@@ -1,0 +1,5 @@
+{
+	"dependencies": {
+		"xmldsigjs": "^2.5.0"
+	}
+}
