@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  mongo:
+    image: mongo:6
+    restart: on-failure
+    environment:
+      # TODO: add cap-editor user automatically too
+      # https://stackoverflow.com/a/70244418
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+    volumes:
+      - ./docker-volumes/mongo:/data/db
+    ports:
+     - 127.0.0.1:27017:27017
