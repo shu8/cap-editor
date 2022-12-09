@@ -23,13 +23,20 @@ app.post('/alerts', async (request, reply) => {
   const { sender, sent = new Date().toISOString(), status, msgType, scope, info } = request.body;
   const { category, event, urgency, severity, certainty, resourceDesc, areaDesc } = info;
 
-  await app.mongo.db.collection('alerts').insertOne({
-    id: randomUUID(),
+  const id = randomUUID();
+  const alert = await app.mongo.db.collection('alerts').insertOne({
+    id,
     sender, sent, status, msgType, scope,
     info: {
       category, event, urgency, severity, certainty, resourceDesc, areaDesc
     }
   });
+
+  return { success: true, id };
+});
+
+app.get('/alerts', async (request, reply) => {
+  reply.redirect('/feed');
 });
 
 app.get('/alerts/:id', async (request, reply) => {

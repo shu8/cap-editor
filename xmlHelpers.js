@@ -23,7 +23,7 @@ export const formatAlertAsXML = (alert) => {
 
 export const formatFeedAsXML = alerts => {
   return `<feed xmlns="http://www.w3.org/2005/Atom">
-  <id>https://cap-xml.prd.defra.cloud/messages.atom</id>
+  <id>${process.env.DOMAIN}/feed</id>
   <title>TODO</title>
   <updated>${new Date().toISOString()}</updated>
   <generator>TODO</generator>
@@ -32,7 +32,7 @@ export const formatFeedAsXML = alerts => {
     <email>TODO</email>
     <uri>TODO</uri>
   </author>
-  <link rel="alternate" href="TODO"/>
+  <link rel="alternate" href="${process.env.DOMAIN}/alerts"/>
   <subtitle>TODO</subtitle>
   <rights>TODO</rights>
   ${alerts.map(alert => `<entry>
@@ -40,7 +40,7 @@ export const formatFeedAsXML = alerts => {
     <title>${alert.msgType}, ${alert.info.severity} - ${alert.info.event}</title>
     <updated>${alert.sent}</updated>
     <link rel="related" type="application/cap+xml" href="${process.env.DOMAIN}/alerts/${alert.id}"/>
-  </entry>`)}
+  </entry>`).join('\n')}
 </feed>
   `;
 }
