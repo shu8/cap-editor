@@ -1,8 +1,15 @@
+import { webcrypto } from 'node:crypto';
 import { randomUUID } from "crypto";
+
 import fastify from "fastify";
 import dotenv from 'dotenv';
-import fastifyMongoDb, { ObjectId } from 'fastify-mongodb';
+import fastifyMongoDb from 'fastify-mongodb';
+import xmldsigjs from 'xmldsigjs';
+
 import { formatAlertAsXML, formatFeedAsXML } from "./xmlHelpers.js";
+import { getKeys } from "./crypto.js";
+
+xmldsigjs.Application.setEngine("OpenSSL", webcrypto);
 
 dotenv.config();
 const app = fastify({ logger: true });
@@ -27,11 +34,25 @@ app.post('/alerts', async (request, reply) => {
 
 app.get('/alerts/:id', async (request, reply) => {
   const alert = await app.mongo.db.collection('alerts').findOne({ id: request.params.id });
+  const alertXml = xmldsigjs.Parse(formatAlertAsXML(alert));
+  const signed = new xmldsigjs.SignedXml(alertXml);
+  const keys = await getKeys();
 
+  const signature = await signed.Sign(
+    { name: "ECDSA", hash: 'SHA-512' },
+    keys.privateKey,
+    alertXml,
+    {
+      keyValue: keys.publicKey,
+      references: [{ hash: "SHA-512", transforms: ["enveloped", "c14n"] }]
+    })
+    .catch(e => console.log(e));
+
+  signature.LoadXml(signed.XmlSignature.GetXml());
   reply
     .code(200)
     .header('Content-Type', 'application/xml')
-    .send(formatAlertAsXML(alert));
+    .send(signed.toString());
 })
 
 app.get('/feed', async (request, reply) => {
