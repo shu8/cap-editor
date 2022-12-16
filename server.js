@@ -7,7 +7,7 @@ import fastifyMongoDb from 'fastify-mongodb';
 import xmldsigjs from 'xmldsigjs';
 
 import { formatAlertAsXML, formatFeedAsXML } from "./xmlHelpers.js";
-import { getKeys } from "./crypto.js";
+import { getPrivateKey, getPublicKey } from "./crypto.js";
 
 xmldsigjs.Application.setEngine("OpenSSL", webcrypto);
 
@@ -43,14 +43,13 @@ app.get('/alerts/:id', async (request, reply) => {
   const alert = await app.mongo.db.collection('alerts').findOne({ id: request.params.id });
   const alertXml = xmldsigjs.Parse(formatAlertAsXML(alert));
   const signed = new xmldsigjs.SignedXml(alertXml);
-  const keys = await getKeys();
+  const privateKey = await getPrivateKey();
 
   const signature = await signed.Sign(
     { name: "ECDSA", hash: 'SHA-512' },
-    keys.privateKey,
+    privateKey,
     alertXml,
     {
-      keyValue: keys.publicKey,
       references: [{ hash: "SHA-512", transforms: ["enveloped", "c14n"] }]
     })
     .catch(e => console.log(e));
@@ -61,6 +60,18 @@ app.get('/alerts/:id', async (request, reply) => {
     .header('Content-Type', 'application/xml')
     .send(signed.toString());
 })
+
+app.get('/alerts/verify/:id', async (request, reply) => {
+  const alert = await app.mongo.db.collection('alerts').findOne({ id: request.params.id });
+  const alertXml = xmldsigjs.Parse(formatAlertAsXML(alert));
+  const signed = new xmldsigjs.SignedXml(alertXml);
+  const publicKey = await getPublicKey();
+
+  const isValid = await signed.Verify(publicKey)
+    .catch(e => console.log(e));
+
+  return { valid: isValid }
+});
 
 app.get('/feed', async (request, reply) => {
   const alertsCursor = await app.mongo.db.collection('alerts').find();
