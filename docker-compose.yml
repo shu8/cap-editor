@@ -14,3 +14,8 @@ services:
       - ./docker-volumes/mongo:/data/db
     ports:
       - 127.0.0.1:27017:27017
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 127.0.0.1:1025:1025
+      - 127.0.0.1:8025:8025

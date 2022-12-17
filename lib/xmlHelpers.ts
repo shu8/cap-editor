@@ -19,7 +19,7 @@ export const formatAlertAsXML = (alert) => {
   </info>
 </alert>
   `;
-}
+};
 
 export const formatFeedAsXML = alerts => {
   return `<feed xmlns="http://www.w3.org/2005/Atom">
@@ -39,8 +39,8 @@ export const formatFeedAsXML = alerts => {
     <id>${alert._id}</id>
     <title>${alert.msgType}, ${alert.info.severity} - ${alert.info.event}</title>
     <updated>${alert.sent}</updated>
-    <link rel="related" type="application/cap+xml" href="${process.env.DOMAIN}/alerts/${alert.id}"/>
+    <link rel="related" type="application/cap+xml" href="${process.env.DOMAIN}/feed/${alert.id}"/>
   </entry>`).join('\n')}
 </feed>
   `;
-}
+};
