@@ -1,6 +1,6 @@
 import styles from "../styles/components/AuthenticateForm.module.css";
 import { Button, Form, SelectPicker } from "rsuite";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertingAuthority } from "../lib/types";
 
 type RegisterData = {
@@ -9,13 +9,15 @@ type RegisterData = {
   alertingAuthorityId: string;
 };
 
-export default function RegisterForm() {
+export default function RegisterForm({ email = "" }) {
   const [alertingAuthorities, setAlertingAuthorities] = useState([]);
   const [formData, setFormData] = useState<RegisterData>({
     name: "",
-    email: "",
+    email,
     alertingAuthorityId: "",
   });
+
+  useEffect(() => setFormData((old) => ({ ...old, email })), [email]);
 
   // TODO fix styling of select items (height of virtualised cells)
   return (

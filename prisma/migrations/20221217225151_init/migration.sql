@@ -30,11 +30,12 @@ CREATE TABLE "sessions" (
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
     "name" TEXT,
-    "email" TEXT,
+    "email" TEXT NOT NULL,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
     "alertingAuthorityId" TEXT NOT NULL,
-    "alertingAuthorityVerified" TEXT,
+    "alertingAuthorityVerified" TIMESTAMP(3),
+    "alertingAuthorityVerificationToken" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );

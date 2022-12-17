@@ -10,7 +10,7 @@ const transport = createTransport({
 });
 
 export const sendEmail = async ({
-  to, from, subject, text, html,
+  to, from = process.env.EMAIL_FROM, subject, text, html,
 } = {}) => {
   return await transport.sendMail({ to, from, subject, text, html });
 };

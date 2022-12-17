@@ -2,6 +2,7 @@ import NextAuth, { AuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import prisma from "../../../lib/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { ERRORS } from "../../../lib/errors";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -26,16 +27,24 @@ export const authOptions: AuthOptions = {
   ],
   callbacks: {
     async signIn({ user, email }) {
-      if (
-        email?.verificationRequest &&
-        !(await prisma.user.findFirst({ where: { email: user.email } }))
-      ) {
-        // TODO user needs to register: alerting authority needs to verify user
+      const dbUser = await prisma.user.findFirst({
+        where: { email: user.email },
+      });
+
+      // If user doesn't exist in db yet, they need to register first
+      if (!dbUser) {
         return `/register?email=${user.email}`;
       }
 
+      // If user is in db, but their AS hasn't verified them, they can't login yet
+      if (!dbUser.alertingAuthorityVerified) {
+        return `/error/${ERRORS["not-verified"]}`;
+      }
+
+      // In all other cases, allow login
       return true;
     },
   },
 };
+
 export default NextAuth(authOptions);
