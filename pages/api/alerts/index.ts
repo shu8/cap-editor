@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { randomUUID } from "crypto";
 
-import db from '../../../lib/db';
+import prisma from '../../../lib/db';
 import { formatFeedAsXML } from '../../../lib/xmlHelpers';
 
 type SubmitAlertResult = {
@@ -18,11 +18,15 @@ export default async function handler(
     const { category, event, urgency, severity, certainty, resourceDesc, areaDesc } = info;
 
     const id = randomUUID();
-    const alert = await (await db).db('cap-editor').collection('alerts').insertOne({
-      id,
-      sender, sent, status, msgType, scope,
-      info: {
-        category, event, urgency, severity, certainty, resourceDesc, areaDesc
+    const alert = await prisma.alert.create({
+      data: {
+        id,
+        data: {
+          sender, sent, status, msgType, scope,
+          info: {
+            category, event, urgency, severity, certainty, resourceDesc, areaDesc
+          }
+        }
       }
     });
 
@@ -30,8 +34,7 @@ export default async function handler(
   }
 
   if (req.method === 'GET') {
-    const alertsCursor = (await db).db('cap-editor').collection('alerts').find();
-    const alerts = await alertsCursor.toArray();
+    const alerts = await prisma.alert.findMany();
 
     return res
       .status(200)

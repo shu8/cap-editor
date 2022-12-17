@@ -1,19 +1,17 @@
 version: '3.7'
 
 services:
-  mongo:
-    image: mongo:6
+  db:
+    image: postgres:14-alpine
     restart: on-failure
     environment:
-      # TODO: add cap-editor user automatically too
-      # https://stackoverflow.com/a/70244418
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
     volumes:
-      - ./docker-volumes/mongo:/data/db
+      - ./docker-volumes/postgres:/var/lib/postgresql/data
     ports:
-      - 127.0.0.1:27017:27017
+      - 127.0.0.1:5432:5432
   mailhog:
     image: mailhog/mailhog
     ports:

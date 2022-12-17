@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import db from '../../../lib/db';
+import prisma from '../../../lib/db';
 import { sign } from '../../../lib/sign';
 
 export default async function handler(
@@ -7,8 +7,16 @@ export default async function handler(
   res: NextApiResponse<string>
 ) {
   if (req.method === 'GET') {
+    const { alertId } = req.query;
+
+    if (typeof alertId !== 'string') {
+      return res.redirect('/feed');
+    }
+
     try {
-      const alert = await (await db).db('cap-editor').collection('alerts').findOne({ id: req.query.alertId });
+      const alert = await prisma.alert.findFirst({ where: { id: alertId } });
+      // TODO handle alert not found
+
       const signedXML = await sign(alert);
       return res
         .status(200)

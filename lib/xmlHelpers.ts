@@ -1,27 +1,29 @@
+import { Alert } from "@prisma/client";
+
 export const formatAlertAsXML = (alert) => {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
   <identifier>${alert.id}</identifier>
-  <sender>${alert.sender}</sender>
-  <sent>${alert.sent}</sent>
-  <status>${alert.status}</status>
-  <msgType>${alert.msgType}</msgType>
-  <scope>${alert.scope}</scope>
+  <sender>${alert.data.sender}</sender>
+  <sent>${alert.data.sent}</sent>
+  <status>${alert.data.status}</status>
+  <msgType>${alert.data.msgType}</msgType>
+  <scope>${alert.data.scope}</scope>
   <info>
-    <category>${alert.info.category}</category>
-    <event>${alert.info.event}</event>
-    <urgency>${alert.info.urgency}</urgency>
-    <severity>${alert.info.severity}</severity>
-    <certainty>${alert.info.certainty}</certainty>
+    <category>${alert.data.info.category}</category>
+    <event>${alert.data.info.event}</event>
+    <urgency>${alert.data.info.urgency}</urgency>
+    <severity>${alert.data.info.severity}</severity>
+    <certainty>${alert.data.info.certainty}</certainty>
     <area>
-      <areaDesc>${alert.info.areaDesc}</areaDesc>
+      <areaDesc>${alert.data.info.areaDesc}</areaDesc>
     </area>
   </info>
 </alert>
   `;
 };
 
-export const formatFeedAsXML = alerts => {
+export const formatFeedAsXML = (alerts: Alert[]) => {
   return `<feed xmlns="http://www.w3.org/2005/Atom">
   <id>${process.env.DOMAIN}/feed</id>
   <title>TODO</title>
@@ -36,9 +38,9 @@ export const formatFeedAsXML = alerts => {
   <subtitle>TODO</subtitle>
   <rights>TODO</rights>
   ${alerts.map(alert => `<entry>
-    <id>${alert._id}</id>
-    <title>${alert.msgType}, ${alert.info.severity} - ${alert.info.event}</title>
-    <updated>${alert.sent}</updated>
+    <id>${alert.id}</id>
+    <title>${alert.data.msgType}, ${alert.data.info.severity} - ${alert.data.info.event}</title>
+    <updated>${alert.data.sent}</updated>
     <link rel="related" type="application/cap+xml" href="${process.env.DOMAIN}/feed/${alert.id}"/>
   </entry>`).join('\n')}
 </feed>
