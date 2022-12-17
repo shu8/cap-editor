@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../lib/db';
-import { sign } from '../../../lib/sign';
+import { sign } from '../../../lib/xml/sign';
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,7 +15,10 @@ export default async function handler(
 
     try {
       const alert = await prisma.alert.findFirst({ where: { id: alertId } });
-      // TODO handle alert not found
+
+      if (!alert) {
+        throw 'Unknown alert';
+      }
 
       const signedXML = await sign(alert);
       return res

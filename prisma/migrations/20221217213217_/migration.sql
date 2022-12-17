@@ -33,7 +33,7 @@ CREATE TABLE "users" (
     "email" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
-    "alertingAuthority" TEXT,
+    "alertingAuthorityId" TEXT NOT NULL,
     "alertingAuthorityVerified" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
@@ -52,6 +52,16 @@ CREATE TABLE "alerts" (
     "data" JSONB NOT NULL,
 
     CONSTRAINT "alerts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "alerting_authorities" (
+    "id" TEXT NOT NULL,
+    "author" TEXT NOT NULL,
+    "countryCode" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "alerting_authorities_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -74,3 +84,6 @@ ALTER TABLE "accounts" ADD CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userI
 
 -- AddForeignKey
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "users" ADD CONSTRAINT "users_alertingAuthorityId_fkey" FOREIGN KEY ("alertingAuthorityId") REFERENCES "alerting_authorities"("id") ON DELETE CASCADE ON UPDATE CASCADE;

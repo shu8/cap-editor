@@ -1,12 +1,13 @@
 import { Application, Parse, SignedXml } from 'xmldsigjs';
 import { webcrypto } from 'node:crypto';
 
-import { formatAlertAsXML } from "./xmlHelpers";
-import { getPrivateKey } from './crypto';
+import { formatAlertAsXML } from "./helpers";
+import { getPrivateKey } from '../crypto';
+import { Alert } from '.prisma/client';
 
 Application.setEngine("OpenSSL", webcrypto);
 
-export async function sign(alert) {
+export async function sign(alert: Alert) {
   const alertXml = Parse(formatAlertAsXML(alert));
   const signed = new SignedXml(alertXml);
   const privateKey = await getPrivateKey();

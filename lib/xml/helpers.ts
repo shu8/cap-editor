@@ -1,6 +1,6 @@
 import { Alert } from "@prisma/client";
 
-export const formatAlertAsXML = (alert) => {
+export const formatAlertAsXML = (alert: Alert) => {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
   <identifier>${alert.id}</identifier>

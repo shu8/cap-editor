@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { randomUUID } from "crypto";
 
 import prisma from '../../../lib/db';
-import { formatFeedAsXML } from '../../../lib/xmlHelpers';
+import { formatFeedAsXML } from '../../../lib/xml/helpers';
 
 type SubmitAlertResult = {
   success: Boolean;

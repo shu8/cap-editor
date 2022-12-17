@@ -38,12 +38,13 @@ model Session {
 }
 
 model User {
-  id                        String    @id @default(cuid())
+  id                        String            @id @default(cuid())
   name                      String?
-  email                     String?   @unique
+  email                     String?           @unique
   emailVerified             DateTime?
   image                     String?
-  alertingAuthority         String?
+  alertingAuthorityId       String
+  alertingAuthority         AlertingAuthority @relation(fields: [alertingAuthorityId], references: [id], onDelete: Cascade)
   alertingAuthorityVerified String?
   accounts                  Account[]
   sessions                  Session[]
@@ -65,4 +66,14 @@ model Alert {
   data Json
 
   @@map("alerts")
+}
+
+model AlertingAuthority {
+  id          String @id
+  author      String
+  countryCode String
+  name        String
+  users       User[]
+
+  @@map("alerting_authorities")
 }

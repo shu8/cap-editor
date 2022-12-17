@@ -27,7 +27,7 @@ export default function Home() {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                email: formProps.email,
+                sender: formProps.email,
                 status: formProps.status,
                 msgType: formProps.msgType,
                 scope: formProps.scope,
