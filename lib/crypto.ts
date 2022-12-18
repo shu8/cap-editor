@@ -14,17 +14,4 @@ export const getPrivateKey = async () => {
     false,
     ['sign']
   );
-}
-
-export const getPublicKey = async () => {
-  const publicKey = fs.readFileSync('./public-key.pem', 'utf-8')
-    .replace(/-----(BEGIN|END) PUBLIC KEY-----\n?/g, '');
-  console.log(publicKey)
-  return webcrypto.subtle.importKey(
-    'spki',
-    Buffer.from(publicKey),
-    { name: 'ECDSA', namedCurve: 'P-256' },
-    false,
-    ['verify']
-  );
-}
+};
