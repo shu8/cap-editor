@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     });
 
-    // TODO: email AA to confirm user identity
+    // TODO what if the registering user _is_ the AA author? skip this step?
     await sendEmail({
       subject: `New user registered for ${alertingAuthority.name}`,
       to: alertingAuthority.author,

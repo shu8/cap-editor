@@ -6,5 +6,5 @@ export const ERRORS = {
   INVALID_VERIFICATION_TOKEN: {
     slug: 'invalid-verification-token',
     message: 'Your verification link is invalid'
-  }
+  },
 };

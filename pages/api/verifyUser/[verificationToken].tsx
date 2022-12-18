@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/react";
 import prisma from "../../../lib/db";
 import { sendEmail } from "../../../lib/email";
 import { ERRORS } from "../../../lib/errors";
@@ -7,7 +8,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const session = await getSession();
+
   if (req.method === "GET") {
+    if (!session) {
+      return res.redirect("/login");
+    }
+
+    // TODO ask AA to confirm which privileges (draft/edit/publish) this user will have
     const alertingAuthorityVerificationToken = req.query.verificationToken;
     if (typeof alertingAuthorityVerificationToken !== "string") {
       return res.redirect(`/error/${ERRORS.INVALID_VERIFICATION_TOKEN.slug}`);
