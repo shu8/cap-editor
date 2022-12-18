@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  app:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - 127.0.0.1:3000:3000
+
+  db:
+    image: postgres:14-alpine
+    restart: on-failure
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    volumes:
+      - ./docker-volumes/postgres:/var/lib/postgresql/data
+      - ./docker-volumes/caddy/data/:/tls:ro
+    ports:
+      - 127.0.0.1:5432:5432
+
+  caddy:
+    image: caddy:2.6-alpine
+    restart: on-failure
+    volumes:
+      - ./docker-volumes/caddy/data:/data
+      - ./docker-volumes/caddy/config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - 80:80
+      - 443:443
+      - 443:443/udp
+
+  # Only for development
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 127.0.0.1:1025:1025
+      - 127.0.0.1:8025:8025

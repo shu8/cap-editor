@@ -1,4 +1,4 @@
-import { Alert } from "@prisma/client";
+import { Alert } from ".prisma/client";
 
 export const formatAlertAsXML = (alert: Alert) => {
   return `<?xml version="1.0" encoding="UTF-8"?>

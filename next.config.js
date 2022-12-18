@@ -8,6 +8,9 @@ const nextConfig = {
       { source: '/verify/:token', destination: '/api/verifyUser/:token' }
     ];
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  }
 };
 
 module.exports = nextConfig;
