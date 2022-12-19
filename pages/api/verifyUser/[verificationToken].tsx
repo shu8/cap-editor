@@ -1,21 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
 import prisma from "../../../lib/db";
 import { sendEmail } from "../../../lib/email";
 import { ERRORS } from "../../../lib/errors";
-import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
-
   if (req.method === "GET") {
-    if (!session) {
-      return res.redirect("/login");
-    }
-
+    // TODO should this require being logged in? would the AA author always have an account already? If not, there would be a loop...
     // TODO ask AA to confirm which privileges (draft/edit/publish) this user will have
     const alertingAuthorityVerificationToken = req.query.verificationToken;
     if (typeof alertingAuthorityVerificationToken !== "string") {
