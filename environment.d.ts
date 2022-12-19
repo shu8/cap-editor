@@ -8,6 +8,7 @@ declare global {
       EMAIL_SERVER_PASSWORD: string;
       EMAIL_FROM: string;
       NODE_ENV: 'development' | 'production';
+      TLS_DIRECTORY: string;
     }
   }
 }

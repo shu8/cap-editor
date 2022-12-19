@@ -3,14 +3,15 @@ import { randomUUID } from "crypto";
 
 import prisma from '../../../lib/db';
 import { formatFeedAsXML } from '../../../lib/xml/helpers';
-import { getSession } from 'next-auth/react';
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const session = await getSession();
+    const session = await unstable_getServerSession(req, res, authOptions);
 
     if (!session) {
       return res.status(403).json({ success: false, message: 'You do not have permission to create alerts.' });
