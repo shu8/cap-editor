@@ -67,7 +67,7 @@ const start = async () => {
     const signedXml = new xmldsigjs.SignedXml(parsedXml);
     signedXml.LoadXml(signature[0]);
 
-    const publicKey = extractPublicKey(certificate.publicKey);
+    const publicKey = await extractPublicKey(certificate.publicKey);
     const isValid = await signedXml.Verify(publicKey);
 
     if (!isValid) {
