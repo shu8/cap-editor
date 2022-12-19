@@ -1,3 +1,4 @@
+import { exec } from 'child_process';
 import fs from 'fs';
 import { webcrypto } from 'node:crypto';
 import path from 'path';
@@ -18,14 +19,27 @@ const walk = (dir: string, desiredFilename: string): string | null => {
   return null;
 };
 
+const convertTraditionalEcToPkcs8 = async (privateKeyPath: string): Promise<string> =>
+  new Promise((resolve, reject) => {
+    exec(`openssl pkcs8 -topk8 -in ${privateKeyPath} -nocrypt`, (error, stdout) => {
+      if (error) return reject(error);
+      resolve(stdout);
+    });
+  });
+
 // ssh-keygen -m PKCS8 -t ecdsa
 // TODO get the keys from the SSL cert (use shared docker volume?)
 export const getPrivateKey = async () => {
   const privateKeyPath = walk(process.env.TLS_DIRECTORY, `${process.env.DOMAIN}.key`);
   if (!privateKeyPath) return null;
 
-  const privateKey = fs.readFileSync(privateKeyPath, 'utf-8')
-    .replace(/-----(BEGIN|END) PRIVATE KEY-----\n?/g, '');
+  let privateKey = fs.readFileSync(privateKeyPath, 'utf-8');
+
+  if (privateKey.startsWith('-----BEGIN EC PRIVATE KEY')) {
+    privateKey = await convertTraditionalEcToPkcs8(privateKeyPath);
+  }
+
+  privateKey = privateKey.replace(/-----(BEGIN|END) PRIVATE KEY-----\n?/g, '');
 
   return webcrypto.subtle.importKey(
     'pkcs8',
