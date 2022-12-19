@@ -26,7 +26,11 @@ export const authOptions: AuthOptions = {
     // })
   ],
   callbacks: {
-    async signIn({ user, email }) {
+    async signIn({ user }) {
+      if (!user.email) {
+        return "/register";
+      }
+
       const dbUser = await prisma.user.findFirst({
         where: { email: user.email },
       });
@@ -38,7 +42,7 @@ export const authOptions: AuthOptions = {
 
       // If user is in db, but their AS hasn't verified them, they can't login yet
       if (!dbUser.alertingAuthorityVerified) {
-        return `/error/${ERRORS["not-verified"]}`;
+        return `/error/${ERRORS.ACCOUNT_NOT_VERIFIED_YET.slug}`;
       }
 
       // In all other cases, allow login
