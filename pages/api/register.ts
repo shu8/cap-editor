@@ -41,8 +41,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await sendEmail({
       subject: `New user registered for ${alertingAuthority.name}`,
       to: alertingAuthority.author,
-      text: `Please verify this user has permission to create alerts for your Alerting Authority: ${process.env.DOMAIN}/verify/${alertingAuthorityVerificationToken}`,
-      html: `Please verify this user has permission to create alerts for your Alerting Authority: <a href="${process.env.DOMAIN}/verify/${alertingAuthorityVerificationToken}">Click here</a>`,
+      text: `Please verify this user has permission to create alerts for your Alerting Authority: https://${process.env.DOMAIN}/verify/${alertingAuthorityVerificationToken}`,
+      html: `Please verify this user has permission to create alerts for your Alerting Authority: <a href="https://${process.env.DOMAIN}/verify/${alertingAuthorityVerificationToken}">Click here</a>`,
     });
 
     return res.json({ success: true });

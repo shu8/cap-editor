@@ -8,6 +8,9 @@ declare global {
       EMAIL_SERVER_PASSWORD: string;
       EMAIL_FROM: string;
       NODE_ENV: 'development' | 'production';
+      WEBAUTHN_RELAYING_PARTY_NAME: string;
+      WEBAUTHN_RELAYING_PARTY_ID: string;
+      WEBAUTHN_ORIGIN: string;
       TLS_DIRECTORY: string;
     }
   }

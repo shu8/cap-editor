@@ -47,8 +47,10 @@ model User {
   alertingAuthority                  AlertingAuthority @relation(fields: [alertingAuthorityId], references: [id], onDelete: Cascade)
   alertingAuthorityVerified          DateTime?
   alertingAuthorityVerificationToken String?
+  currentWebauthnChallenge           String?
   accounts                           Account[]
   sessions                           Session[]
+  authenticators                     Authenticator[]
 
   @@map("users")
 }
@@ -77,4 +79,18 @@ model AlertingAuthority {
   users       User[]
 
   @@map("alerting_authorities")
+}
+
+// Case sensitive credential* fields: https://simplewebauthn.dev/docs/packages/server#installing to match the TS definitions
+model Authenticator {
+  credentialID         String   @id
+  credentialPublicKey  Bytes
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String[]
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("authenticators")
 }

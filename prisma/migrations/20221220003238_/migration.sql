@@ -36,6 +36,7 @@ CREATE TABLE "users" (
     "alertingAuthorityId" TEXT NOT NULL,
     "alertingAuthorityVerified" TIMESTAMP(3),
     "alertingAuthorityVerificationToken" TEXT,
+    "currentWebauthnChallenge" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -65,6 +66,19 @@ CREATE TABLE "alerting_authorities" (
     CONSTRAINT "alerting_authorities_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "authenticators" (
+    "credentialID" TEXT NOT NULL,
+    "credentialPublicKey" BYTEA NOT NULL,
+    "counter" INTEGER NOT NULL,
+    "credentialDeviceType" TEXT NOT NULL,
+    "credentialBackedUp" BOOLEAN NOT NULL,
+    "transports" TEXT[],
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "authenticators_pkey" PRIMARY KEY ("credentialID")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "accounts_provider_providerAccountId_key" ON "accounts"("provider", "providerAccountId");
 
@@ -88,3 +102,6 @@ ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userI
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_alertingAuthorityId_fkey" FOREIGN KEY ("alertingAuthorityId") REFERENCES "alerting_authorities"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "authenticators" ADD CONSTRAINT "authenticators_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
