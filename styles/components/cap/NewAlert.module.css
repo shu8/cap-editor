@@ -1,0 +1,63 @@
+.newAlert {
+  margin: 10px 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.progressBar {
+  text-transform: capitalize;
+  background-color: lightgrey;
+  border-radius: 10px;
+  height: 40px;
+
+  align-items: center;
+
+  display: grid;
+  column-gap: 15px;
+  grid-template-columns: repeat(5, minmax(60px, 1fr));
+}
+
+.progressItem {
+  display: flex;
+  opacity: 0.8;
+  height: 100%;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  cursor: pointer;
+}
+
+.progressItem.active {
+  opacity: 1;
+  background-color: grey;
+  color: white;
+}
+
+.stepWrapper {
+  width: 100%;
+}
+
+.step {
+  display: flex;
+  gap: 40px;
+}
+
+.stepInstructions {
+  flex: 50%;
+}
+
+.map {
+  flex: 50%;
+}
+
+.footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}

@@ -1706,3 +1706,11 @@ export const fetchWMOAlertingAuthorities = async () => {
 
   return data;
 };
+
+export const classes = (...args) => args.filter(c => !!c).join(' ');
+
+export const getStartOfToday = () => {
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+  return date;
+};

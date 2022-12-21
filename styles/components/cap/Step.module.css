@@ -1,0 +1,28 @@
+
+.buttonGrid {
+  display: grid;
+  row-gap: 10px;
+  column-gap: 10px;
+  grid-template-columns: repeat(2, minmax(100px, 1fr));
+  grid-template-rows: repeat(2, minmax(100px, 1fr));
+  align-items: baseline;
+}
+
+.button {
+  background-color: lightgrey;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  height: 100px;
+}
+
+.urlInputWrapper {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin: 10px;
+}
+
+.urlInputWrapper > span {
+  width: 50px;
+}
