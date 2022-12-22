@@ -3,4 +3,5 @@ export type AlertingAuthority = {
   id: string;
   countryCode: string;
   author: string;
+  polygon?: string;
 };

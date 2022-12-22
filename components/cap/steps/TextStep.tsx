@@ -9,6 +9,19 @@ const Textarea = forwardRef((props, ref) => (
 ));
 Textarea.displayName = "Textarea";
 
+// CAP info.responseType
+const ACTIONS = [
+  "Shelter",
+  "Evacuate",
+  "Prepare",
+  "Execute",
+  "Avoid",
+  "Monitor",
+  "Assess",
+  "All Clear",
+  "None",
+];
+
 export default function TextStep({
   onUpdate,
   headline,
@@ -22,7 +35,7 @@ export default function TextStep({
     <div>
       <h4>Describe the alert</h4>
 
-      <Form>
+      <Form fluid>
         <Form.Group>
           <Form.ControlLabel>Headline</Form.ControlLabel>
           <Form.Control
@@ -30,6 +43,11 @@ export default function TextStep({
             onChange={(headline) => onUpdate({ headline })}
             value={headline}
           />
+          <Form.HelpText
+            style={{ color: headline?.length ?? 0 > 160 ? "red" : "unset" }}
+          >
+            {headline?.length ?? 0}/160 characters
+          </Form.HelpText>
         </Form.Group>
         <Form.Group>
           <Form.ControlLabel>Description</Form.ControlLabel>
@@ -59,7 +77,7 @@ export default function TextStep({
       <TagPicker
         cleanable
         block
-        data={[{ label: "Prepare", value: "Prepare" }]}
+        data={ACTIONS.map((a) => ({ label: a, value: a.replace(" ", "") }))}
         value={actions}
         onChange={(actions) => onUpdate({ actions })}
       />

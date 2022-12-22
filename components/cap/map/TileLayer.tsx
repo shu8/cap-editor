@@ -8,10 +8,9 @@ const TileLayer = ({ map, source, zIndex = 0 }) => {
     let tileLayer = new OLTileLayer({ source, zIndex });
     map.addLayer(tileLayer);
     tileLayer.setZIndex(zIndex);
+
     return () => {
-      if (map) {
-        map.removeLayer(tileLayer);
-      }
+      map?.removeLayer(tileLayer);
     };
   }, [map]);
 

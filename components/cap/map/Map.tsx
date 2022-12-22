@@ -3,7 +3,9 @@ import OLView from "ol/View";
 import OLMap from "ol/Map";
 import OSM from "ol/source/OSM";
 import OLDraw from "ol/interaction/Draw";
+import OLSelect from "ol/interaction/Select";
 import OLVectorSource from "ol/source/Vector";
+import OLFeatureCollection from "ol/Collection";
 import { IconButton } from "rsuite";
 import { Icon } from "@rsuite/icons";
 import { useGeographic } from "ol/proj";
@@ -14,7 +16,9 @@ import { Coordinate } from "ol/coordinate";
 import Image from "next/image";
 import { Style, Stroke, Fill } from "ol/style";
 import GeoJSON from "ol/format/GeoJSON";
-import { FeatureLike } from "ol/Feature";
+import Feature from "ol/Feature";
+import { AlertingAuthority } from "../../../lib/types";
+import { singleClick } from "ol/events/condition";
 
 // https://www.reshot.com/free-svg-icons/item/free-positioning-polygone-F2AWH4PGVQ/
 const PolygonImage = () => (
@@ -63,81 +67,124 @@ const defaultCountryStyle = new Style({
   stroke: new Stroke({ color: "rgba(0, 0, 0, 0.2)" }),
   fill: new Fill({ color: "rgba(255, 255, 255, 0.1)" }),
 });
+const alertingAuthorityStyle = new Style({
+  fill: new Fill({ color: "rgba(100, 100, 100, 0.2)" }),
+});
 
-let hovered: FeatureLike | null = null;
+let hovered: Feature | null;
 export default function Map({
   onNewPolygon,
+  alertingAuthority,
   enableInteraction = false,
 }: {
   onNewPolygon: OnNewPolygonCallback;
+  alertingAuthority: AlertingAuthority;
   enableInteraction: boolean;
 }) {
   useGeographic();
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<OLMap | null>(null);
-  const [polygonsSource, setPolygonsSource] = useState<OLVectorSource | null>(
-    null
+  const [selectedFeatures] = useState<OLFeatureCollection<Feature>>(
+    new OLFeatureCollection()
   );
-  const [center, setCenter] = useState([1, 1]);
+  const [polygonsSource] = useState<OLVectorSource>(
+    new OLVectorSource({ wrapX: false, features: selectedFeatures })
+  );
+  const [select] = useState(
+    new OLSelect({
+      features: selectedFeatures,
+      toggleCondition: singleClick,
+      filter: (f) => f.getId() !== "alertingAuthority",
+      style: selectedStyle,
+    })
+  );
+
+  const alertingAuthorityPolygonCoordinates: any = [
+    alertingAuthority.polygon?.split(" ").map((c) =>
+      c
+        .split(",")
+        .map((c) => +c)
+        .reverse()
+    ) ?? [],
+  ];
+
+  const alertingAuthorityRegion = new Feature({
+    geometry: new Polygon(alertingAuthorityPolygonCoordinates),
+  });
+  alertingAuthorityRegion.setId("alertingAuthority");
 
   useMountEffect(() => {
-    const options = {
-      view: new OLView({ center }),
+    const mapObject = new OLMap({
+      view: new OLView({
+        zoom: 1,
+        extent: alertingAuthorityRegion.getGeometry()?.getExtent(),
+        showFullExtent: true,
+        center: [1, 1],
+      }),
       layers: [],
       controls: [],
       overlays: [],
-    };
-    const mapObject = new OLMap(options);
-    if (mapRef.current) mapObject.setTarget(mapRef.current);
-    mapObject.getView().setZoom(1);
-    mapObject.getView().setCenter(center);
+      interactions: [select],
+    });
 
+    if (mapRef.current) mapObject.setTarget(mapRef.current);
     setMap(mapObject);
 
-    const source = new OLVectorSource({ wrapX: false });
-    setPolygonsSource(source);
-
-    return () => mapObject.setTarget(undefined);
+    alertingAuthorityRegion.setStyle(alertingAuthorityStyle);
+    countriesSource?.addFeature(alertingAuthorityRegion);
+    return () => {
+      mapObject.removeInteraction(select);
+      mapObject.setTarget(undefined);
+    };
   });
 
   useEffect(() => {
-    if (!enableInteraction) return;
+    if (!enableInteraction) {
+      select.setActive(false);
+      return;
+    }
+
+    select.setActive(true);
 
     const hoverListener = (e) => {
-      if (hovered !== null) {
+      if (hovered) {
         hovered.setStyle(undefined);
         hovered = null;
       }
+      if (map?.getInteractions().getLength() !== 10) return;
 
-      map?.forEachFeatureAtPixel(e.pixel, function (f) {
-        hovered = f;
-        f.setStyle(hoverStyle);
-        return true;
-      });
-    };
-
-    const singleClickListener = (e) => {
       map?.forEachFeatureAtPixel(e.pixel, (f) => {
-        if (polygonsSource?.hasFeature(f)) polygonsSource?.removeFeature(f);
-        else polygonsSource?.addFeature(f);
+        const feature = f as Feature;
 
+        // Don't show hover colour over the user's entire AA
+        if (feature.getId() === "alertingAuthority") return;
+
+        // Don't show hover colour if feature already selected
+        if (polygonsSource.hasFeature(feature)) return;
+
+        // Don't show hover colour for features not inside user's AA
+        // TODO also do this for selection
+        if (
+          !alertingAuthorityRegion
+            .getGeometry()
+            ?.containsXY(...map?.getCoordinateFromPixel(e.pixel))
+        ) {
+          return;
+        }
+
+        hovered = feature;
+        feature.setStyle(hoverStyle);
         return true;
       });
     };
 
     map?.on("pointermove", hoverListener);
-    map?.on("singleclick", singleClickListener);
-
     return () => {
       map?.un("pointermove", hoverListener);
-      map?.un("singleclick", singleClickListener);
       hovered?.setStyle(undefined);
+      select.setActive(false);
     };
   }, [map, enableInteraction]);
-
-  useEffect(() => {
-    map?.getView()?.setCenter(center);
-  }, [map, center]);
 
   return (
     <div ref={mapRef} style={{ height: "400px", width: "100%" }}>
@@ -163,9 +210,10 @@ export default function Map({
           icon={<Icon as={PolygonImage} />}
           onClick={() => {
             const draw = new OLDraw({
-              source: polygonsSource!,
+              features: selectedFeatures,
               type: "Polygon",
             });
+            draw.on("drawstart", () => select.setActive(false));
             map?.addInteraction(draw);
 
             draw.on("drawend", (e) => {
@@ -173,6 +221,10 @@ export default function Map({
               draw.setActive(false);
               onNewPolygon("polygon", geometry.getCoordinates().flat());
               map?.removeInteraction(draw);
+
+              setTimeout(function () {
+                select.setActive(true);
+              }, 300);
             });
           }}
         />
@@ -184,9 +236,10 @@ export default function Map({
           icon={<Icon as={CircleImage} />}
           onClick={() => {
             const draw = new OLDraw({
-              source: polygonsSource!,
+              features: selectedFeatures,
               type: "Circle",
             });
+            draw.on("drawstart", () => select.setActive(false));
             map?.addInteraction(draw);
 
             draw.on("drawend", (e) => {
@@ -196,6 +249,10 @@ export default function Map({
                 ...geometry!.getCenter(),
                 geometry!.getRadius(),
               ]);
+
+              setTimeout(function () {
+                select.setActive(true);
+              }, 300);
               map?.removeInteraction(draw);
             });
           }}

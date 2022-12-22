@@ -72,10 +72,11 @@ model Alert {
 }
 
 model AlertingAuthority {
-  id          String @id
+  id          String  @id
   author      String
   countryCode String
   name        String
+  polygon     String?
   users       User[]
 
   @@map("alerting_authorities")

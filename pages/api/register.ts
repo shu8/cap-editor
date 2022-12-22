@@ -31,6 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               name: alertingAuthority.name,
               author: alertingAuthority.author,
               countryCode: alertingAuthority.countryCode,
+              // TODO polygon isn't given for all AAs by WMO
+              polygon: alertingAuthority.polygon
             },
           }
         }

@@ -37,6 +37,7 @@ CREATE TABLE "users" (
     "alertingAuthorityVerified" TIMESTAMP(3),
     "alertingAuthorityVerificationToken" TEXT,
     "currentWebauthnChallenge" TEXT,
+    "webauthnId" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -62,6 +63,7 @@ CREATE TABLE "alerting_authorities" (
     "author" TEXT NOT NULL,
     "countryCode" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "polygon" TEXT,
 
     CONSTRAINT "alerting_authorities_pkey" PRIMARY KEY ("id")
 );

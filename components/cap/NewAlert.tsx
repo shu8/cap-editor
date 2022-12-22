@@ -7,18 +7,19 @@ import {
   getStartOfToday,
   updateState,
 } from "../../lib/helpers";
-import HazardStep from "./steps/HazardStep";
+import CategoryStep from "./steps/CategoryStep";
 import DataStep from "./steps/DataStep";
 import TextStep from "./steps/TextStep";
 import Map from "./map/Map";
 import MapStep from "./steps/MapStep";
 import SummaryStep from "./steps/SummaryStep";
+import { AlertingAuthority } from "../../lib/types";
 
-const STEPS = ["hazard", "map", "data", "text", "summary"];
+const STEPS = ["category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];
 
 export type AlertData = {
-  hazardType: string;
+  category: string;
   regions: string[];
   from: Date;
   to: Date;
@@ -35,10 +36,16 @@ export type StepProps = {
   onUpdate: (data: Partial<AlertData>) => void;
 };
 
-export default function NewAlert() {
-  const [step, setStep] = useState<Step>("hazard");
+export default function NewAlert({
+  onSubmit,
+  alertingAuthority,
+}: {
+  onSubmit: (alertData: AlertData) => void;
+  alertingAuthority: AlertingAuthority;
+}) {
+  const [step, setStep] = useState<Step>(STEPS[0]);
   const [alertData, setAlertData] = useState<AlertData>({
-    hazardType: "",
+    category: "",
     regions: [],
     from: getStartOfToday(),
     to: getStartOfToday(),
@@ -57,11 +64,11 @@ export default function NewAlert() {
   const steps: {
     [step in Step]: { render: () => JSX.Element; isValid: () => boolean };
   } = {
-    hazard: {
+    category: {
       render: () => (
-        <HazardStep onUpdate={onUpdate} hazardType={alertData.hazardType} />
+        <CategoryStep onUpdate={onUpdate} category={alertData.category} />
       ),
-      isValid: () => !!alertData.hazardType,
+      isValid: () => !!alertData.category,
     },
     map: {
       render: () => <MapStep onUpdate={onUpdate} regions={alertData.regions} />,
@@ -160,6 +167,7 @@ export default function NewAlert() {
               onNewPolygon={(type, coordinates) =>
                 console.log(type, coordinates)
               }
+              alertingAuthority={alertingAuthority}
               enableInteraction={step === "map"}
             />
           </div>
@@ -174,9 +182,7 @@ export default function NewAlert() {
           <Button
             appearance="primary"
             color="green"
-            onClick={() => {
-              setStep(STEPS[currentStepIndex + 1]);
-            }}
+            onClick={() => onSubmit(alertData)}
           >
             Submit Alert
           </Button>

@@ -1,18 +1,14 @@
 .buttonGrid {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   row-gap: 10px;
   column-gap: 10px;
-  grid-template-columns: repeat(2, minmax(100px, 1fr));
-  align-items: baseline;
 }
 
 .button {
-  background-color: lightgrey;
-  border-radius: 20px;
-  padding: 20px;
-  text-align: center;
-  height: 100px;
-  cursor: pointer;
+  border: 1px solid red;
+  color: black;
 }
 
 .selectedButton {

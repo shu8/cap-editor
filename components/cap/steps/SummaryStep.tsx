@@ -34,7 +34,7 @@ export default function SummaryStep({
       </p>
       <ReviewItem
         field="Hazard Type"
-        value={alertData.hazardType ?? "NONE"}
+        value={alertData.category ?? "NONE"}
         step="hazard"
       />
       <ReviewItem

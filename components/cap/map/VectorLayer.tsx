@@ -12,10 +12,9 @@ const VectorLayer = ({ map, source, style, zIndex = 0 }) => {
     });
     map.addLayer(layer);
     layer.setZIndex(zIndex);
+
     return () => {
-      if (map) {
-        map.removeLayer(layer);
-      }
+      map?.removeLayer(layer);
     };
   }, [map]);
 

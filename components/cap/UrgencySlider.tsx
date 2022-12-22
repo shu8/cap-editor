@@ -1,7 +1,4 @@
 import { Slider } from "rsuite";
-import { getStartOfToday } from "../../lib/helpers";
-import { classes } from "../../lib/helpers";
-import styles from "../../styles/components/cap/SeverityCertaintyMatrix.module.css";
 
 export default function UrgencySlider({ onChange, urgency }) {
   const labels = ["Future", "Expected", "Immediate"];
@@ -13,6 +10,7 @@ export default function UrgencySlider({ onChange, urgency }) {
         max={2}
         value={labels.indexOf(urgency)}
         graduated
+        progress
         vertical
         renderMark={(v) => labels[v]}
         tooltip={false}

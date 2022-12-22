@@ -14,6 +14,7 @@ export default function MapStep({
       </p>
 
       <TagPicker
+        block
         data={[
           { label: "England", value: "England" },
           { label: "Wales", value: "Wales" },
