@@ -1,5 +1,6 @@
 .newAlert {
   margin: 10px 20px;
+  height: 100%;
 }
 
 .header {
@@ -37,6 +38,11 @@
   opacity: 1;
   background-color: grey;
   color: white;
+}
+
+.progressItem.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .stepWrapper {

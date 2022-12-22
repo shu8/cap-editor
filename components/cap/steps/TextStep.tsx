@@ -1,12 +1,21 @@
 import styles from "../../../styles/components/cap/Step.module.css";
 import { Button, Form, Input, TagPicker } from "rsuite";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { classes } from "../../../lib/helpers";
+import { AlertData, StepProps } from "../NewAlert";
 
-const Textarea = () => <Input rows={5} as="textarea" />;
+const Textarea = forwardRef((props, ref) => (
+  <Input {...props} ref={ref} rows={5} as="textarea" />
+));
+Textarea.displayName = "Textarea";
 
-export default function TextStep({ onNext }) {
-  const [data, setData] = useState({});
+export default function TextStep({
+  onUpdate,
+  headline,
+  description,
+  instruction,
+  actions,
+}: Partial<AlertData> & StepProps) {
   const [numberOfUrls, setNumberOfUrls] = useState(1);
 
   return (
@@ -16,15 +25,29 @@ export default function TextStep({ onNext }) {
       <Form>
         <Form.Group>
           <Form.ControlLabel>Headline</Form.ControlLabel>
-          <Form.Control name="headline" />
+          <Form.Control
+            name="headline"
+            onChange={(headline) => onUpdate({ headline })}
+            value={headline}
+          />
         </Form.Group>
         <Form.Group>
           <Form.ControlLabel>Description</Form.ControlLabel>
-          <Form.Control accepter={Textarea} name="description" />
+          <Form.Control
+            accepter={Textarea}
+            name="description"
+            onChange={(description) => onUpdate({ description })}
+            value={description}
+          />
         </Form.Group>
         <Form.Group>
           <Form.ControlLabel>Instruction</Form.ControlLabel>
-          <Form.Control accepter={Textarea} name="instruction" />
+          <Form.Control
+            accepter={Textarea}
+            name="instruction"
+            onChange={(instruction) => onUpdate({ instruction })}
+            value={instruction}
+          />
         </Form.Group>
       </Form>
 
@@ -37,6 +60,8 @@ export default function TextStep({ onNext }) {
         cleanable
         block
         data={[{ label: "Prepare", value: "Prepare" }]}
+        value={actions}
+        onChange={(actions) => onUpdate({ actions })}
       />
 
       <h4>Link to external resources</h4>

@@ -1,10 +1,8 @@
-
 .buttonGrid {
   display: grid;
   row-gap: 10px;
   column-gap: 10px;
   grid-template-columns: repeat(2, minmax(100px, 1fr));
-  grid-template-rows: repeat(2, minmax(100px, 1fr));
   align-items: baseline;
 }
 
@@ -14,6 +12,12 @@
   padding: 20px;
   text-align: center;
   height: 100px;
+  cursor: pointer;
+}
+
+.selectedButton {
+  background-color: grey;
+  color: white;
 }
 
 .urlInputWrapper {
@@ -25,4 +29,12 @@
 
 .urlInputWrapper > span {
   width: 50px;
+}
+
+.reviewItem {
+  margin: 10px;
+}
+
+.editIcon {
+  margin-left: 5px;
 }

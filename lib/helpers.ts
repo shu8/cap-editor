@@ -1714,3 +1714,13 @@ export const getStartOfToday = () => {
   date.setHours(0, 0, 0, 0);
   return date;
 };
+
+export const getEndOfYesterday = () => {
+  const date = getStartOfToday();
+  date.setMinutes(date.getMinutes() - 1);
+  return date;
+};
+
+export const updateState = (setter, data) => {
+  setter(old => ({ ...old, ...data }));
+};
