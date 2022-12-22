@@ -1,0 +1,41 @@
+.matrix {
+  position: relative;
+}
+
+.cellWrapper {
+  display: grid;
+  column-gap: 1px;
+  row-gap: 1px;
+  align-items: center;
+  grid-template-columns: repeat(3, 40px);
+  grid-template-rows: repeat(3, 40px);
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.selected::after {
+  content: "✓";
+  position: absolute;
+  font-size: 1.8em;
+  margin-left: 10px;
+}
+
+.red {
+  background-color: #d2222d;
+}
+
+.amber {
+  background-color: #ff851b;
+}
+
+.yellow {
+  background-color: #ffdc00;
+}
+
+.green {
+  background-color: #2ba72b;
+}

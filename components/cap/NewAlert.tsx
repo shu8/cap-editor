@@ -26,6 +26,9 @@ export type AlertData = {
   description: string;
   instruction: string;
   actions: string[];
+  certainty: string;
+  severity: string;
+  urgency: string;
 };
 
 export type StepProps = {
@@ -43,6 +46,9 @@ export default function NewAlert() {
     description: "",
     instruction: "",
     actions: [],
+    certainty: "",
+    severity: "",
+    urgency: "",
   });
 
   const onUpdate = (data: Partial<AlertData>) =>
@@ -63,10 +69,21 @@ export default function NewAlert() {
     },
     data: {
       render: () => (
-        <DataStep onUpdate={onUpdate} from={alertData.from} to={alertData.to} />
+        <DataStep
+          onUpdate={onUpdate}
+          from={alertData.from}
+          to={alertData.to}
+          certainty={alertData.certainty}
+          severity={alertData.severity}
+          urgency={alertData.urgency}
+        />
       ),
       isValid: () =>
-        alertData.from > getEndOfYesterday() && alertData.to > alertData.from,
+        alertData.from > getEndOfYesterday() &&
+        alertData.to > alertData.from &&
+        alertData.severity !== "" &&
+        alertData.certainty !== "" &&
+        alertData.urgency !== "",
     },
     text: {
       render: () => (

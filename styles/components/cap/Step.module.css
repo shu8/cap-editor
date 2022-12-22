@@ -38,3 +38,10 @@
 .editIcon {
   margin-left: 5px;
 }
+
+.sideBySide {
+  display: flex;
+  gap: 0 50px;
+  justify-content: center;
+  align-items: center;
+}
