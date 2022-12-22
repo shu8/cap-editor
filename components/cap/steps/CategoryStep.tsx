@@ -1,7 +1,7 @@
 import styles from "../../../styles/components/cap/Step.module.css";
 import { classes } from "../../../lib/helpers";
 import { AlertData, StepProps } from "../NewAlert";
-import { Button } from "rsuite";
+import { Button, Form } from "rsuite";
 
 const CATEGORIES = [
   { label: "Geophysical (e.g., landslide)", value: "Geo" },
@@ -31,7 +31,9 @@ const CATEGORIES = [
 export default function CategoryStep({
   onUpdate,
   category,
+  event,
 }: Partial<AlertData> & StepProps) {
+  console.log(event, event?.length);
   return (
     <div>
       <h4>Category</h4>
@@ -50,6 +52,34 @@ export default function CategoryStep({
           </Button>
         ))}
       </div>
+
+      {!!category && (
+        <>
+          <h4>Event</h4>
+          <Form fluid>
+            <Form.Group>
+              <Form.ControlLabel>
+                What is this event this{" "}
+                <strong>
+                  <i>{category}</i>
+                </strong>{" "}
+                alert pertains to?
+              </Form.ControlLabel>
+              <Form.Control
+                block
+                name="event"
+                onChange={(event) => onUpdate({ event })}
+                value={event}
+              />
+              <Form.HelpText
+                style={{ color: (event?.length ?? 0) > 15 ? "red" : "unset" }}
+              >
+                {event?.length ?? 0}/15 characters
+              </Form.HelpText>
+            </Form.Group>
+          </Form>
+        </>
+      )}
     </div>
   );
 }

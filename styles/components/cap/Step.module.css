@@ -28,11 +28,8 @@
 }
 
 .reviewItem {
-  margin: 10px;
-}
-
-.editIcon {
-  margin-left: 5px;
+  margin: 5px;
+  margin-top: 0;
 }
 
 .sideBySide {
@@ -40,4 +37,14 @@
   gap: 0 50px;
   justify-content: center;
   align-items: center;
+}
+
+.indent {
+  margin-left: 20px;
+  margin-top: -20px;
+}
+
+.header {
+  text-transform: capitalize;
+  margin-top: 15px;
 }

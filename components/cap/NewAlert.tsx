@@ -14,8 +14,9 @@ import Map from "./map/Map";
 import MapStep from "./steps/MapStep";
 import SummaryStep from "./steps/SummaryStep";
 import { AlertingAuthority } from "../../lib/types";
+import MetadataStep from "./steps/MetadataStep";
 
-const STEPS = ["category", "map", "data", "text", "summary"];
+const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];
 
 export type AlertData = {
@@ -30,6 +31,13 @@ export type AlertData = {
   certainty: string;
   severity: string;
   urgency: string;
+  status: string;
+  msgType: string;
+  scope: string;
+  restriction: string;
+  addresses: string[];
+  references: string[];
+  event: string;
 };
 
 export type StepProps = {
@@ -56,6 +64,13 @@ export default function NewAlert({
     certainty: "",
     severity: "",
     urgency: "",
+    status: "",
+    msgType: "",
+    scope: "",
+    restriction: "",
+    addresses: [],
+    references: [],
+    event: "",
   });
 
   const onUpdate = (data: Partial<AlertData>) =>
@@ -64,11 +79,34 @@ export default function NewAlert({
   const steps: {
     [step in Step]: { render: () => JSX.Element; isValid: () => boolean };
   } = {
+    metadata: {
+      render: () => (
+        <MetadataStep
+          onUpdate={onUpdate}
+          status={alertData.status}
+          msgType={alertData.msgType}
+          scope={alertData.scope}
+          restriction={alertData.restriction}
+          addresses={alertData.addresses}
+          references={alertData.references}
+        />
+      ),
+      isValid: () =>
+        !!alertData.status &&
+        !!alertData.msgType &&
+        !!alertData.scope &&
+        (alertData.scope !== "Private" || alertData.addresses.length > 0) &&
+        (alertData.scope !== "Restricted" || !!alertData.restriction),
+    },
     category: {
       render: () => (
-        <CategoryStep onUpdate={onUpdate} category={alertData.category} />
+        <CategoryStep
+          onUpdate={onUpdate}
+          category={alertData.category}
+          event={alertData.event}
+        />
       ),
-      isValid: () => !!alertData.category,
+      isValid: () => !!alertData.category && !!alertData.event,
     },
     map: {
       render: () => <MapStep onUpdate={onUpdate} regions={alertData.regions} />,
@@ -88,15 +126,16 @@ export default function NewAlert({
       isValid: () =>
         alertData.from > getEndOfYesterday() &&
         alertData.to > alertData.from &&
-        alertData.severity !== "" &&
-        alertData.certainty !== "" &&
-        alertData.urgency !== "",
+        !!alertData.severity &&
+        !!alertData.certainty &&
+        !!alertData.urgency,
     },
     text: {
       render: () => (
         <TextStep
           onUpdate={onUpdate}
           headline={alertData.headline}
+          event={alertData.event}
           description={alertData.description}
           instruction={alertData.instruction}
           actions={alertData.actions}

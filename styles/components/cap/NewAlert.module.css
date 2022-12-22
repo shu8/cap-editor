@@ -20,7 +20,7 @@
 
   display: grid;
   column-gap: 15px;
-  grid-template-columns: repeat(5, minmax(60px, 1fr));
+  grid-template-columns: repeat(6, minmax(75px, 1fr));
 }
 
 .progressItem {

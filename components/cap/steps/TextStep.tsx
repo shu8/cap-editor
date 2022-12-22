@@ -44,7 +44,7 @@ export default function TextStep({
             value={headline}
           />
           <Form.HelpText
-            style={{ color: headline?.length ?? 0 > 160 ? "red" : "unset" }}
+            style={{ color: (headline?.length ?? 0) > 160 ? "red" : "unset" }}
           >
             {headline?.length ?? 0}/160 characters
           </Form.HelpText>
