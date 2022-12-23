@@ -203,60 +203,68 @@ export default function Map({
           zIndex={2}
         />
 
-        <IconButton
-          appearance="ghost"
-          size="sm"
-          style={{ position: "absolute", zIndex: 4, right: 0, top: 0 }}
-          icon={<Icon as={PolygonImage} />}
-          onClick={() => {
-            const draw = new OLDraw({
-              features: selectedFeatures,
-              type: "Polygon",
-            });
-            draw.on("drawstart", () => select.setActive(false));
-            map?.addInteraction(draw);
+        {enableInteraction && (
+          <IconButton
+            appearance="primary"
+            size="sm"
+            color="orange"
+            title="Draw Polygon"
+            style={{ position: "absolute", zIndex: 4, right: 0, top: 0 }}
+            icon={<Icon as={PolygonImage} />}
+            onClick={() => {
+              const draw = new OLDraw({
+                features: selectedFeatures,
+                type: "Polygon",
+              });
+              draw.on("drawstart", () => select.setActive(false));
+              map?.addInteraction(draw);
 
-            draw.on("drawend", (e) => {
-              const geometry = e.feature.getGeometry() as Polygon;
-              draw.setActive(false);
-              onNewPolygon("polygon", geometry.getCoordinates().flat());
-              map?.removeInteraction(draw);
+              draw.on("drawend", (e) => {
+                const geometry = e.feature.getGeometry() as Polygon;
+                draw.setActive(false);
+                onNewPolygon("polygon", geometry.getCoordinates().flat());
+                map?.removeInteraction(draw);
 
-              setTimeout(function () {
-                select.setActive(true);
-              }, 300);
-            });
-          }}
-        />
+                setTimeout(function () {
+                  select.setActive(true);
+                }, 300);
+              });
+            }}
+          />
+        )}
 
-        <IconButton
-          appearance="ghost"
-          size="sm"
-          style={{ position: "absolute", zIndex: 4, right: 0, top: 50 }}
-          icon={<Icon as={CircleImage} />}
-          onClick={() => {
-            const draw = new OLDraw({
-              features: selectedFeatures,
-              type: "Circle",
-            });
-            draw.on("drawstart", () => select.setActive(false));
-            map?.addInteraction(draw);
+        {enableInteraction && (
+          <IconButton
+            appearance="primary"
+            size="sm"
+            color="orange"
+            title="Draw Circle"
+            style={{ position: "absolute", zIndex: 4, right: 0, top: 50 }}
+            icon={<Icon as={CircleImage} />}
+            onClick={() => {
+              const draw = new OLDraw({
+                features: selectedFeatures,
+                type: "Circle",
+              });
+              draw.on("drawstart", () => select.setActive(false));
+              map?.addInteraction(draw);
 
-            draw.on("drawend", (e) => {
-              const geometry = e.feature.getGeometry() as Circle;
-              draw.setActive(false);
-              onNewPolygon("circle", [
-                ...geometry!.getCenter(),
-                geometry!.getRadius(),
-              ]);
+              draw.on("drawend", (e) => {
+                const geometry = e.feature.getGeometry() as Circle;
+                draw.setActive(false);
+                onNewPolygon("circle", [
+                  ...geometry!.getCenter(),
+                  geometry!.getRadius(),
+                ]);
 
-              setTimeout(function () {
-                select.setActive(true);
-              }, 300);
-              map?.removeInteraction(draw);
-            });
-          }}
-        />
+                setTimeout(function () {
+                  select.setActive(true);
+                }, 300);
+                map?.removeInteraction(draw);
+              });
+            }}
+          />
+        )}
       </div>
     </div>
   );

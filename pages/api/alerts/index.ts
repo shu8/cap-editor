@@ -79,7 +79,6 @@ export default async function handler(
       required: true,
       throwFirst: true,
       allowUnknownAttributes: false,
-
     });
 
     if (!validationResult.valid) {

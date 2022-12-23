@@ -59,7 +59,7 @@ export default function CategoryStep({
           <Form fluid>
             <Form.Group>
               <Form.ControlLabel>
-                What is this event this{" "}
+                What is the event this{" "}
                 <strong>
                   <i>{category}</i>
                 </strong>{" "}
