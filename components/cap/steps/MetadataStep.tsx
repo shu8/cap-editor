@@ -1,5 +1,5 @@
 import styles from "../../../styles/components/cap/Step.module.css";
-import { Form, SelectPicker, TagInput } from "rsuite";
+import { Form, SelectPicker, TagInput, TagPicker } from "rsuite";
 import { AlertData, StepProps } from "../NewAlert";
 import { classes } from "../../../lib/helpers";
 import { useState } from "react";

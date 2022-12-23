@@ -13,7 +13,7 @@ import TextStep from "./steps/TextStep";
 import Map from "./map/Map";
 import MapStep from "./steps/MapStep";
 import SummaryStep from "./steps/SummaryStep";
-import { AlertingAuthority } from "../../lib/types";
+import { AlertingAuthority } from "../../lib/types/types";
 import MetadataStep from "./steps/MetadataStep";
 
 const STEPS = ["metadata", "category", "map", "data", "text", "summary"];

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { fetchWMOAlertingAuthorities } from "../../lib/helpers";
-import { AlertingAuthority } from "../../lib/types";
+import { AlertingAuthority } from "../../lib/types/types";
 
 // TODO: WMO returns some AAs with same GUIDs -- how to handle?
 // TODO: cache AA information from WMO

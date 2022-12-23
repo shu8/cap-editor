@@ -17,7 +17,7 @@ import Image from "next/image";
 import { Style, Stroke, Fill } from "ol/style";
 import GeoJSON from "ol/format/GeoJSON";
 import Feature from "ol/Feature";
-import { AlertingAuthority } from "../../../lib/types";
+import { AlertingAuthority } from "../../../lib/types/types";
 import { singleClick } from "ol/events/condition";
 
 // https://www.reshot.com/free-svg-icons/item/free-positioning-polygone-F2AWH4PGVQ/

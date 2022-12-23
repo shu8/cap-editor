@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from '../../lib/db';
 import { sendEmail } from "../../lib/email";
 import { fetchWMOAlertingAuthorities } from "../../lib/helpers";
-import { AlertingAuthority } from "../../lib/types";
+import { AlertingAuthority } from "../../lib/types/types";
 import { randomBytes } from "crypto";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
