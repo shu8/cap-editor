@@ -39,6 +39,10 @@ export default async function handler(
   if (req.method === 'GET') {
     const alerts = await prisma.alert.findMany();
 
+    if (req.query.json) {
+      return res.json({ success: true, alerts });
+    }
+
     return res
       .status(200)
       .setHeader('Content-Type', 'application/xml')

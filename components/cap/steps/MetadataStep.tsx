@@ -2,6 +2,7 @@ import styles from "../../../styles/components/cap/Step.module.css";
 import { Form, SelectPicker, TagInput } from "rsuite";
 import { AlertData, StepProps } from "../NewAlert";
 import { classes } from "../../../lib/helpers";
+import { useState } from "react";
 
 const STATUSES = ["Actual", "Exercise", "System", "Test", "Draft"];
 const MESSAGE_TYPES = ["Alert", "Update", "Cancel", "Ack", "Error"];
@@ -16,6 +17,13 @@ export default function MetadataStep({
   addresses,
   references,
 }: Partial<AlertData> & StepProps) {
+  const [referenceOptions, setReferenceOptions] = useState([]);
+  const fetchReferenceOptions = () => {
+    fetch("/api/alerts?json=true")
+      .then((res) => res.json())
+      .then((res) => setReferenceOptions(res.alerts));
+  };
+
   return (
     <div>
       <h4>Create the Alert</h4>
@@ -114,8 +122,14 @@ export default function MetadataStep({
           <Form.Control
             block
             name="references"
+            accepter={TagPicker}
+            data={referenceOptions.map((r) => ({ label: r.id, value: r.id }))}
             onChange={(references) => onUpdate({ references })}
+            onOpen={fetchReferenceOptions}
+            sort={() => (a, b) =>
+              new Date(a.data.sent) < new Date(b.data.sent) ? 1 : -1}
             value={references}
+            renderMenuItem={(v) => <div>{v}</div>}
           />
           <Form.HelpText>
             Does this Alert reference any previous Alerts?
