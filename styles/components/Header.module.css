@@ -1,0 +1,30 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button {
+  height: 40px;
+}
+
+.button + .button {
+  margin-left: 10px;
+}
+
+.link {
+  color: black;
+}
+
+.link:hover {
+  color: black;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.text {
+  margin-left: 10px;
+}
