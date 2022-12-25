@@ -79,7 +79,7 @@
           },
           "category": {
             "type": "array",
-            "minContains": 1,
+            "minItems": 1,
             "items": {
               "type": "string",
               "enum": [
@@ -102,7 +102,7 @@
           },
           "responseType": {
             "type": "array",
-            "minContains": 1,
+            "minItems": 1,
             "items": {
               "type": "string",
               "enum": [
@@ -312,26 +312,34 @@
     "scope"
   ],
   "additionalProperties": false,
-  "anyOf": [
+  "allOf": [
     {
-      "properties": {
-        "scope": {
-          "const": "Restricted"
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "Restricted"
+          }
         }
       },
-      "required": [
-        "restriction"
-      ]
+      "then": {
+        "required": [
+          "restriction"
+        ]
+      }
     },
     {
-      "properties": {
-        "scope": {
-          "const": "Private"
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "Private"
+          }
         }
       },
-      "required": [
-        "addresses"
-      ]
+      "then": {
+        "required": [
+          "addresses"
+        ]
+      }
     }
   ]
 }

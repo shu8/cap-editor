@@ -29,15 +29,15 @@ export default async function handler(
       msgType: req.body.msgType,
       // source
       scope: req.body.scope,
-      restriction: req.body.restriction,
-      addresses: req.body.addresses.map(a => `"${a}"`).join(' '),
+      ...(req.body.restriction && { restriction: req.body.restriction }),
+      ...(req.body.addresses && { addresses: req.body.addresses?.map(a => `"${a}"`).join(' ') }),
       // code
       // note
-      references: req.body.references.join(' '),
+      ...(req.body.references && { references: req.body.references?.join(' ') }),
       // incidents,
       info: [{
         // language
-        category: [req.body.category],
+        category: req.body.category,
         event: req.body.event,
         responseType: req.body.actions,
         urgency: req.body.urgency,
@@ -75,11 +75,9 @@ export default async function handler(
       }]
     };
 
-    const validationResult = validateJSON(alert, CAPV12Schema, {
-      required: true,
-      throwFirst: true,
-      allowUnknownAttributes: false,
-    });
+    console.log(JSON.stringify(alert));
+
+    const validationResult = validateJSON(alert, CAPV12Schema);
 
     if (!validationResult.valid) {
       console.error('Invalid alert', validationResult);

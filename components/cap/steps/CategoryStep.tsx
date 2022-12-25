@@ -37,14 +37,22 @@ export default function CategoryStep({
   return (
     <div>
       <h4>Category</h4>
-      <p>Choose a category for the alert.</p>
+      <p>Choose a category (or multiple) for the alert.</p>
       <div className={classes(styles.buttonGrid)}>
         {CATEGORIES.map((c) => (
           <Button
             className={classes(styles.button)}
             key={`cat-${c.value}`}
-            onClick={() => onUpdate({ category: c.value })}
-            active={category === c.value}
+            onClick={() => {
+              const index = category?.indexOf(c.value) ?? -1;
+              if (index > -1) {
+                category?.splice(index, 1);
+              } else {
+                category?.push(c.value);
+              }
+              return onUpdate({ category: category });
+            }}
+            active={category?.includes(c.value)}
             appearance="subtle"
             color="red"
           >
@@ -53,7 +61,7 @@ export default function CategoryStep({
         ))}
       </div>
 
-      {!!category && (
+      {category?.length > 0 && (
         <>
           <h4>Event</h4>
           <Form fluid>
@@ -61,7 +69,7 @@ export default function CategoryStep({
               <Form.ControlLabel>
                 What is the event this{" "}
                 <strong>
-                  <i>{category}</i>
+                  <i>{category?.join(", ") ?? ""}</i>
                 </strong>{" "}
                 alert pertains to?
               </Form.ControlLabel>

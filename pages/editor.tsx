@@ -38,23 +38,7 @@ export default function Home({ session, alertingAuthority }) {
             fetch("/api/alerts", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                status: formProps.status,
-                msgType: formProps.msgType,
-                scope: formProps.scope,
-                info: {
-                  category: alertData.category,
-                  responseType: alertData.actions,
-                  urgency: alertData.urgency,
-                  severity: alertData.severity,
-                  certainty: alertData.certainty,
-                  onset: alertData.from,
-                  expires: alertData.to,
-                  headline: alertData.headline,
-                  description: alertData.description,
-                  instruction: alertData.instruction,
-                },
-              }),
+              body: JSON.stringify({ ...alertData }),
             });
           }}
         />

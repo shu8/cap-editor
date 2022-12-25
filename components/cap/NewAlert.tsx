@@ -20,7 +20,7 @@ const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];
 
 export type AlertData = {
-  category: string;
+  category: string[];
   regions: string[];
   from: Date;
   to: Date;
@@ -53,7 +53,7 @@ export default function NewAlert({
 }) {
   const [step, setStep] = useState<Step>(STEPS[0]);
   const [alertData, setAlertData] = useState<AlertData>({
-    category: "",
+    category: [],
     regions: [],
     from: getStartOfToday(),
     to: getStartOfToday(),
@@ -106,7 +106,7 @@ export default function NewAlert({
           event={alertData.event}
         />
       ),
-      isValid: () => !!alertData.category && !!alertData.event,
+      isValid: () => alertData.category?.length > 0 && !!alertData.event,
     },
     map: {
       render: () => <MapStep onUpdate={onUpdate} regions={alertData.regions} />,

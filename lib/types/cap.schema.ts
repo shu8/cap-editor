@@ -9,15 +9,9 @@
  * JSON Schema for Common Alerting Protocol v1.2
  */
 export type CAPV12JSONSchema = CAPV12JSONSchema1 & CAPV12JSONSchema2;
-export type CAPV12JSONSchema1 =
-  | {
-    scope?: "Restricted";
-    [k: string]: unknown;
-  }
-  | {
-    scope?: "Private";
-    [k: string]: unknown;
-  };
+export type CAPV12JSONSchema1 = {
+  [k: string]: unknown;
+};
 
 export interface CAPV12JSONSchema2 {
   identifier: string;
@@ -35,31 +29,21 @@ export interface CAPV12JSONSchema2 {
   incidents?: string;
   info?: {
     language?: string;
-    category: (
-      | "Geo"
-      | "Met"
-      | "Safety"
-      | "Rescue"
-      | "Fire"
-      | "Health"
-      | "Env"
-      | "Transport"
-      | "Infra"
-      | "CBRNE"
-      | "Other"
-    )[];
+    /**
+     * @minItems 1
+     */
+    category: [
+      "Geo" | "Met" | "Safety" | "Rescue" | "Fire" | "Health" | "Env" | "Transport" | "Infra" | "CBRNE" | "Other",
+      ...("Geo" | "Met" | "Safety" | "Rescue" | "Fire" | "Health" | "Env" | "Transport" | "Infra" | "CBRNE" | "Other")[]
+    ];
     event: string;
-    responseType?: (
-      | "Shelter"
-      | "Evacuate"
-      | "Prepare"
-      | "Execute"
-      | "Avoid"
-      | "Monitor"
-      | "Assess"
-      | "AllClear"
-      | "None"
-    )[];
+    /**
+     * @minItems 1
+     */
+    responseType?: [
+      "Shelter" | "Evacuate" | "Prepare" | "Execute" | "Avoid" | "Monitor" | "Assess" | "AllClear" | "None",
+      ...("Shelter" | "Evacuate" | "Prepare" | "Execute" | "Avoid" | "Monitor" | "Assess" | "AllClear" | "None")[]
+    ];
     urgency: "Immediate" | "Expected" | "Future" | "Past" | "Unknown";
     severity: "Extreme" | "Severe" | "Moderate" | "Minor" | "Unknown";
     certainty: "Observed" | "Likely" | "Possible" | "Unlikely" | "Unknown";
@@ -182,7 +166,7 @@ export const CAPV12Schema =
           },
           "category": {
             "type": "array",
-            "minContains": 1,
+            "minItems": 1,
             "items": {
               "type": "string",
               "enum": [
@@ -205,7 +189,7 @@ export const CAPV12Schema =
           },
           "responseType": {
             "type": "array",
-            "minContains": 1,
+            "minItems": 1,
             "items": {
               "type": "string",
               "enum": [
@@ -415,26 +399,34 @@ export const CAPV12Schema =
     "scope"
   ],
   "additionalProperties": false,
-  "anyOf": [
+  "allOf": [
     {
-      "properties": {
-        "scope": {
-          "const": "Restricted"
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "Restricted"
+          }
         }
       },
-      "required": [
-        "restriction"
-      ]
+      "then": {
+        "required": [
+          "restriction"
+        ]
+      }
     },
     {
-      "properties": {
-        "scope": {
-          "const": "Private"
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "Private"
+          }
         }
       },
-      "required": [
-        "addresses"
-      ]
+      "then": {
+        "required": [
+          "addresses"
+        ]
+      }
     }
   ]
 };
