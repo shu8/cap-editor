@@ -65,7 +65,6 @@ export default function TextStep({
       .then((res) => setWhatNowMessages(res.data));
   }, []);
 
-  console.log(whatNowMessages, chosenWhatNowInstructions);
   useEffect(() => {
     if (chosenWhatNowMessage == null) {
       onUpdate({ description: "", instruction: "" });
@@ -106,31 +105,35 @@ export default function TextStep({
 
         <Form.Group>
           <Form.ControlLabel>Description</Form.ControlLabel>
-          <SelectPicker
-            block
-            placeholder="Choose event to auto-fill from WhatNow?"
-            data={whatNowMessages.map((w) => ({
-              label: w.eventType,
-              value: w.id,
-            }))}
-            onChange={(v) => setChosenWhatNowMessage(v)}
-          />
+          {whatNowMessages.length && (
+            <SelectPicker
+              block
+              placeholder="Choose event to auto-fill from WhatNow?"
+              data={whatNowMessages.map((w) => ({
+                label: w.eventType,
+                value: w.id,
+              }))}
+              onChange={(v) => setChosenWhatNowMessage(v)}
+            />
+          )}
           <Form.Control
             accepter={Textarea}
             name="description"
             onChange={(description) => onUpdate({ description })}
             value={description}
           />
-          <Form.HelpText>
-            WhatNow provides pre-written messages and instructions you can use
-            for certain events. Use the dropdown to select one of these as a
-            template, or provide your own Description and Instructions.
-          </Form.HelpText>
+          {whatNowMessages.length && (
+            <Form.HelpText>
+              WhatNow provides pre-written messages and instructions you can use
+              for certain events. Use the dropdown to select one of these as a
+              template, or provide your own Description and Instructions.
+            </Form.HelpText>
+          )}
         </Form.Group>
 
         <Form.Group>
           <Form.ControlLabel>Instruction</Form.ControlLabel>
-          {chosenWhatNowMessage && (
+          {whatNowMessages.length && chosenWhatNowMessage && (
             <CheckboxGroup
               inline
               onChange={(v) => setChosenWhatNowInstructions(v as string[])}
