@@ -36,7 +36,6 @@ export default function CategoryStep({
   console.log(event, event?.length);
   return (
     <div>
-      <h4>Category</h4>
       <p>Choose a category (or multiple) for the alert.</p>
       <div className={classes(styles.buttonGrid)}>
         {CATEGORIES.map((c) => (

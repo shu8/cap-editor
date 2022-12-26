@@ -7,7 +7,6 @@ export default function MapStep({
 }: Partial<AlertData> & StepProps) {
   return (
     <div>
-      <h4>Location</h4>
       <p>
         Choose the location of the alert, by either selecting from the dropdown
         menu, clicking the map, or using the drawing tool.

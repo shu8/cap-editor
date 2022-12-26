@@ -53,6 +53,11 @@ p {
   justify-content: space-between;
   box-sizing: content-box;
   flex-direction: column;
+  justify-content: flex-start;
+}
+
+main {
+  height: 100%;
 }
 
 #__next {

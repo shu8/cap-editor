@@ -33,7 +33,6 @@ export default function SummaryStep({
 
   return (
     <div>
-      <h4>Summary of the alert</h4>
       <p>
         Please review and confirm the alert&apos;s information presented below.
       </p>

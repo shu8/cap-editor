@@ -15,7 +15,6 @@ export default function DataStep({
 }: Partial<AlertData> & StepProps) {
   return (
     <div>
-      <h4>Time and Duration</h4>
       <p>Select the start and end time of the alert from the calendar.</p>
       <DateRangePicker
         block

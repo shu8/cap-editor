@@ -2,7 +2,7 @@ import styles from "../styles/components/Header.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "rsuite";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -18,27 +18,36 @@ export default function Header() {
 
       <div>
         {session && (
-          <Button appearance="primary" color="violet" className={styles.button}>
+          <Button
+            appearance="primary"
+            color="violet"
+            className={styles.button}
+            onClick={() => signOut()}
+          >
             Logout
           </Button>
         )}
 
         {!session && (
           <>
-            <Button
-              appearance="primary"
-              color="violet"
-              className={styles.button}
-            >
-              Register
-            </Button>
-            <Button
-              appearance="primary"
-              color="violet"
-              className={styles.button}
-            >
-              Login
-            </Button>
+            <Link href="/register" className={styles.button}>
+              <Button
+                appearance="primary"
+                color="violet"
+                className={styles.button}
+              >
+                Register
+              </Button>
+            </Link>
+            <Link href="/login" className={styles.button}>
+              <Button
+                appearance="primary"
+                color="violet"
+                className={styles.button}
+              >
+                Login
+              </Button>
+            </Link>
           </>
         )}
       </div>

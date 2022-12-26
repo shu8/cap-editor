@@ -31,7 +31,6 @@ export default function Home({ session, alertingAuthority }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <p>{session ? "You are logged in" : "You are not logged in"}</p>
         <NewAlert
           alertingAuthority={alertingAuthority}
           onSubmit={async (alertData: AlertData) => {

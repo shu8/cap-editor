@@ -26,8 +26,6 @@ export default function MetadataStep({
 
   return (
     <div>
-      <h4>Create the Alert</h4>
-
       <Form fluid>
         <Form.Group>
           <Form.ControlLabel>Status</Form.ControlLabel>

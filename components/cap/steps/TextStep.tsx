@@ -33,8 +33,6 @@ export default function TextStep({
 
   return (
     <div>
-      <h4>Describe the alert</h4>
-
       <Form fluid>
         <Form.Group>
           <Form.ControlLabel>Headline</Form.ControlLabel>
