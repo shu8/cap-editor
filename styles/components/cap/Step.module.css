@@ -48,3 +48,7 @@
   text-transform: capitalize;
   margin-top: 15px;
 }
+
+.tag {
+  margin-left: 10px;
+}

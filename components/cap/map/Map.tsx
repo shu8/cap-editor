@@ -153,10 +153,10 @@ export default function Map({
         hovered = null;
       }
 
-      // If currently drawing (i.e., more interactions than usual), don't show hover highlight
+      // If currently drawing (i.e., more than the defaul interactions + the select interaction), don't show hover highlight
       if (
         map?.getInteractions().getLength() !==
-        OLDefaultInteractions().getLength()
+        OLDefaultInteractions().getLength() + 1
       ) {
         return;
       }
@@ -301,11 +301,25 @@ export default function Map({
               key={`draw-btn-${t}`}
               appearance="primary"
               size="sm"
-              color="orange"
+              color="violet"
               title={`Draw ${t}`}
               style={{ position: "absolute", zIndex: 4, right: 0, top: i * 50 }}
               icon={<Icon as={t === "Polygon" ? PolygonImage : CircleImage} />}
               onClick={() => {
+                const existingDrawInteractions = map
+                  ?.getInteractions()
+                  .getArray()
+                  .filter((i) => i instanceof OLDraw);
+
+                // i.e., user wants to toggle off a draw interaction
+                if (existingDrawInteractions?.length) {
+                  existingDrawInteractions?.forEach((i) =>
+                    map?.removeInteraction(i)
+                  );
+
+                  return;
+                }
+
                 const draw = new OLDraw({
                   features: selectedFeatures,
                   type: t as Type,

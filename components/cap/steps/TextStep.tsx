@@ -1,5 +1,5 @@
 import styles from "../../../styles/components/cap/Step.module.css";
-import { Button, Form, Input, TagPicker } from "rsuite";
+import { Button, Form, Input, Tag, TagPicker } from "rsuite";
 import { forwardRef, useState } from "react";
 import { classes } from "../../../lib/helpers";
 import { AlertData, StepProps } from "../NewAlert";
@@ -73,7 +73,9 @@ export default function TextStep({
         dropdown menu.
       </p>
       <TagPicker
-        cleanable
+        cleanable={false}
+        color="green"
+        appearance="default"
         block
         data={ACTIONS.map((a) => ({ label: a, value: a.replace(" ", "") }))}
         value={actions}

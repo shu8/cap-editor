@@ -161,6 +161,14 @@ export default function NewAlert({
 
   const currentStepIndex = STEPS.indexOf(step);
   const isStepDataValid = steps[step]?.isValid() ?? false;
+  let earliestInvalidStepIndex = STEPS.length;
+  for (let i = 0; i < STEPS.length; i++) {
+    if (!steps[STEPS[i]].isValid()) {
+      earliestInvalidStepIndex = i;
+      break;
+    }
+  }
+
   return (
     <div className={classes(styles.newAlert)}>
       <div className={classes(styles.header)}>
@@ -168,8 +176,7 @@ export default function NewAlert({
 
         <div className={styles.progressBar}>
           {STEPS.map((s, i) => {
-            let canNavigateToThisStep =
-              i <= currentStepIndex || steps[STEPS[i - 1]]?.isValid();
+            let canNavigateToThisStep = i <= earliestInvalidStepIndex;
 
             return (
               <span
