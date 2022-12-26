@@ -51,13 +51,16 @@ export default function SummaryStep({
       />
 
       <Header step="category" />
-      <ReviewItem field="Alert Category" value={alertData.category ?? "NONE"} />
+      <ReviewItem
+        field="Alert Category"
+        value={alertData.category?.join(", ") ?? "NONE"}
+      />
       <ReviewItem field="Event" value={alertData.event ?? "NONE"} />
 
       <Header step="map" />
       <ReviewItem
         field="Regions"
-        value={alertData.regions?.join(", ") ?? "NONE"}
+        value={Object.keys(alertData.regions ?? {}).join(", ") ?? "NONE"}
       />
 
       <Header step="data" />

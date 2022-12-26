@@ -157,7 +157,7 @@ export default function NewAlert({
       STEPS.filter((s) => s !== "summary").every((s) => steps[s].isValid()),
   };
 
-  // console.log("alert data", alertData);
+  console.log("alert data", alertData);
 
   const currentStepIndex = STEPS.indexOf(step);
   const isStepDataValid = steps[step]?.isValid() ?? false;
@@ -168,18 +168,8 @@ export default function NewAlert({
 
         <div className={styles.progressBar}>
           {STEPS.map((s, i) => {
-            let canNavigateToThisStep = true;
-            if (!isStepDataValid && i > currentStepIndex) {
-              // Disable all future steps if current step is not valid
-              canNavigateToThisStep = false;
-            } else if (
-              // Disable all steps after the next one if this one is now valid (i.e., disable >=i+1)
-              isStepDataValid &&
-              i > currentStepIndex + 1 &&
-              !steps[STEPS[currentStepIndex + 1]]?.isValid()
-            ) {
-              canNavigateToThisStep = false;
-            }
+            let canNavigateToThisStep =
+              i <= currentStepIndex || steps[STEPS[i - 1]]?.isValid();
 
             return (
               <span
@@ -205,9 +195,6 @@ export default function NewAlert({
           </div>
           <div className={classes(styles.map)}>
             <Map
-              onNewPolygon={(type, coordinates) =>
-                console.log(type, coordinates)
-              }
               onRegionsChange={(regions) => onUpdate({ regions })}
               regions={alertData.regions}
               alertingAuthority={alertingAuthority}
