@@ -1,8 +1,17 @@
 import styles from "../../../styles/components/cap/Step.module.css";
-import { Button, Form, Input, Tag, TagPicker } from "rsuite";
-import { forwardRef, useState } from "react";
-import { classes } from "../../../lib/helpers";
+import {
+  Button,
+  Checkbox,
+  CheckboxGroup,
+  Form,
+  Input,
+  SelectPicker,
+  TagPicker,
+} from "rsuite";
+import { forwardRef, useEffect, useState } from "react";
+import { camelise, classes } from "../../../lib/helpers";
 import { AlertData, StepProps } from "../NewAlert";
+import { WhatNowResponse } from "../../../lib/types/types";
 
 const Textarea = forwardRef((props, ref) => (
   <Input {...props} ref={ref} rows={5} as="textarea" />
@@ -22,14 +31,61 @@ const ACTIONS = [
   "None",
 ];
 
+const getDefaultInstructionTypes = (urgency: string) => {
+  const types = [];
+
+  if (urgency === "Immediate") types.push("immediate");
+  if (urgency === "Expected") types.push("watch");
+  if (urgency === "Future") types.push("warning", "seasonalForecast");
+
+  return types;
+};
+
 export default function TextStep({
   onUpdate,
   headline,
   description,
   instruction,
   actions,
-}: Partial<AlertData> & StepProps) {
+  countryCode,
+  urgency,
+}: Partial<AlertData> & StepProps & { countryCode: string }) {
   const [numberOfUrls, setNumberOfUrls] = useState(1);
+  const [whatNowMessages, setWhatNowMessages] = useState<WhatNowResponse[]>([]);
+  const [chosenWhatNowMessage, setChosenWhatNowMessage] = useState<
+    string | null
+  >(null);
+  const [chosenWhatNowInstructions, setChosenWhatNowInstructions] = useState(
+    getDefaultInstructionTypes(urgency!)
+  );
+
+  useEffect(() => {
+    fetch(`/api/whatnow?countryCode=${countryCode}`)
+      .then((res) => res.json())
+      .then((res) => setWhatNowMessages(res.data));
+  }, []);
+
+  console.log(whatNowMessages, chosenWhatNowInstructions);
+  useEffect(() => {
+    if (chosenWhatNowMessage == null) {
+      onUpdate({ description: "", instruction: "" });
+      return;
+    }
+
+    const message = whatNowMessages.find((w) => w.id === chosenWhatNowMessage);
+    if (!message) return;
+
+    onUpdate({
+      description: message.translations.en.description,
+      instruction: Object.entries(message.translations.en.stages)
+        .filter(
+          ([type, strings]) =>
+            chosenWhatNowInstructions.includes(type) && strings.length
+        )
+        .map(([type, strings], i) => `- ${strings.join("\n- ")}`)
+        .join("\n\n"),
+    });
+  }, [chosenWhatNowMessage, chosenWhatNowInstructions]);
 
   return (
     <div>
@@ -47,17 +103,53 @@ export default function TextStep({
             {headline?.length ?? 0}/160 characters
           </Form.HelpText>
         </Form.Group>
+
         <Form.Group>
           <Form.ControlLabel>Description</Form.ControlLabel>
+          <SelectPicker
+            block
+            placeholder="Choose event to auto-fill from WhatNow?"
+            data={whatNowMessages.map((w) => ({
+              label: w.eventType,
+              value: w.id,
+            }))}
+            onChange={(v) => setChosenWhatNowMessage(v)}
+          />
           <Form.Control
             accepter={Textarea}
             name="description"
             onChange={(description) => onUpdate({ description })}
             value={description}
           />
+          <Form.HelpText>
+            WhatNow provides pre-written messages and instructions you can use
+            for certain events. Use the dropdown to select one of these as a
+            template, or provide your own Description and Instructions.
+          </Form.HelpText>
         </Form.Group>
+
         <Form.Group>
           <Form.ControlLabel>Instruction</Form.ControlLabel>
+          {chosenWhatNowMessage && (
+            <CheckboxGroup
+              inline
+              onChange={(v) => setChosenWhatNowInstructions(v as string[])}
+              value={chosenWhatNowInstructions}
+            >
+              {[
+                "Mitigation",
+                "Seasonal Forecast",
+                "Warning",
+                "Watch",
+                "Immediate",
+                "Recover",
+              ].map((t) => (
+                <Checkbox key={`instruction-type-${t}`} value={camelise(t)}>
+                  {t}
+                </Checkbox>
+              ))}
+            </CheckboxGroup>
+          )}
           <Form.Control
             accepter={Textarea}
             name="instruction"

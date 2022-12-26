@@ -1861,3 +1861,12 @@ export const getEndOfYesterday = () => {
 export const updateState = (setter, data) => {
   setter(old => ({ ...old, ...data }));
 };
+
+export const camelise = (str: string) => {
+  const words = str.toLowerCase().split(' ');
+  let ret = words[0];
+  for (let i = 1; i < words.length; i++) {
+    ret += words[i][0].toUpperCase() + words[i].substring(1);
+  }
+  return ret;
+};

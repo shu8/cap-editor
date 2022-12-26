@@ -141,6 +141,8 @@ export default function NewAlert({
           description={alertData.description}
           instruction={alertData.instruction}
           actions={alertData.actions}
+          countryCode={alertingAuthority.countryCode}
+          urgency={alertData.urgency}
         />
       ),
       isValid: () =>

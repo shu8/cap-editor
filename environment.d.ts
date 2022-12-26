@@ -12,6 +12,7 @@ declare global {
       WEBAUTHN_RELAYING_PARTY_ID: string;
       WEBAUTHN_ORIGIN: string;
       TLS_DIRECTORY: string;
+      WHAT_NOW_API_KEY: string;
     }
   }
 }
