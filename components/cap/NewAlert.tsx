@@ -21,7 +21,7 @@ export type Step = typeof STEPS[number];
 
 export type AlertData = {
   category: string[];
-  regions: string[];
+  regions: { [key: string]: number[] };
   from: Date;
   to: Date;
   headline: string;
@@ -54,7 +54,7 @@ export default function NewAlert({
   const [step, setStep] = useState<Step>(STEPS[0]);
   const [alertData, setAlertData] = useState<AlertData>({
     category: [],
-    regions: [],
+    regions: {},
     from: getStartOfToday(),
     to: getStartOfToday(),
     headline: "",
@@ -109,8 +109,10 @@ export default function NewAlert({
       isValid: () => alertData.category?.length > 0 && !!alertData.event,
     },
     map: {
-      render: () => <MapStep onUpdate={onUpdate} regions={alertData.regions} />,
-      isValid: () => alertData.regions.length > 0,
+      render: () => (
+        <MapStep onUpdate={onUpdate} regions={{ ...alertData.regions }} />
+      ),
+      isValid: () => Object.keys(alertData.regions).length > 0,
     },
     data: {
       render: () => (
@@ -155,14 +157,14 @@ export default function NewAlert({
       STEPS.filter((s) => s !== "summary").every((s) => steps[s].isValid()),
   };
 
-  console.log("alert data", alertData);
+  // console.log("alert data", alertData);
 
   const currentStepIndex = STEPS.indexOf(step);
   const isStepDataValid = steps[step]?.isValid() ?? false;
   return (
     <div className={classes(styles.newAlert)}>
       <div className={classes(styles.header)}>
-        <h2>New Alert</h2>
+        <h3>New alert: {step}</h3>
 
         <div className={styles.progressBar}>
           {STEPS.map((s, i) => {
@@ -206,6 +208,8 @@ export default function NewAlert({
               onNewPolygon={(type, coordinates) =>
                 console.log(type, coordinates)
               }
+              onRegionsChange={(regions) => onUpdate({ regions })}
+              regions={alertData.regions}
               alertingAuthority={alertingAuthority}
               enableInteraction={step === "map"}
             />
