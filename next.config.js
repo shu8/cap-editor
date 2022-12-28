@@ -5,7 +5,6 @@ const nextConfig = {
     return [
       { source: '/feed', destination: '/api/alerts' },
       { source: '/feed/:id', destination: '/api/alerts/:id' },
-      { source: '/verify/:token', destination: '/api/verifyUser/:token' }
     ];
   },
   typescript: {
