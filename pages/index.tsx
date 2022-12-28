@@ -1,5 +1,4 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import { useSession } from "next-auth/react";
 import { startRegistration } from "@simplewebauthn/browser";
 import { Button } from "rsuite";
@@ -18,7 +17,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main>
         <p>
           The CAP Editor tool allows you to create public hazard and emergency
           alerts and immediately publish them to an XML-based feed.
