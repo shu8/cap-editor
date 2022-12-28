@@ -42,12 +42,19 @@ export default async function handler(
       return res.json({ error: false });
     }
 
+    if (!req.body.roles?.length) {
+      return res
+        .status(400)
+        .json({ error: true, message: "No roles supplied" });
+    }
+
     // TODO ask verifying user what rights the new user should have (edit/publish/admin etc.)
     await prisma.user.update({
       where: { email: user.email },
       data: {
         alertingAuthorityVerificationToken: null,
         alertingAuthorityVerified: new Date(),
+        roles: req.body.roles,
       },
     });
 

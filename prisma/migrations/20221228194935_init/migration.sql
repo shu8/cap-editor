@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'EDITOR', 'VALIDATOR');
+
 -- CreateTable
 CREATE TABLE "accounts" (
     "id" TEXT NOT NULL,
@@ -29,7 +32,7 @@ CREATE TABLE "sessions" (
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
@@ -38,6 +41,7 @@ CREATE TABLE "users" (
     "alertingAuthorityVerificationToken" TEXT,
     "currentWebauthnChallenge" TEXT,
     "webauthnId" TEXT,
+    "roles" "Role"[],
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );

@@ -3,8 +3,9 @@ import Head from "next/head";
 import styles from "../styles/Verify.module.css";
 import { ERRORS } from "../lib/errors";
 import db from "../lib/db";
-import { Button, Message } from "rsuite";
+import { Button, Message, Modal, TagPicker } from "rsuite";
 import { GetServerSideProps } from "next";
+import { useState } from "react";
 
 type Props = {
   userToBeVerified: {
@@ -54,6 +55,9 @@ export default function VerifyUser({
   userToBeVerified,
   verificationToken,
 }: Props) {
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [roles, setRoles] = useState([]);
+
   const verifyUser = (verified: boolean) => {
     fetch("/api/verifyUser", {
       method: "POST",
@@ -61,6 +65,7 @@ export default function VerifyUser({
       body: JSON.stringify({
         verificationToken,
         verified,
+        roles,
       }),
     });
   };
@@ -70,6 +75,46 @@ export default function VerifyUser({
       <Head>
         <title>CAP Editor | Verify User</title>
       </Head>
+
+      {showRoleModal && (
+        <Modal open={showRoleModal} onClose={() => setShowRoleModal(false)}>
+          <Modal.Header>
+            <Modal.Title>User Roles</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Please select the role(s) for this user:</p>
+            <TagPicker
+              block
+              cleanable={false}
+              searchable={false}
+              value={roles}
+              placeholder="Select role(s): Admin/Editor/Validator"
+              onChange={(v) => setRoles(v)}
+              data={[
+                { label: "Admin", value: "ADMIN" },
+                { label: "Editor", value: "EDITOR" },
+                { label: "Validator", value: "VALIDATOR" },
+              ]}
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              appearance="ghost"
+              color="red"
+              onClick={() => setShowRoleModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              appearance="primary"
+              color="green"
+              onClick={() => verifyUser(true)}
+            >
+              Activate this user&apos;s account
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
 
       <main>
         <Message
@@ -108,11 +153,9 @@ export default function VerifyUser({
             <Button
               appearance="primary"
               color="green"
-              onClick={() => verifyUser(true)}
+              onClick={() => setShowRoleModal(true)}
             >
-              Yes, this user is part of my Alerting Authority:
-              <br />
-              Activate their account.
+              Yes, this user is part of my Alerting Authority.
             </Button>
           </p>
         </Message>

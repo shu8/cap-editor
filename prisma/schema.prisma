@@ -48,6 +48,7 @@ model User {
   alertingAuthorityVerified          DateTime?
   alertingAuthorityVerificationToken String?
   currentWebauthnChallenge           String?
+  roles                              Role[]
   accounts                           Account[]
   sessions                           Session[]
   authenticators                     Authenticator[]
@@ -94,4 +95,10 @@ model Authenticator {
   user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("authenticators")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  VALIDATOR
 }
