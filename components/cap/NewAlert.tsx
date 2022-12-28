@@ -110,7 +110,11 @@ export default function NewAlert({
     },
     map: {
       render: () => (
-        <MapStep onUpdate={onUpdate} regions={{ ...alertData.regions }} />
+        <MapStep
+          onUpdate={onUpdate}
+          regions={{ ...alertData.regions }}
+          countryCode={alertingAuthority.countryCode}
+        />
       ),
       isValid: () => Object.keys(alertData.regions).length > 0,
     },

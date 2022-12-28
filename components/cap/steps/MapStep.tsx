@@ -5,11 +5,12 @@ import { AlertData, StepProps } from "../NewAlert";
 export default function MapStep({
   onUpdate,
   regions = {},
-}: Partial<AlertData> & StepProps) {
+  countryCode,
+}: Partial<AlertData> & StepProps & { countryCode: string }) {
   const [countries, setCountries] = useState([]);
 
   const fetchCountries = async () => {
-    fetch("/api/countries")
+    fetch(`/api/countries?countryCode=${countryCode}`)
       .then((res) => res.json())
       .then((res) => setCountries(res.countries));
   };
@@ -33,7 +34,6 @@ export default function MapStep({
             .filter((r) => r.startsWith("custom"))
             .map((r, i) => ({ label: `Custom Region ${i + 1}`, value: r })),
         ]}
-        onOpen={fetchCountries}
         cleanable={false}
         value={Object.keys(regions)}
         onChange={(selected) => {
