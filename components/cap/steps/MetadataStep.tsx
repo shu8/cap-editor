@@ -99,7 +99,6 @@ export default function MetadataStep({
               name="addresses"
               cleanable={false}
               onChange={(addresses) => {
-                console.log(addresses);
                 return onUpdate({ addresses: addresses ?? [] });
               }}
               accepter={TagInput}

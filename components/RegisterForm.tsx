@@ -29,7 +29,6 @@ export default function RegisterForm({ email = "" }) {
         onChange={(v) => setFormData(v as RegisterData)}
         onSubmit={async (_, e) => {
           e.preventDefault();
-          console.log(formData);
           await fetch("/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -41,7 +40,6 @@ export default function RegisterForm({ email = "" }) {
           })
             .then((res) => res.json())
             .then((res) => {
-              console.log(res);
               window.alert(
                 "Registration successful. You will receive an email once your Alerting Authority has approved your account."
               );

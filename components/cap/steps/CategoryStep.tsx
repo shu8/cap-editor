@@ -33,7 +33,6 @@ export default function CategoryStep({
   category,
   event,
 }: Partial<AlertData> & StepProps) {
-  console.log(event, event?.length);
   return (
     <div>
       <p>Choose a category (or multiple) for the alert.</p>

@@ -10,18 +10,15 @@ export const getServerSideProps = async (context) => {
     context.res,
     authOptions
   );
-  if (!session) return { props: { session } };
+  if (!session) return { props: {} };
 
   const alertingAuthority = await prisma.alertingAuthority.findFirst({
     where: { users: { some: { email: session.user.email } } },
   });
-  console.log(session, alertingAuthority);
-  return { props: { session, alertingAuthority } };
+  return { props: { alertingAuthority } };
 };
 
-export default function Home({ session, alertingAuthority }) {
-  console.log(session, alertingAuthority);
-
+export default function Home({ alertingAuthority }) {
   return (
     <>
       <Head>
