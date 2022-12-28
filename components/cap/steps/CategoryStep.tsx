@@ -72,7 +72,6 @@ export default function CategoryStep({
                 alert pertains to?
               </Form.ControlLabel>
               <Form.Control
-                block
                 name="event"
                 onChange={(event) => onUpdate({ event })}
                 value={event}

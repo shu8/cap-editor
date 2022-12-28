@@ -61,8 +61,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  padding: 6rem;
+  /* align-items: center; */
 }
 
 #__next {

@@ -77,8 +77,8 @@ export default function RegisterForm({ email = "" }) {
             labelKey="name"
             valueKey="id"
             sort={(isGroup) => {
-              return (a: AlertingAuthority, b: AlertingAuthority) =>
-                (isGroup ? a.countryCode < b.countryCode : a.name < b.name)
+              return (a, b) =>
+                (isGroup ? a.groupTitle > b.groupTitle : a.name > b.name)
                   ? 1
                   : -1;
             }}
