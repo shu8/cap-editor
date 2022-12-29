@@ -8,7 +8,7 @@
   height: 40px;
 }
 
-.button + .button {
+.button {
   margin-left: 10px;
 }
 

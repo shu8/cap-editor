@@ -18,14 +18,26 @@ export default function Header() {
 
       <div>
         {session && (
-          <Button
-            appearance="primary"
-            color="violet"
-            className={styles.button}
-            onClick={() => signOut()}
-          >
-            Logout
-          </Button>
+          <>
+            <Link href="/editor">
+              <Button
+                appearance="ghost"
+                color="violet"
+                className={styles.button}
+              >
+                Create alert
+              </Button>
+            </Link>
+
+            <Button
+              appearance="ghost"
+              color="violet"
+              className={styles.button}
+              onClick={() => signOut()}
+            >
+              Logout
+            </Button>
+          </>
         )}
 
         {!session && (

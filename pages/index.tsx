@@ -1,11 +1,20 @@
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { startRegistration } from "@simplewebauthn/browser";
-import { Button } from "rsuite";
-import Link from "next/link";
+import { Button, Loader, Message, Panel } from "rsuite";
+import useSWR from "swr";
+
+import { fetcher } from "../lib/helpers";
+import Alert from "../components/Alert";
 
 export default function Home() {
   const { data: session } = useSession();
+  const {
+    data: alerts,
+    error,
+    isLoading,
+  } = useSWR("/api/alerts?json=1", fetcher);
+
   console.log(session);
 
   return (
@@ -35,15 +44,33 @@ export default function Home() {
 
         {session && (
           <>
-            <p>
-              <Link href="/editor">
-                <Button color="violet" appearance="primary">
-                  Create alert &rarr;
-                </Button>
-              </Link>
-            </p>
+            {isLoading && (
+              <Loader size="lg" backdrop center content="Loading alerts..." />
+            )}
 
-            <button
+            {error && (
+              <Message type="error">
+                There was an error loading the alerts
+              </Message>
+            )}
+
+            {!error && alerts?.success && (
+              <>
+                <Panel
+                  header="Active alerts"
+                  bordered
+                  collapsible
+                  defaultExpanded
+                >
+                  {alerts.alerts.map((a) => (
+                    <Alert key={`alert-${a.id}`} capAlert={a.data} />
+                  ))}
+                </Panel>
+                <Panel header="Past alerts" bordered collapsible></Panel>
+              </>
+            )}
+
+            <Button
               onClick={async () => {
                 const options = await fetch("/api/webauthn/register").then(
                   (res) => res.json()
@@ -64,7 +91,7 @@ export default function Home() {
               }}
             >
               Register WebAuthn
-            </button>
+            </Button>
           </>
         )}
       </main>
