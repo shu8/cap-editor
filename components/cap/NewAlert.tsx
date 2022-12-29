@@ -1,12 +1,7 @@
 import styles from "../../styles/components/cap/NewAlert.module.css";
-import { Button, Form } from "rsuite";
-import { useState } from "react";
-import {
-  classes,
-  getEndOfYesterday,
-  getStartOfToday,
-  updateState,
-} from "../../lib/helpers";
+import { Button } from "rsuite";
+import { useContext, useState } from "react";
+import { classes, getEndOfYesterday, updateState } from "../../lib/helpers";
 import CategoryStep from "./steps/CategoryStep";
 import DataStep from "./steps/DataStep";
 import TextStep from "./steps/TextStep";
@@ -15,6 +10,7 @@ import MapStep from "./steps/MapStep";
 import SummaryStep from "./steps/SummaryStep";
 import { AlertingAuthority } from "../../lib/types/types";
 import MetadataStep from "./steps/MetadataStep";
+import EditorContext from "../../lib/EditorContext";
 
 const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];
@@ -52,26 +48,7 @@ export default function NewAlert({
   alertingAuthority: AlertingAuthority;
 }) {
   const [step, setStep] = useState<Step>(STEPS[0]);
-  const [alertData, setAlertData] = useState<AlertData>({
-    category: [],
-    regions: {},
-    from: getStartOfToday(),
-    to: getStartOfToday(),
-    headline: "",
-    description: "",
-    instruction: "",
-    actions: [],
-    certainty: "",
-    severity: "",
-    urgency: "",
-    status: "",
-    msgType: "",
-    scope: "",
-    restriction: "",
-    addresses: [],
-    references: [],
-    event: "",
-  });
+  const { alertData, setAlertData } = useContext(EditorContext);
 
   const onUpdate = (data: Partial<AlertData>) =>
     updateState(setAlertData, data);
