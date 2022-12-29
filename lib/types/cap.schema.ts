@@ -75,7 +75,7 @@ export interface CAPV12JSONSchema2 {
     }[];
     area?: {
       areaDesc: string;
-      polygon?: string[];
+      polygon?: number[][][][];
       circle?: string[];
       geocode?: string[];
       altitude?: number;
@@ -84,7 +84,7 @@ export interface CAPV12JSONSchema2 {
   }[];
 }
 
-export const CAPV12Schema =
+export const CAPV12Schema = 
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "title": "CAP v1.2 JSON schema",
@@ -350,7 +350,16 @@ export const CAPV12Schema =
                 "polygon": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    }
                   }
                 },
                 "circle": {
@@ -429,4 +438,4 @@ export const CAPV12Schema =
       }
     }
   ]
-};
+}

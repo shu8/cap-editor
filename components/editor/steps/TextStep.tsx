@@ -66,10 +66,7 @@ export default function TextStep({
   }, []);
 
   useEffect(() => {
-    if (chosenWhatNowMessage == null) {
-      onUpdate({ description: "", instruction: "" });
-      return;
-    }
+    if (chosenWhatNowMessage == null) return;
 
     const message = whatNowMessages.find((w) => w.id === chosenWhatNowMessage);
     if (!message) return;

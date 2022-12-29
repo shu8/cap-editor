@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 import { Button, ButtonToolbar, Panel } from "rsuite";
 import EditorContext from "../lib/EditorContext";
+import { getStartOfToday } from "../lib/helpers";
 import { CAPV12JSONSchema } from "../lib/types/cap.schema";
 
 export default function Alert({ capAlert }: { capAlert: CAPV12JSONSchema }) {
@@ -41,8 +42,46 @@ export default function Alert({ capAlert }: { capAlert: CAPV12JSONSchema }) {
           appearance="primary"
           color="violet"
           onClick={() => {
-            // TODO convert CAP format to AlertData format
-            setAlertData({});
+            console.log(capAlert);
+            setAlertData({
+              category: info?.category ?? [],
+              regions:
+                info?.area?.reduce((acc, area, i) => {
+                  console.log(acc, area, i);
+                  const areaDescriptions = area.areaDesc.split(", ");
+                  if (area.circle) {
+                    // TODO map circles into format so they are shown on map
+                    acc[
+                      areaDescriptions.find((a) => a.startsWith("custom")) ?? i
+                    ] = area.circle;
+                  }
+                  if (area.polygon) {
+                    acc[
+                      areaDescriptions.find((a) => !a.startsWith("custom")) ?? i
+                    ] = area.polygon;
+                  }
+
+                  return acc;
+                }, {}) ?? {},
+              from: info?.effective
+                ? new Date(info?.effective)
+                : getStartOfToday(),
+              to: info?.expires ? new Date(info?.expires) : new Date(),
+              headline: info?.headline ?? "",
+              description: info?.description ?? "",
+              instruction: info?.instruction ?? "",
+              actions: info?.responseType ?? [],
+              certainty: info?.certainty ?? "",
+              severity: info?.severity ?? "",
+              urgency: info?.urgency ?? "",
+              status: capAlert.status,
+              msgType: capAlert.msgType,
+              scope: capAlert.scope,
+              restriction: capAlert.restriction ?? "",
+              addresses: capAlert.addresses?.match(/\w+|"[^"]+"/g) ?? [],
+              references: capAlert.references?.split(" ") ?? [],
+              event: info?.event ?? "",
+            });
             router.push("/editor");
           }}
         >

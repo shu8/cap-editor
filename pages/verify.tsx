@@ -62,11 +62,7 @@ export default function VerifyUser({
     fetch("/api/verifyUser", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        verificationToken,
-        verified,
-        roles,
-      }),
+      body: JSON.stringify({ verificationToken, verified, roles }),
     });
   };
 

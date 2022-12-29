@@ -8,6 +8,7 @@ import { formatFeedAsXML } from '../../../lib/xml/helpers';
 import { CAPV12JSONSchema, CAPV12Schema } from '../../../lib/types/cap.schema';
 import { validate as validateJSON } from 'jsonschema';
 import { Prisma } from '@prisma/client';
+import { AlertData } from '../../../components/editor/NewAlert';
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,64 +22,63 @@ export default async function handler(
     }
 
     const identifier = randomUUID();
-    const alert: CAPV12JSONSchema = {
+    const alertData: AlertData = req.body;
+    const alert = {
       identifier,
       sender: 'TODO',
       sent: new Date().toISOString(),
-      status: req.body.status,
-      msgType: req.body.msgType,
+      status: alertData.status,
+      msgType: alertData.msgType,
       // source
-      scope: req.body.scope,
-      ...(req.body.restriction && { restriction: req.body.restriction }),
-      ...(req.body.addresses && { addresses: req.body.addresses?.map(a => `"${a}"`).join(' ') }),
+      scope: alertData.scope,
+      ...(alertData.restriction && { restriction: alertData.restriction }),
+      ...(alertData.addresses && { addresses: alertData.addresses?.map(a => `"${a}"`).join(' ') }),
       // code
       // note
-      ...(req.body.references && { references: req.body.references?.join(' ') }),
+      ...(alertData.references && { references: alertData.references?.join(' ') }),
       // incidents,
       info: [{
         // language
-        category: req.body.category,
-        event: req.body.event,
-        responseType: req.body.actions,
-        urgency: req.body.urgency,
-        severity: req.body.severity,
-        certainty: req.body.certainty,
+        category: alertData.category,
+        event: alertData.event,
+        responseType: alertData.actions,
+        urgency: alertData.urgency,
+        severity: alertData.severity,
+        certainty: alertData.certainty,
         // audience
         // eventCode
         // effective
-        onset: req.body.from,
-        expires: req.body.to,
+        onset: alertData.from,
+        expires: alertData.to,
         // senderName
-        headline: req.body.headline,
-        description: req.body.description,
-        instruction: req.body.instruction,
-        // web
+        headline: alertData.headline,
+        description: alertData.description,
+        instruction: alertData.instruction,
+        web: `https://${process.env.DOMAIN}/feed/${identifier}`,
         // contact
         // parameter
-        resource: [{
-          resourceDesc: req.body.resourceDesc,
-          mimeType: req.body.mimeType,
-          // size
-          // uri
-          // drefUri
-          // digest
-        }],
+        // resource: [{
+        //   resourceDesc: alertData.resourceDesc,
+        //   mimeType: alertData.mimeType,
+        //   // size
+        //   // uri
+        //   // drefUri
+        //   // digest
+        // }],
         area: [{
-          areaDesc: req.body.areaDesc,
-          polygon: req.body.polygon,
-          circle: req.body.circle,
+          areaDesc: Object.keys(alertData.regions).join(', '),
+          circle: Object.values(alertData.regions).filter(data => typeof data === 'string'),
+          polygon: Object.values(alertData.regions).filter(data => typeof data !== 'string'),
           // geocode
           // altitude
           // ceiling
         }]
-
       }]
     };
 
     console.log(JSON.stringify(alert));
 
     const validationResult = validateJSON(alert, CAPV12Schema);
-
     if (!validationResult.valid) {
       console.error('Invalid alert', validationResult);
       return res.status(400).json({ success: false, message: 'Invalid alert' });

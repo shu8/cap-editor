@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { AlertData } from "../components/cap/NewAlert";
+import { AlertData } from "../components/editor/NewAlert";
 import { getStartOfToday } from "./helpers";
 
 const defaultAlertData = {
