@@ -18,12 +18,20 @@ export default async function handler(
     const session = await unstable_getServerSession(req, res, authOptions);
 
     if (!session) {
-      return res.status(403).json({ success: false, message: 'You do not have permission to create alerts.' });
+      return res.status(403).json({ success: false, message: 'You are not logged in' });
+    }
+
+    // i.e., if they are only a VALIDATOR, then they can only publish existing drafted alerts (not POST new ones)
+    if (!session.user.roles.includes('ADMIN') && !session.user.roles.includes('EDITOR')) {
+      return res.status(403).json({ success: false, message: 'You do not have permission to create new alerts' });
     }
 
     const identifier = randomUUID();
-    const alertData: AlertData = req.body;
-    const alert = {
+    const alertData: AlertData = req.body.data;
+
+    // Type as `any` for now, because we will validate against the JSON schema next
+    // Typecast as `AlertData` when JSON schema validation is successful
+    const alert: any = {
       identifier,
       sender: 'TODO',
       sent: new Date().toISOString(),
@@ -84,7 +92,14 @@ export default async function handler(
       return res.status(400).json({ success: false, message: 'Invalid alert' });
     }
 
-    await prisma.alert.create({ data: { id: alert.identifier, data: alert as Prisma.InputJsonValue } });
+    await prisma.alert.create({
+      data: {
+        id: alert.identifier,
+        data: alert as Prisma.InputJsonValue,
+        creator: { connect: { email: session.user.email } },
+        status: req.body.status ?? 'DRAFT',
+      }
+    });
     return res.status(200).json({ success: true, identifier });
   }
 

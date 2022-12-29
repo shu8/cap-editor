@@ -8,6 +8,7 @@ import {
   verifyAuthenticationResponse,
   verifyRegistrationResponse,
 } from "@simplewebauthn/server";
+import { Role } from "@prisma/client";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -114,7 +115,6 @@ export const authOptions: AuthOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      console.log("sign in callback", user);
       if (!user.email) {
         return "/register";
       }
@@ -135,6 +135,22 @@ export const authOptions: AuthOptions = {
 
       // In all other cases, allow login
       return true;
+    },
+    async jwt({ token, account, profile }) {
+      if (account) {
+        const user = await prisma.user.findFirst({
+          where: { id: profile?.sub },
+          select: { roles: true },
+        });
+        if (!user) return token;
+
+        token.roles = user.roles;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.user.roles = token.roles as Role[];
+      return session;
     },
   },
 };

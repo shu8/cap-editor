@@ -3,8 +3,10 @@ import NewAlert, { AlertData } from "../components/editor/NewAlert";
 import prisma from "../lib/prisma";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
+import { AlertingAuthority, AlertStatus, Role } from "@prisma/client";
+import { GetServerSideProps } from "next";
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await unstable_getServerSession(
     context.req,
     context.res,
@@ -12,13 +14,23 @@ export const getServerSideProps = async (context) => {
   );
   if (!session) return { props: {} };
 
-  const alertingAuthority = await prisma.alertingAuthority.findFirst({
-    where: { users: { some: { email: session.user.email } } },
+  const user = await prisma.user.findFirst({
+    where: { email: session.user.email },
+    include: { alertingAuthority: true },
   });
-  return { props: { alertingAuthority } };
+
+  return {
+    props: { alertingAuthority: user?.alertingAuthority, roles: user?.roles },
+  };
 };
 
-export default function Home({ alertingAuthority }) {
+export default function Home({
+  alertingAuthority,
+  roles,
+}: {
+  alertingAuthority: AlertingAuthority;
+  roles: Role[];
+}) {
   return (
     <>
       <Head>
@@ -30,11 +42,12 @@ export default function Home({ alertingAuthority }) {
       <main>
         <NewAlert
           alertingAuthority={alertingAuthority}
-          onSubmit={async (alertData: AlertData) => {
+          roles={roles}
+          onSubmit={async (alertData: AlertData, alertStatus: AlertStatus) => {
             fetch("/api/alerts", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ...alertData }),
+              body: JSON.stringify({ status: alertStatus, data: alertData }),
             });
           }}
         />

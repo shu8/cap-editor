@@ -12,6 +12,8 @@ import SummaryStep from "./steps/SummaryStep";
 import { AlertingAuthority } from "../../lib/types/types";
 import MetadataStep from "./steps/MetadataStep";
 import EditorContext from "../../lib/EditorContext";
+import { AlertStatus, Role } from "@prisma/client";
+import SplitButton from "../SplitButton";
 
 const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];
@@ -44,9 +46,11 @@ export type StepProps = {
 export default function NewAlert({
   onSubmit,
   alertingAuthority,
+  roles,
 }: {
-  onSubmit: (alertData: AlertData) => void;
+  onSubmit: (alertData: AlertData, alertStatus: AlertStatus) => void;
   alertingAuthority: AlertingAuthority;
+  roles: Role[];
 }) {
   const [step, setStep] = useState<Step>(STEPS[0]);
   const { alertData, setAlertData } = useContext(EditorContext);
@@ -153,6 +157,42 @@ export default function NewAlert({
     }
   }
 
+  const renderActionButton = () => {
+    if (step !== "summary") {
+      return (
+        <Button
+          appearance="primary"
+          color="blue"
+          disabled={!isStepDataValid}
+          onClick={() => {
+            if (!isStepDataValid) {
+              return alert("Please complete the details first");
+            }
+            setStep(STEPS[currentStepIndex + 1]);
+          }}
+        >
+          Next
+        </Button>
+      );
+    }
+
+    const options: AlertStatus[] = ["DRAFT", "TEMPLATE"];
+    if (roles.includes("VALIDATOR") || roles.includes("ADMIN")) {
+      options.push("PUBLISHED");
+    }
+
+    return (
+      <SplitButton
+        options={options.map((o) =>
+          o === "PUBLISHED" ? `Publish alert now` : `Save as ${o.toLowerCase()}`
+        )}
+        appearance="primary"
+        color="green"
+        onClick={(optionIndex) => onSubmit(alertData, options[optionIndex])}
+      />
+    );
+  };
+
   return (
     <div className={classes(styles.newAlert)}>
       <div className={classes(styles.header)}>
@@ -199,29 +239,8 @@ export default function NewAlert({
         <Button appearance="ghost" color="red">
           Abort
         </Button>
-        {step === "summary" ? (
-          <Button
-            appearance="primary"
-            color="green"
-            onClick={() => onSubmit(alertData)}
-          >
-            Submit Alert
-          </Button>
-        ) : (
-          <Button
-            appearance="primary"
-            color="blue"
-            disabled={!isStepDataValid}
-            onClick={() => {
-              if (!isStepDataValid) {
-                return alert("Please complete the details first");
-              }
-              setStep(STEPS[currentStepIndex + 1]);
-            }}
-          >
-            Next
-          </Button>
-        )}
+
+        {renderActionButton()}
       </div>
     </div>
   );

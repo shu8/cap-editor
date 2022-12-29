@@ -1,10 +1,6 @@
-export type AlertingAuthority = {
-  name: string;
-  id: string;
-  countryCode: string;
-  author: string;
-  polygon?: string;
-};
+import { Role } from "@prisma/client";
+import { DefaultSession } from "next-auth";
+
 
 export type WhatNowResponse = {
   id: string;
@@ -40,3 +36,12 @@ export type WhatNowResponse = {
   createdAt: string;
   updatedAt: string;
 };
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      roles: Role[];
+      email: string;
+    } & DefaultSession['user'];
+  }
+}

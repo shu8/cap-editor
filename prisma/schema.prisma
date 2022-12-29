@@ -52,6 +52,7 @@ model User {
   accounts                           Account[]
   sessions                           Session[]
   authenticators                     Authenticator[]
+  Alert                              Alert[]
 
   @@map("users")
 }
@@ -66,8 +67,11 @@ model VerificationToken {
 }
 
 model Alert {
-  id   String @id
-  data Json
+  id      String      @id
+  status  AlertStatus @default(DRAFT)
+  creator User        @relation(fields: [userId], references: [id])
+  data    Json
+  userId  String
 
   @@map("alerts")
 }
@@ -101,4 +105,10 @@ enum Role {
   ADMIN
   EDITOR
   VALIDATOR
+}
+
+enum AlertStatus {
+  PUBLISHED
+  TEMPLATE
+  DRAFT
 }
