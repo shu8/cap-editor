@@ -11,8 +11,7 @@ import { Icon } from "@rsuite/icons";
 import { useGeographic } from "ol/proj";
 import TileLayer from "./TileLayer";
 import VectorLayer from "./VectorLayer";
-import { Circle, Geometry, LineString, Point, Polygon } from "ol/geom";
-import { Coordinate } from "ol/coordinate";
+import { Circle, Geometry, Polygon } from "ol/geom";
 import Image from "next/image";
 import { Style, Stroke, Fill } from "ol/style";
 import GeoJSON from "ol/format/GeoJSON";
@@ -22,7 +21,6 @@ import { singleClick } from "ol/events/condition";
 import { AlertData } from "../NewAlert";
 import { Type } from "ol/geom/Geometry";
 import { defaults as OLDefaultInteractions } from "ol/interaction";
-import { METERS_PER_UNIT } from "ol/proj";
 
 // https://www.reshot.com/free-svg-icons/item/free-positioning-polygone-F2AWH4PGVQ/
 const PolygonImage = () => (
@@ -142,7 +140,6 @@ export default function Map({
         zoom: 1,
       }),
       layers: [],
-      controls: [],
       overlays: [],
       interactions: OLDefaultInteractions().extend([select]),
     });

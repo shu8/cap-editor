@@ -1,3 +1,4 @@
+import "ol/ol.css";
 import styles from "../../styles/components/cap/NewAlert.module.css";
 import { Button } from "rsuite";
 import { useContext, useState } from "react";
