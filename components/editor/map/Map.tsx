@@ -96,6 +96,7 @@ export default function Map({
       style: selectedStyle,
     })
   );
+  const metersPerUnit = map?.getView().getProjection().getMetersPerUnit();
 
   const alertingAuthorityPolygonCoordinates: any = [
     alertingAuthority.polygon?.split(" ").map((c) =>
@@ -119,13 +120,35 @@ export default function Map({
 
     Object.keys(regions).forEach((r) => {
       const feature = defaultFeaturesSource.getFeatureById(r);
+      if (feature && selectedFeaturesSource.hasFeature(feature)) return;
 
-      // Only handle default country features -- custom features are added immediately after drawing
-      if (
-        feature?.get("ADMIN") != null &&
-        !selectedFeaturesSource.hasFeature(feature)
-      ) {
+      if (feature?.get("ADMIN") != null) {
+        // Only handle default country features -- custom features are added immediately after drawing
         selectedFeaturesSource.addFeature(feature);
+      } else {
+        const data = regions[r]?.[0];
+        if (!data) return;
+
+        if (typeof data === "string") {
+          if (!metersPerUnit) return;
+
+          const [coords, radius] = data.split(" ");
+          const circleFeature = new Feature(
+            new Circle(
+              coords
+                .split(",")
+                .map((c) => +c)
+                .reverse(),
+              (+radius * 1000) / metersPerUnit
+            )
+          );
+          circleFeature.setId(r);
+          selectedFeaturesSource.addFeature(circleFeature);
+        } else {
+          const polygonFeature = new Feature(new Polygon([data]));
+          polygonFeature.setId(r);
+          selectedFeaturesSource.addFeature(polygonFeature);
+        }
       }
     });
   };
@@ -214,14 +237,16 @@ export default function Map({
 
   useEffect(() => {
     const addFeatureHandler = (e: VectorSourceEvent<Geometry>) => {
-      const region = e.feature?.get("ADMIN");
+      const id = e.feature?.getId();
+      if (id && regions[id]) return;
 
-      if (region) {
+      const regionName = e.feature?.get("ADMIN");
+      if (regionName) {
         // A full country was selected
 
         onRegionsChange({
           ...regions,
-          [region]: (e.feature?.getGeometry() as Polygon)
+          [regionName]: (e.feature?.getGeometry() as Polygon)
             ?.getCoordinates()
             ?.flat(),
         });
@@ -243,10 +268,6 @@ export default function Map({
           const geometry = e.feature?.getGeometry() as Circle;
           // Center is in form Longitude, Latitude
           const center = geometry.getCenter();
-          const metersPerUnit = map
-            ?.getView()
-            .getProjection()
-            .getMetersPerUnit();
 
           if (!metersPerUnit) return;
           const radiusKm = (geometry.getRadius() * metersPerUnit) / 1000;

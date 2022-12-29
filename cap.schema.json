@@ -267,10 +267,17 @@
                     "items": {
                       "type": "array",
                       "items": {
-                        "type": "array",
-                        "items": {
-                          "type": "number"
-                        }
+                        "anyOf": [
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            }
+                          },
+                          {
+                            "type": "number"
+                          }
+                        ]
                       }
                     }
                   }
