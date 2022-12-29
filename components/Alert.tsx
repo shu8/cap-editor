@@ -1,9 +1,36 @@
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { Button, ButtonToolbar, Panel } from "rsuite";
+import { Button, ButtonToolbar, Panel, Tag } from "rsuite";
+
+import styles from "../styles/components/Alert.module.css";
+
 import EditorContext from "../lib/EditorContext";
 import { getStartOfToday } from "../lib/helpers";
 import { CAPV12JSONSchema } from "../lib/types/cap.schema";
+
+const colors = {
+  urgency: {
+    Immediate: "red",
+    Expected: "orange",
+    Future: "yellow",
+    Past: "cyan",
+    Unknown: "blue",
+  },
+  certainty: {
+    Likely: "red",
+    Observed: "orange",
+    Possible: "yellow",
+    Unlikely: "cyan",
+    Unknown: "blue",
+  },
+  severity: {
+    Severe: "red",
+    Extreme: "orange",
+    Moderate: "yellow",
+    Minor: "cyan",
+    Unknown: "blue",
+  },
+};
 
 export default function Alert({ capAlert }: { capAlert: CAPV12JSONSchema }) {
   const info = capAlert.info?.[0];
@@ -14,14 +41,15 @@ export default function Alert({ capAlert }: { capAlert: CAPV12JSONSchema }) {
     <Panel
       header={
         <>
-          {new Date(capAlert.sent).toString()}{" "}
-          {!info?.web && (
+          <strong>{info?.headline}</strong> <i>({info?.category.join(", ")})</i>{" "}
+          {info?.web && (
             <a
+              className={styles.viewBtn}
               target="_blank"
               href={`/feed/${capAlert.identifier}`}
               rel="noreferrer"
             >
-              <Button appearance="ghost" color="violet" size="sm">
+              <Button appearance="ghost" color="violet" size="xs">
                 View alert ↗
               </Button>
             </a>
@@ -30,11 +58,17 @@ export default function Alert({ capAlert }: { capAlert: CAPV12JSONSchema }) {
       }
     >
       <p>
-        <strong>{info?.category.join(", ")}</strong> alert expiring at{" "}
-        {new Date(info?.expires).toString()}.
+        Sent: {new Date(capAlert.sent).toString()}
+        <br />
+        Expires: {new Date(info?.expires).toString()}
       </p>
-
-      <p>Headline: {info?.headline}</p>
+      <p>
+        <Tag color="green">{capAlert.msgType}</Tag>
+        <Tag color="green">{capAlert.status}</Tag>
+        <Tag color={colors.urgency[info?.urgency]}>{info?.urgency}</Tag>
+        <Tag color={colors.certainty[info?.certainty]}>{info?.certainty}</Tag>
+        <Tag color={colors.severity[info?.severity]}>{info?.severity}</Tag>
+      </p>
 
       <ButtonToolbar>
         <Button

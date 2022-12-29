@@ -68,3 +68,8 @@ main {
 #__next {
   height: 100%;
 }
+
+.rs-tag-yellow,
+.rs-tag-orange {
+  color: black;
+}

@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { fetcher } from "../lib/helpers";
 import Alert from "../components/Alert";
@@ -32,12 +31,12 @@ export default function Dashboard() {
 
         {!error && alerts?.success && (
           <>
-            <Panel header="Active alerts" bordered>
+            <Panel header="Active alerts" bordered collapsible defaultExpanded>
               {alerts.alerts.map((a) => (
                 <Alert key={`alert-${a.id}`} capAlert={a.data} />
               ))}
             </Panel>
-            <Panel header="Past alerts" bordered></Panel>
+            <Panel header="Past alerts" bordered collapsible></Panel>
           </>
         )}
       </main>
