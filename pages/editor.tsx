@@ -1,6 +1,5 @@
 import Head from "next/head";
-import NewAlert, { AlertData } from "../components/cap/NewAlert";
-import prisma from "../lib/db";
+import prisma from "../lib/prisma";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 

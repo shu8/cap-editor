@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../../lib/db';
+import prisma from '../../../lib/prisma';
 import { sign } from '../../../lib/xml/sign';
 
 export default async function handler(

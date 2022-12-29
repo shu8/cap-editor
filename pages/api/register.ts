@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from '../../lib/db';
+import prisma from '../../lib/prisma';
 import { sendEmail } from "../../lib/email";
 import { fetchWMOAlertingAuthorities } from "../../lib/helpers";
 import { AlertingAuthority } from "../../lib/types/types";

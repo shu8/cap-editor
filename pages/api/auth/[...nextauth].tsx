@@ -1,7 +1,7 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "../../../lib/db";
+import prisma from "../../../lib/prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { ERRORS } from "../../../lib/errors";
 import {

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth';
 import { randomUUID } from "crypto";
 
-import prisma from '../../../lib/db';
+import prisma from '../../../lib/prisma';
 import { authOptions } from '../auth/[...nextauth]';
 import { formatFeedAsXML } from '../../../lib/xml/helpers';
 import { CAPV12JSONSchema, CAPV12Schema } from '../../../lib/types/cap.schema';

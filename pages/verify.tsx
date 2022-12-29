@@ -2,7 +2,7 @@ import Head from "next/head";
 
 import styles from "../styles/Verify.module.css";
 import { ERRORS } from "../lib/errors";
-import db from "../lib/db";
+import prisma from "../lib/prisma";
 import { Button, Message, Modal, TagPicker } from "rsuite";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     return { redirect };
   }
 
-  const userToBeVerified = await db.user.findFirst({
+  const userToBeVerified = await prisma.user.findFirst({
     where: { alertingAuthorityVerificationToken },
     include: { alertingAuthority: { select: { name: true } } },
   });
