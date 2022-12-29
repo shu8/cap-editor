@@ -113,6 +113,25 @@ export default function Map({
   });
   alertingAuthorityRegion.setId("alertingAuthority");
 
+  const updateRegionsOnMap = () => {
+    selectedFeaturesSource.forEachFeature((f) => {
+      const id = f.getId() as string;
+      if (!regions[id]) selectedFeaturesSource.removeFeature(f);
+    });
+
+    Object.keys(regions).forEach((r) => {
+      const feature = defaultFeaturesSource.getFeatureById(r);
+
+      // Only handle default country features -- custom features are added immediately after drawing
+      if (
+        feature?.get("ADMIN") != null &&
+        !selectedFeaturesSource.hasFeature(feature)
+      ) {
+        selectedFeaturesSource.addFeature(feature);
+      }
+    });
+  };
+
   useMountEffect(() => {
     const mapObject = new OLMap({
       view: new OLView({
@@ -133,8 +152,10 @@ export default function Map({
 
     alertingAuthorityRegion.setStyle(alertingAuthorityStyle);
     defaultFeaturesSource?.addFeature(alertingAuthorityRegion);
+    defaultFeaturesSource.on("featuresloadend", updateRegionsOnMap);
     return () => {
       mapObject.removeInteraction(select);
+      defaultFeaturesSource.un("featuresloadend", updateRegionsOnMap);
       mapObject.setTarget(undefined);
     };
   });
@@ -255,22 +276,7 @@ export default function Map({
     selectedFeaturesSource.on("addfeature", addFeatureHandler);
     selectedFeaturesSource.on("removefeature", removeFeatureHandler);
 
-    selectedFeaturesSource.forEachFeature((f) => {
-      const id = f.getId() as string;
-      if (!regions[id]) selectedFeaturesSource.removeFeature(f);
-    });
-
-    Object.keys(regions).forEach((r) => {
-      const feature = defaultFeaturesSource.getFeatureById(r);
-
-      // Only handle default country features -- custom features are added immediately after drawing
-      if (
-        feature?.get("ADMIN") != null &&
-        !selectedFeaturesSource.hasFeature(feature)
-      ) {
-        selectedFeaturesSource.addFeature(feature);
-      }
-    });
+    updateRegionsOnMap();
 
     return () => {
       selectedFeaturesSource.un("addfeature", addFeatureHandler);
