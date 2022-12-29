@@ -3,16 +3,15 @@ import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { fetcher } from "../lib/helpers";
 import Alert from "../components/Alert";
+import { Loader, Message, Panel } from "rsuite";
 
 export default function Dashboard() {
-  const { data: session } = useSession();
   const {
     data: alerts,
     error,
     isLoading,
   } = useSWR("/api/alerts?json=1", fetcher);
 
-  console.log(alerts);
   return (
     <>
       <Head>
@@ -23,10 +22,24 @@ export default function Dashboard() {
       </Head>
 
       <main>
-        {alerts?.success &&
-          alerts.alerts.map((a) => (
-            <Alert key={`alert-${a.id}`} capAlert={a.data} />
-          ))}
+        {isLoading && (
+          <Loader size="lg" backdrop center content="Loading alerts..." />
+        )}
+
+        {error && (
+          <Message type="error">There was an error loading the alerts</Message>
+        )}
+
+        {!error && alerts?.success && (
+          <>
+            <Panel header="Active alerts" bordered>
+              {alerts.alerts.map((a) => (
+                <Alert key={`alert-${a.id}`} capAlert={a.data} />
+              ))}
+            </Panel>
+            <Panel header="Past alerts" bordered></Panel>
+          </>
+        )}
       </main>
     </>
   );

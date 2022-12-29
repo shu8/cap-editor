@@ -12,7 +12,6 @@ export default function Alert({ capAlert }: { capAlert: CAPV12JSONSchema }) {
 
   return (
     <Panel
-      bordered
       header={
         <>
           {new Date(capAlert.sent).toString()}{" "}
