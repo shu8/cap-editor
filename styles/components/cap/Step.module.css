@@ -30,6 +30,7 @@
 .reviewItem {
   margin: 5px;
   margin-top: 0;
+  white-space: pre-wrap;
 }
 
 .sideBySide {
@@ -51,4 +52,10 @@
 
 .tag {
   margin-left: 10px;
+}
+
+.reviewStepsWrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
