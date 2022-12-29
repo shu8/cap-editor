@@ -63,11 +63,21 @@ export default function Alert({ capAlert }: { capAlert: CAPV12JSONSchema }) {
         Expires: {new Date(info?.expires).toString()}
       </p>
       <p>
-        <Tag color="green">{capAlert.msgType}</Tag>
-        <Tag color="green">{capAlert.status}</Tag>
-        <Tag color={colors.urgency[info?.urgency]}>{info?.urgency}</Tag>
-        <Tag color={colors.certainty[info?.certainty]}>{info?.certainty}</Tag>
-        <Tag color={colors.severity[info?.severity]}>{info?.severity}</Tag>
+        <Tag as="span" color="green">
+          {capAlert.msgType}
+        </Tag>
+        <Tag as="span" color="green">
+          {capAlert.status}
+        </Tag>
+        <Tag as="span" color={colors.urgency[info?.urgency]}>
+          {info?.urgency}
+        </Tag>
+        <Tag as="span" color={colors.certainty[info?.certainty]}>
+          {info?.certainty}
+        </Tag>
+        <Tag as="span" color={colors.severity[info?.severity]}>
+          {info?.severity}
+        </Tag>
       </p>
 
       <ButtonToolbar>

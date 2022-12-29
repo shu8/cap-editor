@@ -15,8 +15,6 @@ export default function Home() {
     isLoading,
   } = useSWR("/api/alerts?json=1", fetcher);
 
-  console.log(session);
-
   return (
     <>
       <Head>
