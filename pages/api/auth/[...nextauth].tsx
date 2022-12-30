@@ -126,18 +126,14 @@ export const authOptions: AuthOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      if (!user.email) {
-        return "/register";
-      }
+      if (!user.email) return "/register";
 
       const dbUser = await prisma.user.findFirst({
         where: { email: user.email },
       });
 
       // If user doesn't exist in db yet, they need to register first
-      if (!dbUser) {
-        return `/register?email=${user.email}`;
-      }
+      if (!dbUser) return `/register?email=${user.email}`;
 
       // If user is in db, but their AS hasn't verified them, they can't login yet
       if (!dbUser.alertingAuthorityVerified) {

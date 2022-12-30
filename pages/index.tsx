@@ -85,7 +85,7 @@ export default function Home() {
                 {Object.entries(alertsByStatus).map(
                   ([status, alertsForStatus]) => (
                     <Panel
-                      key={`alerts-${status}`}
+                      key={`alerts-${status}-${alertsForStatus.length}`}
                       header={`${status} alerts`}
                       className={styles.alertStatusWrapper}
                       defaultExpanded={!!alertsForStatus.length}

@@ -1,7 +1,6 @@
 import styles from "../styles/components/AuthenticateForm.module.css";
 import { Button, Form, SelectPicker } from "rsuite";
 import { useEffect, useState } from "react";
-import { AlertingAuthority } from "../lib/types/types";
 import { updateState } from "../lib/helpers";
 
 type RegisterData = {

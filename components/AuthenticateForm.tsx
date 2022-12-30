@@ -5,7 +5,7 @@ import { Button, Form } from "rsuite";
 export default function AuthenticateForm() {
   return (
     <div className={styles.wrapper}>
-      <h1>Login or register</h1>
+      <h1>Login</h1>
       <Form
         onSubmit={(_, e) => {
           e.preventDefault();

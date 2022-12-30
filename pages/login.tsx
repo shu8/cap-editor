@@ -1,11 +1,7 @@
 import Head from "next/head";
 import { signIn, useSession } from "next-auth/react";
 import AuthenticateForm from "../components/AuthenticateForm";
-import {
-  startAuthentication,
-  startRegistration,
-} from "@simplewebauthn/browser";
-import { Button } from "rsuite";
+import { startAuthentication } from "@simplewebauthn/browser";
 import { useEffect } from "react";
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
@@ -52,29 +48,6 @@ export default function Login() {
       </Head>
       <main>
         <AuthenticateForm />
-
-        <Button
-          onClick={async () => {
-            const options = await fetch("/api/webauthn/register").then((res) =>
-              res.json()
-            );
-            const credential = await startRegistration(options);
-            console.log(credential);
-
-            const verification = await fetch("/api/webauthn/register", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(credential),
-            }).then((res) => res.json());
-
-            console.log(verification);
-            if (verification?.verified) {
-              alert("Registered");
-            }
-          }}
-        >
-          Register WebAuthn
-        </Button>
       </main>
     </>
   );
