@@ -46,7 +46,6 @@ export default function Home() {
     }
   }
 
-  // TODO return the internal alert status in request
   return (
     <>
       <Head>
