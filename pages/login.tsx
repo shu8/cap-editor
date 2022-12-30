@@ -1,37 +1,80 @@
 import Head from "next/head";
 import { signIn, useSession } from "next-auth/react";
 import AuthenticateForm from "../components/AuthenticateForm";
-import { startAuthentication } from "@simplewebauthn/browser";
+import {
+  startAuthentication,
+  startRegistration,
+} from "@simplewebauthn/browser";
+import { Button } from "rsuite";
+import { useEffect } from "react";
+import { GetServerSideProps } from "next";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]";
 
-export default function Home() {
-  const { data: session } = useSession();
-  console.log(session);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  if (session) return { redirect: { destination: "/", permanent: false } };
+  return { props: {} };
+};
+
+export default function Login() {
+  const { data: session, status: sessionStatus } = useSession();
+
+  useEffect(() => {
+    async function initUsernamelessLogin() {
+      const options = await fetch("/api/webauthn/authenticate").then((res) =>
+        res.json()
+      );
+      const auth = await startAuthentication(options);
+      await signIn("webauthn", {
+        ...auth,
+        ...auth.clientExtensionResults,
+        ...auth.response,
+      });
+    }
+
+    if (sessionStatus !== "loading" && !session) {
+      initUsernamelessLogin().catch((err) =>
+        console.error("Failed to start usernameless login", err)
+      );
+    }
+  }, [session, sessionStatus]);
 
   return (
     <>
       <Head>
-        <title>CAP Editor</title>
-        <meta name="description" content="CAP Editor" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>CAP Editor | Login</title>
       </Head>
       <main>
         <AuthenticateForm />
-        <button
+
+        <Button
           onClick={async () => {
-            const options = await fetch(
-              "/api/webauthn/authenticate?email=shubham@sjain.dev"
-            ).then((res) => res.json());
-            const auth = await startAuthentication(options);
-            await signIn("webauthn", {
-              ...auth,
-              ...auth.clientExtensionResults,
-              ...auth.response,
-            });
+            const options = await fetch("/api/webauthn/register").then((res) =>
+              res.json()
+            );
+            const credential = await startRegistration(options);
+            console.log(credential);
+
+            const verification = await fetch("/api/webauthn/register", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(credential),
+            }).then((res) => res.json());
+
+            console.log(verification);
+            if (verification?.verified) {
+              alert("Registered");
+            }
           }}
         >
-          WebAuthn login
-        </button>
+          Register WebAuthn
+        </Button>
       </main>
     </>
   );

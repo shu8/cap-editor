@@ -14,6 +14,7 @@ declare global {
       TLS_DIRECTORY: string;
       WHAT_NOW_API_KEY: string;
       CAP_ALERT_SENDER: string;
+      REDIS_HOST: string;
     }
   }
 }

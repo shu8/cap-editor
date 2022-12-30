@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { useSession } from "next-auth/react";
-import { startRegistration } from "@simplewebauthn/browser";
 import { Button, Loader, Message, Panel } from "rsuite";
 import { Alert as DBAlert } from "@prisma/client";
 import useSWR from "swr";
@@ -104,29 +103,6 @@ export default function Home() {
                 )}
               </>
             )}
-
-            <Button
-              onClick={async () => {
-                const options = await fetch("/api/webauthn/register").then(
-                  (res) => res.json()
-                );
-                const credential = await startRegistration(options);
-                console.log(credential);
-
-                const verification = await fetch("/api/webauthn/register", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(credential),
-                }).then((res) => res.json());
-
-                console.log(verification);
-                if (verification?.verified) {
-                  alert("Registered");
-                }
-              }}
-            >
-              Register WebAuthn
-            </Button>
           </>
         )}
       </main>

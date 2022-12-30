@@ -48,6 +48,7 @@ model User {
   alertingAuthorityVerified          DateTime?
   alertingAuthorityVerificationToken String?
   currentWebauthnChallenge           String?
+  webauthnId                         String?
   roles                              Role[]
   accounts                           Account[]
   sessions                           Session[]

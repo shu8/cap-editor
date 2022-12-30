@@ -1,20 +1,18 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "../../../lib/prisma";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { ERRORS } from "../../../lib/errors";
-import {
-  verifyAuthenticationResponse,
-  verifyRegistrationResponse,
-} from "@simplewebauthn/server";
+import { verifyAuthenticationResponse } from "@simplewebauthn/server";
 import { Role } from "@prisma/client";
+import { deleteCookie, getCookie } from "cookies-next";
+
+import prisma from "../../../lib/prisma";
+import { ERRORS } from "../../../lib/errors";
+import redis from "../../../lib/redis";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
-  session: {
-    strategy: "jwt",
-  },
+  session: { strategy: "jwt" },
   providers: [
     // https://github.com/nextauthjs/next-auth/discussions/3154 - custom sign in page
     EmailProvider({
@@ -27,6 +25,7 @@ export const authOptions: AuthOptions = {
           pass: process.env.EMAIL_SERVER_PASSWORD,
         },
       },
+      maxAge: 600, // 10 minutes
       from: process.env.EMAIL_FROM,
     }),
     // https://dev.to/jsombie/password-less-authentication-in-nextjs-application-with-webauthn-and-nextauth-3mgl
@@ -49,12 +48,21 @@ export const authOptions: AuthOptions = {
             userHandle: credential.userHandle,
           };
 
-          console.log("body", credential);
+          const tempWebauthnUserId = getCookie("webauthn-user-id", { req });
+          if (typeof tempWebauthnUserId !== "string") return null;
+
+          const expectedChallenge = await redis.hGet(
+            "webauthn-auth-challenges",
+            tempWebauthnUserId
+          );
+
+          if (!expectedChallenge) {
+            deleteCookie("webauthn-user-id", { req });
+            return null;
+          }
 
           const user = await prisma.user.findFirst({
-            where: {
-              authenticators: { some: { credentialID: credential.id } },
-            },
+            where: { webauthnId: credential.response.userHandle },
             select: {
               currentWebauthnChallenge: true,
               authenticators: true,
@@ -64,22 +72,27 @@ export const authOptions: AuthOptions = {
             },
           });
 
-          console.log("user", user);
-
-          if (!user?.currentWebauthnChallenge || !user?.authenticators.length) {
+          // At this point, the user should not have any pending challenge in the DB
+          // They should only have the pending usernameless auth challenge in redis
+          // And they should have at least one authenticator in the DB
+          if (
+            user?.currentWebauthnChallenge != null ||
+            !user?.authenticators.length
+          ) {
+            deleteCookie("webauthn-user-id", { req });
+            await redis.hDel("webauthn-auth-challenges", tempWebauthnUserId);
             return null;
           }
 
           const { verified, authenticationInfo } =
             await verifyAuthenticationResponse({
               credential,
-              expectedChallenge: user.currentWebauthnChallenge,
+              expectedChallenge: expectedChallenge,
               expectedOrigin: process.env.WEBAUTHN_ORIGIN,
               expectedRPID: process.env.WEBAUTHN_RELAYING_PARTY_ID,
               authenticator: user.authenticators[0],
+              requireUserVerification: true,
             });
-
-          console.log("response", verified, authenticationInfo);
 
           if (verified && authenticationInfo) {
             await prisma.user.update({
@@ -97,16 +110,14 @@ export const authOptions: AuthOptions = {
               },
             });
 
-            console.log("logged in");
-
-            return {
-              id: user.id,
-              email: user.email,
-              name: user.name,
-            };
+            return { id: user.id, email: user.email, name: user.name };
           }
+
+          await redis.hDel("webauthn-auth-challenges", tempWebauthnUserId);
         } catch (err) {
           console.error("errr", err);
+        } finally {
+          deleteCookie("webauthn-user-id", { req });
         }
 
         return null;
