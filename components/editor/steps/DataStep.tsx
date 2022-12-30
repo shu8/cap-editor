@@ -1,6 +1,6 @@
 import { DateRangePicker } from "rsuite";
 import { getStartOfToday } from "../../../lib/helpers";
-import { AlertData, StepProps } from "../NewAlert";
+import { FormAlertData, StepProps } from "../Editor";
 import SeverityCertaintyMatrix from "../SeverityCertaintyMatrix";
 import UrgencySlider from "../UrgencySlider";
 import styles from "../../../styles/components/cap/Step.module.css";
@@ -12,7 +12,7 @@ export default function DataStep({
   certainty,
   severity,
   urgency,
-}: Partial<AlertData> & StepProps) {
+}: Partial<FormAlertData> & StepProps) {
   return (
     <div>
       <p>Select the start and end time of the alert from the calendar.</p>

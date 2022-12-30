@@ -1,5 +1,5 @@
 import { classes } from "../../../lib/helpers";
-import { AlertData, Step } from "../NewAlert";
+import { FormAlertData, Step } from "../Editor";
 import styles from "../../../styles/components/cap/Step.module.css";
 import { IconButton } from "rsuite";
 import EditIcon from "@rsuite/icons/Edit";
@@ -19,7 +19,7 @@ const ReviewItem = (props: {
 export default function SummaryStep({
   jumpToStep,
   ...alertData
-}: Partial<AlertData> & {
+}: Partial<FormAlertData> & {
   jumpToStep: (step: Step) => void;
 }) {
   const Header = (props: { step: Step }) => (

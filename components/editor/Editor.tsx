@@ -1,7 +1,7 @@
 import "ol/ol.css";
 import styles from "../../styles/components/cap/NewAlert.module.css";
 import { Button } from "rsuite";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { classes, getEndOfYesterday, updateState } from "../../lib/helpers";
 import CategoryStep from "./steps/CategoryStep";
 import DataStep from "./steps/DataStep";
@@ -9,16 +9,16 @@ import TextStep from "./steps/TextStep";
 import Map from "./map/Map";
 import MapStep from "./steps/MapStep";
 import SummaryStep from "./steps/SummaryStep";
-import { AlertingAuthority } from "../../lib/types/types";
 import MetadataStep from "./steps/MetadataStep";
-import EditorContext from "../../lib/EditorContext";
-import { AlertStatus, Role } from "@prisma/client";
+import { AlertingAuthority, AlertStatus, Role } from "@prisma/client";
 import SplitButton from "../SplitButton";
 
 const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];
 
-export type AlertData = {
+export type FormAlertData = {
+  // Only present if an Alert is being edited (instead of created)
+  identifier?: string;
   category: string[];
   regions: { [key: string]: number[] };
   from: Date;
@@ -40,22 +40,22 @@ export type AlertData = {
 };
 
 export type StepProps = {
-  onUpdate: (data: Partial<AlertData>) => void;
+  onUpdate: (data: Partial<FormAlertData>) => void;
 };
 
-export default function NewAlert({
-  onSubmit,
-  alertingAuthority,
-  roles,
-}: {
-  onSubmit: (alertData: AlertData, alertStatus: AlertStatus) => void;
+type Props = {
+  onSubmit: (alertData: FormAlertData, alertStatus: AlertStatus) => void;
+  defaultAlertData: FormAlertData;
   alertingAuthority: AlertingAuthority;
   roles: Role[];
-}) {
-  const [step, setStep] = useState<Step>(STEPS[0]);
-  const { alertData, setAlertData } = useContext(EditorContext);
+  existingAlertStatus?: AlertStatus;
+};
 
-  const onUpdate = (data: Partial<AlertData>) =>
+export default function Editor(props: Props) {
+  const [step, setStep] = useState<Step>(STEPS[0]);
+  const [alertData, setAlertData] = useState(props.defaultAlertData);
+
+  const onUpdate = (data: Partial<FormAlertData>) =>
     updateState(setAlertData, data);
 
   const steps: {
@@ -95,7 +95,7 @@ export default function NewAlert({
         <MapStep
           onUpdate={onUpdate}
           regions={{ ...alertData.regions }}
-          countryCode={alertingAuthority.countryCode}
+          countryCode={props.alertingAuthority.countryCode}
         />
       ),
       isValid: () => Object.keys(alertData.regions).length > 0,
@@ -127,7 +127,7 @@ export default function NewAlert({
           description={alertData.description}
           instruction={alertData.instruction}
           actions={alertData.actions}
-          countryCode={alertingAuthority.countryCode}
+          countryCode={props.alertingAuthority.countryCode}
           urgency={alertData.urgency}
         />
       ),
@@ -176,19 +176,30 @@ export default function NewAlert({
       );
     }
 
-    const options: AlertStatus[] = ["DRAFT", "TEMPLATE"];
-    if (roles.includes("VALIDATOR") || roles.includes("ADMIN")) {
+    const options: AlertStatus[] = props.existingAlertStatus
+      ? [props.existingAlertStatus]
+      : ["DRAFT", "TEMPLATE"];
+
+    if (
+      !alertData.identifier &&
+      (props.roles.includes("VALIDATOR") || props.roles.includes("ADMIN"))
+    ) {
       options.push("PUBLISHED");
     }
 
     return (
       <SplitButton
-        options={options.map((o) =>
-          o === "PUBLISHED" ? `Publish alert now` : `Save as ${o.toLowerCase()}`
-        )}
+        options={options.map((o) => {
+          if (o === "PUBLISHED") return "Publish alert now";
+          return `${
+            alertData.identifier ? "Update" : "Save as"
+          } ${o.toLowerCase()}`;
+        })}
         appearance="primary"
         color="green"
-        onClick={(optionIndex) => onSubmit(alertData, options[optionIndex])}
+        onClick={(optionIndex) =>
+          props.onSubmit(alertData, options[optionIndex])
+        }
       />
     );
   };
@@ -196,7 +207,14 @@ export default function NewAlert({
   return (
     <div className={classes(styles.newAlert)}>
       <div className={classes(styles.header)}>
-        <h3>New alert: {step}</h3>
+        <div>
+          <h3>
+            {alertData.identifier ? "Edit alert" : "New alert"}: {step}
+          </h3>
+          {alertData.identifier && (
+            <span>Alert ID: {alertData.identifier}</span>
+          )}
+        </div>
 
         <div className={styles.progressBar}>
           {STEPS.map((s, i) => {
@@ -228,7 +246,7 @@ export default function NewAlert({
             <Map
               onRegionsChange={(regions) => onUpdate({ regions })}
               regions={alertData.regions}
-              alertingAuthority={alertingAuthority}
+              alertingAuthority={props.alertingAuthority}
               enableInteraction={step === "map"}
             />
           </div>

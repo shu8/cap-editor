@@ -10,7 +10,7 @@ import {
 } from "rsuite";
 import { forwardRef, useEffect, useState } from "react";
 import { camelise, classes } from "../../../lib/helpers";
-import { AlertData, StepProps } from "../NewAlert";
+import { FormAlertData, StepProps } from "../Editor";
 import { WhatNowResponse } from "../../../lib/types/types";
 
 const Textarea = forwardRef((props, ref) => (
@@ -49,7 +49,7 @@ export default function TextStep({
   actions,
   countryCode,
   urgency,
-}: Partial<AlertData> & StepProps & { countryCode: string }) {
+}: Partial<FormAlertData> & StepProps & { countryCode: string }) {
   const [numberOfUrls, setNumberOfUrls] = useState(1);
   const [whatNowMessages, setWhatNowMessages] = useState<WhatNowResponse[]>([]);
   const [chosenWhatNowMessage, setChosenWhatNowMessage] = useState<

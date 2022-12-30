@@ -1,6 +1,6 @@
 import styles from "../../../styles/components/cap/Step.module.css";
 import { Form, SelectPicker, TagInput, TagPicker } from "rsuite";
-import { AlertData, StepProps } from "../NewAlert";
+import { FormAlertData, StepProps } from "../Editor";
 import { classes } from "../../../lib/helpers";
 import { useState } from "react";
 
@@ -16,7 +16,7 @@ export default function MetadataStep({
   restriction,
   addresses,
   references,
-}: Partial<AlertData> & StepProps) {
+}: Partial<FormAlertData> & StepProps) {
   const [referenceOptions, setReferenceOptions] = useState([]);
   const fetchReferenceOptions = () => {
     fetch("/api/alerts?json=true")

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { TagPicker } from "rsuite";
-import { AlertData, StepProps } from "../NewAlert";
+import { FormAlertData, StepProps } from "../Editor";
 
 export default function MapStep({
   onUpdate,
   regions = {},
   countryCode,
-}: Partial<AlertData> & StepProps & { countryCode: string }) {
+}: Partial<FormAlertData> & StepProps & { countryCode: string }) {
   const [countries, setCountries] = useState([]);
 
   const fetchCountries = async () => {

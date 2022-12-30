@@ -25,33 +25,35 @@ export default function SplitButton({
       <Button {...buttonProps} onClick={() => onClick(optionIndex)}>
         {options[optionIndex]}
       </Button>
-      <Whisper
-        placement="top"
-        trigger="click"
-        speaker={({ onClose, left, top, className }, ref) => (
-          <Popover ref={ref} className={className} style={{ left, top }} full>
-            <Dropdown.Menu
-              onSelect={(eventKey) => {
-                onClose();
-                setOptionIndex(eventKey);
-              }}
-            >
-              {options.map((o, i) => (
-                <Dropdown.Item key={i} eventKey={i}>
-                  {o}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Popover>
-        )}
-      >
-        <IconButton
-          style={{ borderLeft: "1px solid black" }}
-          appearance="primary"
-          color={buttonProps.color ?? "blue"}
-          icon={<ArrowUp />}
-        />
-      </Whisper>
+      {options.length > 1 && (
+        <Whisper
+          placement="top"
+          trigger="click"
+          speaker={({ onClose, left, top, className }, ref) => (
+            <Popover ref={ref} className={className} style={{ left, top }} full>
+              <Dropdown.Menu
+                onSelect={(eventKey) => {
+                  onClose();
+                  setOptionIndex(eventKey);
+                }}
+              >
+                {options.map((o, i) => (
+                  <Dropdown.Item key={i} eventKey={i}>
+                    {o}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Popover>
+          )}
+        >
+          <IconButton
+            style={{ borderLeft: "1px solid black" }}
+            appearance="primary"
+            color={buttonProps.color ?? "blue"}
+            icon={<ArrowUp />}
+          />
+        </Whisper>
+      )}
     </ButtonGroup>
   );
 }

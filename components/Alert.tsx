@@ -1,11 +1,8 @@
-import { useRouter } from "next/router";
-import { useContext } from "react";
-import { Button, ButtonToolbar, Panel, Tag } from "rsuite";
+import { Button, Panel, Tag } from "rsuite";
+import { Alert as DBAlert } from "@prisma/client";
+import Link from "next/link";
 
 import styles from "../styles/components/Alert.module.css";
-
-import EditorContext from "../lib/EditorContext";
-import { getStartOfToday } from "../lib/helpers";
 import { CAPV12JSONSchema } from "../lib/types/cap.schema";
 
 const colors = {
@@ -32,21 +29,23 @@ const colors = {
   },
 };
 
-export default function Alert({ capAlert }: { capAlert: CAPV12JSONSchema }) {
-  const info = capAlert.info?.[0];
-  const { setAlertData } = useContext(EditorContext);
-  const router = useRouter();
+export default function Alert({ alert }: { alert: DBAlert }) {
+  const alertData = alert.data as CAPV12JSONSchema;
+  const info = alertData.info?.[0];
 
+  const expiryDate = new Date(info?.expires);
+  const expired = expiryDate < new Date();
   return (
     <Panel
+      bordered
       header={
         <>
           <strong>{info?.headline}</strong> <i>({info?.category.join(", ")})</i>{" "}
-          {info?.web && (
+          {alert.status === "PUBLISHED" && !expired && info?.web && (
             <a
-              className={styles.viewBtn}
+              className={styles.btn}
               target="_blank"
-              href={`/feed/${capAlert.identifier}`}
+              href={`/feed/${alertData.identifier}`}
               rel="noreferrer"
             >
               <Button appearance="ghost" color="violet" size="xs">
@@ -54,20 +53,42 @@ export default function Alert({ capAlert }: { capAlert: CAPV12JSONSchema }) {
               </Button>
             </a>
           )}
+          <Link href={`/editor/${alert.id}`}>
+            {alert.status !== "PUBLISHED" && (
+              <Button
+                className={styles.btn}
+                appearance="ghost"
+                color="violet"
+                size="xs"
+              >
+                Edit alert 🖉
+              </Button>
+            )}
+          </Link>
+          <Link href={`/editor?template=${alert.id}`}>
+            <Button
+              className={styles.btn}
+              appearance="ghost"
+              color="violet"
+              size="xs"
+            >
+              Use as template for new alert &rarr;
+            </Button>
+          </Link>
         </>
       }
     >
       <p>
-        Sent: {new Date(capAlert.sent).toString()}
+        Sent: {new Date(alertData.sent).toString()}
         <br />
-        Expires: {new Date(info?.expires).toString()}
+        Expires: {expiryDate.toString()}
       </p>
       <p>
         <Tag as="span" color="green">
-          {capAlert.msgType}
+          {alertData.msgType}
         </Tag>
         <Tag as="span" color="green">
-          {capAlert.status}
+          {alertData.status}
         </Tag>
         <Tag as="span" color={colors.urgency[info?.urgency]}>
           {info?.urgency}
@@ -79,58 +100,6 @@ export default function Alert({ capAlert }: { capAlert: CAPV12JSONSchema }) {
           {info?.severity}
         </Tag>
       </p>
-
-      <ButtonToolbar>
-        <Button
-          appearance="primary"
-          color="violet"
-          onClick={() => {
-            console.log(capAlert);
-            setAlertData({
-              category: info?.category ?? [],
-              regions:
-                info?.area?.reduce((acc, area, i) => {
-                  console.log(acc, area, i);
-                  const areaDescriptions = area.areaDesc.split(", ");
-                  if (area.circle) {
-                    // TODO map circles into format so they are shown on map
-                    acc[
-                      areaDescriptions.find((a) => a.startsWith("custom")) ?? i
-                    ] = area.circle;
-                  }
-                  if (area.polygon) {
-                    acc[
-                      areaDescriptions.find((a) => !a.startsWith("custom")) ?? i
-                    ] = area.polygon;
-                  }
-
-                  return acc;
-                }, {}) ?? {},
-              from: info?.effective
-                ? new Date(info?.effective)
-                : getStartOfToday(),
-              to: info?.expires ? new Date(info?.expires) : new Date(),
-              headline: info?.headline ?? "",
-              description: info?.description ?? "",
-              instruction: info?.instruction ?? "",
-              actions: info?.responseType ?? [],
-              certainty: info?.certainty ?? "",
-              severity: info?.severity ?? "",
-              urgency: info?.urgency ?? "",
-              status: capAlert.status,
-              msgType: capAlert.msgType,
-              scope: capAlert.scope,
-              restriction: capAlert.restriction ?? "",
-              addresses: capAlert.addresses?.match(/\w+|"[^"]+"/g) ?? [],
-              references: capAlert.references?.split(" ") ?? [],
-              event: info?.event ?? "",
-            });
-            router.push("/editor");
-          }}
-        >
-          Use as template for new alert
-        </Button>
-      </ButtonToolbar>
     </Panel>
   );
 }

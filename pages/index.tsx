@@ -2,8 +2,10 @@ import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { startRegistration } from "@simplewebauthn/browser";
 import { Button, Loader, Message, Panel } from "rsuite";
+import { Alert as DBAlert } from "@prisma/client";
 import useSWR from "swr";
 
+import styles from "../styles/Home.module.css";
 import { fetcher } from "../lib/helpers";
 import Alert from "../components/Alert";
 
@@ -15,6 +17,36 @@ export default function Home() {
     isLoading,
   } = useSWR("/api/alerts?json=1", fetcher);
 
+  const alertsByStatus: {
+    published: DBAlert[];
+    draft: DBAlert[];
+    template: DBAlert[];
+    expired: DBAlert[];
+  } = {
+    published: [],
+    draft: [],
+    template: [],
+    expired: [],
+  };
+
+  if (alerts && !alerts?.error) {
+    for (let i = 0; i < alerts.alerts.length; i++) {
+      const alert = alerts.alerts[i];
+      if (alert.status === "DRAFT") {
+        alertsByStatus.draft.push(alert);
+      } else if (alert.status === "TEMPLATE") {
+        alertsByStatus.template.push(alert);
+      } else if (alert.status === "PUBLISHED") {
+        if (new Date(alert?.data?.info?.[0]?.expires) < new Date()) {
+          alertsByStatus.expired.push(alert);
+        } else {
+          alertsByStatus.published.push(alert);
+        }
+      }
+    }
+  }
+
+  // TODO return the internal alert status in request
   return (
     <>
       <Head>
@@ -31,13 +63,11 @@ export default function Home() {
         </p>
 
         {!session && (
-          <>
-            <p>
-              <Button color="violet" appearance="primary">
-                Register with your Alerting Authority &rarr;
-              </Button>
-            </p>
-          </>
+          <p>
+            <Button color="violet" appearance="primary">
+              Register with your Alerting Authority &rarr;
+            </Button>
+          </p>
         )}
 
         {session && (
@@ -52,19 +82,27 @@ export default function Home() {
               </Message>
             )}
 
-            {!error && alerts?.success && (
+            {!error && !alerts?.error && (
               <>
-                <Panel
-                  header="Active alerts"
-                  bordered
-                  collapsible
-                  defaultExpanded
-                >
-                  {alerts.alerts.map((a) => (
-                    <Alert key={`alert-${a.id}`} capAlert={a.data} />
-                  ))}
-                </Panel>
-                <Panel header="Past alerts" bordered collapsible></Panel>
+                {Object.entries(alertsByStatus).map(
+                  ([status, alertsForStatus]) => (
+                    <Panel
+                      key={`alerts-${status}`}
+                      header={`${status} alerts`}
+                      className={styles.alertStatusWrapper}
+                      defaultExpanded={!!alertsForStatus.length}
+                      collapsible
+                      bordered
+                    >
+                      <div className={styles.alertsWrapper}>
+                        {!alertsForStatus.length && <p>No alerts</p>}
+                        {alertsForStatus.map((a) => (
+                          <Alert key={`alert-${a.id}`} alert={a} />
+                        ))}
+                      </div>
+                    </Panel>
+                  )
+                )}
               </>
             )}
 

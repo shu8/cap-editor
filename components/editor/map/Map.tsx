@@ -18,7 +18,7 @@ import GeoJSON from "ol/format/GeoJSON";
 import Feature from "ol/Feature";
 import { AlertingAuthority } from "../../../lib/types/types";
 import { singleClick } from "ol/events/condition";
-import { AlertData } from "../NewAlert";
+import { FormAlertData } from "../Editor";
 import { Type } from "ol/geom/Geometry";
 import { defaults as OLDefaultInteractions } from "ol/interaction";
 
@@ -74,8 +74,8 @@ export default function Map({
   onRegionsChange,
   alertingAuthority,
   enableInteraction = false,
-}: Partial<AlertData> & {
-  onRegionsChange: (regions: AlertData["regions"]) => null;
+}: Partial<FormAlertData> & {
+  onRegionsChange: (regions: FormAlertData["regions"]) => null;
   alertingAuthority: AlertingAuthority;
   enableInteraction: boolean;
 }) {

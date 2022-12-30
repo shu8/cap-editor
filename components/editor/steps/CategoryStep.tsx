@@ -1,6 +1,6 @@
 import styles from "../../../styles/components/cap/Step.module.css";
 import { classes } from "../../../lib/helpers";
-import { AlertData, StepProps } from "../NewAlert";
+import { FormAlertData, StepProps } from "../Editor";
 import { Button, Form } from "rsuite";
 
 const CATEGORIES = [
@@ -32,7 +32,7 @@ export default function CategoryStep({
   onUpdate,
   category,
   event,
-}: Partial<AlertData> & StepProps) {
+}: Partial<FormAlertData> & StepProps) {
   return (
     <div>
       <p>Choose a category (or multiple) for the alert.</p>
