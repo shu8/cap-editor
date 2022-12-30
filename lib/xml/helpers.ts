@@ -1,6 +1,24 @@
 import { Alert } from ".prisma/client";
+import { XMLBuilder } from "fast-xml-parser";
+import { Capgen } from 'capgen';
+
+const CAPGenerator = new Capgen({ strictMode: false, comment: false, xmlOptions: { prettyPrint: true } });
 
 export const formatAlertAsXML = (alert: Alert) => {
+  // console.log(alerts[0].data.info[0].area[0].polygon.flat(2));
+  const info = alert?.data?.info;
+  if (info) {
+    for (let j = 0; j < info.length; j++) {
+      info[j].area?.forEach(a => {
+        if (typeof a.polygon !== 'string') {
+          a.polygon = [a.polygon.flat(2).join(' ')];
+        }
+      });
+    }
+  }
+
+  return CAPGenerator.createUsing(alert.data);
+
   return `<?xml version="1.0" encoding="UTF-8"?>
 <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
   <identifier>${alert.id}</identifier>
