@@ -106,12 +106,16 @@ export default function EditorPage(props: Props) {
           const areaDescriptions = area.areaDesc.split(", ");
           if (area.circle) {
             // TODO map circles into format so they are shown on map
-            acc[areaDescriptions.find((a) => a.startsWith("custom")) ?? i] =
-              area.circle;
+            acc[
+              areaDescriptions.find((a) => a.startsWith("custom")) ??
+                `custom-${i}`
+            ] = area.circle;
           }
           if (area.polygon) {
-            acc[areaDescriptions.find((a) => !a.startsWith("custom")) ?? i] =
-              area.polygon;
+            acc[
+              areaDescriptions.find((a) => !a.startsWith("custom")) ??
+                `custom-${i}`
+            ] = area.polygon;
           }
 
           return acc;

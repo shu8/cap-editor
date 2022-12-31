@@ -23,6 +23,8 @@
     "@rsuite/icons": "^1.0.2",
     "@simplewebauthn/browser": "^6.2.2",
     "@simplewebauthn/server": "^6.2.2",
+    "@turf/flip": "^6.5.0",
+    "@turf/union": "7.0.0-alpha.0",
     "capgen": "^1.0.8",
     "cookies-next": "^2.1.1",
     "fast-xml-parser": "^4.0.12",

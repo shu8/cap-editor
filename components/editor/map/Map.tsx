@@ -16,11 +16,12 @@ import Image from "next/image";
 import { Style, Stroke, Fill } from "ol/style";
 import GeoJSON from "ol/format/GeoJSON";
 import Feature from "ol/Feature";
-import { AlertingAuthority } from "../../../lib/types/types";
 import { singleClick } from "ol/events/condition";
 import { FormAlertData } from "../Editor";
 import { Type } from "ol/geom/Geometry";
 import { defaults as OLDefaultInteractions } from "ol/interaction";
+import { AlertingAuthority } from "@prisma/client";
+import flip from "@turf/flip";
 
 // https://www.reshot.com/free-svg-icons/item/free-positioning-polygone-F2AWH4PGVQ/
 const PolygonImage = () => (
@@ -47,9 +48,10 @@ const CircleImage = () => (
 // eslint-disable-next-line react-hooks/exhaustive-deps
 const useMountEffect = (fn: EffectCallback) => useEffect(fn, []);
 
+const geojsonFormat = new GeoJSON();
 const defaultFeaturesSource = new OLVectorSource({
   url: "/countries.geojson",
-  format: new GeoJSON(),
+  format: geojsonFormat,
 });
 const OSMSource = new OSM();
 const selectedStyle = new Style({
@@ -147,7 +149,12 @@ export default function Map({
         } else {
           const polygonFeature = new Feature(new Polygon([data]));
           polygonFeature.setId(r);
-          selectedFeaturesSource.addFeature(polygonFeature);
+          const geoJsonFeature =
+            geojsonFormat.writeFeatureObject(polygonFeature);
+          flip(geoJsonFeature, { mutate: true });
+          selectedFeaturesSource.addFeature(
+            geojsonFormat.readFeature(geoJsonFeature)
+          );
         }
       }
     });
@@ -244,11 +251,11 @@ export default function Map({
       if (regionName) {
         // A full country was selected
 
+        const geoJsonFeature = geojsonFormat.writeFeatureObject(e.feature);
+        flip(geoJsonFeature, { mutate: true });
         onRegionsChange({
           ...regions,
-          [regionName]: (e.feature?.getGeometry() as Polygon)
-            ?.getCoordinates()
-            ?.flat(),
+          [regionName]: geoJsonFeature.geometry.coordinates.flat(),
         });
       } else {
         // A custom polygon/circle was added
@@ -258,11 +265,12 @@ export default function Map({
         const geometryType = e.feature?.getGeometry()?.getType();
 
         if (geometryType === "Polygon") {
+          const geoJsonFeature = geojsonFormat.writeFeatureObject(e.feature);
+          flip(geoJsonFeature, { mutate: true });
+
           onRegionsChange({
             ...regions,
-            [id]: (e.feature?.getGeometry() as Polygon)
-              ?.getCoordinates()
-              ?.flat(),
+            [id]: geoJsonFeature.geometry.coordinates,
           });
         } else {
           const geometry = e.feature?.getGeometry() as Circle;
@@ -272,11 +280,11 @@ export default function Map({
           if (!metersPerUnit) return;
           const radiusKm = (geometry.getRadius() * metersPerUnit) / 1000;
 
-          // WGS84 needs Center as Latitude, Longitude.
-          // CAP wants radius in km after a space character
+          // CAP needs Center as Latitude, Longitude.
+          // CAP needs radius in km after a space character
           onRegionsChange({
             ...regions,
-            [id]: `${center.reverse().join(",")} ${radiusKm}`,
+            [id]: [`${center.reverse().join(",")} ${radiusKm}`],
           });
         }
       }

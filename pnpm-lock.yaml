@@ -8,6 +8,8 @@ specifiers:
   '@simplewebauthn/browser': ^6.2.2
   '@simplewebauthn/server': ^6.2.2
   '@simplewebauthn/typescript-types': 6.3.0-alpha.1
+  '@turf/flip': ^6.5.0
+  '@turf/union': 7.0.0-alpha.0
   '@types/node': 18.11.15
   '@types/nodemailer': ^6.4.7
   '@types/react': 18.0.26
@@ -40,6 +42,8 @@ dependencies:
   '@rsuite/icons': 1.0.2_biqbaboplfbrettd7655fr4n2y
   '@simplewebauthn/browser': 6.2.2
   '@simplewebauthn/server': 6.2.2
+  '@turf/flip': 6.5.0
+  '@turf/union': 7.0.0-alpha.0
   capgen: 1.0.8
   cookies-next: 2.1.1
   fast-xml-parser: 4.0.12
@@ -570,6 +574,51 @@ packages:
   /@tsconfig/node16/1.0.3:
     resolution: {integrity: sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==}
     dev: true
+
+  /@turf/clone/6.5.0:
+    resolution: {integrity: sha512-mzVtTFj/QycXOn6ig+annKrM6ZlimreKYz6f/GSERytOpgzodbQyOgkfwru100O1KQhhjSudKK4DsQ0oyi9cTw==}
+    dependencies:
+      '@turf/helpers': 6.5.0
+    dev: false
+
+  /@turf/flip/6.5.0:
+    resolution: {integrity: sha512-oyikJFNjt2LmIXQqgOGLvt70RgE2lyzPMloYWM7OR5oIFGRiBvqVD2hA6MNw6JewIm30fWZ8DQJw1NHXJTJPbg==}
+    dependencies:
+      '@turf/clone': 6.5.0
+      '@turf/helpers': 6.5.0
+      '@turf/meta': 6.5.0
+    dev: false
+
+  /@turf/helpers/6.5.0:
+    resolution: {integrity: sha512-VbI1dV5bLFzohYYdgqwikdMVpe7pJ9X3E+dlr425wa2/sMJqYDhTO++ec38/pcPvPE6oD9WEEeU3Xu3gza+VPw==}
+    dev: false
+
+  /@turf/helpers/7.0.0-alpha.0:
+    resolution: {integrity: sha512-+TL5Lv7J12+/JZ8DkKmbia5w/wJFONESTVOHYGzqo2UiutM6wofqlfRZxw3sa36yggosDQ56PEF+sbQhTEazwQ==}
+    dependencies:
+      tslib: 2.4.1
+    dev: false
+
+  /@turf/meta/6.5.0:
+    resolution: {integrity: sha512-RrArvtsV0vdsCBegoBtOalgdSOfkBrTJ07VkpiCnq/491W67hnMWmDu7e6Ztw0C3WldRYTXkg3SumfdzZxLBHA==}
+    dependencies:
+      '@turf/helpers': 6.5.0
+    dev: false
+
+  /@turf/meta/7.0.0-alpha.0:
+    resolution: {integrity: sha512-BGn9d5GIk25CXkgU5P0YcW4eOAL04zFpVwFIRreHNU28baI0s+bM8WUtC+DcYTs75hSvJo4gbvb1FiRFj9Viow==}
+    dependencies:
+      '@turf/helpers': 7.0.0-alpha.0
+    dev: false
+
+  /@turf/union/7.0.0-alpha.0:
+    resolution: {integrity: sha512-4MHMvIzUDNKFEJMU3P6WyG7X+Ya3QRQbmGj6lkgBlaTm0XN+cygqRlrfU8xx0IeMhaqdgWYSDs1WqoOkAVnKKw==}
+    dependencies:
+      '@turf/helpers': 7.0.0-alpha.0
+      '@turf/meta': 7.0.0-alpha.0
+      polygon-clipping: 0.15.3
+      tslib: 2.4.1
+    dev: false
 
   /@types/chai/4.3.4:
     resolution: {integrity: sha512-KnRanxnpfpjUTqTCXslZSEdLfXExwgNxYPdiO2WGUj8+HDjFi8R3k5RVKPeSCzLjCcshCAtVO2QBbVuAV4kTnw==}
@@ -2519,6 +2568,12 @@ packages:
       pvutils: 1.1.3
     dev: false
 
+  /polygon-clipping/0.15.3:
+    resolution: {integrity: sha512-ho0Xx5DLkgxRx/+n4O74XyJ67DcyN3Tu9bGYKsnTukGAW6ssnuak6Mwcyb1wHy9MZc9xsUWqIoiazkZB5weECg==}
+    dependencies:
+      splaytree: 3.1.1
+    dev: false
+
   /postcss/8.4.14:
     resolution: {integrity: sha512-E398TUmfAYFPBSdzgeieK2Y1+1cpdxJx8yXbK/m57nRhKSmk1GB2tO4lbLBtlkfPQTDKfe4Xqv1ASWPpayPEig==}
     engines: {node: ^10 || ^12 || >=14}
@@ -2857,6 +2912,10 @@ packages:
   /source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /splaytree/3.1.1:
+    resolution: {integrity: sha512-9FaQ18FF0+sZc/ieEeXHt+Jw2eSpUgUtTLDYB/HXKWvhYVyOc7h1hzkn5MMO3GPib9MmXG1go8+OsBBzs/NMww==}
     dev: false
 
   /sprintf-js/1.0.3:

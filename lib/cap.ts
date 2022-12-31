@@ -35,7 +35,7 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
       headline: alertData.headline,
       description: alertData.description,
       instruction: alertData.instruction,
-      web: `https://${process.env.DOMAIN}/feed/${identifier}`,
+      web: `https://${process.env.DOMAIN}/feed/${id}`,
       // contact
       // parameter
       // resource: [{
@@ -46,20 +46,23 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
       //   // drefUri
       //   // digest
       // }],
-      area: [{
-        areaDesc: Object.keys(alertData.regions).join(', '),
-        circle: Object.values(alertData.regions).filter(data => typeof data === 'string'),
-        polygon: Object.values(alertData.regions).filter(data => typeof data !== 'string'),
+      area: Object.entries(alertData.regions).map(([regionName, data]) => ({
+        areaDesc: regionName,
+        ...(typeof data?.[0] === 'string' && { circle: data }),
+        ...(typeof data?.[0] !== 'string' && { polygon: data }),
         // geocode
         // altitude
         // ceiling
-      }]
+      }))
     }]
   };
 
 
   const validationResult = validateJSON(alert, CAPV12Schema);
-  if (!validationResult.valid) throw 'Invalid alert details';
+  if (!validationResult.valid) {
+    console.error(validationResult);
+    throw 'Invalid alert details';
+  }
 
   return alert as CAPV12JSONSchema;
 };
