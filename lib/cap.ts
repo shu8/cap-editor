@@ -1,22 +1,23 @@
 import { FormAlertData } from "../components/editor/Editor";
 import { validate as validateJSON } from 'jsonschema';
 import { CAPV12JSONSchema, CAPV12Schema } from "./types/cap.schema";
+import { formatDate } from "./helpers";
 
 export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string): CAPV12JSONSchema => {
   // Type as `any` for now because this object needs to next be validated against the JSON schema
   const alert: any = {
     identifier: id,
     sender: process.env.CAP_ALERT_SENDER,
-    sent: new Date().toISOString(),
+    sent: formatDate(new Date()),
     status: alertData.status,
     msgType: alertData.msgType,
     // source
     scope: alertData.scope,
     ...(alertData.restriction && { restriction: alertData.restriction }),
-    ...(alertData.addresses && { addresses: alertData.addresses?.map(a => `"${a}"`).join(' ') }),
+    ...(alertData.addresses?.length && { addresses: alertData.addresses?.map(a => `"${a}"`).join(' ') }),
     // code
     // note
-    ...(alertData.references && { references: alertData.references?.join(' ') }),
+    ...(alertData.references?.length && { references: alertData.references?.join(' ') }),
     // incidents,
     info: [{
       // language

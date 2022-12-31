@@ -98,9 +98,7 @@ export default function MetadataStep({
               block
               name="addresses"
               cleanable={false}
-              onChange={(addresses) => {
-                return onUpdate({ addresses: addresses ?? [] });
-              }}
+              onChange={(addresses) => onUpdate({ addresses: addresses ?? [] })}
               accepter={TagInput}
               trigger={["Enter", "Space", "Comma"]}
               value={addresses}

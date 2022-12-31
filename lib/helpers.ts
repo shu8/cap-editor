@@ -1872,3 +1872,18 @@ export const camelise = (str: string) => {
 };
 
 export const fetcher = (...args) => fetch(...args).then(res => res.json());
+
+// In part, from https://stackoverflow.com/a/17415677
+export const formatDate = (date: Date) => {
+  const pad = (num: number) => num.toString().padStart(2, '0');
+  const tzo = -date.getTimezoneOffset();
+
+  return date.getFullYear() +
+    '-' + pad(date.getMonth() + 1) +
+    '-' + pad(date.getDate()) +
+    'T' + pad(date.getHours()) +
+    ':' + pad(date.getMinutes()) +
+    ':' + pad(date.getSeconds()) +
+    (tzo < 0 ? '-' : '+') + pad(tzo / 60) +
+    ':' + pad(Math.abs(tzo) % 60);
+};

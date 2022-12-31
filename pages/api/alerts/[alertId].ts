@@ -8,6 +8,7 @@ import { authOptions } from '../auth/[...nextauth]';
 import { CAPV12JSONSchema } from '../../../lib/types/cap.schema';
 import { Prisma } from '@prisma/client';
 import { mapFormAlertDataToCapSchema } from '../../../lib/cap';
+import { formatAlertAsXML } from '../../../lib/xml/helpers';
 
 export default async function handler(
   req: NextApiRequest,

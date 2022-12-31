@@ -5,7 +5,7 @@ import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { Alert, AlertingAuthority, AlertStatus, Role } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import { getStartOfToday } from "../../lib/helpers";
+import { formatDate, getStartOfToday } from "../../lib/helpers";
 import { CAPV12JSONSchema } from "../../lib/types/cap.schema";
 import { ERRORS } from "../../lib/errors";
 
@@ -133,8 +133,10 @@ export default function EditorPage(props: Props) {
       msgType: alertData.msgType,
       scope: alertData.scope,
       restriction: alertData.restriction ?? "",
-      addresses: alertData.addresses?.match(/\w+|"[^"]+"/g) ?? [],
-      references: alertData.references?.split(" ") ?? [],
+      addresses: alertData.addresses
+        ? alertData.addresses?.match(/\w+|"[^"]+"/g)
+        : [],
+      references: alertData.references ? alertData.references.split(" ") : [],
       event: info?.event ?? "",
     };
   } else {
@@ -185,7 +187,12 @@ export default function EditorPage(props: Props) {
               {
                 method: props.alert ? "PUT" : "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: alertStatus, data: alertData }),
+                body: JSON.stringify(
+                  { status: alertStatus, data: alertData },
+                  function (k, v) {
+                    return this[k] instanceof Date ? formatDate(this[k]) : v;
+                  }
+                ),
               }
             );
           }}
