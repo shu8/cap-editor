@@ -2,9 +2,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { setCookie } from "cookies-next";
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
 import { randomUUID } from "crypto";
-import redis from "../../../lib/redis";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+import redis from "../../../lib/redis";
+import { withErrorHandler } from "../../../lib/apiErrorHandler";
+
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     const tempUserId = randomUUID();
     const cookieExpiry = new Date();
@@ -27,3 +29,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.json(options);
   }
 }
+
+export default withErrorHandler(handler);

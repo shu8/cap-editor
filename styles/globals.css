@@ -73,3 +73,7 @@ main {
 .rs-tag-orange {
   color: black;
 }
+
+.rs-toast-container {
+  pointer-events: fill;
+}

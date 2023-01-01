@@ -1,7 +1,8 @@
 import styles from "../styles/components/AuthenticateForm.module.css";
-import { Button, Form, SelectPicker } from "rsuite";
+import { Button, Form, Message, SelectPicker, useToaster } from "rsuite";
 import { useEffect, useState } from "react";
-import { updateState } from "../lib/helpers";
+import { HandledError, updateState } from "../lib/helpers";
+import ErrorMessage from "./ErrorMessage";
 
 type RegisterData = {
   name: string;
@@ -10,6 +11,7 @@ type RegisterData = {
 };
 
 export default function RegisterForm({ email = "" }) {
+  const toaster = useToaster();
   const [alertingAuthorities, setAlertingAuthorities] = useState([]);
   const [formData, setFormData] = useState<RegisterData>({
     name: "",
@@ -39,10 +41,17 @@ export default function RegisterForm({ email = "" }) {
           })
             .then((res) => res.json())
             .then((res) => {
-              window.alert(
-                "Registration successful. You will receive an email once your Alerting Authority has approved your account."
+              if (res.error) throw new HandledError(res.message);
+              toaster.push(
+                <Message type="success">
+                  Registration successful. You will receive an email once your
+                  Alerting Authority has approved your account.
+                </Message>
               );
-            });
+            })
+            .catch((err) =>
+              toaster.push(<ErrorMessage error={err} action="registering" />)
+            );
         }}
       >
         <Form.Group controlId="name">
@@ -69,7 +78,18 @@ export default function RegisterForm({ email = "" }) {
             onOpen={() =>
               fetch("/api/alertingAuthorities")
                 .then((res) => res.json())
-                .then((res) => setAlertingAuthorities(res.result))
+                .then((res) => {
+                  if (res.error) throw new HandledError(res.message);
+                  return setAlertingAuthorities(res.result);
+                })
+                .catch((err) =>
+                  toaster.push(
+                    <ErrorMessage
+                      error={err}
+                      action="fetching alerting authorities"
+                    />
+                  )
+                )
             }
             virtualized
             groupBy="countryCode"

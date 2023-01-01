@@ -1,7 +1,8 @@
 import { readFileSync } from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { withErrorHandler } from "../../lib/apiErrorHandler";
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -13,3 +14,5 @@ export default async function handler(
     return res.json({ countries: countries.features.map(f => f.id) });
   }
 }
+
+export default withErrorHandler(handler);

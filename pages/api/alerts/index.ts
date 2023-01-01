@@ -9,29 +9,31 @@ import { CAPV12JSONSchema, CAPV12Schema } from '../../../lib/types/cap.schema';
 import { Prisma } from '@prisma/client';
 import { FormAlertData } from '../../../components/editor/Editor';
 import { mapFormAlertDataToCapSchema } from '../../../lib/cap';
+import { withErrorHandler } from '../../../lib/apiErrorHandler';
+import { ApiError } from 'next/dist/server/api-utils';
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
     if (!['TEMPLATE', 'PUBLISHED', 'DRAFT'].includes(req.body.status)) {
-      return res.status(400).json({ success: false, message: 'Invalid request' });
+      throw new ApiError(400, 'You did not provide a valid alert status');
     }
 
     const session = await unstable_getServerSession(req, res, authOptions);
     if (!session) {
-      return res.status(403).json({ success: false, message: 'You are not logged in' });
+      throw new ApiError(401, 'You are not logged in');
     }
 
     // i.e., if they are only a VALIDATOR, then they can only publish existing drafted alerts (not POST new ones)
     if (!session.user.roles.includes('ADMIN') && !session.user.roles.includes('EDITOR')) {
-      return res.status(403).json({ success: false, message: 'You do not have permission to create new alerts' });
+      throw new ApiError(403, 'You do not have permission to create new alerts');
     }
 
     // i.e., only admins can request to publish a new alert (a validator must update the status of an existing alert and an editor can only edit drafts/templates)
     if (!session.user.roles.includes('ADMIN') && req.body.status === 'PUBLISHED') {
-      return res.status(403).json({ success: false, message: 'You do not have permission to publish new alerts' });
+      throw new ApiError(403, 'You do not have permission to publish new alerts');
     }
 
     const identifier = randomUUID();
@@ -47,10 +49,10 @@ export default async function handler(
           status: req.body.status,
         }
       });
-      return res.status(200).json({ success: true, identifier });
+      return res.status(200).json({ error: false, identifier });
     } catch (err) {
       console.error(err);
-      return res.status(400).json({ success: false, message: 'Invalid alert' });
+      throw new ApiError(400, 'You did not provide valid alert details');
     }
   }
 
@@ -75,3 +77,5 @@ export default async function handler(
       )));
   }
 }
+
+export default withErrorHandler(handler);

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { TagPicker } from "rsuite";
+import { TagPicker, useToaster } from "rsuite";
+import { HandledError } from "../../../lib/helpers";
+import ErrorMessage from "../../ErrorMessage";
 import { FormAlertData, StepProps } from "../Editor";
 
 export default function MapStep({
@@ -7,12 +9,19 @@ export default function MapStep({
   regions = {},
   countryCode,
 }: Partial<FormAlertData> & StepProps & { countryCode: string }) {
+  const toaster = useToaster();
   const [countries, setCountries] = useState([]);
 
   const fetchCountries = async () => {
     fetch(`/api/countries?countryCode=${countryCode}`)
       .then((res) => res.json())
-      .then((res) => setCountries(res.countries));
+      .then((res) => {
+        if (res.error) throw new HandledError(res.message);
+        setCountries(res.countries);
+      })
+      .catch((err) =>
+        toaster.push(<ErrorMessage error={err} action="fetching map regions" />)
+      );
   };
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+import { AlertingAuthority } from "@prisma/client";
 import { XMLParser } from "fast-xml-parser";
 
 export const fetchWMOAlertingAuthorities = async () => {
@@ -1841,7 +1842,7 @@ export const fetchWMOAlertingAuthorities = async () => {
     }
   ];
 
-  return data;
+  return data as AlertingAuthority[];
 };
 
 export const classes = (...args) => args.filter(c => !!c).join(' ');
@@ -1887,3 +1888,11 @@ export const formatDate = (date: Date) => {
     (tzo < 0 ? '-' : '+') + pad(tzo / 60) +
     ':' + pad(Math.abs(tzo) % 60);
 };
+
+export class HandledError extends Error {
+  constructor(message: string, ...params) {
+    super(...params);
+    this.name = 'HandledError';
+    this.message = message;
+  }
+}

@@ -3,9 +3,11 @@ import Head from "next/head";
 import styles from "../styles/Verify.module.css";
 import { ERRORS } from "../lib/errors";
 import prisma from "../lib/prisma";
-import { Button, Message, Modal, TagPicker } from "rsuite";
+import { Button, Message, Modal, TagPicker, useToaster } from "rsuite";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
+import { HandledError } from "../lib/helpers";
+import ErrorMessage from "../components/ErrorMessage";
 
 type Props = {
   userToBeVerified: {
@@ -55,6 +57,7 @@ export default function VerifyUser({
   userToBeVerified,
   verificationToken,
 }: Props) {
+  const toaster = useToaster();
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [roles, setRoles] = useState([]);
 
@@ -63,7 +66,19 @@ export default function VerifyUser({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ verificationToken, verified, roles }),
-    });
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.error) throw new HandledError(res.message);
+        toaster.push(
+          <Message type="success">Account successfully verified</Message>
+        );
+      })
+      .catch((err) =>
+        toaster.push(
+          <ErrorMessage error={err} action="verifying the account" />
+        )
+      );
   };
 
   return (

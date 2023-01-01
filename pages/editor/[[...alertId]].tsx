@@ -5,9 +5,11 @@ import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { Alert, AlertingAuthority, AlertStatus, Role } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import { formatDate, getStartOfToday } from "../../lib/helpers";
+import { formatDate, getStartOfToday, HandledError } from "../../lib/helpers";
 import { CAPV12JSONSchema } from "../../lib/types/cap.schema";
 import { ERRORS } from "../../lib/errors";
+import { Message, useToaster } from "rsuite";
+import ErrorMessage from "../../components/ErrorMessage";
 
 type Props = {
   alertingAuthority: AlertingAuthority;
@@ -91,6 +93,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 export default function EditorPage(props: Props) {
+  const toaster = useToaster();
   let defaultAlertData;
 
   if (props.alert) {
@@ -134,7 +137,7 @@ export default function EditorPage(props: Props) {
       scope: alertData.scope,
       restriction: alertData.restriction ?? "",
       addresses: alertData.addresses
-        ? alertData.addresses?.match(/\w+|"[^"]+"/g)
+        ? alertData.addresses?.match(/\w+|"[^"]+"/g) ?? []
         : [],
       references: alertData.references ? alertData.references.split(" ") : [],
       event: info?.event ?? "",
@@ -194,7 +197,21 @@ export default function EditorPage(props: Props) {
                   }
                 ),
               }
-            );
+            )
+              .then((res) => res.json())
+              .then((res) => {
+                if (res.error) throw new HandledError(res.message);
+                toaster.push(
+                  <Message type="success">
+                    Alert successfully submitted.
+                  </Message>
+                );
+              })
+              .catch((err) =>
+                toaster.push(
+                  <ErrorMessage error={err} action="submitting the alert" />
+                )
+              );
           }}
         />
       </main>

@@ -1,8 +1,9 @@
 import styles from "../../../styles/components/cap/Step.module.css";
-import { Form, SelectPicker, TagInput, TagPicker } from "rsuite";
+import { Form, SelectPicker, TagInput, TagPicker, useToaster } from "rsuite";
 import { FormAlertData, StepProps } from "../Editor";
-import { classes } from "../../../lib/helpers";
+import { classes, HandledError } from "../../../lib/helpers";
 import { useState } from "react";
+import ErrorMessage from "../../ErrorMessage";
 
 const STATUSES = ["Actual", "Exercise", "System", "Test", "Draft"];
 const MESSAGE_TYPES = ["Alert", "Update", "Cancel", "Ack", "Error"];
@@ -17,11 +18,18 @@ export default function MetadataStep({
   addresses,
   references,
 }: Partial<FormAlertData> & StepProps) {
+  const toaster = useToaster();
   const [referenceOptions, setReferenceOptions] = useState([]);
   const fetchReferenceOptions = () => {
     fetch("/api/alerts?json=true")
       .then((res) => res.json())
-      .then((res) => setReferenceOptions(res.alerts));
+      .then((res) => {
+        if (res.error) throw new HandledError(res.message);
+        setReferenceOptions(res.alerts);
+      })
+      .catch((err) =>
+        toaster.push(<ErrorMessage error={err} action="fetching past alerts" />)
+      );
   };
 
   return (

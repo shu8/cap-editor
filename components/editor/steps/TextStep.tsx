@@ -7,11 +7,13 @@ import {
   Input,
   SelectPicker,
   TagPicker,
+  useToaster,
 } from "rsuite";
 import { forwardRef, useEffect, useState } from "react";
-import { camelise, classes } from "../../../lib/helpers";
+import { camelise, classes, HandledError } from "../../../lib/helpers";
 import { FormAlertData, StepProps } from "../Editor";
 import { WhatNowResponse } from "../../../lib/types/types";
+import ErrorMessage from "../../ErrorMessage";
 
 const Textarea = forwardRef((props, ref) => (
   <Input {...props} ref={ref} rows={5} as="textarea" />
@@ -50,6 +52,7 @@ export default function TextStep({
   countryCode,
   urgency,
 }: Partial<FormAlertData> & StepProps & { countryCode: string }) {
+  const toaster = useToaster();
   const [numberOfUrls, setNumberOfUrls] = useState(1);
   const [whatNowMessages, setWhatNowMessages] = useState<WhatNowResponse[]>([]);
   const [chosenWhatNowMessage, setChosenWhatNowMessage] = useState<
@@ -62,7 +65,15 @@ export default function TextStep({
   useEffect(() => {
     fetch(`/api/whatnow?countryCode=${countryCode}`)
       .then((res) => res.json())
-      .then((res) => setWhatNowMessages(res.data));
+      .then((res) => {
+        if (res.error) throw new HandledError(res.message);
+        setWhatNowMessages(res.data);
+      })
+      .catch((err) =>
+        toaster.push(
+          <ErrorMessage error={err} action="fetching WhatNow messages" />
+        )
+      );
   }, []);
 
   useEffect(() => {

@@ -5,16 +5,18 @@ import { unstable_getServerSession } from "next-auth";
 
 import prisma from '../../../lib/prisma';
 import { authOptions } from "../auth/[...nextauth]";
+import { withErrorHandler } from "../../../lib/apiErrorHandler";
+import { ApiError } from "next/dist/server/api-utils";
 
 /**
  * To register with WebAuthn, you need to be logged in already (via magic link).
  * Then, on future logins, you can use WebAuthn.
  */
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session?.user) {
-    return res.status(403).json({ error: true, message: 'You are not logged in' });
+    throw new ApiError(401, 'You are not logged in');
   }
 
   if (req.method === "GET") {
@@ -51,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     if (!challenge?.currentWebauthnChallenge) {
-      return res.status(401).json({ error: true, message: 'Cannot register yet' });
+      throw new ApiError(403, 'Your account cannot register for WebAuthn yet');
     }
 
     const { verified, registrationInfo } = await verifyRegistrationResponse({
@@ -87,7 +89,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       where: { email: session.user.email as string },
       data: { currentWebauthnChallenge: null }
     });
-    return res.status(500).json({ error: true, message: 'Unable to register' });
 
+    throw new Error('Unable to register');
   }
 }
+
+export default withErrorHandler(handler);

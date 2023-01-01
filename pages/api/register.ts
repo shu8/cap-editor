@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { randomBytes } from "crypto";
+import { AlertingAuthority } from "@prisma/client";
 import prisma from '../../lib/prisma';
 import { sendEmail } from "../../lib/email";
 import { fetchWMOAlertingAuthorities } from "../../lib/helpers";
-import { AlertingAuthority } from "../../lib/types/types";
-import { randomBytes } from "crypto";
+import { withErrorHandler } from "../../lib/apiErrorHandler";
+import { ApiError } from "next/dist/server/api-utils";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     const { name, email, alertingAuthorityId } = req.body;
 
@@ -13,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const alertingAuthority = alertingAuthorities.find(a => a.id === alertingAuthorityId);
 
     if (!alertingAuthority) {
-      return res.status(400).json({ success: false, error: 'Unknown Alerting Authority' });
+      throw new ApiError(400, 'You did not choose a valid Alerting Authority');
     }
 
     const alertingAuthorityVerificationToken = randomBytes(32).toString('hex');
@@ -47,6 +49,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       html: `Please verify this user has permission to create alerts for your Alerting Authority: <a href="https://${process.env.DOMAIN}/verify?token=${alertingAuthorityVerificationToken}">Click here</a>`,
     });
 
-    return res.json({ success: true });
+    return res.json({ error: false });
   }
 }
+
+export default withErrorHandler(handler);

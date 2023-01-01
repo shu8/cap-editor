@@ -1,19 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prisma";
 import { sendEmail } from "../../lib/email";
-import { ERRORS } from "../../lib/errors";
+import { withErrorHandler } from "../../lib/apiErrorHandler";
+import { ApiError } from "next/dist/server/api-utils";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     // TODO should this require being logged in? would the AA author always have an account already? If not, there would be a loop...
     const alertingAuthorityVerificationToken = req.body.verificationToken;
     if (!alertingAuthorityVerificationToken) {
-      return res
-        .status(400)
-        .json({ error: true, message: "Invalid verification token provided" });
+      throw new ApiError(400, "You did not provide a valid verification token");
     }
 
     const user = await prisma.user.findFirst({
@@ -22,13 +18,14 @@ export default async function handler(
     });
 
     if (!user) {
-      return res
-        .status(400)
-        .json({ error: true, message: "Invalid verification token provided" });
+      throw new ApiError(400, "You did not provide a valid verification token");
     }
 
     if (typeof req.body.verified !== "boolean") {
-      return res.status(400).json({ error: true, message: "Invalid request" });
+      throw new ApiError(
+        400,
+        "You did not provide a valid verification result"
+      );
     }
 
     if (req.body.verified === false) {
@@ -43,9 +40,10 @@ export default async function handler(
     }
 
     if (!req.body.roles?.length) {
-      return res
-        .status(400)
-        .json({ error: true, message: "No roles supplied" });
+      throw new ApiError(
+        400,
+        "You did not provide valid roles for the new account"
+      );
     }
 
     // TODO ask verifying user what rights the new user should have (edit/publish/admin etc.)
@@ -68,3 +66,5 @@ export default async function handler(
     return res.redirect("/");
   }
 }
+
+export default withErrorHandler(handler);

@@ -1,20 +1,21 @@
-import { readFileSync } from "fs";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
+import { ApiError } from "next/dist/server/api-utils";
+import { withErrorHandler } from "../../lib/apiErrorHandler";
 import { authOptions } from "./auth/[...nextauth]";
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
     if (!req.query.countryCode) {
-      return res.status(400).json({ error: true, message: 'No country code supplied' });
+      throw new ApiError(400, 'You did not supply a country code');
     }
 
     const session = await unstable_getServerSession(req, res, authOptions);
     if (!session) {
-      return res.status(403).json({ error: true, message: 'You are not logged in' });
+      throw new ApiError(403, 'You are not logged in');
     }
 
     // const data = await fetch(`https://api.preparecenter.org/v1/org/${req.query.countryCode}/whatnow`, {
@@ -225,3 +226,5 @@ export default async function handler(
     });
   }
 }
+
+export default withErrorHandler(handler);

@@ -9,8 +9,10 @@ import { CAPV12JSONSchema } from '../../../lib/types/cap.schema';
 import { Prisma } from '@prisma/client';
 import { mapFormAlertDataToCapSchema } from '../../../lib/cap';
 import { formatAlertAsXML } from '../../../lib/xml/helpers';
+import { withErrorHandler } from '../../../lib/apiErrorHandler';
+import { ApiError } from 'next/dist/server/api-utils';
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -18,38 +20,38 @@ export default async function handler(
 
   if (req.method === 'PUT') {
     if (typeof alertId !== 'string') {
-      return res.status(400).json({ error: true, message: 'Invalid request' });
+      throw new ApiError(400, 'You did not provide a valid Alert ID');
     }
 
     if (!['TEMPLATE', 'PUBLISHED', 'DRAFT'].includes(req.body.status)) {
-      return res.status(400).json({ success: false, message: 'Invalid request' });
+      throw new ApiError(400, 'You did not provide a valid alert status');
     }
 
     const session = await unstable_getServerSession(req, res, authOptions);
 
     if (!session) {
-      return res.status(403).json({ error: true, message: 'You are not logged in' });
+      throw new ApiError(401, 'You are not logged ins');
     }
 
     // i.e., only admins and validators can publish an existing alert
     if (req.body.status === 'PUBLISHED' && (!session.user.roles.includes('ADMIN') && !session.user.roles.includes('VALIDATOR'))) {
-      return res.status(403).json({ error: true, message: 'You do not have permission to publish new alerts' });
+      throw new ApiError(403, 'You do not have permission to publish new alerts');
     }
 
     const alert = await prisma.alert.findFirst({ where: { id: alertId } });
 
     if (!alert) {
-      return res.status(404).json({ error: true, message: 'Invalid alert ID' });
+      throw new ApiError(404, 'You did not provide a valid alert ID');
     }
 
     // i.e., nobody can edit an already-published alert
     if (alert.status === 'PUBLISHED') {
-      return res.status(403).json({ error: true, message: 'You cannot edit an alert that has already been published' });
+      throw new ApiError(403, 'You cannot edit an alert that has already been published');
     }
 
     // i.e., only admins and editors can edit a template
     if (alert.status === 'TEMPLATE' && (!session.user.roles.includes('ADMIN') && !session.user.roles.includes('EDITOR'))) {
-      return res.status(403).json({ error: true, message: 'You do not have permission to edit template alerts' });
+      throw new ApiError(403, 'You do not have permission to edit template alerts');
     }
 
     const alertData: FormAlertData = req.body.data;
@@ -67,7 +69,7 @@ export default async function handler(
       return res.status(200).json({ error: false });
     } catch (err) {
       console.error(err);
-      return res.status(400).json({ success: false, message: 'Invalid new alert details' });
+      throw new ApiError(400, 'You did not provide valid alert details');
     }
   }
 
@@ -79,9 +81,7 @@ export default async function handler(
     try {
       const alert = await prisma.alert.findFirst({ where: { id: alertId } });
 
-      if (!alert) {
-        throw 'Unknown alert';
-      }
+      if (!alert) throw 'Unknown alert';
 
       const signedXML = await sign(alert);
       return res
@@ -95,3 +95,5 @@ export default async function handler(
     }
   }
 }
+
+export default withErrorHandler(handler);
