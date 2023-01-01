@@ -34,19 +34,18 @@ export const formatFeedAsXML = (alerts: Alert[]) => {
     feed: {
       '@_xmlns': 'http://www.w3.org/2005/Atom',
       id: `${process.env.DOMAIN}/feed`,
-      title: 'TODO',
+      title: `Alerts for ${process.env.AA_NAME}`,
       updated: new Date().toISOString(),
       author: {
-        name: 'TODO',
-        email: 'TODO',
-        uri: 'TODO'
+        name: process.env.AA_NAME,
+        email: process.env.AA_EMAIL,
+        uri: process.env.AA_URI,
       },
       link: {
         '@_rel': 'self',
         '@_href': `https://${process.env.DOMAIN}/feed`
       },
-      subtitle: 'TODO',
-      rights: 'TODO',
+      subtitle: process.env.AA_DESCRIPTION,
       entry: alerts.map(a => ({
         id: a.id,
         title: a.data?.info?.[0]?.headline ?? 'Alert',

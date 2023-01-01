@@ -13,7 +13,10 @@ declare global {
       WEBAUTHN_ORIGIN: string;
       TLS_DIRECTORY: string;
       WHAT_NOW_API_KEY: string;
-      CAP_ALERT_SENDER: string;
+      AA_NAME: string;
+      AA_EMAIL: string;
+      AA_URI: string;
+      AA_DESCRIPTION: string;
       REDIS_HOST: string;
     }
   }

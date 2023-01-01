@@ -7,7 +7,7 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
   // Type as `any` for now because this object needs to next be validated against the JSON schema
   const alert: any = {
     identifier: id,
-    sender: process.env.CAP_ALERT_SENDER,
+    sender: process.env.AA_EMAIL,
     sent: formatDate(new Date()),
     status: alertData.status,
     msgType: alertData.msgType,
