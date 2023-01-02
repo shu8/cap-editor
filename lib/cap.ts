@@ -54,7 +54,8 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
         // geocode
         // altitude
         // ceiling
-      }))
+      })),
+      resource: alertData.resources
     }]
   };
 

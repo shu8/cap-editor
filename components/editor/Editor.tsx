@@ -12,6 +12,8 @@ import SummaryStep from "./steps/SummaryStep";
 import MetadataStep from "./steps/MetadataStep";
 import { AlertingAuthority, AlertStatus, Role } from "@prisma/client";
 import SplitButton from "../SplitButton";
+import { useRouter } from "next/router";
+import { Resource } from "../../lib/types/types";
 
 const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];
@@ -35,6 +37,7 @@ export type FormAlertData = {
   scope: string;
   restriction: string;
   addresses: string[];
+  resources: Resource[];
   references: string[];
   event: string;
 };
@@ -52,6 +55,7 @@ type Props = {
 };
 
 export default function Editor(props: Props) {
+  const router = useRouter();
   const [step, setStep] = useState<Step>(STEPS[0]);
   const [alertData, setAlertData] = useState(props.defaultAlertData);
 
@@ -133,6 +137,7 @@ export default function Editor(props: Props) {
           actions={alertData.actions}
           countryCode={props.alertingAuthority.countryCode}
           urgency={alertData.urgency}
+          resources={alertData.resources}
         />
       ),
       isValid: () =>
@@ -258,7 +263,19 @@ export default function Editor(props: Props) {
       </div>
 
       <div className={classes(styles.footer)}>
-        <Button appearance="ghost" color="red">
+        <Button
+          appearance="ghost"
+          color="red"
+          onClick={() => {
+            if (
+              window.confirm(
+                "Are you sure you want to cancel editing this alert?"
+              )
+            ) {
+              router.push("/");
+            }
+          }}
+        >
           Abort
         </Button>
 

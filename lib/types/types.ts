@@ -1,6 +1,11 @@
 import { Role } from "@prisma/client";
 import { DefaultSession } from "next-auth";
 
+export type Resource = {
+  resourceDesc: string;
+  uri: string;
+  mimeType: string;
+};
 
 export type WhatNowResponse = {
   id: string;

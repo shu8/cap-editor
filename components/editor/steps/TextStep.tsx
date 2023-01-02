@@ -10,10 +10,11 @@ import {
   useToaster,
 } from "rsuite";
 import { forwardRef, useEffect, useState } from "react";
-import { camelise, classes, HandledError } from "../../../lib/helpers";
+import { camelise, HandledError } from "../../../lib/helpers";
 import { FormAlertData, StepProps } from "../Editor";
-import { WhatNowResponse } from "../../../lib/types/types";
+import { Resource, WhatNowResponse } from "../../../lib/types/types";
 import ErrorMessage from "../../ErrorMessage";
+import ResourceModal from "../ResourceModal";
 
 const Textarea = forwardRef((props, ref) => (
   <Input {...props} ref={ref} rows={5} as="textarea" />
@@ -43,6 +44,27 @@ const getDefaultInstructionTypes = (urgency: string) => {
   return types;
 };
 
+const Resource = ({
+  resource,
+  onDelete,
+}: {
+  resource: Resource;
+  onDelete: () => void;
+}) => {
+  return (
+    <li className={styles.resource}>
+      {resource.resourceDesc} (
+      <a href={resource.uri} target="_blank" rel="noreferrer">
+        {resource.uri}
+      </a>
+      ) &mdash;{" "}
+      <Button size="xs" color="red" appearance="ghost" onClick={onDelete}>
+        Delete?
+      </Button>
+    </li>
+  );
+};
+
 export default function TextStep({
   onUpdate,
   headline,
@@ -51,9 +73,10 @@ export default function TextStep({
   actions,
   countryCode,
   urgency,
+  resources,
 }: Partial<FormAlertData> & StepProps & { countryCode: string }) {
   const toaster = useToaster();
-  const [numberOfUrls, setNumberOfUrls] = useState(1);
+  const [showResourceModal, setShowResourceModal] = useState(false);
   const [whatNowMessages, setWhatNowMessages] = useState<WhatNowResponse[]>([]);
   const [chosenWhatNowMessage, setChosenWhatNowMessage] = useState<
     string | null
@@ -190,13 +213,29 @@ export default function TextStep({
         If necessary, add links to resources that offer complementary,
         non-essential information to the alert.
       </p>
-      {[...new Array(numberOfUrls)].map((_, n) => (
-        <div key={`url-${n + 1}`} className={classes(styles.urlInputWrapper)}>
-          <span>URL {n + 1}:</span>
-          <Input type="url" />
-        </div>
+      {showResourceModal && (
+        <ResourceModal
+          onSubmit={(d) => {
+            if (!d?.resourceDesc || !d?.uri) return setShowResourceModal(false);
+            resources!.push(d);
+            onUpdate({ resources: [...resources!] });
+            setShowResourceModal(false);
+          }}
+        />
+      )}
+
+      {resources?.map((r, i) => (
+        <Resource
+          resource={r}
+          key={`resource=${i}`}
+          onDelete={() => {
+            resources.splice(i, 1);
+            onUpdate({ resources: [...resources!] });
+          }}
+        />
       ))}
-      <Button>Add another URL?</Button>
+
+      <Button onClick={() => setShowResourceModal(true)}>Add URL?</Button>
     </div>
   );
 }

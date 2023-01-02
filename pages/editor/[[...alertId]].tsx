@@ -124,6 +124,7 @@ export default function EditorPage(props: Props) {
       addresses: alertData.addresses
         ? alertData.addresses?.match(/\w+|"[^"]+"/g) ?? []
         : [],
+      resources: info?.resource ?? [],
       references: alertData.references ? alertData.references.split(" ") : [],
       event: info?.event ?? "",
     };
@@ -145,6 +146,7 @@ export default function EditorPage(props: Props) {
       scope: "Public",
       restriction: "",
       addresses: [],
+      resources: [],
       references: [],
       event: "Test",
     };

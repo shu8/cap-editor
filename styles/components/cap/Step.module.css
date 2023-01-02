@@ -16,15 +16,8 @@
   color: white;
 }
 
-.urlInputWrapper {
-  display: flex;
-  gap: 20px;
-  align-items: center;
+.resource {
   margin: 10px;
-}
-
-.urlInputWrapper > span {
-  width: 50px;
 }
 
 .reviewItem {
