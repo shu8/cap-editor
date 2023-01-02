@@ -98,7 +98,11 @@ export default function Editor(props: Props) {
           countryCode={props.alertingAuthority.countryCode}
         />
       ),
-      isValid: () => Object.keys(alertData.regions).length > 0,
+      isValid: () =>
+        Object.keys(alertData.regions).length > 0 &&
+        Object.values(alertData.regions).every(
+          (r) => Array.isArray(r) && r.length > 0
+        ),
     },
     data: {
       render: () => (

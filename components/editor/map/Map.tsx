@@ -244,7 +244,9 @@ export default function Map({
 
   useEffect(() => {
     const addFeatureHandler = (e: VectorSourceEvent<Geometry>) => {
-      const id = e.feature?.getId();
+      if (!e.feature) return;
+
+      const id = e.feature.getId();
       if (id && regions[id]) return;
 
       const regionName = e.feature?.get("ADMIN");
@@ -260,8 +262,13 @@ export default function Map({
       } else {
         // A custom polygon/circle was added
 
-        const id = `custom-${new Date().getTime()}`;
-        e.feature?.setId(id);
+        const name = e.feature.get("name");
+        if (!name) {
+          selectedFeaturesSource.removeFeature(e.feature);
+          return;
+        }
+
+        e.feature.setId(name);
         const geometryType = e.feature?.getGeometry()?.getType();
 
         if (geometryType === "Polygon") {
@@ -270,10 +277,10 @@ export default function Map({
 
           onRegionsChange({
             ...regions,
-            [id]: geoJsonFeature.geometry.coordinates,
+            [`custom-${name}`]: geoJsonFeature.geometry.coordinates,
           });
         } else {
-          const geometry = e.feature?.getGeometry() as Circle;
+          const geometry = e.feature.getGeometry() as Circle;
           // Center is in form Longitude, Latitude
           const center = geometry.getCenter();
 
@@ -284,7 +291,7 @@ export default function Map({
           // CAP needs radius in km after a space character
           onRegionsChange({
             ...regions,
-            [id]: [`${center.reverse().join(",")} ${radiusKm}`],
+            [`custom-${name}`]: [`${center.reverse().join(",")} ${radiusKm}`],
           });
         }
       }
@@ -358,6 +365,10 @@ export default function Map({
                 });
                 draw.on("drawstart", () => select.setActive(false));
                 draw.on("drawend", (e) => {
+                  const name = window.prompt(
+                    "What is the name of this region?"
+                  );
+                  if (name) e.feature.setProperties({ name });
                   draw.setActive(false);
                   map?.removeInteraction(draw);
                   setTimeout(() => select.setActive(true), 300);

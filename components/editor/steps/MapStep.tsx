@@ -41,7 +41,7 @@ export default function MapStep({
           ...countries.map((c) => ({ label: c, value: c })),
           ...Object.keys(regions)
             .filter((r) => r.startsWith("custom"))
-            .map((r, i) => ({ label: `Custom Region ${i + 1}`, value: r })),
+            .map((r) => ({ label: r.replace("custom-", ""), value: r })),
         ]}
         cleanable={false}
         value={Object.keys(regions)}

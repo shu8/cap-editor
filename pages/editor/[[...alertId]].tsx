@@ -104,25 +104,10 @@ export default function EditorPage(props: Props) {
     defaultAlertData = {
       ...(!props.isTemplate && { identifier: alertData.identifier }),
       category: info?.category ?? [],
-      regions:
-        info?.area?.reduce((acc, area, i) => {
-          const areaDescriptions = area.areaDesc.split(", ");
-          if (area.circle) {
-            // TODO map circles into format so they are shown on map
-            acc[
-              areaDescriptions.find((a) => a.startsWith("custom")) ??
-                `custom-${i}`
-            ] = area.circle;
-          }
-          if (area.polygon) {
-            acc[
-              areaDescriptions.find((a) => !a.startsWith("custom")) ??
-                `custom-${i}`
-            ] = area.polygon;
-          }
-
-          return acc;
-        }, {}) ?? {},
+      regions: info?.area?.reduce((acc, area) => {
+        acc[area.areaDesc] = area.circle ?? area.polygon;
+        return acc;
+      }, {}),
       from: info?.effective ? new Date(info?.effective) : getStartOfToday(),
       to: info?.expires ? new Date(info?.expires) : new Date(),
       headline: info?.headline ?? "",
