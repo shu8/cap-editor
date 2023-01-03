@@ -1,14 +1,16 @@
 import ISO6391 from "iso-639-1";
+import { ReactNode, useState } from "react";
+import { Button, Message, Modal, SelectPicker, useToaster } from "rsuite";
+import CloseOutlineIcon from "@rsuite/icons/CloseOutline";
 
 import styles from "../../styles/components/cap/LanguageTabs.module.css";
 import { classes } from "../../lib/helpers";
-import { ReactNode, useState } from "react";
-import { Button, Message, Modal, SelectPicker, useToaster } from "rsuite";
 
 type Props = {
   languages: string[];
   language: string;
   onCreateLanguage: (language: string) => void;
+  onDeleteLanguage: (language: string) => void;
   onSetLanguage: (language: string) => void;
   children: ReactNode;
 };
@@ -79,6 +81,20 @@ export default function LanguageTabs(props: Props) {
             onClick={() => props.onSetLanguage(l)}
           >
             {ISO6391.getName(l)}
+            <span
+              title="Delete language?"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Are you sure you want to delete this language and all its contents?"
+                  )
+                ) {
+                  props.onDeleteLanguage(l);
+                }
+              }}
+            >
+              <CloseOutlineIcon className={styles.deleteLanguageIcon} />
+            </span>
           </span>
         ))}
         <span

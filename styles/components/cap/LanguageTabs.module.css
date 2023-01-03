@@ -17,3 +17,12 @@
   text-decoration: underline;
   font-weight: bold;
 }
+
+.deleteLanguageIcon {
+  margin-left: 5px;
+}
+
+.deleteLanguageIcon:hover {
+  color: red;
+  font-size: 1.2em;
+}

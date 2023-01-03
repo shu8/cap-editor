@@ -5,6 +5,7 @@ import {
   CheckboxGroup,
   Form,
   Input,
+  Message,
   SelectPicker,
   useToaster,
 } from "rsuite";
@@ -109,16 +110,38 @@ export default function TextStep({
     );
   }, [chosenWhatNowMessage, chosenWhatNowInstructions]);
 
+  useEffect(() => {
+    // Handle a language being deleted
+    const languages = Object.keys(textLanguages!);
+    if (languages.indexOf(language) === -1) {
+      setLanguage(languages[0]);
+    }
+  }, [textLanguages]);
+
   const whatNowMessagesInCurrentLanguage =
     whatNowMessages?.filter((m) => !!m.translations[language]) ?? [];
 
+  console.log(language);
   const { event, headline, description, instruction, resources } =
-    textLanguages![language];
+    textLanguages![language] ?? {};
   return (
     <div>
       <LanguageTabs
         languages={Object.keys(textLanguages!)}
         language={language}
+        onDeleteLanguage={(l) => {
+          if (Object.keys(textLanguages).length > 1) {
+            delete textLanguages![l];
+            onUpdate({ textLanguages: { ...textLanguages } });
+          } else {
+            toaster.push(
+              <Message type="error" duration={0} closable>
+                You cannot delete all languages. Please select a new language to
+                keep first
+              </Message>
+            );
+          }
+        }}
         onCreateLanguage={(l) => {
           onUpdate({
             textLanguages: {
@@ -128,6 +151,7 @@ export default function TextStep({
                 headline: "",
                 description: "",
                 instruction: "",
+                resources: [],
               },
             },
           });
@@ -233,7 +257,7 @@ export default function TextStep({
         </p>
         {showResourceModal && (
           <ResourceModal
-          language={ISO6391.getName(language)}
+            language={ISO6391.getName(language)}
             onSubmit={(d) => {
               if (!d?.resourceDesc || !d?.uri) {
                 return setShowResourceModal(false);
