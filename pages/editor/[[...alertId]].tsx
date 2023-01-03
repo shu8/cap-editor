@@ -189,9 +189,10 @@ export default function EditorPage(props: Props) {
               .then((res) => {
                 if (res.error) throw new HandledError(res.message);
                 toaster.push(
-                  <Message type="success">
+                  <Message type="success" duration={0} showIcon closable>
                     Alert successfully submitted.
-                  </Message>
+                  </Message>,
+                  { placement: "bottomCenter" }
                 );
               })
               .catch((err) =>

@@ -4,6 +4,7 @@ import { FormAlertData, StepProps } from "../Editor";
 import { classes, HandledError } from "../../../lib/helpers";
 import { useState } from "react";
 import ErrorMessage from "../../ErrorMessage";
+import { Alert } from "@prisma/client";
 
 const STATUSES = ["Actual", "Exercise", "System", "Test", "Draft"];
 const MESSAGE_TYPES = ["Alert", "Update", "Cancel", "Ack", "Error"];
@@ -19,7 +20,7 @@ export default function MetadataStep({
   references,
 }: Partial<FormAlertData> & StepProps) {
   const toaster = useToaster();
-  const [referenceOptions, setReferenceOptions] = useState([]);
+  const [referenceOptions, setReferenceOptions] = useState<Alert[]>([]);
   const fetchReferenceOptions = () => {
     fetch("/api/alerts?json=true")
       .then((res) => res.json())
@@ -126,11 +127,16 @@ export default function MetadataStep({
             block
             name="references"
             accepter={TagPicker}
-            data={referenceOptions.map((r) => ({ label: r.id, value: r.id }))}
+            data={referenceOptions.map((alert) => ({
+              label: alert.id,
+              value: `${alert.data.sender},${alert.id},${alert.data.sent}`,
+            }))}
             onChange={(references) => onUpdate({ references })}
             onOpen={fetchReferenceOptions}
-            sort={() => (a, b) =>
-              new Date(a.data.sent) < new Date(b.data.sent) ? 1 : -1}
+            sort={() => (a, b) => {
+              if (!a?.data?.sent || !b?.data?.sent) return 1;
+              return new Date(a.data.sent) < new Date(b.data.sent) ? 1 : -1;
+            }}
             value={references}
             renderMenuItem={(v) => <div>{v}</div>}
           />

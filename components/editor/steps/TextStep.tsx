@@ -136,7 +136,7 @@ export default function TextStep({
 
         <Form.Group>
           <Form.ControlLabel>Description</Form.ControlLabel>
-          {whatNowMessages.length && (
+          {!!whatNowMessages.length && (
             <SelectPicker
               block
               placeholder="Choose event to auto-fill from WhatNow?"
@@ -153,7 +153,7 @@ export default function TextStep({
             onChange={(description) => onUpdate({ description })}
             value={description}
           />
-          {whatNowMessages.length && (
+          {!!whatNowMessages.length && (
             <Form.HelpText>
               WhatNow provides pre-written messages and instructions you can use
               for certain events. Use the dropdown to select one of these as a

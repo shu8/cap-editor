@@ -76,7 +76,11 @@ export default function SummaryStep({
           <Header step="map" />
           <ReviewItem
             field="Regions"
-            value={Object.keys(alertData.regions ?? {}).join(", ") ?? "NONE"}
+            value={
+              Object.keys(alertData.regions ?? {})
+                .map((r) => r.replace("custom-", ""))
+                .join(", ") || "NONE"
+            }
           />
         </div>
 

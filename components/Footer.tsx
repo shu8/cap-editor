@@ -8,6 +8,9 @@ export default function Footer() {
       >
         GitHub ↗
       </a>
+      <a href="https://alerthub.ifrc.org/" target="_blank" rel="noreferrer">
+        IFRC Alert Hub ↗
+      </a>
     </footer>
   );
 }
