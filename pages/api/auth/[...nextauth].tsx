@@ -55,45 +55,19 @@ export const authOptions: AuthOptions = {
 
           const tempWebauthnUserId = getCookie("webauthn-user-id", { req });
           if (typeof tempWebauthnUserId !== "string") return null;
+          deleteCookie("webauthn-user-id", { req });
 
-          const expectedChallenge = await redis.hGet(
-            "webauthn-auth-challenges",
-            tempWebauthnUserId
-          );
-
-          if (!expectedChallenge) {
-            deleteCookie("webauthn-user-id", { req });
-            return null;
-          }
+          const redisKey = `webauthn-auth:${tempWebauthnUserId}`;
+          const expectedChallenge = await redis.hGet(redisKey, "challenge");
+          if (!expectedChallenge) return null;
+          await redis.hDel(redisKey, tempWebauthnUserId);
 
           const user = await prisma.user.findFirst({
             where: { webauthnId: credential.response.userHandle },
-            select: {
-              currentWebauthnChallenge: true,
-              authenticators: true,
-              email: true,
-              name: true,
-              id: true,
-            },
+            select: { authenticators: true, email: true, name: true, id: true },
           });
 
-          if (!user) return null;
-
-          // At this point, the user should not have any pending challenge in the DB
-          // They should only have the pending usernameless auth challenge in redis
-          // And they should have at least one authenticator in the DB
-          if (
-            user.currentWebauthnChallenge != null ||
-            !user.authenticators.length
-          ) {
-            deleteCookie("webauthn-user-id", { req });
-            await redis.hDel("webauthn-auth-challenges", tempWebauthnUserId);
-            await prisma.user.update({
-              where: { id: user.id },
-              data: { currentWebauthnChallenge: null },
-            });
-            return null;
-          }
+          if (!user?.authenticators.length) return null;
 
           const { verified, authenticationInfo } =
             await verifyAuthenticationResponse({
@@ -123,12 +97,8 @@ export const authOptions: AuthOptions = {
 
             return { id: user.id, email: user.email, name: user.name };
           }
-
-          await redis.hDel("webauthn-auth-challenges", tempWebauthnUserId);
         } catch (err) {
           console.error("WebAuthn login error", err);
-        } finally {
-          deleteCookie("webauthn-user-id", { req });
         }
 
         return null;

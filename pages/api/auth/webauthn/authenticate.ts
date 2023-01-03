@@ -24,7 +24,10 @@ async function getUserAuthenticationOptions(req: NextApiRequest, res: NextApiRes
     userVerification: 'preferred',
   });
 
-  await redis.hSet('webauthn-auth-challenges', tempUserId, options.challenge);
+  // Expire after 5 minutes
+  await redis.hSet(`webauthn-auth:${tempUserId}`, 'challenge', options.challenge);
+  await redis.expire(`webauthn-auth:${tempUserId}`, 60 * 5);
+
   return res.json(options);
 }
 

@@ -47,7 +47,6 @@ model User {
   alertingAuthority                  AlertingAuthority @relation(fields: [alertingAuthorityId], references: [id], onDelete: Cascade)
   alertingAuthorityVerified          DateTime?
   alertingAuthorityVerificationToken String?
-  currentWebauthnChallenge           String?
   webauthnId                         String?
   roles                              Role[]
   accounts                           Account[]

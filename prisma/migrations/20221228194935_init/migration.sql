@@ -39,7 +39,6 @@ CREATE TABLE "users" (
     "alertingAuthorityId" TEXT NOT NULL,
     "alertingAuthorityVerified" TIMESTAMP(3),
     "alertingAuthorityVerificationToken" TEXT,
-    "currentWebauthnChallenge" TEXT,
     "webauthnId" TEXT,
     "roles" "Role"[],
 

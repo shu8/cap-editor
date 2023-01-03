@@ -7,6 +7,7 @@ import { ApiError } from "next/dist/server/api-utils";
 import prisma from '../../../../lib/prisma';
 import { authOptions } from "../[...nextauth]";
 import { withErrorHandler } from "../../../../lib/apiErrorHandler";
+import redis from "../../../../lib/redis";
 
 /**
  * To register with WebAuthn, you need to be logged in already (via magic link).
@@ -31,8 +32,12 @@ async function handleGetUserRegistrationOptions(req: NextApiRequest, res: NextAp
 
   await prisma.user.update({
     where: { email: session.user.email as string },
-    data: { currentWebauthnChallenge: options.challenge, webauthnId: userWebauthnId }
+    data: { webauthnId: userWebauthnId }
   });
+
+  // Expire challenge after 5 minutes
+  await redis.hSet(`webauthn-register:${session.user.email}`, 'challenge', options.challenge);
+  await redis.expire(`webauthn-register:${session.user.email}`, 60 * 5);
 
   return res.json(options);
 }
@@ -40,20 +45,17 @@ async function handleGetUserRegistrationOptions(req: NextApiRequest, res: NextAp
 async function handleUserRegistration(req: NextApiRequest, res: NextApiResponse, session: Session) {
   const credential = req.body;
 
-  const challenge = await prisma.user.findFirst({
-    where: { email: session.user.email as string },
-    select: { currentWebauthnChallenge: true }
-  });
-
-  if (!challenge?.currentWebauthnChallenge) {
+  const challenge = await redis.hGet(`webauthn-register:${session.user.email}`, 'challenge');
+  if (!challenge) {
     throw new ApiError(403, 'Your account cannot register for WebAuthn yet');
   }
+  await redis.del(`webauthn-register:${session.user.email}`);
 
   const { verified, registrationInfo } = await verifyRegistrationResponse({
     credential,
     expectedRPID: process.env.WEBAUTHN_RELAYING_PARTY_ID,
     expectedOrigin: process.env.WEBAUTHN_ORIGIN,
-    expectedChallenge: challenge.currentWebauthnChallenge,
+    expectedChallenge: challenge,
     requireUserVerification: true,
   });
 
@@ -70,18 +72,12 @@ async function handleUserRegistration(req: NextApiRequest, res: NextApiResponse,
             transports: credential.transports?.length ? credential.transports : ['internal'],
             credentialDeviceType: registrationInfo.credentialDeviceType,
           }
-        },
-        currentWebauthnChallenge: null
+        }
       }
     });
 
     return res.json({ error: false });
   }
-
-  await prisma.user.update({
-    where: { email: session.user.email as string },
-    data: { currentWebauthnChallenge: null }
-  });
 
   throw new Error('Unable to register');
 }
