@@ -1,11 +1,13 @@
 import Head from "next/head";
 import { signIn, useSession } from "next-auth/react";
-import AuthenticateForm from "../components/AuthenticateForm";
+import AuthenticateForm from "../../components/AuthenticateForm";
 import { startAuthentication } from "@simplewebauthn/browser";
 import { useEffect } from "react";
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { useRouter } from "next/router";
+import { Message } from "rsuite";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await unstable_getServerSession(
@@ -20,6 +22,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function Login() {
   const { data: session, status: sessionStatus } = useSession();
+  const router = useRouter();
+  const { error } = router.query;
 
   useEffect(() => {
     async function initUsernamelessLogin() {
@@ -34,7 +38,11 @@ export default function Login() {
       });
     }
 
-    if (sessionStatus !== "loading" && !session) {
+    if (
+      sessionStatus !== "loading" &&
+      !session &&
+      !window.location.search.includes("error")
+    ) {
       initUsernamelessLogin().catch((err) =>
         console.error("Failed to start usernameless login", err)
       );
@@ -46,9 +54,18 @@ export default function Login() {
       <Head>
         <title>CAP Editor | Login</title>
       </Head>
-      <main>
-        <AuthenticateForm />
-      </main>
+      {error ? (
+        <main className="centered-message">
+          <Message type="error">
+            There was an error logging in. Please try again later or contact
+            your administrator if the issue persists.
+          </Message>
+        </main>
+      ) : (
+        <main>
+          <AuthenticateForm />
+        </main>
+      )}
     </>
   );
 }

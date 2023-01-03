@@ -5,6 +5,8 @@ const nextConfig = {
     return [
       { source: '/feed', destination: '/api/alerts' },
       { source: '/feed/:id', destination: '/api/alerts/:id' },
+      { source: '/login', destination: '/auth/login' },
+      { source: '/register', destination: '/auth/register' },
     ];
   },
   typescript: {

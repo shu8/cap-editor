@@ -1,11 +1,11 @@
 import Head from "next/head";
-import RegisterForm from "../components/RegisterForm";
+import RegisterForm from "../../components/RegisterForm";
 import { useRouter } from "next/router";
 import { Button } from "rsuite";
 import { startRegistration } from "@simplewebauthn/browser";
 import { unstable_getServerSession } from "next-auth";
 import { GetServerSideProps } from "next";
-import { authOptions } from "./api/auth/[...nextauth]";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await unstable_getServerSession(

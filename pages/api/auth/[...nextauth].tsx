@@ -13,6 +13,11 @@ import redis from "../../../lib/redis";
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
+  pages: {
+    signIn: "/login",
+    verifyRequest: "/auth/verify-request",
+    error: "/error",
+  },
   providers: [
     // https://github.com/nextauthjs/next-auth/discussions/3154 - custom sign in page
     EmailProvider({

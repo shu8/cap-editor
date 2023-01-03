@@ -25,6 +25,10 @@ body {
   color: rbg(--foreground-rgb);
 }
 
+nav {
+  z-index: 2;
+}
+
 footer {
   display: flex;
   justify-content: space-evenly;
@@ -68,4 +72,15 @@ main {
 
 .rs-toast-container {
   pointer-events: fill;
+}
+
+.centered-message {
+  align-items: center;
+  height: 100%;
+  justify-content: center;
+  margin-top: -5em;
+}
+
+.centered-message > * {
+  font-size: 1.2em;
 }
