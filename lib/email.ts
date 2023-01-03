@@ -40,7 +40,7 @@ export const sendEmail = async ({
   body,
 }: {
   to: string,
-  from: string;
+  from?: string;
   subject: string;
   title: string;
   url: string;
