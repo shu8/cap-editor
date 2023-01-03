@@ -3,7 +3,7 @@ import { ReactNode, useState } from "react";
 import { Button, Message, Modal, SelectPicker, useToaster } from "rsuite";
 import CloseOutlineIcon from "@rsuite/icons/CloseOutline";
 
-import styles from "../../styles/components/cap/LanguageTabs.module.css";
+import styles from "../../styles/components/editor/LanguageTabs.module.css";
 import { classes } from "../../lib/helpers";
 
 type Props = {

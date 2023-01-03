@@ -1,5 +1,5 @@
 import "ol/ol.css";
-import styles from "../../styles/components/cap/NewAlert.module.css";
+import styles from "../../styles/components/editor/Editor.module.css";
 import { Button } from "rsuite";
 import { useState } from "react";
 import { classes, getEndOfYesterday, updateState } from "../../lib/helpers";

@@ -1,4 +1,4 @@
-import styles from "../../../styles/components/cap/Step.module.css";
+import styles from "../../../styles/components/editor/Step.module.css";
 import { classes } from "../../../lib/helpers";
 import { FormAlertData, StepProps } from "../Editor";
 import { Button, Form } from "rsuite";

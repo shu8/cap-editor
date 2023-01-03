@@ -1,4 +1,4 @@
-import styles from "../../../styles/components/cap/Step.module.css";
+import styles from "../../../styles/components/editor/Step.module.css";
 import {
   Button,
   Checkbox,

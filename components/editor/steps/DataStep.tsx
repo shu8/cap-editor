@@ -3,7 +3,7 @@ import { getStartOfToday } from "../../../lib/helpers";
 import { FormAlertData, StepProps } from "../Editor";
 import SeverityCertaintyMatrix from "../SeverityCertaintyMatrix";
 import UrgencySlider from "../UrgencySlider";
-import styles from "../../../styles/components/cap/Step.module.css";
+import styles from "../../../styles/components/editor/Step.module.css";
 
 // CAP info.responseType
 const ACTIONS = [

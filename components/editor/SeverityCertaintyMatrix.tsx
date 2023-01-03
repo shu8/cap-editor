@@ -1,6 +1,6 @@
 import { getStartOfToday } from "../../lib/helpers";
 import { classes } from "../../lib/helpers";
-import styles from "../../styles/components/cap/SeverityCertaintyMatrix.module.css";
+import styles from "../../styles/components/editor/SeverityCertaintyMatrix.module.css";
 
 export default function SeverityCertaintyMatrix({
   onChange,

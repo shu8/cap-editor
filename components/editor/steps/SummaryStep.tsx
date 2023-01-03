@@ -2,7 +2,7 @@ import ISO6391 from "iso-639-1";
 import { IconButton } from "rsuite";
 import EditIcon from "@rsuite/icons/Edit";
 
-import styles from "../../../styles/components/cap/Step.module.css";
+import styles from "../../../styles/components/editor/Step.module.css";
 import { FormAlertData, Step } from "../Editor";
 import { classes } from "../../../lib/helpers";
 
