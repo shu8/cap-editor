@@ -6,7 +6,6 @@ import {
   Form,
   Input,
   SelectPicker,
-  TagPicker,
   useToaster,
 } from "rsuite";
 import { forwardRef, useEffect, useState } from "react";
@@ -22,19 +21,6 @@ const Textarea = forwardRef((props, ref) => (
   <Input {...props} ref={ref} rows={5} as="textarea" />
 ));
 Textarea.displayName = "Textarea";
-
-// CAP info.responseType
-const ACTIONS = [
-  "Shelter",
-  "Evacuate",
-  "Prepare",
-  "Execute",
-  "Avoid",
-  "Monitor",
-  "Assess",
-  "All Clear",
-  "None",
-];
 
 const getDefaultInstructionTypes = (urgency: string) => {
   const types = [];
@@ -69,7 +55,6 @@ const Resource = ({
 
 export default function TextStep({
   onUpdate,
-  actions,
   countryCode,
   urgency,
   resources,
@@ -240,21 +225,6 @@ export default function TextStep({
             />
           </Form.Group>
         </Form>
-
-        <h4>Recommended Actions</h4>
-        <p>
-          Choose the recommended actions for the audience of the alert, using
-          the dropdown menu.
-        </p>
-        <TagPicker
-          cleanable={false}
-          color="green"
-          appearance="default"
-          block
-          data={ACTIONS.map((a) => ({ label: a, value: a.replace(" ", "") }))}
-          value={actions}
-          onChange={(actions) => onUpdate({ actions })}
-        />
 
         <h4>Link to external resources</h4>
         <p>

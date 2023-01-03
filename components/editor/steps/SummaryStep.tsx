@@ -99,14 +99,15 @@ export default function SummaryStep({
           <ReviewItem field="Severity" value={alertData.severity ?? "NONE"} />
           <ReviewItem field="Certainty" value={alertData.certainty ?? "NONE"} />
           <ReviewItem field="Urgency" value={alertData.urgency ?? "NONE"} />
-        </div>
 
-        <div className={styles.reviewStep}>
-          <Header step="text" />
           <ReviewItem
             field="Actions"
             value={alertData.actions?.join(", ") ?? "NONE"}
           />
+        </div>
+
+        <div className={styles.reviewStep}>
+          <Header step="text" />
 
           {Object.entries(alertData.textLanguages).map(
             ([language, languageData]) => (

@@ -1,10 +1,22 @@
-import { DateRangePicker } from "rsuite";
+import { DateRangePicker, TagPicker } from "rsuite";
 import { getStartOfToday } from "../../../lib/helpers";
 import { FormAlertData, StepProps } from "../Editor";
 import SeverityCertaintyMatrix from "../SeverityCertaintyMatrix";
 import UrgencySlider from "../UrgencySlider";
 import styles from "../../../styles/components/cap/Step.module.css";
 
+// CAP info.responseType
+const ACTIONS = [
+  "Shelter",
+  "Evacuate",
+  "Prepare",
+  "Execute",
+  "Avoid",
+  "Monitor",
+  "Assess",
+  "All Clear",
+  "None",
+];
 export default function DataStep({
   onUpdate,
   from = getStartOfToday(),
@@ -12,6 +24,7 @@ export default function DataStep({
   certainty,
   severity,
   urgency,
+  actions,
 }: Partial<FormAlertData> & StepProps) {
   return (
     <div>
@@ -48,7 +61,7 @@ export default function DataStep({
         />
         <UrgencySlider
           urgency={urgency}
-          onChange={(u: string) => onUpdate({ urgency: u })}
+          onChange={(urgency: string) => onUpdate({ urgency })}
         />
       </div>
       <div>
@@ -56,6 +69,21 @@ export default function DataStep({
         {certainty && <div>Certainty: {certainty}.</div>}
         {urgency && <div>Urgency: {urgency}.</div>}
       </div>
+
+      <h4>Recommended Actions</h4>
+      <p>
+        Choose the recommended actions for the audience of the alert, using the
+        dropdown menu.
+      </p>
+      <TagPicker
+        cleanable={false}
+        color="green"
+        appearance="default"
+        block
+        data={ACTIONS.map((a) => ({ label: a, value: a.replace(" ", "") }))}
+        value={actions}
+        onChange={(actions) => onUpdate({ actions })}
+      />
     </div>
   );
 }

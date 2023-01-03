@@ -120,6 +120,7 @@ export default function Editor(props: Props) {
           certainty={alertData.certainty}
           severity={alertData.severity}
           urgency={alertData.urgency}
+          actions={alertData.actions}
         />
       ),
       isValid: () =>
@@ -127,13 +128,13 @@ export default function Editor(props: Props) {
         alertData.to > alertData.from &&
         !!alertData.severity &&
         !!alertData.certainty &&
-        !!alertData.urgency,
+        !!alertData.urgency &&
+        alertData.actions.length > 0,
     },
     text: {
       render: () => (
         <TextStep
           onUpdate={onUpdate}
-          actions={alertData.actions}
           countryCode={props.alertingAuthority.countryCode}
           urgency={alertData.urgency}
           resources={alertData.resources}
@@ -143,7 +144,7 @@ export default function Editor(props: Props) {
       isValid: () =>
         Object.values(alertData.textLanguages).every(
           (l) => !!l.event && !!l.headline && !!l.description && !!l.instruction
-        ) && alertData.actions.length > 0,
+        ),
     },
   };
 
