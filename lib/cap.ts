@@ -36,7 +36,7 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
       headline: languageData.headline,
       description: languageData.description,
       instruction: languageData.instruction,
-      web: `https://${process.env.DOMAIN}/feed/${id}`,
+      web: `${process.env.BASE_URL}/feed/${id}`,
       contact: process.env.AA_EMAIL,
       // parameter
       resource: languageData.resources,

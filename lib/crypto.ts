@@ -30,7 +30,7 @@ const convertTraditionalEcToPkcs8 = async (privateKeyPath: string): Promise<stri
 // ssh-keygen -m PKCS8 -t ecdsa
 // TODO get the keys from the SSL cert (use shared docker volume?)
 export const getPrivateKey = async () => {
-  const privateKeyPath = walk(process.env.TLS_DIRECTORY, `${process.env.DOMAIN}.key`);
+  const privateKeyPath = walk(process.env.TLS_DIRECTORY, process.env.PRIVATE_KEY_FILENAME);
   if (!privateKeyPath) return null;
 
   let privateKey = fs.readFileSync(privateKeyPath, 'utf-8');

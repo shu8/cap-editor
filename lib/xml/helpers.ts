@@ -40,7 +40,7 @@ export const formatFeedAsXML = async (alerts: Alert[]) => {
     entries.push(({
       id: alert.id,
       title: alert.data?.info?.[0]?.headline ?? 'Alert',
-      link: { '@_href': `https://${process.env.DOMAIN}/feed/${alert.id}` },
+      link: { '@_href': `${process.env.BASE_URL}/feed/${alert.id}` },
       updated: lastSignedAt ? new Date(+lastSignedAt).toISOString() : new Date().toISOString(),
       published: new Date(alert.data.sent).toISOString(),
     }));
@@ -49,7 +49,7 @@ export const formatFeedAsXML = async (alerts: Alert[]) => {
   const feed = builder.build({
     feed: {
       '@_xmlns': 'http://www.w3.org/2005/Atom',
-      id: `${process.env.DOMAIN}/feed`,
+      id: `${process.env.BASE_URL}/feed`,
       title: `Alerts for ${process.env.AA_NAME}`,
       updated: new Date().toISOString(),
       author: {
@@ -59,7 +59,7 @@ export const formatFeedAsXML = async (alerts: Alert[]) => {
       },
       link: {
         '@_rel': 'self',
-        '@_href': `https://${process.env.DOMAIN}/feed`
+        '@_href': `${process.env.BASE_URL}/feed`
       },
       subtitle: process.env.AA_DESCRIPTION,
       entry: entries

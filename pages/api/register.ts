@@ -46,7 +46,7 @@ async function handleRegisterUser(req: NextApiRequest, res: NextApiResponse) {
     subject: `New user registered for ${alertingAuthority.name}`,
     to: alertingAuthority.author,
     body: `Please verify this user has permission to create alerts for your Alerting Authority`,
-    url: `https://${process.env.DOMAIN}/verify?token=${alertingAuthorityVerificationToken}`,
+    url: `${process.env.BASE_URL}/verify?token=${alertingAuthorityVerificationToken}`,
     urlText: 'Verify user now',
     title: 'New user verification required'
   });

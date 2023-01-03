@@ -31,7 +31,7 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
       to: user.email,
       body: `Your account was not approved for ${user.alertingAuthority.name}. As a result, your account has been deleted. Please try registering with a new account if you believe there has been a mistake or you would like to choose a different Alerting Authority.`,
       title: "Account verification rejected",
-      url: `https://${process.env.DOMAIN}`,
+      url: `${process.env.BASE_URL}`,
       urlText: "Visit the CAP Editor now",
     });
 
@@ -61,7 +61,7 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
     to: user.email,
     body: "Your account has now been verified by your Alerting Authority!",
     title: "Account verified",
-    url: `https://${process.env.DOMAIN}/login`,
+    url: `${process.env.BASE_URL}/login`,
     urlText: "Visit the CAP Editor now",
   });
 
