@@ -3,8 +3,8 @@ import { setCookie } from "cookies-next";
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
 import { randomUUID } from "crypto";
 
-import redis from "../../../lib/redis";
-import { withErrorHandler } from "../../../lib/apiErrorHandler";
+import redis from "../../../../lib/redis";
+import { withErrorHandler } from "../../../../lib/apiErrorHandler";
 
 async function getUserAuthenticationOptions(req: NextApiRequest, res: NextApiResponse) {
   const tempUserId = randomUUID();

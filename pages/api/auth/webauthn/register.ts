@@ -4,9 +4,9 @@ import { generateRegistrationOptions, verifyRegistrationResponse } from '@simple
 import { Session, unstable_getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
-import prisma from '../../../lib/prisma';
-import { authOptions } from "../auth/[...nextauth]";
-import { withErrorHandler } from "../../../lib/apiErrorHandler";
+import prisma from '../../../../lib/prisma';
+import { authOptions } from "../[...nextauth]";
+import { withErrorHandler } from "../../../../lib/apiErrorHandler";
 
 /**
  * To register with WebAuthn, you need to be logged in already (via magic link).

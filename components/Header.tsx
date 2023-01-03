@@ -29,6 +29,16 @@ export default function Header() {
               </Button>
             </Link>
 
+            <Link href="/settings">
+              <Button
+                appearance="ghost"
+                color="violet"
+                className={styles.button}
+              >
+                Settings
+              </Button>
+            </Link>
+
             <Button
               appearance="ghost"
               color="violet"

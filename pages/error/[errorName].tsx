@@ -12,7 +12,7 @@ export default function ErrorPage() {
       <Head>
         <title>CAP Editor - Error</title>
       </Head>
-      <main>
+      <main className="centered-message">
         <Message type="error">
           {Object.values(ERRORS).find((e) => e.slug === errorName)?.message ??
             "There was an unexpected error. Please try again"}
