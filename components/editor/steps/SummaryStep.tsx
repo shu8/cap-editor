@@ -70,7 +70,7 @@ export default function SummaryStep({
           <Header step="category" />
           <ReviewItem
             field="Alert Category"
-            value={alertData.category?.join(", ") ?? "NONE"}
+            value={alertData.category?.join("; ") ?? "NONE"}
           />
         </div>
 
@@ -81,7 +81,7 @@ export default function SummaryStep({
             value={
               Object.keys(alertData.regions ?? {})
                 .map((r) => r.replace("custom-", ""))
-                .join(", ") || "NONE"
+                .join("; ") || "NONE"
             }
           />
         </div>
@@ -102,7 +102,7 @@ export default function SummaryStep({
 
           <ReviewItem
             field="Actions"
-            value={alertData.actions?.join(", ") ?? "NONE"}
+            value={alertData.actions?.join("; ") ?? "NONE"}
           />
         </div>
 
@@ -117,20 +117,26 @@ export default function SummaryStep({
               >
                 <i className={styles.language}>{ISO6391.getName(language)}</i>
                 <ReviewItem
-                  field={`Event`}
+                  field="Event"
                   value={languageData.event ?? "NONE"}
                 />
                 <ReviewItem
-                  field={`Headline`}
+                  field="Headline"
                   value={languageData.headline ?? "NONE"}
                 />
                 <ReviewItem
-                  field={`Description`}
+                  field="Description"
                   value={languageData.description ?? "NONE"}
                 />
                 <ReviewItem
-                  field={`Instruction`}
+                  field="Instruction"
                   value={languageData.instruction ?? "NONE"}
+                />
+                <ReviewItem
+                  field="Resources"
+                  value={languageData.resources
+                    .map((r) => r.resourceDesc)
+                    .join("; ")}
                 />
               </div>
             )
