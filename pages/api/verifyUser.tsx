@@ -32,9 +32,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       await sendEmail({
         subject: `Account verification rejected for ${user.alertingAuthority.name}`,
         to: user.email,
-        text: `Your account was not approved for ${user.alertingAuthority.name}. As a result, your account has been deleted. Please try registering with a new account if you believe there has been a mistake or you would like to choose a different Alerting Authority.`,
-        html: `Your account was not approved for ${user.alertingAuthority.name}. As a result, your account has been deleted. Please try registering with a new account if you believe there has been a mistake or you would like to choose a different Alerting Authority.`,
+        body: `Your account was not approved for ${user.alertingAuthority.name}. As a result, your account has been deleted. Please try registering with a new account if you believe there has been a mistake or you would like to choose a different Alerting Authority.`,
+        title: "Account verification rejected",
+        url: `https://${process.env.DOMAIN}`,
+        urlText: "Visit the CAP Editor now",
       });
+
       await prisma.user.delete({ where: { email: user.email } });
       return res.json({ error: false });
     }
@@ -59,8 +62,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await sendEmail({
       subject: `Account verification complete for ${user.alertingAuthority.name}`,
       to: user.email,
-      text: `Your account has now been verified by your Alerting Authority!`,
-      html: `Your account has now been verified by your Alerting Authority!`,
+      body: "Your account has now been verified by your Alerting Authority!",
+      title: "Account verified",
+      url: `https://${process.env.DOMAIN}/login`,
+      urlText: "Visit the CAP Editor now",
     });
 
     return res.redirect("/");
