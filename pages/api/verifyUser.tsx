@@ -63,7 +63,7 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
     urlText: "Visit the CAP Editor now",
   });
 
-  return res.redirect("/");
+  return res.json({ error: false });
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
