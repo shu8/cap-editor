@@ -6,7 +6,6 @@ import { sendEmail } from "../../lib/email";
 import { withErrorHandler } from "../../lib/apiErrorHandler";
 
 async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
-  // TODO should this require being logged in? would the AA author always have an account already? If not, there would be a loop...
   const alertingAuthorityVerificationToken = req.body.verificationToken;
   if (!alertingAuthorityVerificationToken) {
     throw new ApiError(400, "You did not provide a valid verification token");
@@ -46,7 +45,6 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
     );
   }
 
-  // TODO ask verifying user what rights the new user should have (edit/publish/admin etc.)
   await prisma.user.update({
     where: { email: user.email },
     data: {
