@@ -98,7 +98,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return handleUserRegistration(req, res, session);
   }
 
-  return res.status(405);
+  return res.status(405).send('Method not allowed');
 }
 
 export default withErrorHandler(handler);

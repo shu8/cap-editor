@@ -18,7 +18,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return handleGetAlertingAuthorities(req, res);
   }
 
-  return res.status(405);
+  return res.status(405).send("Method not allowed");
 }
 
 export default withErrorHandler(handler);
