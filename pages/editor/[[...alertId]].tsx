@@ -212,7 +212,8 @@ export default function EditorPage(props: Props) {
               })
               .catch((err) =>
                 toaster.push(
-                  <ErrorMessage error={err} action="submitting the alert" />
+                  <ErrorMessage error={err} action="submitting the alert" />,
+                  { placement: "bottomCenter" }
                 )
               );
           }}
