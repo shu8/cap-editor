@@ -11,6 +11,7 @@ export const formatAlertAsXML = (alert: Alert): string => {
     for (let i = 0; i < info.length; i++) {
       for (let j = 0; j < info[i].area.length; j++) {
         const area = info[i].area[j];
+        area.areaDesc = area.areaDesc.replace('custom-', '');
         if (typeof area.polygon !== 'undefined') {
           area.polygon = area.polygon.map(p => p.join(' '));
         }
@@ -22,7 +23,7 @@ export const formatAlertAsXML = (alert: Alert): string => {
     let xmlAlert = CAPGenerator.createUsing(alert.data as any) as string;
     const newlineIndex = xmlAlert.indexOf('\n');
     return xmlAlert.substring(0, newlineIndex) +
-      '<?xml-stylesheet type="text/xsl" href="/cap-style.xsl" ?>' +
+      '<?xml-stylesheet type="text/xsl" href="/alert-style.xsl" ?>' +
       xmlAlert.substring(newlineIndex);
   } catch (err) {
     return '';

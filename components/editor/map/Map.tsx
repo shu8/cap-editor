@@ -22,6 +22,7 @@ import { Type } from "ol/geom/Geometry";
 import { defaults as OLDefaultInteractions } from "ol/interaction";
 import { AlertingAuthority } from "@prisma/client";
 import flip from "@turf/flip";
+import { useMountEffect } from "../../../lib/helpers";
 
 // https://www.reshot.com/free-svg-icons/item/free-positioning-polygone-F2AWH4PGVQ/
 const PolygonImage = () => (
@@ -44,9 +45,6 @@ const CircleImage = () => (
     alt="Draw Circle"
   />
 );
-
-// eslint-disable-next-line react-hooks/exhaustive-deps
-const useMountEffect = (fn: EffectCallback) => useEffect(fn, []);
 
 const geojsonFormat = new GeoJSON();
 const defaultFeaturesSource = new OLVectorSource({

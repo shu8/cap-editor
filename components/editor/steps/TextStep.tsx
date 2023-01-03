@@ -10,7 +10,7 @@ import {
   useToaster,
 } from "rsuite";
 import { forwardRef, useEffect, useState } from "react";
-import { camelise, HandledError } from "../../../lib/helpers";
+import { camelise, HandledError, useMountEffect } from "../../../lib/helpers";
 import { FormAlertData, StepProps } from "../Editor";
 import { Resource, WhatNowResponse } from "../../../lib/types/types";
 import ErrorMessage from "../../ErrorMessage";
@@ -85,7 +85,7 @@ export default function TextStep({
     getDefaultInstructionTypes(urgency!)
   );
 
-  useEffect(() => {
+  useMountEffect(() => {
     fetch(`/api/whatnow?countryCode=${countryCode}`)
       .then((res) => res.json())
       .then((res) => {
@@ -97,7 +97,7 @@ export default function TextStep({
           <ErrorMessage error={err} action="fetching WhatNow messages" />
         )
       );
-  }, []);
+  });
 
   useEffect(() => {
     if (chosenWhatNowMessage == null) return;

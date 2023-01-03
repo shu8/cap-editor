@@ -5,11 +5,18 @@ import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { Alert, AlertingAuthority, AlertStatus, Role } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import { formatDate, getStartOfToday, HandledError } from "../../lib/helpers";
+import {
+  formatDate,
+  getStartOfToday,
+  HandledError,
+  useMountEffect,
+} from "../../lib/helpers";
 import { CAPV12JSONSchema } from "../../lib/types/cap.schema";
 import { ERRORS } from "../../lib/errors";
 import { Message, useToaster } from "rsuite";
 import ErrorMessage from "../../components/ErrorMessage";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 type Props = {
   alertingAuthority: AlertingAuthority;
@@ -50,7 +57,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   // First, check if user wants to edit an alert through /editor/ID
   let { alertId } = context.query;
-
   // Next.js returns catch-all route params as array
   if (alertId) alertId = alertId[0];
 
@@ -72,7 +78,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   // Next, check if Admins/Editors want to use an existing alert as a template through /editor?template=ID
   if (!alertId) {
     ret.props.isTemplate = true;
-    alertId = context.params?.template;
+    alertId = context.query?.template;
   }
 
   if (typeof alertId === "string") {
@@ -93,9 +99,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 export default function EditorPage(props: Props) {
+  console.log(props);
   const toaster = useToaster();
-  let defaultAlertData;
+  const router = useRouter();
 
+  // If ?template query param exists, hide it from user
+  useMountEffect(() => {
+    if (router.query.template) {
+      router.replace("/editor", undefined, { shallow: true });
+    }
+  });
+
+  let defaultAlertData;
   if (props.alert) {
     // Convert DB Alert data to FormAlertData for Editor
     const alertData = props.alert.data as CAPV12JSONSchema;

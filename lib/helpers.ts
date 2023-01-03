@@ -1,5 +1,6 @@
 import { AlertingAuthority } from "@prisma/client";
 import { XMLParser } from "fast-xml-parser";
+import { EffectCallback, useEffect } from "react";
 
 export const fetchWMOAlertingAuthorities = async () => {
   // const result = await fetch(
@@ -1896,3 +1897,6 @@ export class HandledError extends Error {
     this.message = message;
   }
 }
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+export const useMountEffect = (fn: EffectCallback) => useEffect(fn, []);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TagPicker, useToaster } from "rsuite";
-import { HandledError } from "../../../lib/helpers";
+import { HandledError, useMountEffect } from "../../../lib/helpers";
 import ErrorMessage from "../../ErrorMessage";
 import { FormAlertData, StepProps } from "../Editor";
 
@@ -24,9 +24,9 @@ export default function MapStep({
       );
   };
 
-  useEffect(() => {
+  useMountEffect(() => {
     fetchCountries();
-  }, []);
+  });
 
   return (
     <div>
