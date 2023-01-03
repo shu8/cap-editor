@@ -1,6 +1,7 @@
 import { Alert } from ".prisma/client";
 import { XMLBuilder } from "fast-xml-parser";
 import { Capgen } from 'capgen';
+import redis from "../redis";
 
 const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: '@_' });
 const CAPGenerator = new Capgen({ strictMode: false, comment: false, xmlOptions: { prettyPrint: true } });
@@ -30,7 +31,21 @@ export const formatAlertAsXML = (alert: Alert): string => {
   }
 };
 
-export const formatFeedAsXML = (alerts: Alert[]) => {
+export const formatFeedAsXML = async (alerts: Alert[]) => {
+  const entries = [];
+  const numAlerts = alerts.length;
+  for (let i = 0; i < numAlerts; i++) {
+    const alert = alerts[i];
+    const lastSignedAt = await redis.hGet(`alerts:${alert.id}`, 'last_signed_at');
+    entries.push(({
+      id: alert.id,
+      title: alert.data?.info?.[0]?.headline ?? 'Alert',
+      link: { '@_href': `https://${process.env.DOMAIN}/feed/${alert.id}` },
+      updated: lastSignedAt ? new Date(+lastSignedAt).toISOString() : new Date().toISOString(),
+      published: new Date(alert.data.sent).toISOString(),
+    }));
+  }
+
   const feed = builder.build({
     feed: {
       '@_xmlns': 'http://www.w3.org/2005/Atom',
@@ -47,13 +62,7 @@ export const formatFeedAsXML = (alerts: Alert[]) => {
         '@_href': `https://${process.env.DOMAIN}/feed`
       },
       subtitle: process.env.AA_DESCRIPTION,
-      entry: alerts.map(a => ({
-        id: a.id,
-        title: a.data?.info?.[0]?.headline ?? 'Alert',
-        link: { '@_href': `https://${process.env.DOMAIN}/feed/${a.id}` },
-        // TODO: this should equal time when signature last changed
-        updated: 'TODO'
-      }))
+      entry: entries
     }
   });
 

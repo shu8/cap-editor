@@ -11,6 +11,7 @@ import { CAPV12JSONSchema } from '../../../lib/types/cap.schema';
 import { FormAlertData } from '../../../components/editor/Editor';
 import { mapFormAlertDataToCapSchema } from '../../../lib/cap';
 import { withErrorHandler } from '../../../lib/apiErrorHandler';
+import redis from '../../../lib/redis';
 
 async function handleNewAlert(req: NextApiRequest, res: NextApiResponse) {
   if (!['TEMPLATE', 'PUBLISHED', 'DRAFT'].includes(req.body.status)) {
@@ -55,7 +56,7 @@ async function handleNewAlert(req: NextApiRequest, res: NextApiResponse) {
 async function handleGetAlerts(req: NextApiRequest, res: NextApiResponse) {
   const alerts = await prisma.alert.findMany();
 
-  // JSON returns all alerts (inc. draft and template), as long as you are logged in
+  // JSON returns all alerts, unsigned, inc. draft and template, as long as you are logged in
   if (req.query.json) {
     const session = await unstable_getServerSession(req, res, authOptions);
     if (!session) return res.status(403).json({ error: true, message: 'You are not logged in' });
@@ -67,8 +68,9 @@ async function handleGetAlerts(req: NextApiRequest, res: NextApiResponse) {
   return res
     .status(200)
     .setHeader('Content-Type', 'application/xml')
-    .send(formatFeedAsXML(alerts.filter(a =>
-      a.status === 'PUBLISHED' &&
+    .send(await formatFeedAsXML(alerts.filter(a =>
+      a.status === 'PUBLISHED'
+      &&
       new Date(a.data?.info?.[0]?.expires) >= new Date()
     )));
 }

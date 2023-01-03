@@ -11,6 +11,7 @@ import { CAPV12JSONSchema } from '../../../lib/types/cap.schema';
 import { mapFormAlertDataToCapSchema } from '../../../lib/cap';
 import { formatAlertAsXML } from '../../../lib/xml/helpers';
 import { withErrorHandler } from '../../../lib/apiErrorHandler';
+import redis from '../../../lib/redis';
 
 async function handleUpdateAlert(req: NextApiRequest, res: NextApiResponse, alertId: string | string[] | undefined) {
   if (typeof alertId !== 'string') {
@@ -74,16 +75,25 @@ async function handleGetAlert(req: NextApiRequest, res: NextApiResponse, alertId
 
   try {
     const alert = await prisma.alert.findFirst({ where: { id: alertId } });
-
     if (!alert) throw 'Unknown alert';
 
-    const signedXML = await sign(alert);
+    let signedXML = await redis.hGet(`alerts:${alert.id}`, 'signed_xml');
+    if (!signedXML) {
+      signedXML = await sign(alert);
+
+      // Cache, and expire every 20 days
+      await redis.hSet(`alerts:${alert.id}`, [
+        'signed_xml', signedXML,
+        'last_signed_at', new Date().getTime()
+      ]);
+      await redis.expire(`alerts:${alert.id}`, 60 * 60 * 24 * 20);
+    }
+
     return res
       .status(200)
       .setHeader('Content-Type', 'application/xml')
-      .send(signedXML.toString());
-  }
-  catch (err) {
+      .send(signedXML);
+  } catch (err) {
     console.error(err);
     return res.status(500).send('Failed to sign alert');
   }
