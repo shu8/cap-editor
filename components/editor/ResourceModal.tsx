@@ -19,8 +19,10 @@ const getMimeType = async (url: string): Promise<string> => {
 
 export default function ResourceModal({
   onSubmit,
+  language,
 }: {
   onSubmit: (resource: Resource | null) => void;
+  language: string;
 }) {
   const toaster = useToaster();
   const [data, setData] = useState<Resource>({
@@ -76,7 +78,7 @@ export default function ResourceModal({
             <Form.Control
               required
               name="resourceDesc"
-              placeholder="e.g., image of flood"
+              placeholder={`e.g., image of flood (please use ${language} language)`}
             />
           </Form.Group>
           <Form.Group>

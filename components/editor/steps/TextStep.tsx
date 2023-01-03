@@ -9,6 +9,7 @@ import {
   useToaster,
 } from "rsuite";
 import { forwardRef, useEffect, useState } from "react";
+import ISO6391 from "iso-639-1";
 
 import { camelise, HandledError, useMountEffect } from "../../../lib/helpers";
 import { FormAlertData, StepProps } from "../Editor";
@@ -57,7 +58,6 @@ export default function TextStep({
   onUpdate,
   countryCode,
   urgency,
-  resources,
   textLanguages,
 }: Partial<FormAlertData> & StepProps & { countryCode: string }) {
   const toaster = useToaster();
@@ -112,7 +112,7 @@ export default function TextStep({
   const whatNowMessagesInCurrentLanguage =
     whatNowMessages?.filter((m) => !!m.translations[language]) ?? [];
 
-  const { event, headline, description, instruction } =
+  const { event, headline, description, instruction, resources } =
     textLanguages![language];
   return (
     <div>
@@ -228,17 +228,18 @@ export default function TextStep({
 
         <h4>Link to external resources</h4>
         <p>
-          If necessary, add links to resources that offer complementary,
-          non-essential information to the alert.
+          If necessary, add links to resources (in {ISO6391.getName(language)})
+          that offer complementary, non-essential information to the alert.
         </p>
         {showResourceModal && (
           <ResourceModal
+          language={ISO6391.getName(language)}
             onSubmit={(d) => {
               if (!d?.resourceDesc || !d?.uri) {
                 return setShowResourceModal(false);
               }
               resources!.push(d);
-              onUpdate({ resources: [...resources!] });
+              updateField("resources", [...resources]);
               setShowResourceModal(false);
             }}
           />
@@ -250,7 +251,7 @@ export default function TextStep({
             key={`resource=${i}`}
             onDelete={() => {
               resources.splice(i, 1);
-              onUpdate({ resources: [...resources!] });
+              updateField("resources", [...resources]);
             }}
           />
         ))}

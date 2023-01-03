@@ -37,7 +37,6 @@ export type FormAlertData = {
   scope: string;
   restriction: string;
   addresses: string[];
-  resources: Resource[];
   references: string[];
   textLanguages: {
     [key: string]: {
@@ -45,6 +44,7 @@ export type FormAlertData = {
       headline: string;
       description: string;
       instruction: string;
+      resources: Resource[];
     };
   };
 };
@@ -137,7 +137,6 @@ export default function Editor(props: Props) {
           onUpdate={onUpdate}
           countryCode={props.alertingAuthority.countryCode}
           urgency={alertData.urgency}
-          resources={alertData.resources}
           textLanguages={alertData.textLanguages}
         />
       ),

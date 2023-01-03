@@ -99,7 +99,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       addresses: alertData.addresses
         ? alertData.addresses?.match(/\w+|"[^"]+"/g) ?? []
         : [],
-      resources: info?.resource ?? [],
       references: alertData.references ? alertData.references.split(" ") : [],
       textLanguages: alertData.info?.reduce((acc, info) => {
         acc[info.language as string] = {
@@ -107,6 +106,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
           headline: info.headline ?? "",
           description: info.description ?? "",
           instruction: info.instruction ?? "",
+          resources: info.resource ?? [],
         };
         return acc;
       }, {}),
@@ -131,10 +131,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       scope: "Public",
       restriction: "",
       addresses: [],
-      resources: [],
       references: [],
       textLanguages: {
-        en: { event: "", headline: "", description: "", instruction: "" },
+        en: {
+          event: "",
+          headline: "",
+          description: "",
+          instruction: "",
+          resources: [],
+        },
       },
     };
   }

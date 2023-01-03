@@ -39,7 +39,7 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
       web: `https://${process.env.DOMAIN}/feed/${id}`,
       contact: process.env.AA_EMAIL,
       // parameter
-      resource: alertData.resources,
+      resource: languageData.resources,
       area: Object.entries(alertData.regions).map(([regionName, data]) => ({
         areaDesc: regionName,
         ...(typeof data?.[0] === 'string' && { circle: data }),
@@ -50,7 +50,6 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
       })),
     }))
   };
-
 
   const validationResult = validateJSON(alert, CAPV12Schema);
   if (!validationResult.valid) {
