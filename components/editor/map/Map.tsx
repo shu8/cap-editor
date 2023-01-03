@@ -123,9 +123,10 @@ export default function Map({
       if (feature && selectedFeaturesSource.hasFeature(feature)) return;
 
       if (feature?.get("ADMIN") != null) {
-        // Only handle default country features -- custom features are added immediately after drawing
+        // Handle default country features
         selectedFeaturesSource.addFeature(feature);
-      } else {
+      } else if (r.startsWith("custom-")) {
+        // Handle custom features
         const data = regions[r]?.[0];
         if (!data) return;
 

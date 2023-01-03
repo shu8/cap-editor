@@ -2,9 +2,8 @@ import Head from "next/head";
 import Editor, { FormAlertData } from "../../components/editor/Editor";
 import prisma from "../../lib/prisma";
 import { unstable_getServerSession } from "next-auth";
-import { Alert, AlertingAuthority, AlertStatus, Role } from "@prisma/client";
+import { AlertingAuthority, AlertStatus, Role } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import ISO6391 from "iso-639-1";
 
 import {
   formatDate,
@@ -22,9 +21,13 @@ import { useRouter } from "next/router";
 type Props = {
   alertingAuthority: AlertingAuthority;
   roles: Role[];
-  alert?: Alert;
-  isTemplate: boolean;
+  defaultAlertData: FormAlertData & { from: string; to: string };
+  editingAlert: { id: string; status: AlertStatus };
 };
+
+const redirect = (url: string) => ({
+  redirect: { destination: url, permanent: false },
+});
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
@@ -34,27 +37,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     context.res,
     authOptions
   );
-
-  if (!session) {
-    return { redirect: { destination: "/login", permanent: false } };
-  }
+  if (!session) return redirect("/login");
 
   const user = await prisma.user.findFirst({
     where: { email: session.user.email },
     include: { alertingAuthority: true },
   });
-
-  if (!user) {
-    return { redirect: { destination: "/login", permanent: false } };
-  }
-
-  const ret: { props: Props } = {
-    props: {
-      alertingAuthority: user?.alertingAuthority,
-      roles: user?.roles,
-      isTemplate: false,
-    },
-  };
+  if (!user) return redirect("/login");
 
   // First, check if user wants to edit an alert through /editor/ID
   let { alertId } = context.query;
@@ -68,64 +57,37 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     !session.user.roles.includes("ADMIN") &&
     !session.user.roles.includes("EDITOR")
   ) {
-    return {
-      redirect: {
-        destination: `/error/${ERRORS.NOT_ALLOWED_CREATE_ALERTS.slug}`,
-        permanent: false,
-      },
-    };
+    return redirect(`/error/${ERRORS.NOT_ALLOWED_CREATE_ALERTS.slug}`);
   }
 
+  let isTemplate = false;
   // Next, check if Admins/Editors want to use an existing alert as a template through /editor?template=ID
   if (!alertId) {
-    ret.props.isTemplate = true;
     alertId = context.query?.template;
+    if (alertId) isTemplate = true;
   }
 
+  let defaultAlertData: any;
+  let editingAlert: any;
   if (typeof alertId === "string") {
     const alert = await prisma.alert.findFirst({ where: { id: alertId } });
-    if (!alert) {
-      return {
-        redirect: {
-          destination: `/error/${ERRORS.ALERT_NOT_FOUND.slug}`,
-          permanent: false,
-        },
-      };
-    }
+    if (!alert) return redirect(`/error/${ERRORS.ALERT_NOT_FOUND.slug}`);
 
-    ret.props.alert = alert;
-  }
-
-  return ret;
-};
-
-export default function EditorPage(props: Props) {
-  console.log(props);
-  const toaster = useToaster();
-  const router = useRouter();
-
-  // If ?template query param exists, hide it from user
-  useMountEffect(() => {
-    if (router.query.template) {
-      router.replace("/editor", undefined, { shallow: true });
-    }
-  });
-
-  let defaultAlertData;
-  if (props.alert) {
     // Convert DB Alert data to FormAlertData for Editor
-    const alertData = props.alert.data as CAPV12JSONSchema;
+    const alertData = alert.data as CAPV12JSONSchema;
     const info = alertData.info?.[0];
 
     defaultAlertData = {
-      ...(!props.isTemplate && { identifier: alertData.identifier }),
       category: info?.category ?? [],
       regions: info?.area?.reduce((acc, area) => {
         acc[area.areaDesc] = area.circle ?? area.polygon;
         return acc;
       }, {}),
-      from: info?.effective ? new Date(info?.effective) : getStartOfToday(),
-      to: info?.expires ? new Date(info?.expires) : new Date(),
+      from: (info?.effective
+        ? new Date(info?.effective)
+        : getStartOfToday()
+      ).toString(),
+      to: (info?.expires ? new Date(info?.expires) : new Date()).toString(),
       actions: info?.responseType ?? [],
       certainty: info?.certainty ?? "",
       severity: info?.severity ?? "",
@@ -144,17 +106,22 @@ export default function EditorPage(props: Props) {
           event: info.event ?? "",
           headline: info.headline ?? "",
           description: info.description ?? "",
-          instruction: info.description ?? "",
+          instruction: info.instruction ?? "",
         };
         return acc;
       }, {}),
     };
+
+    if (!isTemplate) {
+      defaultAlertData.identifier = alertData.identifier;
+      editingAlert = { id: alertData.identifier, status: alert.status };
+    }
   } else {
     defaultAlertData = {
       category: ["Geo"],
       regions: { "United Kingdom": [] },
-      from: getStartOfToday(),
-      to: new Date(),
+      from: getStartOfToday().toString(),
+      to: new Date().toString(),
       actions: [],
       certainty: "Likely",
       severity: "Severe",
@@ -172,7 +139,34 @@ export default function EditorPage(props: Props) {
     };
   }
 
-  const isEditingAlert = !!props.alert && !props.isTemplate;
+  return {
+    props: {
+      alertingAuthority: user.alertingAuthority,
+      roles: user.roles,
+      defaultAlertData,
+      editingAlert,
+    },
+  };
+};
+
+export default function EditorPage(props: Props) {
+  // Dates were serialised on server; convert back to Date now
+  const defaultAlertData: FormAlertData = {
+    ...props.defaultAlertData,
+    from: new Date(props.defaultAlertData.from),
+    to: new Date(props.defaultAlertData.to),
+  };
+
+  const toaster = useToaster();
+  const router = useRouter();
+
+  // If ?template query param exists, hide it from user
+  useMountEffect(() => {
+    if (router.query.template) {
+      router.replace("/editor", undefined, { shallow: true });
+    }
+  });
+
   return (
     <>
       <Head>
@@ -181,22 +175,26 @@ export default function EditorPage(props: Props) {
       <main>
         <Editor
           key={
-            isEditingAlert
-              ? `editor-${props.alert!.id}`
+            props.editingAlert
+              ? `editor-${props.editingAlert.id}`
               : `editor-${new Date().getTime()}`
           }
           alertingAuthority={props.alertingAuthority}
           roles={props.roles}
           defaultAlertData={defaultAlertData}
-          {...(isEditingAlert && { existingAlertStatus: props.alert!.status })}
+          {...(props.editingAlert && {
+            existingAlertStatus: props.editingAlert.status,
+          })}
           onSubmit={async (
             alertData: FormAlertData,
             alertStatus: AlertStatus
           ) => {
             fetch(
-              isEditingAlert ? `/api/alerts/${props.alert!.id}` : "/api/alerts",
+              props.editingAlert
+                ? `/api/alerts/${props.editingAlert.id}`
+                : "/api/alerts",
               {
-                method: isEditingAlert ? "PUT" : "POST",
+                method: props.editingAlert ? "PUT" : "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(
                   { status: alertStatus, data: alertData },
