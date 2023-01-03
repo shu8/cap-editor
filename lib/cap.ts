@@ -32,21 +32,14 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
       // effective
       onset: alertData.from,
       expires: alertData.to,
-      // senderName
+      senderName: process.env.AA_NAME,
       headline: alertData.headline,
       description: alertData.description,
       instruction: alertData.instruction,
       web: `https://${process.env.DOMAIN}/feed/${id}`,
-      // contact
+      contact: process.env.AA_EMAIL,
       // parameter
-      // resource: [{
-      //   resourceDesc: alertData.resourceDesc,
-      //   mimeType: alertData.mimeType,
-      //   // size
-      //   // uri
-      //   // drefUri
-      //   // digest
-      // }],
+      resource: alertData.resources,
       area: Object.entries(alertData.regions).map(([regionName, data]) => ({
         areaDesc: regionName,
         ...(typeof data?.[0] === 'string' && { circle: data }),
@@ -55,7 +48,6 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
         // altitude
         // ceiling
       })),
-      resource: alertData.resources
     }]
   };
 
