@@ -39,9 +39,9 @@ export type FormAlertData = {
   addresses: string[];
   resources: Resource[];
   references: string[];
-  event: string;
   textLanguages: {
     [key: string]: {
+      event: string;
       headline: string;
       description: string;
       instruction: string;
@@ -93,13 +93,9 @@ export default function Editor(props: Props) {
     },
     category: {
       render: () => (
-        <CategoryStep
-          onUpdate={onUpdate}
-          category={alertData.category}
-          event={alertData.event}
-        />
+        <CategoryStep onUpdate={onUpdate} category={alertData.category} />
       ),
-      isValid: () => alertData.category?.length > 0 && !!alertData.event,
+      isValid: () => alertData.category?.length > 0,
     },
     map: {
       render: () => (
@@ -146,7 +142,7 @@ export default function Editor(props: Props) {
       ),
       isValid: () =>
         Object.values(alertData.textLanguages).every(
-          (l) => !!l.headline && !!l.description && !!l.instruction
+          (l) => !!l.event && !!l.headline && !!l.description && !!l.instruction
         ) && alertData.actions.length > 0,
     },
   };
@@ -224,7 +220,10 @@ export default function Editor(props: Props) {
             {alertData.identifier ? "Edit alert" : "New alert"}: {step}
           </h3>
           {alertData.identifier && (
-            <span>Alert ID: {alertData.identifier}</span>
+            <>
+              Alert ID:{" "}
+              <span className={styles.alertId}>{alertData.identifier}</span>
+            </>
           )}
         </div>
 

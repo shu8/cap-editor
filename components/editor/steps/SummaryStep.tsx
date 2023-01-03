@@ -1,8 +1,10 @@
-import { classes } from "../../../lib/helpers";
-import { FormAlertData, Step } from "../Editor";
-import styles from "../../../styles/components/cap/Step.module.css";
+import ISO6391 from "iso-639-1";
 import { IconButton } from "rsuite";
 import EditIcon from "@rsuite/icons/Edit";
+
+import styles from "../../../styles/components/cap/Step.module.css";
+import { FormAlertData, Step } from "../Editor";
+import { classes } from "../../../lib/helpers";
 
 const ReviewItem = (props: {
   field: string;
@@ -19,7 +21,7 @@ const ReviewItem = (props: {
 export default function SummaryStep({
   jumpToStep,
   ...alertData
-}: Partial<FormAlertData> & {
+}: FormAlertData & {
   jumpToStep: (step: Step) => void;
 }) {
   const Header = (props: { step: Step }) => (
@@ -70,8 +72,8 @@ export default function SummaryStep({
             field="Alert Category"
             value={alertData.category?.join(", ") ?? "NONE"}
           />
-          <ReviewItem field="Event" value={alertData.event ?? "NONE"} />
         </div>
+
         <div className={styles.reviewStep}>
           <Header step="map" />
           <ReviewItem
@@ -101,21 +103,37 @@ export default function SummaryStep({
 
         <div className={styles.reviewStep}>
           <Header step="text" />
-          <ReviewItem field="Headline" value={alertData.headline ?? "NONE"} />
-          <ReviewItem
-            field="Description"
-            newLine
-            value={alertData.description ?? "NONE"}
-          />
-          <ReviewItem
-            field="Instruction"
-            newLine
-            value={alertData.instruction ?? "NONE"}
-          />
           <ReviewItem
             field="Actions"
             value={alertData.actions?.join(", ") ?? "NONE"}
           />
+
+          {Object.entries(alertData.textLanguages).map(
+            ([language, languageData]) => (
+              <div
+                className={styles.languageWrapper}
+                key={`language-summary-${language}`}
+              >
+                <i className={styles.language}>{ISO6391.getName(language)}</i>
+                <ReviewItem
+                  field={`Event`}
+                  value={languageData.event ?? "NONE"}
+                />
+                <ReviewItem
+                  field={`Headline`}
+                  value={languageData.headline ?? "NONE"}
+                />
+                <ReviewItem
+                  field={`Description`}
+                  value={languageData.description ?? "NONE"}
+                />
+                <ReviewItem
+                  field={`Instruction`}
+                  value={languageData.instruction ?? "NONE"}
+                />
+              </div>
+            )
+          )}
         </div>
       </div>
     </div>

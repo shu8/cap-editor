@@ -68,3 +68,8 @@
   display: flex;
   justify-content: space-between;
 }
+
+.alertId {
+  font-family: monospace;
+  text-transform: none;
+}

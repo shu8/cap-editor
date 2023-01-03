@@ -127,7 +127,8 @@ export default function TextStep({
   const whatNowMessagesInCurrentLanguage =
     whatNowMessages?.filter((m) => !!m.translations[language]) ?? [];
 
-  const { headline, description, instruction } = textLanguages![language];
+  const { event, headline, description, instruction } =
+    textLanguages![language];
   return (
     <div>
       <LanguageTabs
@@ -137,7 +138,12 @@ export default function TextStep({
           onUpdate({
             textLanguages: {
               ...textLanguages,
-              [l]: { headline: "", description: "", instruction: "" },
+              [l]: {
+                event: "",
+                headline: "",
+                description: "",
+                instruction: "",
+              },
             },
           });
           setLanguage(l);
@@ -145,6 +151,22 @@ export default function TextStep({
         onSetLanguage={(l) => setLanguage(l)}
       >
         <Form fluid>
+          <Form.Group>
+            <Form.ControlLabel>
+              What is the event this alert pertains to?
+            </Form.ControlLabel>
+            <Form.Control
+              name="event"
+              onChange={(v) => updateField("event", v)}
+              value={event}
+            />
+            <Form.HelpText
+              style={{ color: (event?.length ?? 0) > 15 ? "red" : "unset" }}
+            >
+              {event?.length ?? 0}/15 characters
+            </Form.HelpText>
+          </Form.Group>
+
           <Form.Group>
             <Form.ControlLabel>Headline</Form.ControlLabel>
             <Form.Control

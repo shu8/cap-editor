@@ -22,7 +22,7 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
     info: Object.entries(alertData.textLanguages).map(([language, languageData]) => ({
       language,
       category: alertData.category,
-      event: alertData.event,
+      event: languageData.event,
       responseType: alertData.actions,
       urgency: alertData.urgency,
       severity: alertData.severity,

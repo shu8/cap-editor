@@ -139,9 +139,9 @@ export default function EditorPage(props: Props) {
         : [],
       resources: info?.resource ?? [],
       references: alertData.references ? alertData.references.split(" ") : [],
-      event: info?.event ?? "",
       textLanguages: alertData.info?.reduce((acc, info) => {
         acc[info.language as string] = {
+          event: info.event ?? "",
           headline: info.headline ?? "",
           description: info.description ?? "",
           instruction: info.description ?? "",
@@ -166,8 +166,9 @@ export default function EditorPage(props: Props) {
       addresses: [],
       resources: [],
       references: [],
-      event: "Test",
-      textLanguages: { en: { headline: "", description: "", instruction: "" } },
+      textLanguages: {
+        en: { event: "", headline: "", description: "", instruction: "" },
+      },
     };
   }
 

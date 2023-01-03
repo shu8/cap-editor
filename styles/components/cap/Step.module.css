@@ -52,3 +52,12 @@
   justify-content: space-between;
   flex-wrap: wrap;
 }
+
+.languageWrapper {
+  margin: 10px 0;
+}
+
+.language {
+  margin: 4px;
+  text-decoration: underline;
+}

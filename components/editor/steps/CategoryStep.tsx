@@ -31,7 +31,6 @@ const CATEGORIES = [
 export default function CategoryStep({
   onUpdate,
   category,
-  event,
 }: Partial<FormAlertData> & StepProps) {
   return (
     <div>
@@ -58,33 +57,6 @@ export default function CategoryStep({
           </Button>
         ))}
       </div>
-
-      {category?.length > 0 && (
-        <>
-          <h4>Event</h4>
-          <Form fluid>
-            <Form.Group>
-              <Form.ControlLabel>
-                What is the event this{" "}
-                <strong>
-                  <i>{category?.join(", ") ?? ""}</i>
-                </strong>{" "}
-                alert pertains to?
-              </Form.ControlLabel>
-              <Form.Control
-                name="event"
-                onChange={(event) => onUpdate({ event })}
-                value={event}
-              />
-              <Form.HelpText
-                style={{ color: (event?.length ?? 0) > 15 ? "red" : "unset" }}
-              >
-                {event?.length ?? 0}/15 characters
-              </Form.HelpText>
-            </Form.Group>
-          </Form>
-        </>
-      )}
     </div>
   );
 }
