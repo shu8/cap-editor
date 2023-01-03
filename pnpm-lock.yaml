@@ -20,6 +20,7 @@ specifiers:
   eslint: 8.29.0
   eslint-config-next: 13.0.7
   fast-xml-parser: ^4.0.12
+  iso-639-1: ^2.1.15
   json-schema-to-typescript: ^11.0.2
   jsonschema: ^1.4.1
   next: 13.0.7
@@ -49,6 +50,7 @@ dependencies:
   capgen: 1.0.8
   cookies-next: 2.1.1
   fast-xml-parser: 4.0.12
+  iso-639-1: 2.1.15
   jsonschema: 1.4.1
   next: 13.0.7_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.18.6_gxrb4puqhmlxj5cjmftw47fgty
@@ -2042,6 +2044,11 @@ packages:
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
+
+  /iso-639-1/2.1.15:
+    resolution: {integrity: sha512-7c7mBznZu2ktfvyT582E2msM+Udc1EjOyhVRE/0ZsjD9LBtWSm23h3PtiRh2a35XoUsTQQjJXaJzuLjXsOdFDg==}
+    engines: {node: '>=6.0'}
+    dev: false
 
   /jose/4.11.1:
     resolution: {integrity: sha512-YRv4Tk/Wlug8qicwqFNFVEZSdbROCHRAC6qu/i0dyNKr5JQdoa2pIGoS04lLO/jXQX7Z9omoNewYIVIxqZBd9Q==}

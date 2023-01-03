@@ -2,21 +2,22 @@ import Head from "next/head";
 import Editor, { FormAlertData } from "../../components/editor/Editor";
 import prisma from "../../lib/prisma";
 import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
 import { Alert, AlertingAuthority, AlertStatus, Role } from "@prisma/client";
 import { GetServerSideProps } from "next";
+import ISO6391 from "iso-639-1";
+
 import {
   formatDate,
   getStartOfToday,
   HandledError,
   useMountEffect,
 } from "../../lib/helpers";
+import { authOptions } from "../api/auth/[...nextauth]";
 import { CAPV12JSONSchema } from "../../lib/types/cap.schema";
 import { ERRORS } from "../../lib/errors";
 import { Message, useToaster } from "rsuite";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 type Props = {
   alertingAuthority: AlertingAuthority;
@@ -125,9 +126,6 @@ export default function EditorPage(props: Props) {
       }, {}),
       from: info?.effective ? new Date(info?.effective) : getStartOfToday(),
       to: info?.expires ? new Date(info?.expires) : new Date(),
-      headline: info?.headline ?? "",
-      description: info?.description ?? "",
-      instruction: info?.instruction ?? "",
       actions: info?.responseType ?? [],
       certainty: info?.certainty ?? "",
       severity: info?.severity ?? "",
@@ -142,6 +140,14 @@ export default function EditorPage(props: Props) {
       resources: info?.resource ?? [],
       references: alertData.references ? alertData.references.split(" ") : [],
       event: info?.event ?? "",
+      textLanguages: alertData.info?.reduce((acc, info) => {
+        acc[info.language as string] = {
+          headline: info.headline ?? "",
+          description: info.description ?? "",
+          instruction: info.description ?? "",
+        };
+        return acc;
+      }, {}),
     };
   } else {
     defaultAlertData = {
@@ -149,9 +155,6 @@ export default function EditorPage(props: Props) {
       regions: { "United Kingdom": [] },
       from: getStartOfToday(),
       to: new Date(),
-      headline: "",
-      description: "",
-      instruction: "",
       actions: [],
       certainty: "Likely",
       severity: "Severe",
@@ -164,9 +167,11 @@ export default function EditorPage(props: Props) {
       resources: [],
       references: [],
       event: "Test",
+      textLanguages: { en: { headline: "", description: "", instruction: "" } },
     };
   }
 
+  const isEditingAlert = !!props.alert && !props.isTemplate;
   return (
     <>
       <Head>
@@ -175,22 +180,22 @@ export default function EditorPage(props: Props) {
       <main>
         <Editor
           key={
-            props.alert
-              ? `editor-${props.alert.id}`
+            isEditingAlert
+              ? `editor-${props.alert!.id}`
               : `editor-${new Date().getTime()}`
           }
           alertingAuthority={props.alertingAuthority}
           roles={props.roles}
           defaultAlertData={defaultAlertData}
-          {...(!!props.alert && { existingAlertStatus: props.alert.status })}
+          {...(isEditingAlert && { existingAlertStatus: props.alert!.status })}
           onSubmit={async (
             alertData: FormAlertData,
             alertStatus: AlertStatus
           ) => {
             fetch(
-              props.alert ? `/api/alerts/${props.alert.id}` : "/api/alerts",
+              isEditingAlert ? `/api/alerts/${props.alert!.id}` : "/api/alerts",
               {
-                method: props.alert ? "PUT" : "POST",
+                method: isEditingAlert ? "PUT" : "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(
                   { status: alertStatus, data: alertData },

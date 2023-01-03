@@ -40,6 +40,13 @@ export type FormAlertData = {
   resources: Resource[];
   references: string[];
   event: string;
+  textLanguages: {
+    [key: string]: {
+      headline: string;
+      description: string;
+      instruction: string;
+    };
+  };
 };
 
 export type StepProps = {
@@ -130,21 +137,17 @@ export default function Editor(props: Props) {
       render: () => (
         <TextStep
           onUpdate={onUpdate}
-          headline={alertData.headline}
-          event={alertData.event}
-          description={alertData.description}
-          instruction={alertData.instruction}
           actions={alertData.actions}
           countryCode={props.alertingAuthority.countryCode}
           urgency={alertData.urgency}
           resources={alertData.resources}
+          textLanguages={alertData.textLanguages}
         />
       ),
       isValid: () =>
-        !!alertData.headline &&
-        !!alertData.description &&
-        !!alertData.instruction &&
-        alertData.actions.length > 0,
+        Object.values(alertData.textLanguages).every(
+          (l) => !!l.headline && !!l.description && !!l.instruction
+        ) && alertData.actions.length > 0,
     },
   };
 

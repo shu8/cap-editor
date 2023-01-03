@@ -1,0 +1,19 @@
+.languagesTabs {
+  display: flex;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.languageTab {
+  text-transform: capitalize;
+  cursor: pointer;
+  margin: 5px 10px;
+}
+
+.languageTab.selected {
+  text-decoration: underline;
+  font-weight: bold;
+}

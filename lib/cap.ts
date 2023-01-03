@@ -19,8 +19,8 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
     // note
     ...(alertData.references?.length && { references: alertData.references?.join(' ') }),
     // incidents,
-    info: [{
-      // language
+    info: Object.entries(alertData.textLanguages).map(([language, languageData]) => ({
+      language,
       category: alertData.category,
       event: alertData.event,
       responseType: alertData.actions,
@@ -33,9 +33,9 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
       onset: alertData.from,
       expires: alertData.to,
       senderName: process.env.AA_NAME,
-      headline: alertData.headline,
-      description: alertData.description,
-      instruction: alertData.instruction,
+      headline: languageData.headline,
+      description: languageData.description,
+      instruction: languageData.instruction,
       web: `https://${process.env.DOMAIN}/feed/${id}`,
       contact: process.env.AA_EMAIL,
       // parameter
@@ -48,7 +48,7 @@ export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string
         // altitude
         // ceiling
       })),
-    }]
+    }))
   };
 
 
