@@ -8,18 +8,6 @@
   --rs-text-primary: black;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
-    --secondary-glow: linear-gradient(
-      to bottom right,
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0.3)
-    );
-  }
-}
-
 * {
   box-sizing: border-box;
   padding: 0;
@@ -40,8 +28,9 @@ body {
 footer {
   display: flex;
   justify-content: space-evenly;
-  padding: 10px;
+  padding-top: 5px;
   margin-top: 10px;
+  box-sizing: content-box;
   border-top: 1px solid black;
 }
 
@@ -56,21 +45,16 @@ p {
 
 .wrapper {
   height: 100%;
-  margin: 10px;
+  padding: 10px;
   display: flex;
-  justify-content: space-between;
-  box-sizing: content-box;
   flex-direction: column;
-  justify-content: flex-start;
 }
 
 main {
-  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* justify-content: space-around; */
-  /* align-items: center; */
+  flex: auto;
 }
 
 #__next {
