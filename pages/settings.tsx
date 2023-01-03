@@ -1,7 +1,10 @@
 import { startRegistration } from "@simplewebauthn/browser";
-import { Button, useToaster } from "rsuite";
+import { Button, Message, useToaster } from "rsuite";
 import Head from "next/head";
 import ErrorMessage from "../components/ErrorMessage";
+import { GetServerSideProps } from "next";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]";
 
 export default function SettingsPage() {
   const toaster = useToaster();
@@ -29,7 +32,16 @@ export default function SettingsPage() {
                 body: JSON.stringify(credential),
               }).then((res) => res.json());
 
-              if (verification?.verified) window.alert("Registered");
+              if (!verification?.error) {
+                toaster.push(
+                  <Message type="success" duration={0} closable>
+                    This device has been successfully registered for WebAuthn
+                    authentication.
+                  </Message>
+                );
+              } else {
+                throw new Error("Failed to register", verification);
+              }
             } catch (err) {
               console.error("Failed to register WebAuthn", err);
               toaster.push(
@@ -44,3 +56,15 @@ export default function SettingsPage() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+  if (!session) {
+    return { redirect: { destination: "/login", permanent: false } };
+  }
+  return { props: {} };
+};

@@ -77,15 +77,21 @@ export const authOptions: AuthOptions = {
             },
           });
 
+          if (!user) return null;
+
           // At this point, the user should not have any pending challenge in the DB
           // They should only have the pending usernameless auth challenge in redis
           // And they should have at least one authenticator in the DB
           if (
-            user?.currentWebauthnChallenge != null ||
-            !user?.authenticators.length
+            user.currentWebauthnChallenge != null ||
+            !user.authenticators.length
           ) {
             deleteCookie("webauthn-user-id", { req });
             await redis.hDel("webauthn-auth-challenges", tempWebauthnUserId);
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { currentWebauthnChallenge: null },
+            });
             return null;
           }
 
@@ -120,7 +126,7 @@ export const authOptions: AuthOptions = {
 
           await redis.hDel("webauthn-auth-challenges", tempWebauthnUserId);
         } catch (err) {
-          console.error("errr", err);
+          console.error("WebAuthn login error", err);
         } finally {
           deleteCookie("webauthn-user-id", { req });
         }
