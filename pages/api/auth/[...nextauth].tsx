@@ -12,7 +12,8 @@ import redis from "../../../lib/redis";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
+  // 2 day sessions
+  session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 2 },
   pages: {
     signIn: "/login",
     verifyRequest: "/auth/verify-request",
@@ -30,7 +31,8 @@ export const authOptions: AuthOptions = {
           pass: process.env.EMAIL_SERVER_PASSWORD,
         },
       },
-      maxAge: 600, // 10 minutes
+      // 10 minute email links
+      maxAge: 600,
       from: process.env.EMAIL_FROM,
     }),
     // https://dev.to/jsombie/password-less-authentication-in-nextjs-application-with-webauthn-and-nextauth-3mgl
