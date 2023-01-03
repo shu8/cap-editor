@@ -7,6 +7,7 @@ import useSWR from "swr";
 import styles from "../styles/Home.module.css";
 import { fetcher } from "../lib/helpers";
 import Alert from "../components/Alert";
+import Link from "next/link";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -62,9 +63,11 @@ export default function Home() {
 
         {!session && (
           <p>
-            <Button color="violet" appearance="primary">
-              Register with your Alerting Authority &rarr;
-            </Button>
+            <Link href="/register">
+              <Button color="violet" appearance="primary">
+                Register with your Alerting Authority &rarr;
+              </Button>
+            </Link>
           </p>
         )}
 

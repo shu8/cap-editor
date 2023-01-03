@@ -22,6 +22,7 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/cap.schema.json /app/countries.geojson /app/email-template.html ./
 
 EXPOSE 3000
 CMD ["npm", "run", "start:prod"]
