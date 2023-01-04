@@ -14,5 +14,9 @@ export const ERRORS = {
   ALERT_NOT_FOUND: {
     slug: 'alert-not-found',
     message: 'The requested alert could not be found.'
+  },
+  EDIT_PUBLISHED_ALERT: {
+    slug: 'edit-published-alert',
+    message: 'You cannot edit a published alert. Please create a new alert referencing the existing one if you need to update information.'
   }
 };

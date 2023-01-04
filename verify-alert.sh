@@ -55,3 +55,10 @@ xmlsec1 --verify --pubkey-pem $pubkey_path $alert_path > /dev/null 2>&1
 [[ $? -ne 0 ]] && err "Alert Signature Verification failed"
 
 echo "${green}Alert is valid$reset"
+
+# TODO only check the URL written inside the alert
+# https://dzone.com/articles/ocsp-validation-with-openssl
+# openssl s_client -connect revoked.badssl.com:443 < /dev/null 2>&1 |  sed -n '/-----BEGIN/,/-----END/p' > certificate.pem
+# openssl s_client -showcerts -connect revoked.badssl.com:443 < /dev/null 2>&1 |  sed -n '/-----BEGIN/,/-----END/p' > chain.pem
+# OCSP_URL=`openssl x509 -noout -ocsp_uri -in certificate.pem`
+# openssl ocsp -issuer chain.pem -cert certificate.pem -text -url $OCSP_URL

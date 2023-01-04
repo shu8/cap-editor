@@ -73,6 +73,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     const alert = await prisma.alert.findFirst({ where: { id: alertId } });
     if (!alert) return redirect(`/error/${ERRORS.ALERT_NOT_FOUND.slug}`);
 
+    if (alert.status === 'PUBLISHED' && !isTemplate) {
+      return redirect(`/error/${ERRORS.EDIT_PUBLISHED_ALERT.slug}`)
+    }
+
     // Convert DB Alert data to FormAlertData for Editor
     const alertData = alert.data as CAPV12JSONSchema;
     const info = alertData.info?.[0];
