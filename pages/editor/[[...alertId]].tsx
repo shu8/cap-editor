@@ -73,8 +73,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     const alert = await prisma.alert.findFirst({ where: { id: alertId } });
     if (!alert) return redirect(`/error/${ERRORS.ALERT_NOT_FOUND.slug}`);
 
-    if (alert.status === 'PUBLISHED' && !isTemplate) {
-      return redirect(`/error/${ERRORS.EDIT_PUBLISHED_ALERT.slug}`)
+    if (alert.status === "PUBLISHED" && !isTemplate) {
+      return redirect(`/error/${ERRORS.EDIT_PUBLISHED_ALERT.slug}`);
     }
 
     // Convert DB Alert data to FormAlertData for Editor
@@ -122,17 +122,17 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
   } else {
     defaultAlertData = {
-      category: ["Geo"],
-      regions: { "United Kingdom": [] },
+      category: [],
+      regions: {},
       from: getStartOfToday().toString(),
       to: new Date().toString(),
       actions: [],
-      certainty: "Likely",
-      severity: "Severe",
-      urgency: "Immediate",
-      status: "Actual",
-      msgType: "Alert",
-      scope: "Public",
+      certainty: "",
+      severity: "",
+      urgency: "",
+      status: "",
+      msgType: "",
+      scope: "",
       restriction: "",
       addresses: [],
       references: [],
