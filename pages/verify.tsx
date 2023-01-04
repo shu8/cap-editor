@@ -71,7 +71,9 @@ export default function VerifyUser({
       .then((res) => {
         if (res.error) throw new HandledError(res.message);
         toaster.push(
-          <Message type="success">Account successfully verified</Message>
+          <Message type="success" duration={0} closable>
+            Account successfully verified
+          </Message>
         );
       })
       .catch((err) =>

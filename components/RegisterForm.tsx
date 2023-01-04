@@ -43,7 +43,7 @@ export default function RegisterForm({ email = "" }) {
             .then((res) => {
               if (res.error) throw new HandledError(res.message);
               toaster.push(
-                <Message type="success">
+                <Message type="success" duration={0} closable>
                   Registration successful. You will receive an email once your
                   Alerting Authority has approved your account.
                 </Message>
