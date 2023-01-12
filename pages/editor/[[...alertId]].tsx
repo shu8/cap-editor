@@ -68,7 +68,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   }
 
   let defaultAlertData: any;
-  let editingAlert: any;
+  let editingAlert: any = null;
   if (typeof alertId === "string") {
     const alert = await prisma.alert.findFirst({ where: { id: alertId } });
     if (!alert) return redirect(`/error/${ERRORS.ALERT_NOT_FOUND.slug}`);
