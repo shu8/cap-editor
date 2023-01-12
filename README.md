@@ -62,7 +62,19 @@ In the below architecture diagram, the _feed server_ is this Next.js app.
 docker-compose up -d
 ```
 
-4. Run the Next.js development server:
+4. Install the Node dependencies:
+
+```bash
+pnpm install
+```
+
+5. Run the database migrations:
+
+```bash
+pnpm migrate
+```
+
+6. Run the Next.js development server:
 
 ```bash
 pnpm dev
