@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/macro";
 import Head from "next/head";
 import { Message } from "rsuite";
 
@@ -11,9 +12,15 @@ export default function VerifyRequestPage() {
         <Message
           type="info"
           showIcon
-          header={<strong>Please check your email</strong>}
+          header={
+            <strong>
+              <Trans>Please check your email</Trans>
+            </strong>
+          }
         >
-          <p>A sign in link has been sent to your email address.</p>
+          <p>
+            <Trans>A sign in link has been sent to your email address.</Trans>
+          </p>
         </Message>
       </main>
     </>

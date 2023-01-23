@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import styles from "../styles/components/Alert.module.css";
 import { CAPV12JSONSchema } from "../lib/types/cap.schema";
+import { Trans } from "@lingui/macro";
 
 const colors = {
   urgency: {
@@ -49,7 +50,7 @@ export default function Alert({ alert }: { alert: DBAlert }) {
               rel="noreferrer"
             >
               <Button appearance="ghost" color="violet" size="xs">
-                View alert ↗
+                <Trans>View alert</Trans>↗
               </Button>
             </a>
           )}
@@ -61,7 +62,8 @@ export default function Alert({ alert }: { alert: DBAlert }) {
                 color="violet"
                 size="xs"
               >
-                Edit alert 🖉
+                <Trans>Edit alert</Trans>
+                🖉
               </Button>
             )}
           </Link>
@@ -72,16 +74,16 @@ export default function Alert({ alert }: { alert: DBAlert }) {
               color="violet"
               size="xs"
             >
-              Use as template for new alert &rarr;
+              <Trans>Use as template for new alert</Trans> &rarr;
             </Button>
           </Link>
         </>
       }
     >
       <p>
-        Sent: {new Date(alertData.sent).toString()}
+        <Trans>Sent</Trans>:{new Date(alertData.sent).toString()}
         <br />
-        Expires: {expiryDate.toString()}
+        <Trans>Expires</Trans>: {expiryDate.toString()}
       </p>
       <p>
         <Tag as="span" color="green">

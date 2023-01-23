@@ -82,6 +82,16 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Internationalisation (i18n)
+
+This project uses [LinguiJS](https://lingui.js.org/index.html) for internationalisation.
+
+Language catalogs are stored in [`./locales/[lang]`](./locales/) in the [PO format](https://localizely.com/po-file/).
+
+Strings in the source code are written in English (UK) and must be wrapped in the `<Trans></Trans>` component from `@lingui/macro` package, or wrapped with the `t\`...\`` macro from the same package.
+
+To update the files _to be translated_, run `pnpm i18n:extract`. Then, manually (or automatically using a translation tool), write in the translations for each of the strings in the [`./locales/[lang]/messages.po`](/.locales) files. Once translated, run `pnpm i18n:compile` to update the web-app to reflect the latest translations.
+
 ### Learn More
 
 To learn more about Next.js, take a look at the following resources:

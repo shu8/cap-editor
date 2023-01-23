@@ -17,6 +17,7 @@ import { ERRORS } from "../../lib/errors";
 import { Message, useToaster } from "rsuite";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useRouter } from "next/router";
+import { t } from "@lingui/macro";
 
 type Props = {
   alertingAuthority: AlertingAuthority;
@@ -225,7 +226,7 @@ export default function EditorPage(props: Props) {
               })
               .catch((err) =>
                 toaster.push(
-                  <ErrorMessage error={err} action="submitting the alert" />,
+                  <ErrorMessage error={err} action={t`submitting the alert`} />,
                   { placement: "bottomCenter" }
                 )
               );

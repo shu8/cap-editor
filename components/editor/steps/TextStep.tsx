@@ -15,9 +15,11 @@ import ISO6391 from "iso-639-1";
 import { camelise, HandledError, useMountEffect } from "../../../lib/helpers";
 import { FormAlertData, StepProps } from "../Editor";
 import { Resource, WhatNowResponse } from "../../../lib/types/types";
+
 import ErrorMessage from "../../ErrorMessage";
 import ResourceModal from "../ResourceModal";
 import LanguageTabs from "../LanguageTabs";
+import { t, Trans } from "@lingui/macro";
 
 const Textarea = forwardRef((props, ref) => (
   <Input {...props} ref={ref} rows={5} as="textarea" />
@@ -34,7 +36,7 @@ const getDefaultInstructionTypes = (urgency: string) => {
   return types;
 };
 
-const Resource = ({
+const ResourceItem = ({
   resource,
   onDelete,
 }: {
@@ -49,7 +51,7 @@ const Resource = ({
       </a>
       ) &mdash;{" "}
       <Button size="xs" color="red" appearance="ghost" onClick={onDelete}>
-        Delete?
+        <Trans>Delete?</Trans>
       </Button>
     </li>
   );
@@ -86,7 +88,7 @@ export default function TextStep({
       })
       .catch((err) =>
         toaster.push(
-          <ErrorMessage error={err} action="fetching WhatNow messages" />
+          <ErrorMessage error={err} action={t`fetching WhatNow messages`} />
         )
       );
   });
@@ -136,8 +138,10 @@ export default function TextStep({
           } else {
             toaster.push(
               <Message type="error" duration={0} closable>
-                You cannot delete all languages. Please select a new language to
-                keep first
+                <Trans>
+                  You cannot delete all languages. Please select a new language
+                  to keep first
+                </Trans>
               </Message>
             );
           }
@@ -162,7 +166,7 @@ export default function TextStep({
         <Form fluid>
           <Form.Group>
             <Form.ControlLabel>
-              What is the event this alert pertains to?
+              <Trans>What is the event this alert pertains to?</Trans>
             </Form.ControlLabel>
             <Form.Control
               name="event"
@@ -172,12 +176,14 @@ export default function TextStep({
             <Form.HelpText
               style={{ color: (event?.length ?? 0) > 15 ? "red" : "unset" }}
             >
-              {event?.length ?? 0}/15 characters
+              {event?.length ?? 0}/15 <Trans>characters</Trans>
             </Form.HelpText>
           </Form.Group>
 
           <Form.Group>
-            <Form.ControlLabel>Headline</Form.ControlLabel>
+            <Form.ControlLabel>
+              <Trans>Headline</Trans>
+            </Form.ControlLabel>
             <Form.Control
               name="headline"
               onChange={(v) => updateField("headline", v)}
@@ -186,16 +192,18 @@ export default function TextStep({
             <Form.HelpText
               style={{ color: (headline?.length ?? 0) > 160 ? "red" : "unset" }}
             >
-              {headline?.length ?? 0}/160 characters
+              {headline?.length ?? 0}/160 <Trans>characters</Trans>
             </Form.HelpText>
           </Form.Group>
 
           <Form.Group>
-            <Form.ControlLabel>Description</Form.ControlLabel>
+            <Form.ControlLabel>
+              <Trans>Description</Trans>
+            </Form.ControlLabel>
             {!!whatNowMessagesInCurrentLanguage.length && (
               <SelectPicker
                 block
-                placeholder="Choose event to auto-fill from WhatNow?"
+                placeholder={t`Choose event to auto-fill from WhatNow?`}
                 data={whatNowMessages.map((w) => ({
                   label: w.eventType,
                   value: w.id,
@@ -211,9 +219,12 @@ export default function TextStep({
             />
             {!!whatNowMessagesInCurrentLanguage.length && (
               <Form.HelpText>
-                WhatNow provides pre-written messages and instructions you can
-                use for certain events. Use the dropdown to select one of these
-                as a template, or provide your own Description and Instructions.
+                <Trans>
+                  WhatNow provides pre-written messages and instructions you can
+                  use for certain events. Use the dropdown to select one of
+                  these as a template, or provide your own Description and
+                  Instructions.
+                </Trans>
               </Form.HelpText>
             )}
           </Form.Group>
@@ -250,10 +261,14 @@ export default function TextStep({
           </Form.Group>
         </Form>
 
-        <h4>Link to external resources</h4>
+        <h4>
+          <Trans>Link to external resources</Trans>
+        </h4>
         <p>
-          If necessary, add links to resources (in {ISO6391.getName(language)})
-          that offer complementary, non-essential information to the alert.
+          <Trans>
+            If necessary, add links to resources (in {ISO6391.getName(language)}
+            ) that offer complementary, non-essential information to the alert.
+          </Trans>
         </p>
         {showResourceModal && (
           <ResourceModal
@@ -270,7 +285,7 @@ export default function TextStep({
         )}
 
         {resources?.map((r, i) => (
-          <Resource
+          <ResourceItem
             resource={r}
             key={`resource=${i}`}
             onDelete={() => {

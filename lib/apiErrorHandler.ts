@@ -1,3 +1,4 @@
+import { t } from "@lingui/macro";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 
@@ -7,12 +8,12 @@ export function withErrorHandler(handler: NextApiHandler) {
       await handler(req, res);
     } catch (err) {
       let statusCode = 5000;
-      let message = 'An unexpected error occurred. Please try again later or contact your administrator if the issue persists';
+      let message = t`An unexpected error occurred. Please try again later or contact your administrator if the issue persists`;
       if (err instanceof ApiError) {
         statusCode = err.statusCode;
         message = err.message;
       } else {
-        console.error('Unhandled error', err);
+        console.error("Unhandled error", err);
       }
 
       return res.status(statusCode).json({ error: true, message: message });

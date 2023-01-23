@@ -5,6 +5,7 @@ import CloseOutlineIcon from "@rsuite/icons/CloseOutline";
 
 import styles from "../../styles/components/editor/LanguageTabs.module.css";
 import { classes } from "../../lib/helpers";
+import { t, Trans } from "@lingui/macro";
 
 type Props = {
   languages: string[];
@@ -24,12 +25,14 @@ export default function LanguageTabs(props: Props) {
     <>
       {showChooseLanguageModal && (
         <Modal open>
-          <Modal.Title>Choose language</Modal.Title>
+          <Modal.Title>
+            <Trans>Choose language</Trans>
+          </Modal.Title>
 
           <Modal.Body>
             <SelectPicker
-              placeholder="Select a language"
-              label="Language"
+              placeholder={t`Select a language`}
+              label={t`Language`}
               data={ISO6391.getAllNames().map((l) => ({
                 label: l,
                 value: ISO6391.getCode(l),
@@ -45,7 +48,7 @@ export default function LanguageTabs(props: Props) {
               color="red"
               onClick={() => setShowChooseLanguageModal(false)}
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button
               appearance="primary"
@@ -53,7 +56,7 @@ export default function LanguageTabs(props: Props) {
                 if (!newLanguage) {
                   toaster.push(
                     <Message type="error" closable duration={0}>
-                      Please choose a language to add
+                      <Trans>Please choose a language to add</Trans>
                     </Message>
                   );
                   return;
@@ -63,14 +66,14 @@ export default function LanguageTabs(props: Props) {
                 setShowChooseLanguageModal(false);
               }}
             >
-              Add language
+              <Trans>Add language</Trans>
             </Button>
           </Modal.Footer>
         </Modal>
       )}
 
       <div className={styles.languagesTabs}>
-        Language:
+        <Trans>Language</Trans>:
         {props.languages.map((l) => (
           <span
             key={`language-${l}`}
@@ -82,11 +85,11 @@ export default function LanguageTabs(props: Props) {
           >
             {ISO6391.getName(l)}
             <span
-              title="Delete language?"
+              title={t`Delete language?`}
               onClick={() => {
                 if (
                   window.confirm(
-                    "Are you sure you want to delete this language and all its contents?"
+                    t`Are you sure you want to delete this language and all its contents?`
                   )
                 ) {
                   props.onDeleteLanguage(l);
@@ -101,7 +104,7 @@ export default function LanguageTabs(props: Props) {
           className={classes(styles.languageTab)}
           onClick={() => setShowChooseLanguageModal(true)}
         >
-          Add another language?
+          <Trans>Add another language?</Trans>
         </span>
       </div>
 

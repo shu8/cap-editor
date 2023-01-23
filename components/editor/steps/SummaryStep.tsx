@@ -5,6 +5,7 @@ import EditIcon from "@rsuite/icons/Edit";
 import styles from "../../../styles/components/editor/Step.module.css";
 import { FormAlertData, Step } from "../Editor";
 import { classes } from "../../../lib/helpers";
+import { t, Trans } from "@lingui/macro";
 
 const ReviewItem = (props: {
   field: string;
@@ -41,28 +42,31 @@ export default function SummaryStep({
   return (
     <div>
       <p>
-        Please review and confirm the alert&apos;s information presented below.
+        <Trans>
+          Please review and confirm the alert&apos;s information presented
+          below.
+        </Trans>
       </p>
       <div className={styles.reviewStepsWrapper}>
         <div className={styles.reviewStep}>
           <Header step="metadata" />
-          <ReviewItem field="Status" value={alertData.status ?? "NONE"} />
+          <ReviewItem field="Status" value={alertData.status ?? t`NONE`} />
           <ReviewItem
             field="Message Type"
-            value={alertData.msgType ?? "NONE"}
+            value={alertData.msgType ?? t`NONE`}
           />
-          <ReviewItem field="Scope" value={alertData.scope ?? "NONE"} />
+          <ReviewItem field="Scope" value={alertData.scope ?? t`NONE`} />
           <ReviewItem
             field="Restriction"
-            value={alertData.restriction ?? "NONE"}
+            value={alertData.restriction ?? t`NONE`}
           />
           <ReviewItem
             field="Addresses"
-            value={alertData.addresses?.join("; ") ?? "NONE"}
+            value={alertData.addresses?.join("; ") ?? t`NONE`}
           />
           <ReviewItem
             field="References"
-            value={alertData.references?.join("; ") ?? "NONE"}
+            value={alertData.references?.join("; ") ?? t`NONE`}
           />
         </div>
 
@@ -70,7 +74,7 @@ export default function SummaryStep({
           <Header step="category" />
           <ReviewItem
             field="Alert Category"
-            value={alertData.category?.join("; ") ?? "NONE"}
+            value={alertData.category?.join("; ") ?? t`NONE`}
           />
         </div>
 
@@ -81,7 +85,7 @@ export default function SummaryStep({
             value={
               Object.keys(alertData.regions ?? {})
                 .map((r) => r.replace("custom-", ""))
-                .join("; ") || "NONE"
+                .join("; ") || t`NONE`
             }
           />
         </div>
@@ -90,19 +94,22 @@ export default function SummaryStep({
           <Header step="data" />
           <ReviewItem
             field="From"
-            value={alertData.from?.toLocaleString() ?? "NONE"}
+            value={alertData.from?.toLocaleString() ?? t`NONE`}
           />
           <ReviewItem
             field="To"
-            value={alertData.to?.toLocaleString() ?? "NONE"}
+            value={alertData.to?.toLocaleString() ?? t`NONE`}
           />
-          <ReviewItem field="Severity" value={alertData.severity ?? "NONE"} />
-          <ReviewItem field="Certainty" value={alertData.certainty ?? "NONE"} />
-          <ReviewItem field="Urgency" value={alertData.urgency ?? "NONE"} />
+          <ReviewItem field="Severity" value={alertData.severity ?? t`NONE`} />
+          <ReviewItem
+            field="Certainty"
+            value={alertData.certainty ?? t`NONE`}
+          />
+          <ReviewItem field="Urgency" value={alertData.urgency ?? t`NONE`} />
 
           <ReviewItem
             field="Actions"
-            value={alertData.actions?.join("; ") ?? "NONE"}
+            value={alertData.actions?.join("; ") ?? t`NONE`}
           />
         </div>
 
@@ -118,19 +125,19 @@ export default function SummaryStep({
                 <i className={styles.language}>{ISO6391.getName(language)}</i>
                 <ReviewItem
                   field="Event"
-                  value={languageData.event ?? "NONE"}
+                  value={languageData.event ?? t`NONE`}
                 />
                 <ReviewItem
                   field="Headline"
-                  value={languageData.headline ?? "NONE"}
+                  value={languageData.headline ?? t`NONE`}
                 />
                 <ReviewItem
                   field="Description"
-                  value={languageData.description ?? "NONE"}
+                  value={languageData.description ?? t`NONE`}
                 />
                 <ReviewItem
                   field="Instruction"
-                  value={languageData.instruction ?? "NONE"}
+                  value={languageData.instruction ?? t`NONE`}
                 />
                 <ReviewItem
                   field="Resources"

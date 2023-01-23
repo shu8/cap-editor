@@ -1,11 +1,14 @@
 import { signIn } from "next-auth/react";
 import styles from "../styles/components/AuthenticateForm.module.css";
 import { Button, Form } from "rsuite";
+import { Trans } from "@lingui/macro";
 
 export default function AuthenticateForm() {
   return (
     <div className={styles.wrapper}>
-      <h1>Login</h1>
+      <h1>
+        <Trans>Login</Trans>
+      </h1>
       <Form
         onSubmit={(_, e) => {
           e.preventDefault();
@@ -15,7 +18,9 @@ export default function AuthenticateForm() {
         }}
       >
         <Form.Group>
-          <Form.ControlLabel>Email</Form.ControlLabel>
+          <Form.ControlLabel>
+            <Trans>Email</Trans>
+          </Form.ControlLabel>
           <Form.Control
             name="email"
             type="email"
@@ -24,7 +29,7 @@ export default function AuthenticateForm() {
         </Form.Group>
         <Form.Group>
           <Button appearance="primary" type="submit">
-            Next
+            <Trans>Next</Trans>
           </Button>
         </Form.Group>
       </Form>

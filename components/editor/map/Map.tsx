@@ -23,6 +23,7 @@ import { defaults as OLDefaultInteractions } from "ol/interaction";
 import { AlertingAuthority } from "@prisma/client";
 import flip from "@turf/flip";
 import { useMountEffect } from "../../../lib/helpers";
+import { t } from "@lingui/macro";
 
 // https://www.reshot.com/free-svg-icons/item/free-positioning-polygone-F2AWH4PGVQ/
 const PolygonImage = () => (
@@ -334,15 +335,19 @@ export default function Map({
         />
 
         {enableInteraction &&
-          ["Polygon", "Circle"].map((t, i) => (
+          ["Polygon", "Circle"].map((objectType, i) => (
             <IconButton
-              key={`draw-btn-${t}`}
+              key={`draw-btn-${objectType}`}
               appearance="primary"
               size="sm"
               color="violet"
-              title={`Draw ${t}`}
+              title={`Draw ${objectType}`}
               style={{ position: "absolute", zIndex: 4, right: 0, top: i * 50 }}
-              icon={<Icon as={t === "Polygon" ? PolygonImage : CircleImage} />}
+              icon={
+                <Icon
+                  as={objectType === "Polygon" ? PolygonImage : CircleImage}
+                />
+              }
               onClick={() => {
                 const existingDrawInteractions = map
                   ?.getInteractions()
@@ -360,12 +365,12 @@ export default function Map({
 
                 const draw = new OLDraw({
                   features: selectedFeatures,
-                  type: t as Type,
+                  type: objectType as Type,
                 });
                 draw.on("drawstart", () => select.setActive(false));
                 draw.on("drawend", (e) => {
                   const name = window.prompt(
-                    "What is the name of this region?"
+                    t`What is the name of this region?`
                   );
                   if (name) e.feature.setProperties({ name });
                   draw.setActive(false);

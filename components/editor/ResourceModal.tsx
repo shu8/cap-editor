@@ -1,3 +1,4 @@
+import { t, Trans } from "@lingui/macro";
 import { useState } from "react";
 import { Button, Form, Message, Modal, Schema, useToaster } from "rsuite";
 import { HandledError } from "../../lib/helpers";
@@ -12,7 +13,7 @@ const getMimeType = async (url: string): Promise<string> => {
     return res.mime;
   } catch {
     throw new HandledError(
-      "There was an error accessing this resource. It may be currently unavailable."
+      t`There was an error accessing this resource. It may be currently unavailable.`
     );
   }
 };
@@ -34,7 +35,9 @@ export default function ResourceModal({
   return (
     <Modal backdrop open onClose={() => onSubmit(null)}>
       <Modal.Header>
-        <Modal.Title>Add resource</Modal.Title>
+        <Modal.Title>
+          <Trans>Add resource</Trans>
+        </Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -44,17 +47,17 @@ export default function ResourceModal({
           onChange={setData}
           model={Schema.Model({
             description: Schema.Types.StringType().isRequired(
-              "Please provide a description of the resource"
+              t`Please provide a description of the resource`
             ),
             url: Schema.Types.StringType().isURL(
-              "Please provide a valid URL of the resource"
+              t`Please provide a valid URL of the resource`
             ),
           })}
           onSubmit={async () => {
             if (!data.resourceDesc || !data.uri) {
               toaster.push(
                 <Message type="error" closable duration={0}>
-                  Please provide a valid description and URL
+                  <Trans>Please provide a valid description and URL</Trans>
                 </Message>
               );
               return;
@@ -78,7 +81,7 @@ export default function ResourceModal({
             <Form.Control
               required
               name="resourceDesc"
-              placeholder={`e.g., image of flood (please use ${language} language)`}
+              placeholder={t`e.g., image of flood (please use ${language} language)`}
             />
           </Form.Group>
           <Form.Group>
@@ -97,10 +100,10 @@ export default function ResourceModal({
               appearance="ghost"
               color="red"
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button appearance="primary" color="blue" type="submit">
-              Save
+              <Trans>Save</Trans>
             </Button>
           </Modal.Footer>
         </Form>

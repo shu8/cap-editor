@@ -5,6 +5,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
+import { t, Trans } from "@lingui/macro";
 
 export default function SettingsPage() {
   const toaster = useToaster();
@@ -16,7 +17,9 @@ export default function SettingsPage() {
       </Head>
 
       <main>
-        <h2>Settings</h2>
+        <h2>
+          <Trans>Settings</Trans>
+        </h2>
         <Button
           appearance="primary"
           style={{ width: "200px" }}
@@ -35,8 +38,10 @@ export default function SettingsPage() {
               if (!verification?.error) {
                 toaster.push(
                   <Message type="success" duration={0} closable>
-                    This device has been successfully registered for WebAuthn
-                    authentication.
+                    <Trans>
+                      This device has been successfully registered for WebAuthn
+                      authentication.
+                    </Trans>
                   </Message>
                 );
               } else {
@@ -45,7 +50,10 @@ export default function SettingsPage() {
             } catch (err) {
               console.error("Failed to register WebAuthn", err);
               toaster.push(
-                <ErrorMessage error={err} action="registering for WebAuthn" />
+                <ErrorMessage
+                  error={err}
+                  action={t`registering for WebAuthn`}
+                />
               );
             }
           }}

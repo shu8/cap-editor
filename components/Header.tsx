@@ -1,8 +1,10 @@
 import styles from "../styles/components/Header.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "rsuite";
+import { Button, Dropdown } from "rsuite";
 import { signOut, useSession } from "next-auth/react";
+import { Trans } from "@lingui/macro";
+import { ArrowDown } from "@rsuite/icons";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -25,7 +27,7 @@ export default function Header() {
                 color="violet"
                 className={styles.button}
               >
-                Create alert
+                <Trans>Create alert</Trans>
               </Button>
             </Link>
 
@@ -35,7 +37,7 @@ export default function Header() {
                 color="violet"
                 className={styles.button}
               >
-                Settings
+                <Trans>Settings</Trans>
               </Button>
             </Link>
 
@@ -45,20 +47,41 @@ export default function Header() {
               className={styles.button}
               onClick={() => signOut()}
             >
-              Logout
+              <Trans>Logout</Trans>
             </Button>
           </>
         )}
 
         {!session && (
           <>
+            <Dropdown
+              renderToggle={(props, ref) => (
+                <Button
+                  {...props}
+                  ref={ref}
+                  appearance="primary"
+                  size="md"
+                  color="violet"
+                >
+                  <Trans>Language</Trans>
+                  <ArrowDown />
+                </Button>
+              )}
+            >
+              <Link href="#" locale="en">
+                <Dropdown.Item>English</Dropdown.Item>
+              </Link>
+              <Link href="#" locale="fr">
+                <Dropdown.Item>Français</Dropdown.Item>
+              </Link>
+            </Dropdown>
             <Link href="/register" className={styles.button}>
               <Button
                 appearance="primary"
                 color="violet"
                 className={styles.button}
               >
-                Register
+                <Trans>Register</Trans>
               </Button>
             </Link>
             <Link href="/login" className={styles.button}>
@@ -67,7 +90,7 @@ export default function Header() {
                 color="violet"
                 className={styles.button}
               >
-                Login
+                <Trans>Login</Trans>
               </Button>
             </Link>
           </>

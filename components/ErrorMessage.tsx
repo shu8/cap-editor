@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/macro";
 import { Message } from "rsuite";
 import { HandledError } from "../lib/helpers";
 
@@ -11,14 +12,16 @@ export default function ErrorMessage({
   if (error instanceof HandledError) {
     return (
       <Message closable type="error" duration={0}>
-        There was an error {action}: {error.message}
+        <Trans>There was an error</Trans> {action}: {error.message}
       </Message>
     );
   } else {
     return (
       <Message closable type="error" duration={0}>
-        There was an error {action}. Please try again later or contact your
-        administrator if the issue persists.
+        <Trans>
+          There was an error {action}. Please try again later or contact your
+          administrator if the issue persists.
+        </Trans>
       </Message>
     );
   }

@@ -3,6 +3,7 @@ import { Button, Form, Message, SelectPicker, useToaster } from "rsuite";
 import { useEffect, useState } from "react";
 import { HandledError, updateState } from "../lib/helpers";
 import ErrorMessage from "./ErrorMessage";
+import { t, Trans } from "@lingui/macro";
 
 type RegisterData = {
   name: string;
@@ -44,8 +45,10 @@ export default function RegisterForm({ email = "" }) {
               if (res.error) throw new HandledError(res.message);
               toaster.push(
                 <Message type="success" duration={0} closable>
-                  Registration successful. You will receive an email once your
-                  Alerting Authority has approved your account.
+                  <Trans>
+                    Registration successful. You will receive an email once your
+                    Alerting Authority has approved your account.
+                  </Trans>
                 </Message>
               );
             })
@@ -55,12 +58,16 @@ export default function RegisterForm({ email = "" }) {
         }}
       >
         <Form.Group controlId="name">
-          <Form.ControlLabel>Name</Form.ControlLabel>
-          <Form.Control required name="name" placeholder="Your name" />
+          <Form.ControlLabel>
+            <Trans>Name</Trans>
+          </Form.ControlLabel>
+          <Form.Control required name="name" placeholder={t`Your name`} />
         </Form.Group>
 
         <Form.Group controlId="email">
-          <Form.ControlLabel>Email</Form.ControlLabel>
+          <Form.ControlLabel>
+            <Trans>Email</Trans>
+          </Form.ControlLabel>
           <Form.Control
             required
             name="email"
@@ -70,7 +77,9 @@ export default function RegisterForm({ email = "" }) {
         </Form.Group>
 
         <Form.Group controlId="alertingAuthorityId">
-          <Form.ControlLabel>Alerting Authority</Form.ControlLabel>
+          <Form.ControlLabel>
+            <Trans>Alerting Authority</Trans>
+          </Form.ControlLabel>
           <Form.Control
             style={{ width: "400px" }}
             name="alertingAuthorityId"
@@ -86,7 +95,7 @@ export default function RegisterForm({ email = "" }) {
                   toaster.push(
                     <ErrorMessage
                       error={err}
-                      action="fetching alerting authorities"
+                      action={t`fetching alerting authorities`}
                     />
                   )
                 )
@@ -107,7 +116,7 @@ export default function RegisterForm({ email = "" }) {
 
         <Form.Group>
           <Button appearance="primary" type="submit">
-            Register
+            <Trans>Register</Trans>
           </Button>
         </Form.Group>
       </Form>

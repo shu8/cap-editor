@@ -14,6 +14,7 @@ import { AlertingAuthority, AlertStatus, Role } from "@prisma/client";
 import SplitButton from "../SplitButton";
 import { useRouter } from "next/router";
 import { Resource } from "../../lib/types/types";
+import { t, Trans } from "@lingui/macro";
 
 const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];
@@ -174,7 +175,7 @@ export default function Editor(props: Props) {
           disabled={!isStepDataValid}
           onClick={() => {
             if (!isStepDataValid) {
-              return alert("Please complete the details first");
+              return alert(t`Please complete the details first`);
             }
             setStep(STEPS[currentStepIndex + 1]);
           }}
@@ -195,9 +196,9 @@ export default function Editor(props: Props) {
     return (
       <SplitButton
         options={options.map((o) => {
-          if (o === "PUBLISHED") return "Publish alert now";
+          if (o === "PUBLISHED") return t`Publish alert now`;
           return `${
-            alertData.identifier ? "Update" : "Save as"
+            alertData.identifier ? t`Update` : t`Save as`
           } ${o.toLowerCase()}`;
         })}
         appearance="primary"
@@ -214,11 +215,11 @@ export default function Editor(props: Props) {
       <div className={classes(styles.header)}>
         <div>
           <h3>
-            {alertData.identifier ? "Edit alert" : "New alert"}: {step}
+            {alertData.identifier ? t`Edit alert` : t`New alert`}: {step}
           </h3>
           {alertData.identifier && (
             <>
-              Alert ID:{" "}
+              <Trans>Alert ID</Trans>:{" "}
               <span className={styles.alertId}>{alertData.identifier}</span>
             </>
           )}
@@ -268,14 +269,14 @@ export default function Editor(props: Props) {
           onClick={() => {
             if (
               window.confirm(
-                "Are you sure you want to cancel editing this alert?"
+                t`Are you sure you want to cancel editing this alert?`
               )
             ) {
               router.push("/");
             }
           }}
         >
-          Abort
+          <Trans>Cancel</Trans>
         </Button>
 
         {renderActionButton()}

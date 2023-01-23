@@ -8,6 +8,7 @@ import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { useRouter } from "next/router";
 import { Message } from "rsuite";
+import { Trans } from "@lingui/macro";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await unstable_getServerSession(
@@ -57,8 +58,10 @@ export default function Login() {
       {error ? (
         <main className="centered-message">
           <Message type="error">
-            There was an error logging in. Please try again later or contact
-            your administrator if the issue persists.
+            <Trans>
+              There was an error logging in. Please try again later or contact
+              your administrator if the issue persists.
+            </Trans>
           </Message>
         </main>
       ) : (

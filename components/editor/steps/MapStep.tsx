@@ -1,3 +1,4 @@
+import { t, Trans } from "@lingui/macro";
 import { useEffect, useState } from "react";
 import { TagPicker, useToaster } from "rsuite";
 import { HandledError, useMountEffect } from "../../../lib/helpers";
@@ -20,7 +21,9 @@ export default function MapStep({
         setCountries(res.countries);
       })
       .catch((err) =>
-        toaster.push(<ErrorMessage error={err} action="fetching map regions" />)
+        toaster.push(
+          <ErrorMessage error={err} action={t`fetching map regions`} />
+        )
       );
   };
 
@@ -31,8 +34,10 @@ export default function MapStep({
   return (
     <div>
       <p>
-        Choose the location of the alert, by either selecting from the dropdown
-        menu, clicking the map, or using the drawing tool.
+        <Trans>
+          Choose the location of the alert, by either selecting from the
+          dropdown menu, clicking the map, or using the drawing tool.
+        </Trans>
       </p>
 
       <TagPicker

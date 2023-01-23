@@ -5,6 +5,7 @@ import { classes, HandledError } from "../../../lib/helpers";
 import { useState } from "react";
 import ErrorMessage from "../../ErrorMessage";
 import { Alert } from "@prisma/client";
+import { t, Trans } from "@lingui/macro";
 
 const STATUSES = ["Actual", "Exercise", "System", "Test", "Draft"];
 const MESSAGE_TYPES = ["Alert", "Update", "Cancel", "Ack", "Error"];
@@ -29,7 +30,9 @@ export default function MetadataStep({
         setReferenceOptions(res.alerts);
       })
       .catch((err) =>
-        toaster.push(<ErrorMessage error={err} action="fetching past alerts" />)
+        toaster.push(
+          <ErrorMessage error={err} action={t`fetching past alerts`} />
+        )
       );
   };
 
@@ -37,7 +40,9 @@ export default function MetadataStep({
     <div>
       <Form fluid>
         <Form.Group>
-          <Form.ControlLabel>Status</Form.ControlLabel>
+          <Form.ControlLabel>
+            <Trans>Status</Trans>
+          </Form.ControlLabel>
           <Form.Control
             block
             name="status"
@@ -50,7 +55,9 @@ export default function MetadataStep({
           />
         </Form.Group>
         <Form.Group>
-          <Form.ControlLabel>Message type</Form.ControlLabel>
+          <Form.ControlLabel>
+            <Trans>Message type</Trans>
+          </Form.ControlLabel>
           <Form.Control
             block
             name="msgType"
@@ -63,7 +70,9 @@ export default function MetadataStep({
           />
         </Form.Group>
         <Form.Group>
-          <Form.ControlLabel>Scope</Form.ControlLabel>
+          <Form.ControlLabel>
+            <Trans>Scope</Trans>
+          </Form.ControlLabel>
           <Form.Control
             block
             name="scope"
@@ -86,7 +95,9 @@ export default function MetadataStep({
 
         {scope === "Restricted" && (
           <Form.Group className={classes(styles.indent)}>
-            <Form.ControlLabel>Restriction</Form.ControlLabel>
+            <Form.ControlLabel>
+              <Trans>Restriction</Trans>
+            </Form.ControlLabel>
             <Form.Control
               block
               name="restriction"
@@ -94,15 +105,19 @@ export default function MetadataStep({
               value={restriction}
             />
             <Form.HelpText>
-              Please describe the rule for limiting the distribution of this{" "}
-              <i>Restricted</i> Alert.
+              <Trans>
+                Please describe the rule for limiting the distribution of this{" "}
+                <i>Restricted</i> Alert.
+              </Trans>
             </Form.HelpText>
           </Form.Group>
         )}
 
         {scope === "Private" && (
           <Form.Group className={classes(styles.indent)}>
-            <Form.ControlLabel>Addresses</Form.ControlLabel>
+            <Form.ControlLabel>
+              <Trans>Addresses</Trans>
+            </Form.ControlLabel>
             <Form.Control
               block
               name="addresses"
@@ -114,14 +129,18 @@ export default function MetadataStep({
               data={[]}
             />
             <Form.HelpText>
-              Please provide the IDs/addresses of the intended recipients of
-              this <i>Private</i> Alert.
+              <Trans>
+                Please provide the IDs/addresses of the intended recipients of
+                this <i>Private</i> Alert.
+              </Trans>
             </Form.HelpText>
           </Form.Group>
         )}
 
         <Form.Group>
-          <Form.ControlLabel>References</Form.ControlLabel>
+          <Form.ControlLabel>
+            <Trans>References</Trans>
+          </Form.ControlLabel>
 
           <Form.Control
             block
@@ -141,7 +160,7 @@ export default function MetadataStep({
             renderMenuItem={(v) => <div>{v}</div>}
           />
           <Form.HelpText>
-            Does this Alert reference any previous Alerts?
+            <Trans>Does this Alert reference any previous Alerts?</Trans>
           </Form.HelpText>
         </Form.Group>
       </Form>

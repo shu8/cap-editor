@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { Button, Loader, Message, Panel } from "rsuite";
 import { Alert as DBAlert } from "@prisma/client";
+import { Trans, t } from "@lingui/macro";
 import useSWR from "swr";
 
 import styles from "../styles/Home.module.css";
@@ -57,15 +58,17 @@ export default function Home() {
 
       <main>
         <p>
-          The CAP Editor tool allows you to create public hazard and emergency
-          alerts and immediately publish them to an XML-based feed.
+          <Trans>
+            The CAP Editor tool allows you to create public hazard and emergency
+            alerts and immediately publish them to an XML-based feed.
+          </Trans>
         </p>
 
         {!session && (
           <p>
             <Link href="/register">
               <Button color="violet" appearance="primary">
-                Register with your Alerting Authority &rarr;
+                <Trans>Register with your Alerting Authority</Trans> &rarr;
               </Button>
             </Link>
           </p>
@@ -74,12 +77,17 @@ export default function Home() {
         {session && (
           <>
             {isLoading && (
-              <Loader size="lg" backdrop center content="Loading alerts..." />
+              <Loader
+                size="lg"
+                backdrop
+                center
+                content={t`Loading alerts...`}
+              />
             )}
 
             {error && (
               <Message type="error">
-                There was an error loading the alerts
+                <Trans>There was an error loading the alerts</Trans>
               </Message>
             )}
 

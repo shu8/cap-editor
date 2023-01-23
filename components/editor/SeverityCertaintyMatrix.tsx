@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/macro";
 import { getStartOfToday } from "../../lib/helpers";
 import { classes } from "../../lib/helpers";
 import styles from "../../styles/components/editor/SeverityCertaintyMatrix.module.css";
@@ -33,7 +34,7 @@ export default function SeverityCertaintyMatrix({
             transform: "rotate(180deg)",
           }}
         >
-          Certainty &#10230;
+          <Trans>Certainty</Trans> &#10230;
         </div>
 
         <Cell
@@ -83,7 +84,9 @@ export default function SeverityCertaintyMatrix({
         />
       </div>
 
-      <div style={{ textAlign: "center" }}>Impact/Intensity &#10230;</div>
+      <div style={{ textAlign: "center" }}>
+        <Trans>Impact/Intensity</Trans> &#10230;
+      </div>
     </div>
   );
 }

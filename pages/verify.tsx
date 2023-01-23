@@ -8,6 +8,7 @@ import { GetServerSideProps } from "next";
 import { useState } from "react";
 import { HandledError } from "../lib/helpers";
 import ErrorMessage from "../components/ErrorMessage";
+import { t, Trans } from "@lingui/macro";
 
 type Props = {
   userToBeVerified: {
@@ -72,13 +73,13 @@ export default function VerifyUser({
         if (res.error) throw new HandledError(res.message);
         toaster.push(
           <Message type="success" duration={0} closable>
-            Account successfully verified
+            <Trans>Account successfully verified</Trans>
           </Message>
         );
       })
       .catch((err) =>
         toaster.push(
-          <ErrorMessage error={err} action="verifying the account" />
+          <ErrorMessage error={err} action={t`verifying the account`} />
         )
       );
   };
@@ -92,21 +93,25 @@ export default function VerifyUser({
       {showRoleModal && (
         <Modal open={showRoleModal} onClose={() => setShowRoleModal(false)}>
           <Modal.Header>
-            <Modal.Title>User Roles</Modal.Title>
+            <Modal.Title>
+              <Trans>User Roles</Trans>
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Please select the role(s) for this user:</p>
+            <p>
+              <Trans>Please select the role(s) for this user</Trans>:
+            </p>
             <TagPicker
               block
               cleanable={false}
               searchable={false}
               value={roles}
-              placeholder="Select role(s): Admin/Editor/Validator"
+              placeholder={t`Select role(s): Admin/Editor/Validator`}
               onChange={(v) => setRoles(v)}
               data={[
-                { label: "Admin", value: "ADMIN" },
-                { label: "Editor", value: "EDITOR" },
-                { label: "Validator", value: "VALIDATOR" },
+                { label: t`Admin`, value: "ADMIN" },
+                { label: t`Editor`, value: "EDITOR" },
+                { label: t`Validator`, value: "VALIDATOR" },
               ]}
             />
           </Modal.Body>
@@ -116,14 +121,14 @@ export default function VerifyUser({
               color="red"
               onClick={() => setShowRoleModal(false)}
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button
               appearance="primary"
               color="green"
               onClick={() => verifyUser(true)}
             >
-              Activate this user&apos;s account
+              <Trans>Activate this user&apos;s account</Trans>
             </Button>
           </Modal.Footer>
         </Modal>
@@ -135,21 +140,29 @@ export default function VerifyUser({
           showIcon
           header={
             <>
-              <strong>Verify User</strong> (
-              <i>{userToBeVerified.alertingAuthority.name}</i>)
+              <strong>
+                <Trans>Verify User</Trans>
+              </strong>{" "}
+              (<i>{userToBeVerified.alertingAuthority.name}</i>)
             </>
           }
         >
           <p>
-            The following user has requested to register with the CAP Editor.
-            Please confirm they are part of your Alerting Authority (
-            <i>{userToBeVerified.alertingAuthority.id}</i>) to enable their
-            account.
+            <Trans>
+              The following user has requested to register with the CAP Editor.
+              Please confirm they are part of your Alerting Authority (
+              <i>{userToBeVerified.alertingAuthority.id}</i>) to enable their
+              account.
+            </Trans>
           </p>
 
           <ul className={styles.list}>
-            <li>Name: {userToBeVerified.name}</li>
-            <li>Email: {userToBeVerified.email}</li>
+            <li>
+              <Trans>Name</Trans>:{userToBeVerified.name}
+            </li>
+            <li>
+              <Trans>Email</Trans>:{userToBeVerified.email}
+            </li>
           </ul>
 
           <p className={styles.buttons}>
@@ -158,9 +171,11 @@ export default function VerifyUser({
               color="red"
               onClick={() => verifyUser(false)}
             >
-              No, this user is not a part of my Alerting Authority:
-              <br />
-              Do not activate their account.
+              <Trans>
+                No, this user is not a part of my Alerting Authority:
+                <br />
+                Do not activate their account.
+              </Trans>
             </Button>
 
             <Button
@@ -168,7 +183,7 @@ export default function VerifyUser({
               color="green"
               onClick={() => setShowRoleModal(true)}
             >
-              Yes, this user is part of my Alerting Authority.
+              <Trans>Yes, this user is part of my Alerting Authority.</Trans>
             </Button>
           </p>
         </Message>

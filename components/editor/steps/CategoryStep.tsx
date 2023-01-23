@@ -1,31 +1,31 @@
 import styles from "../../../styles/components/editor/Step.module.css";
 import { classes } from "../../../lib/helpers";
 import { FormAlertData, StepProps } from "../Editor";
-import { Button, Form } from "rsuite";
+import { Button } from "rsuite";
+import { t, Trans } from "@lingui/macro";
 
 const CATEGORIES = [
-  { label: "Geophysical (e.g., landslide)", value: "Geo" },
-  { label: "Meteorological (inc. flood)", value: "Met" },
-  { label: "General emergency & public safety", value: "Safety" },
+  { label: t`Geophysical (e.g., landslide)`, value: "Geo" },
+  { label: t`Meteorological (inc. flood)`, value: "Met" },
+  { label: t`General emergency & public safety`, value: "Safety" },
   {
-    label: "Law enforcement, military, homeland & local/private security",
+    label: t`Law enforcement, military, homeland & local/private security`,
     value: "Security",
   },
-  { label: "Rescue & recovery", value: "Rescue" },
-  { label: "Fire supression & rescue", value: "Fire" },
-  { label: "Medical & public health", value: "Health" },
-  { label: "Pollution & other environmental", value: "Env" },
-  { label: "Public & private transportation", value: "Transport" },
+  { label: t`Rescue & recovery`, value: "Rescue" },
+  { label: t`Fire supression & rescue`, value: "Fire" },
+  { label: t`Medical & public health`, value: "Health" },
+  { label: t`Pollution & other environmental`, value: "Env" },
+  { label: t`Public & private transportation`, value: "Transport" },
   {
-    label: "Utility, telecommunication & other non-transport infrastructure",
+    label: t`Utility, telecommunication & other non-transport infrastructure`,
     value: "Infra",
   },
   {
-    label:
-      "Chemical, Biological, Radiological, Nuclear or High-Yield Explosive threat or attack",
+    label: t`Chemical, Biological, Radiological, Nuclear or High-Yield Explosive threat or attack`,
     value: "CBRNE",
   },
-  { label: "Other", value: "Other" },
+  { label: t`Other`, value: "Other" },
 ];
 
 export default function CategoryStep({
@@ -34,7 +34,9 @@ export default function CategoryStep({
 }: Partial<FormAlertData> & StepProps) {
   return (
     <div>
-      <p>Choose a category (or multiple) for the alert.</p>
+      <p>
+        <Trans>Choose a category (or multiple) for the alert.</Trans>
+      </p>
       <div className={classes(styles.buttonGrid)}>
         {CATEGORIES.map((c) => (
           <Button
