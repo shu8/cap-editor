@@ -81,7 +81,7 @@ export default function Alert({ alert }: { alert: DBAlert }) {
       }
     >
       <p>
-        <Trans>Sent</Trans>:{new Date(alertData.sent).toString()}
+        <Trans>Sent</Trans>: {new Date(alertData.sent).toString()}
         <br />
         <Trans>Expires</Trans>: {expiryDate.toString()}
       </p>

@@ -104,7 +104,11 @@ export default function Home() {
                       bordered
                     >
                       <div className={styles.alertsWrapper}>
-                        {!alertsForStatus.length && <p>No alerts</p>}
+                        {!alertsForStatus.length && (
+                          <p>
+                            <Trans>No alerts</Trans>
+                          </p>
+                        )}
                         {alertsForStatus.map((a) => (
                           <Alert key={`alert-${a.id}`} alert={a} />
                         ))}
