@@ -3,6 +3,8 @@ FROM node:18 AS builder
 WORKDIR /app
 COPY package.json ./
 COPY prisma ./prisma
+COPY locales ./locales
+COPY .linguirc ./
 RUN npm install
 
 COPY . .
