@@ -82,7 +82,7 @@ msgstr "Choisissez une catégorie (ou plusieurs) pour l'alerte."
 
 #: components/editor/steps/TextStep.tsx:206
 msgid "Choose event to auto-fill from WhatNow?"
-msgstr "Choisissez l'événement pour remplir automatiquement de quoi?"
+msgstr "Choisissez l'événement pour remplir automatiquement WhatNow?"
 
 #: components/editor/LanguageTabs.tsx:29
 msgid "Choose language"
@@ -100,7 +100,7 @@ msgstr "Choisissez les actions recommandées pour le public de l'alerte, en util
 msgid "Choose the severity (function of impact/intensity and certainty) and urgency level of the alert, by either selecting from the dropdown menu or by clicking the corresponding level in the matrix and slider."
 msgstr "Choisissez la gravité (fonction de l'impact / intensité et la certitude) et le niveau d'urgence de l'alerte, soit en sélectionnant dans le menu déroulant ou en cliquant sur le niveau correspondant dans la matrice et le curseur."
 
-#: components/Header.tsx:33
+#: components/Header.tsx:30
 msgid "Create alert"
 msgstr "Créer une alerte"
 
@@ -163,7 +163,7 @@ msgstr "Si nécessaire, ajoutez des liens vers des ressources (dans {0}) qui off
 msgid "Impact/Intensity"
 msgstr "Impact / intensité"
 
-#: components/Header.tsx:69
+#: components/Header.tsx:66
 #: components/editor/LanguageTabs.tsx:35
 #: components/editor/LanguageTabs.tsx:76
 msgid "Language"
@@ -182,11 +182,11 @@ msgid "Loading alerts..."
 msgstr "Chargement des alertes ..."
 
 #: components/AuthenticateForm.tsx:10
-#: components/Header.tsx:99
+#: components/Header.tsx:93
 msgid "Login"
 msgstr "Connexion"
 
-#: components/Header.tsx:53
+#: components/Header.tsx:50
 msgid "Logout"
 msgstr "Se déconnecter"
 
@@ -235,6 +235,10 @@ msgstr "Nouvelle alerte"
 #: components/AuthenticateForm.tsx:32
 msgid "Next"
 msgstr "Suivant"
+
+#: pages/index.tsx:109
+msgid "No alerts"
+msgstr "Pas d'alertes"
 
 #: pages/verify.tsx:174
 msgid "No, this user is not a part of my Alerting Authority:<0/>Do not activate their account."
@@ -304,7 +308,7 @@ msgstr "Actions recommandées"
 msgid "References"
 msgstr "Références"
 
-#: components/Header.tsx:90
+#: components/Header.tsx:84
 #: components/RegisterForm.tsx:119
 msgid "Register"
 msgstr "S'inscrire"
@@ -353,7 +357,7 @@ msgstr "Sélectionnez l'heure de début et de fin de l'alerte dans le calendrier
 msgid "Sent"
 msgstr "Expédié"
 
-#: components/Header.tsx:43
+#: components/Header.tsx:40
 #: pages/settings.tsx:21
 msgid "Settings"
 msgstr "Paramètres"
@@ -368,7 +372,7 @@ msgstr "Statut"
 
 #: pages/index.tsx:61
 msgid "The CAP Editor tool allows you to create public hazard and emergency alerts and immediately publish them to an XML-based feed."
-msgstr "L'outil d'éditeur CAP vous permet de créer des risques publics et des alertes d'urgence et de les publier immédiatement sur un flux basé sur XML."
+msgstr "L'outil d'éditeur CAP vous permet de créer des alerts des risques publics et d'urgence et de les publier immédiatement sur un flux basé sur XML."
 
 #: pages/verify.tsx:151
 msgid "The following user has requested to register with the CAP Editor. Please confirm they are part of your Alerting Authority (<0>{0}</0>) to enable their account."
@@ -469,7 +473,7 @@ msgstr "Votre nom"
 #: components/editor/steps/TextStep.tsx:179
 #: components/editor/steps/TextStep.tsx:195
 msgid "characters"
-msgstr "personnages"
+msgstr "caractères"
 
 #: components/editor/ResourceModal.tsx:84
 msgid "e.g., image of flood (please use {language} language)"
@@ -477,7 +481,7 @@ msgstr "par exemple, image de la crue (veuillez utiliser la langue {langue})"
 
 #: components/editor/steps/TextStep.tsx:91
 msgid "fetching WhatNow messages"
-msgstr "Récupérer les messages de ce que"
+msgstr "Récupérer les messages WhatNow"
 
 #: components/RegisterForm.tsx:98
 msgid "fetching alerting authorities"
@@ -502,4 +506,3 @@ msgstr "soumettre l'alerte"
 #: pages/verify.tsx:82
 msgid "verifying the account"
 msgstr "Vérifier le compte"
-
