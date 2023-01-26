@@ -100,7 +100,7 @@ msgstr ""
 msgid "Choose the severity (function of impact/intensity and certainty) and urgency level of the alert, by either selecting from the dropdown menu or by clicking the corresponding level in the matrix and slider."
 msgstr ""
 
-#: components/Header.tsx:33
+#: components/Header.tsx:30
 msgid "Create alert"
 msgstr ""
 
@@ -163,7 +163,7 @@ msgstr ""
 msgid "Impact/Intensity"
 msgstr ""
 
-#: components/Header.tsx:69
+#: components/Header.tsx:66
 #: components/editor/LanguageTabs.tsx:35
 #: components/editor/LanguageTabs.tsx:76
 msgid "Language"
@@ -182,11 +182,11 @@ msgid "Loading alerts..."
 msgstr ""
 
 #: components/AuthenticateForm.tsx:10
-#: components/Header.tsx:99
+#: components/Header.tsx:93
 msgid "Login"
 msgstr ""
 
-#: components/Header.tsx:53
+#: components/Header.tsx:50
 msgid "Logout"
 msgstr ""
 
@@ -235,6 +235,10 @@ msgstr ""
 #: components/AuthenticateForm.tsx:32
 msgid "Next"
 msgstr ""
+
+#: pages/index.tsx:109
+msgid "No alerts"
+msgstr "No alerts"
 
 #: pages/verify.tsx:174
 msgid "No, this user is not a part of my Alerting Authority:<0/>Do not activate their account."
@@ -304,7 +308,7 @@ msgstr ""
 msgid "References"
 msgstr ""
 
-#: components/Header.tsx:90
+#: components/Header.tsx:84
 #: components/RegisterForm.tsx:119
 msgid "Register"
 msgstr ""
@@ -353,7 +357,7 @@ msgstr ""
 msgid "Sent"
 msgstr ""
 
-#: components/Header.tsx:43
+#: components/Header.tsx:40
 #: pages/settings.tsx:21
 msgid "Settings"
 msgstr ""
