@@ -7,7 +7,7 @@ export function withErrorHandler(handler: NextApiHandler) {
     try {
       await handler(req, res);
     } catch (err) {
-      let statusCode = 5000;
+      let statusCode = 500;
       let message = t`An unexpected error occurred. Please try again later or contact your administrator if the issue persists`;
       if (err instanceof ApiError) {
         statusCode = err.statusCode;

@@ -32,15 +32,13 @@ const createHTML = ({
 
 export const sendEmail = async ({
   to,
-  from = process.env.EMAIL_FROM,
   subject,
   title,
   url,
   urlText,
   body,
 }: {
-  to: string,
-  from?: string;
+  to: string;
   subject: string;
   title: string;
   url: string;
@@ -49,7 +47,7 @@ export const sendEmail = async ({
 }) => {
   return transport.sendMail({
     to,
-    from,
+    from: process.env.EMAIL_FROM,
     subject,
     text: `${body}.\n\n${url}`,
     html: createHTML({ title, url, urlText, body }),

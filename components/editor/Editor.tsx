@@ -24,11 +24,8 @@ export type FormAlertData = {
   identifier?: string;
   category: string[];
   regions: { [key: string]: number[] };
-  from: Date;
-  to: Date;
-  headline: string;
-  description: string;
-  instruction: string;
+  from: Date | string;
+  to: Date | string;
   actions: string[];
   certainty: string;
   severity: string;

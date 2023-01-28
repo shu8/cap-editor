@@ -60,9 +60,9 @@ export const authOptions: AuthOptions = {
           deleteCookie("webauthn-user-id", { req });
 
           const redisKey = `webauthn-auth:${tempWebauthnUserId}`;
-          const expectedChallenge = await redis.hGet(redisKey, "challenge");
+          const expectedChallenge = await redis.HGET(redisKey, "challenge");
           if (!expectedChallenge) return null;
-          await redis.hDel(redisKey, tempWebauthnUserId);
+          await redis.HDEL(redisKey, tempWebauthnUserId);
 
           const user = await prisma.user.findFirst({
             where: { webauthnId: credential.response.userHandle },

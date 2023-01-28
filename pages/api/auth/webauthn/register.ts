@@ -36,7 +36,7 @@ async function handleGetUserRegistrationOptions(req: NextApiRequest, res: NextAp
   });
 
   // Expire challenge after 5 minutes
-  await redis.hSet(`webauthn-register:${session.user.email}`, 'challenge', options.challenge);
+  await redis.HSET(`webauthn-register:${session.user.email}`, 'challenge', options.challenge);
   await redis.expire(`webauthn-register:${session.user.email}`, 60 * 5);
 
   return res.json(options);
@@ -45,7 +45,7 @@ async function handleGetUserRegistrationOptions(req: NextApiRequest, res: NextAp
 async function handleUserRegistration(req: NextApiRequest, res: NextApiResponse, session: Session) {
   const credential = req.body;
 
-  const challenge = await redis.hGet(`webauthn-register:${session.user.email}`, 'challenge');
+  const challenge = await redis.HGET(`webauthn-register:${session.user.email}`, 'challenge');
   if (!challenge) {
     throw new ApiError(403, 'Your account cannot register for WebAuthn yet');
   }

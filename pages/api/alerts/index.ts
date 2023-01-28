@@ -65,9 +65,9 @@ async function handleGetAlerts(req: NextApiRequest, res: NextApiResponse) {
   }
 
   // Standard XML feed contains only active published alerts that haven't expired
+  res.setHeader('Content-Type', 'application/xml')
   return res
     .status(200)
-    .setHeader('Content-Type', 'application/xml')
     .send(await formatFeedAsXML(alerts.filter(a =>
       a.status === 'PUBLISHED'
       &&

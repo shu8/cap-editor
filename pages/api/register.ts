@@ -11,6 +11,10 @@ import { withErrorHandler } from "../../lib/apiErrorHandler";
 async function handleRegisterUser(req: NextApiRequest, res: NextApiResponse) {
   const { name, email, alertingAuthorityId } = req.body;
 
+  if (!name || !email) {
+    throw new ApiError(400, 'You did not provide your valid details');
+  }
+
   const alertingAuthorities: AlertingAuthority[] = await fetchWMOAlertingAuthorities();
   const alertingAuthority = alertingAuthorities.find(a => a.id === alertingAuthorityId);
 

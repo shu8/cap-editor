@@ -12,7 +12,6 @@ async function handleGetAlertingAuthorities(
 }
 
 // TODO: WMO returns some AAs with same GUIDs -- how to handle?
-// TODO: cache AA information from WMO
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     return handleGetAlertingAuthorities(req, res);

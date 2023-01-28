@@ -36,7 +36,7 @@ export const formatFeedAsXML = async (alerts: Alert[]) => {
   const numAlerts = alerts.length;
   for (let i = 0; i < numAlerts; i++) {
     const alert = alerts[i];
-    const lastSignedAt = await redis.hGet(`alerts:${alert.id}`, 'last_signed_at');
+    const lastSignedAt = await redis.HGET(`alerts:${alert.id}`, 'last_signed_at');
     entries.push(({
       id: alert.id,
       title: alert.data?.info?.[0]?.headline ?? 'Alert',

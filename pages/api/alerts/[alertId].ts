@@ -25,12 +25,12 @@ async function handleUpdateAlert(req: NextApiRequest, res: NextApiResponse, aler
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session) {
-    throw new ApiError(401, 'You are not logged ins');
+    throw new ApiError(401, 'You are not logged in');
   }
 
   // i.e., only admins and validators can publish an existing alert
   if (req.body.status === 'PUBLISHED' && (!session.user.roles.includes('ADMIN') && !session.user.roles.includes('VALIDATOR'))) {
-    throw new ApiError(403, 'You do not have permission to publish new alerts');
+    throw new ApiError(403, 'You do not have permission to publish alerts');
   }
 
   const alert = await prisma.alert.findFirst({ where: { id: alertId } });
@@ -75,23 +75,23 @@ async function handleGetAlert(req: NextApiRequest, res: NextApiResponse, alertId
 
   try {
     const alert = await prisma.alert.findFirst({ where: { id: alertId } });
-    if (!alert) throw 'Unknown alert';
+    if (!alert) return res.status(404).send('Alert does not exist');
 
-    let signedXML = await redis.hGet(`alerts:${alert.id}`, 'signed_xml');
+    let signedXML = await redis.HGET(`alerts:${alert.id}`, 'signed_xml');
     if (!signedXML) {
       signedXML = await sign(alert);
 
       // Cache, and expire every 20 days
-      await redis.hSet(`alerts:${alert.id}`, [
+      await redis.HSET(`alerts:${alert.id}`, [
         'signed_xml', signedXML,
         'last_signed_at', new Date().getTime()
       ]);
       await redis.expire(`alerts:${alert.id}`, 60 * 60 * 24 * 20);
     }
 
+    res.setHeader('Content-Type', 'application/xml');
     return res
       .status(200)
-      .setHeader('Content-Type', 'application/xml')
       .send(signedXML);
   } catch (err) {
     console.error(err);
