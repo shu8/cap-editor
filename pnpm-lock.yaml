@@ -10,14 +10,12 @@ specifiers:
   '@lingui/macro': ^3.16.0
   '@lingui/react': ^3.16.0
   '@next-auth/prisma-adapter': ^1.0.5
-  '@next/font': 13.0.7
   '@prisma/client': ^4.7.1
   '@rsuite/icons': ^1.0.2
   '@simplewebauthn/browser': ^6.2.2
   '@simplewebauthn/server': ^6.2.2
   '@simplewebauthn/typescript-types': 6.3.0-alpha.1
   '@turf/flip': ^6.5.0
-  '@turf/union': 7.0.0-alpha.0
   '@types/node': 18.11.15
   '@types/nodemailer': ^6.4.7
   '@types/react': 18.0.26
@@ -44,7 +42,6 @@ specifiers:
   ol: ^7.1.0
   po-csv: ^1.0.3
   prisma: ^4.7.1
-  prisma-mock: ^0.1.8
   react: 18.2.0
   react-dom: 18.2.0
   redis: ^4.5.1
@@ -52,7 +49,6 @@ specifiers:
   rsuite: ^5.23.3
   swr: ^2.0.0
   tls: ^0.0.1
-  ts-jest: ^29.0.5
   ts-node: ^10.9.1
   typescript: ^4.9.4
   whatwg-mimetype: ^3.0.0
@@ -62,13 +58,11 @@ dependencies:
   '@lingui/core': 3.16.0
   '@lingui/react': 3.16.0_react@18.2.0
   '@next-auth/prisma-adapter': 1.0.5_64qbzg5ec56bux2misz3l4u6g4
-  '@next/font': 13.0.7
   '@prisma/client': 4.7.1_prisma@4.7.1
   '@rsuite/icons': 1.0.2_biqbaboplfbrettd7655fr4n2y
   '@simplewebauthn/browser': 6.2.2
   '@simplewebauthn/server': 6.2.2
   '@turf/flip': 6.5.0
-  '@turf/union': 7.0.0-alpha.0
   capgen: 1.0.8
   cookies-next: 2.1.1
   fast-xml-parser: 4.0.12
@@ -112,9 +106,7 @@ devDependencies:
   node-mocks-http: 1.12.1
   po-csv: 1.0.3
   prisma: 4.7.1
-  prisma-mock: 0.1.8_@prisma+client@4.7.1
   redis-mock: 0.56.3
-  ts-jest: 29.0.5_zkg4kxig64nsjpedihw2depdom
   ts-node: 10.9.1_ewfw2lwfc3dwdvz7r6yz2ssqyi
   typescript: 4.9.4
 
@@ -1858,10 +1850,6 @@ packages:
       glob: 7.1.7
     dev: true
 
-  /@next/font/13.0.7:
-    resolution: {integrity: sha512-39SzuoMI6jbrIzPs3KtXdKX03OrVp6Y7kRHcoVmOg69spiBzruPJ5x5DQSfN+OXqznbvVBNZBXnmdnSqs3qXiA==}
-    dev: false
-
   /@next/swc-android-arm-eabi/13.0.7:
     resolution: {integrity: sha512-QTEamOK/LCwBf05GZ261rULMbZEpE3TYdjHlXfznV+nXwTztzkBNFXwP67gv2wW44BROzgi/vrR9H8oP+J5jxg==}
     engines: {node: '>= 10'}
@@ -2091,9 +2079,11 @@ packages:
     dependencies:
       '@prisma/engines-version': 4.7.1-1.272861e07ab64f234d3ffc4094e32bd61775599c
       prisma: 4.7.1
+    dev: false
 
   /@prisma/engines-version/4.7.1-1.272861e07ab64f234d3ffc4094e32bd61775599c:
     resolution: {integrity: sha512-Bd4LZ+WAnUHOq31e9X/ihi5zPlr4SzTRwUZZYxvWOxlerIZ7HJlVa9zXpuKTKLpI9O1l8Ec4OYCKsivWCs5a3Q==}
+    dev: false
 
   /@prisma/engines/4.7.1:
     resolution: {integrity: sha512-zWabHosTdLpXXlMefHmnouhXMoTB1+SCbUU3t4FCmdrtIOZcarPKU3Alto7gm/pZ9vHlGOXHCfVZ1G7OIrSbog==}
@@ -2253,31 +2243,10 @@ packages:
     resolution: {integrity: sha512-VbI1dV5bLFzohYYdgqwikdMVpe7pJ9X3E+dlr425wa2/sMJqYDhTO++ec38/pcPvPE6oD9WEEeU3Xu3gza+VPw==}
     dev: false
 
-  /@turf/helpers/7.0.0-alpha.0:
-    resolution: {integrity: sha512-+TL5Lv7J12+/JZ8DkKmbia5w/wJFONESTVOHYGzqo2UiutM6wofqlfRZxw3sa36yggosDQ56PEF+sbQhTEazwQ==}
-    dependencies:
-      tslib: 2.4.1
-    dev: false
-
   /@turf/meta/6.5.0:
     resolution: {integrity: sha512-RrArvtsV0vdsCBegoBtOalgdSOfkBrTJ07VkpiCnq/491W67hnMWmDu7e6Ztw0C3WldRYTXkg3SumfdzZxLBHA==}
     dependencies:
       '@turf/helpers': 6.5.0
-    dev: false
-
-  /@turf/meta/7.0.0-alpha.0:
-    resolution: {integrity: sha512-BGn9d5GIk25CXkgU5P0YcW4eOAL04zFpVwFIRreHNU28baI0s+bM8WUtC+DcYTs75hSvJo4gbvb1FiRFj9Viow==}
-    dependencies:
-      '@turf/helpers': 7.0.0-alpha.0
-    dev: false
-
-  /@turf/union/7.0.0-alpha.0:
-    resolution: {integrity: sha512-4MHMvIzUDNKFEJMU3P6WyG7X+Ya3QRQbmGj6lkgBlaTm0XN+cygqRlrfU8xx0IeMhaqdgWYSDs1WqoOkAVnKKw==}
-    dependencies:
-      '@turf/helpers': 7.0.0-alpha.0
-      '@turf/meta': 7.0.0-alpha.0
-      polygon-clipping: 0.15.3
-      tslib: 2.4.1
     dev: false
 
   /@types/babel__core/7.20.0:
@@ -2894,13 +2863,6 @@ packages:
       electron-to-chromium: 1.4.284
       node-releases: 2.0.8
       update-browserslist-db: 1.0.10_browserslist@4.21.4
-
-  /bs-logger/0.2.6:
-    resolution: {integrity: sha512-pd8DCoxmbgc7hyPKOvxtqNcjYoOsABPQdcCUjGp3d42VR2CX1ORhk2A87oqqu5R1kk+76nsxZupkmyd+MVtCog==}
-    engines: {node: '>= 6'}
-    dependencies:
-      fast-json-stable-stringify: 2.1.0
-    dev: true
 
   /bser/2.1.1:
     resolution: {integrity: sha512-gQxTNE/GAfIIrmHLUE3oJyp5FO6HRBfhjnw4/wMmA63ZGDJnWBmgY/lyQBpnDUkGmAhbSe39tx2d/iTOAfglwQ==}
@@ -5134,10 +5096,6 @@ packages:
     resolution: {integrity: sha512-MXB1is3s899/cD8jheYYE2V9qTHwKvt+npCwpD+1Sxm3Q3cECXCiYHjeHWXNwr6Q0SOBPrYUDxendrO6goVTEA==}
     dev: true
 
-  /lodash.memoize/4.1.2:
-    resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
-    dev: true
-
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: true
@@ -5803,12 +5761,6 @@ packages:
     resolution: {integrity: sha512-r6Q21sKsY1AjTVVjOuU02VYKVNQGJNQHjTIvs4dEbeuuYfxgYk/DGD2mqqq4RDaVkwdSq0VEtmQUOPe/wH8X3g==}
     dev: true
 
-  /polygon-clipping/0.15.3:
-    resolution: {integrity: sha512-ho0Xx5DLkgxRx/+n4O74XyJ67DcyN3Tu9bGYKsnTukGAW6ssnuak6Mwcyb1wHy9MZc9xsUWqIoiazkZB5weECg==}
-    dependencies:
-      splaytree: 3.1.1
-    dev: false
-
   /postcss/8.4.14:
     resolution: {integrity: sha512-E398TUmfAYFPBSdzgeieK2Y1+1cpdxJx8yXbK/m57nRhKSmk1GB2tO4lbLBtlkfPQTDKfe4Xqv1ASWPpayPEig==}
     engines: {node: ^10 || ^12 || >=14}
@@ -5864,14 +5816,6 @@ packages:
   /pretty-format/3.8.0:
     resolution: {integrity: sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==}
     dev: false
-
-  /prisma-mock/0.1.8_@prisma+client@4.7.1:
-    resolution: {integrity: sha512-FLGg7yZ62FPd4alsUSyl857SB6GP7RiwaiiZjKVcRTy5wyDdNVrZyzqVN/JNNODYktYs0CpaWmfS50MP2WooDA==}
-    peerDependencies:
-      '@prisma/client': ^3.5.0 || ^4.7.0
-    dependencies:
-      '@prisma/client': 4.7.1_prisma@4.7.1
-    dev: true
 
   /prisma/4.7.1:
     resolution: {integrity: sha512-CCQP+m+1qZOGIZlvnL6T3ZwaU0LAleIHYFPN9tFSzjs/KL6vH9rlYbGOkTuG9Q1s6Ki5D0LJlYlW18Z9EBUpGg==}
@@ -6325,10 +6269,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /splaytree/3.1.1:
-    resolution: {integrity: sha512-9FaQ18FF0+sZc/ieEeXHt+Jw2eSpUgUtTLDYB/HXKWvhYVyOc7h1hzkn5MMO3GPib9MmXG1go8+OsBBzs/NMww==}
-    dev: false
-
   /sprintf-js/1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
 
@@ -6561,41 +6501,6 @@ packages:
   /tr46/0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
     dev: false
-
-  /ts-jest/29.0.5_zkg4kxig64nsjpedihw2depdom:
-    resolution: {integrity: sha512-PL3UciSgIpQ7f6XjVOmbi96vmDHUqAyqDr8YxzopDqX3kfgYtX1cuNeBjP+L9sFXi6nzsGGA6R3fP3DDDJyrxA==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    hasBin: true
-    peerDependencies:
-      '@babel/core': '>=7.0.0-beta.0 <8'
-      '@jest/types': ^29.0.0
-      babel-jest: ^29.0.0
-      esbuild: '*'
-      jest: ^29.0.0
-      typescript: '>=4.3'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      '@jest/types':
-        optional: true
-      babel-jest:
-        optional: true
-      esbuild:
-        optional: true
-    dependencies:
-      '@babel/core': 7.20.12
-      babel-jest: 29.4.1_@babel+core@7.20.12
-      bs-logger: 0.2.6
-      fast-json-stable-stringify: 2.1.0
-      jest: 29.4.1_44rj7wggyet6z6jbc7gz35fedq
-      jest-util: 29.4.1
-      json5: 2.2.3
-      lodash.memoize: 4.1.2
-      make-error: 1.3.6
-      semver: 7.3.8
-      typescript: 4.9.4
-      yargs-parser: 21.1.1
-    dev: true
 
   /ts-node/10.9.1_ewfw2lwfc3dwdvz7r6yz2ssqyi:
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
