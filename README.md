@@ -115,7 +115,19 @@ docker-compose -f docker-compose-prod.yml up -d --build
 
 ### Development
 
-If you wish to sign alerts during development, you can set up HTTPS locally, or generate a key-pair and update the `TLS_DIRECTORY` and `PRIVATE_KEY_FILENAME` values in the `.env` file.
+If you wish to sign alerts during development, you can either:
+
+1. Set up HTTPS locally, or
+
+2. Generate a key-pair using the command below and hen update `TLS_DIRECTORY=./` and `PRIVATE_KEY_FILENAME=cap-editor` values in the `.env` file
+
+   ```bash
+   ssh-keygen -m PKCS8 -t ecdsa -f $(pwd)/cap-editor
+   ```
+
+   _Note: a PKCS#8-formatted key is required._
+
+   Signed alerts are cached, so if you have added this configuration after an alert was cached, you will need to empty the Redis cache (`FLUSHDB` inside `redis-cli` in the Redis Docker container is the easiest option in development environments).
 
 ### Production
 
