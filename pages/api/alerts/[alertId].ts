@@ -77,8 +77,11 @@ async function handleGetAlert(req: NextApiRequest, res: NextApiResponse, alertId
     const alert = await prisma.alert.findFirst({ where: { id: alertId } });
     if (!alert) return res.status(404).send('Alert does not exist');
 
-    // Don't sign alerts that haven't been published
-    if (alert.status !== 'PUBLISHED') {
+    // Don't sign alerts that haven't been published or have expired
+    if (
+      alert.status !== "PUBLISHED" ||
+      new Date(alert?.data?.info?.[0]?.expires) < new Date()
+    ) {
       res.setHeader("Content-Type", "application/xml");
       return res.status(200).send(formatAlertAsXML(alert));
     }
