@@ -42,18 +42,16 @@ export default function Alert({ alert }: { alert: DBAlert }) {
       header={
         <>
           <strong>{info?.headline}</strong> <i>({info?.category.join(", ")})</i>{" "}
-          {alert.status === "PUBLISHED" && !expired && info?.web && (
-            <a
-              className={styles.btn}
-              target="_blank"
-              href={`/feed/${alertData.identifier}`}
-              rel="noreferrer"
-            >
-              <Button appearance="ghost" color="violet" size="xs">
-                <Trans>View alert</Trans>↗
-              </Button>
-            </a>
-          )}
+          <a
+            className={styles.btn}
+            target="_blank"
+            href={`/feed/${alertData.identifier}`}
+            rel="noreferrer"
+          >
+            <Button appearance="ghost" color="violet" size="xs">
+              <Trans>View alert</Trans> ↗
+            </Button>
+          </a>
           <Link href={`/editor/${alert.id}`}>
             {alert.status !== "PUBLISHED" && (
               <Button
@@ -62,8 +60,7 @@ export default function Alert({ alert }: { alert: DBAlert }) {
                 color="violet"
                 size="xs"
               >
-                <Trans>Edit alert</Trans>
-                🖉
+                <Trans>Edit alert</Trans> 🖉
               </Button>
             )}
           </Link>

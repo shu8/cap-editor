@@ -77,6 +77,12 @@ async function handleGetAlert(req: NextApiRequest, res: NextApiResponse, alertId
     const alert = await prisma.alert.findFirst({ where: { id: alertId } });
     if (!alert) return res.status(404).send('Alert does not exist');
 
+    // Don't sign alerts that haven't been published
+    if (alert.status !== 'PUBLISHED') {
+      res.setHeader("Content-Type", "application/xml");
+      return res.status(200).send(formatAlertAsXML(alert));
+    }
+
     let signedXML = await redis.HGET(`alerts:${alert.id}`, 'signed_xml');
     if (!signedXML) {
       signedXML = await sign(alert);
