@@ -71,7 +71,6 @@
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.7",
     "jest": "^29.4.1",
-    "jest-mock-extended": "2.0.4",
     "json-schema-to-typescript": "^11.0.2",
     "node-mocks-http": "^1.12.1",
     "po-csv": "^1.0.3",

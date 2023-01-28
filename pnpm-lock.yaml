@@ -34,7 +34,6 @@ specifiers:
   fast-xml-parser: ^4.0.12
   iso-639-1: ^2.1.15
   jest: ^29.4.1
-  jest-mock-extended: 2.0.4
   json-schema-to-typescript: ^11.0.2
   jsonschema: ^1.4.1
   net: ^1.0.2
@@ -109,7 +108,6 @@ devDependencies:
   eslint: 8.29.0
   eslint-config-next: 13.0.7_ha6vam6werchizxrnqvarmz2zu
   jest: 29.4.1_44rj7wggyet6z6jbc7gz35fedq
-  jest-mock-extended: 2.0.4_xnqx6kewz4og5i3pgc6ahzwloy
   json-schema-to-typescript: 11.0.2
   node-mocks-http: 1.12.1
   po-csv: 1.0.3
@@ -4705,17 +4703,6 @@ packages:
       stack-utils: 2.0.6
     dev: true
 
-  /jest-mock-extended/2.0.4_xnqx6kewz4og5i3pgc6ahzwloy:
-    resolution: {integrity: sha512-MgL3B3GjURQFjjPGqbCANydA5BFNPygv0mYp4Tjfxohh9MWwxxX8Eq2p6ncCt/Vt+RAnaLlDaI7gwrDRD7Pt9A==}
-    peerDependencies:
-      jest: ^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0
-      typescript: ^3.0.0 || ^4.0.0
-    dependencies:
-      jest: 29.4.1_44rj7wggyet6z6jbc7gz35fedq
-      ts-essentials: 7.0.3_typescript@4.9.4
-      typescript: 4.9.4
-    dev: true
-
   /jest-mock/29.4.1:
     resolution: {integrity: sha512-MwA4hQ7zBOcgVCVnsM8TzaFLVUD/pFWTfbkY953Y81L5ret3GFRZtmPmRFAjKQSdCKoJvvqOu6Bvfpqlwwb0dQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -6574,14 +6561,6 @@ packages:
   /tr46/0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
     dev: false
-
-  /ts-essentials/7.0.3_typescript@4.9.4:
-    resolution: {integrity: sha512-8+gr5+lqO3G84KdiTSMRLtuyJ+nTBVRKuCrK4lidMPdVeEp0uqC875uE5NMcaA7YYMN7XsNiFQuMvasF8HT/xQ==}
-    peerDependencies:
-      typescript: '>=3.7.0'
-    dependencies:
-      typescript: 4.9.4
-    dev: true
 
   /ts-jest/29.0.5_zkg4kxig64nsjpedihw2depdom:
     resolution: {integrity: sha512-PL3UciSgIpQ7f6XjVOmbi96vmDHUqAyqDr8YxzopDqX3kfgYtX1cuNeBjP+L9sFXi6nzsGGA6R3fP3DDDJyrxA==}
