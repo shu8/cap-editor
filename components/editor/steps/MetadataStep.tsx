@@ -1,7 +1,7 @@
 import styles from "../../../styles/components/editor/Step.module.css";
 import { Form, SelectPicker, TagInput, TagPicker, useToaster } from "rsuite";
 import { FormAlertData, StepProps } from "../Editor";
-import { classes, HandledError } from "../../../lib/helpers";
+import { classes, HandledError } from "../../../lib/helpers.client";
 import { useState } from "react";
 import ErrorMessage from "../../ErrorMessage";
 import { Alert } from "@prisma/client";

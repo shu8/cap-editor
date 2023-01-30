@@ -6,7 +6,7 @@ import prisma from "../lib/prisma";
 import { Button, Message, Modal, TagPicker, useToaster } from "rsuite";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
-import { HandledError } from "../lib/helpers";
+import { HandledError } from "../lib/helpers.client";
 import ErrorMessage from "../components/ErrorMessage";
 import { t, Trans } from "@lingui/macro";
 

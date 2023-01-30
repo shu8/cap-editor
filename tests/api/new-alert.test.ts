@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { expect, test, describe, jest } from "@jest/globals";
 import { createMocks } from "node-mocks-http";
-import { formatDate, getStartOfToday } from "../../lib/helpers";
+import { formatDate, getStartOfToday } from "../../lib/helpers.client";
 import handleAlerts from "../../pages/api/alerts/index";
 import { createUser, mockUserOnce, users } from "./helpers";
 import { prismaMock } from "./setup";

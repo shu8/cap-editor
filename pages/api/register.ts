@@ -5,7 +5,7 @@ import { ApiError } from "next/dist/server/api-utils";
 
 import prisma from '../../lib/prisma';
 import { sendEmail } from "../../lib/email";
-import { fetchWMOAlertingAuthorities } from "../../lib/helpers";
+import { fetchWMOAlertingAuthorities } from "../../lib/helpers.server";
 import { withErrorHandler } from "../../lib/apiErrorHandler";
 
 async function handleRegisterUser(req: NextApiRequest, res: NextApiResponse) {

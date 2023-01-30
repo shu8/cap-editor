@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { mapFormAlertDataToCapSchema } from "../../lib/cap";
-import { formatDate, getStartOfToday } from "../../lib/helpers";
+import { formatDate, getStartOfToday } from "../../lib/helpers.client";
 import handleAlert from "../../pages/api/alerts/[alertId]";
 import { createAlert, createUser, mockUserOnce, users } from "./helpers";
 import { prismaMock } from "./setup";

@@ -1,7 +1,7 @@
 import { t, Trans } from "@lingui/macro";
 import { useEffect, useState } from "react";
 import { TagPicker, useToaster } from "rsuite";
-import { HandledError, useMountEffect } from "../../../lib/helpers";
+import { HandledError, useMountEffect } from "../../../lib/helpers.client";
 import ErrorMessage from "../../ErrorMessage";
 import { FormAlertData, StepProps } from "../Editor";
 

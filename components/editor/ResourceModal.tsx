@@ -1,7 +1,7 @@
 import { t, Trans } from "@lingui/macro";
 import { useState } from "react";
 import { Button, Form, Message, Modal, Schema, useToaster } from "rsuite";
-import { HandledError } from "../../lib/helpers";
+import { HandledError } from "../../lib/helpers.client";
 import { Resource } from "../../lib/types/types";
 
 const getMimeType = async (url: string): Promise<string> => {

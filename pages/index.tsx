@@ -6,7 +6,7 @@ import { Trans, t } from "@lingui/macro";
 import useSWR from "swr";
 
 import styles from "../styles/Home.module.css";
-import { fetcher } from "../lib/helpers";
+import { fetcher } from "../lib/helpers.client";
 import Alert from "../components/Alert";
 import Link from "next/link";
 

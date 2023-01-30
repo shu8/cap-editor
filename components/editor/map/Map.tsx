@@ -22,7 +22,7 @@ import { Type } from "ol/geom/Geometry";
 import { defaults as OLDefaultInteractions } from "ol/interaction";
 import { AlertingAuthority } from "@prisma/client";
 import flip from "@turf/flip";
-import { useMountEffect } from "../../../lib/helpers";
+import { useMountEffect } from "../../../lib/helpers.client";
 import { t } from "@lingui/macro";
 
 // https://www.reshot.com/free-svg-icons/item/free-positioning-polygone-F2AWH4PGVQ/

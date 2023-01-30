@@ -10,7 +10,7 @@ import {
   getStartOfToday,
   HandledError,
   useMountEffect,
-} from "../../lib/helpers";
+} from "../../lib/helpers.client";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { CAPV12JSONSchema } from "../../lib/types/cap.schema";
 import { ERRORS } from "../../lib/errors";

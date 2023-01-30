@@ -1,6 +1,5 @@
 import { Trans } from "@lingui/macro";
-import { getStartOfToday } from "../../lib/helpers";
-import { classes } from "../../lib/helpers";
+import { classes } from "../../lib/helpers.client";
 import styles from "../../styles/components/editor/SeverityCertaintyMatrix.module.css";
 
 export default function SeverityCertaintyMatrix({

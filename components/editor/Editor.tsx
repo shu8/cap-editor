@@ -2,7 +2,11 @@ import "ol/ol.css";
 import styles from "../../styles/components/editor/Editor.module.css";
 import { Button } from "rsuite";
 import { useState } from "react";
-import { classes, getEndOfYesterday, updateState } from "../../lib/helpers";
+import {
+  classes,
+  getEndOfYesterday,
+  updateState,
+} from "../../lib/helpers.client";
 import CategoryStep from "./steps/CategoryStep";
 import DataStep from "./steps/DataStep";
 import TextStep from "./steps/TextStep";

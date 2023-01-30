@@ -4,7 +4,7 @@ import { jest } from "@jest/globals";
 import { prismaMock } from "./setup";
 import { randomUUID } from "crypto";
 import { mapFormAlertDataToCapSchema } from "../../lib/cap";
-import { formatDate } from "../../lib/helpers";
+import { formatDate } from "../../lib/helpers.client";
 
 export const mockUserOnce = (mockUserDetails) => {
   const originalModuleClient = jest.requireActual("next-auth/react") as any;

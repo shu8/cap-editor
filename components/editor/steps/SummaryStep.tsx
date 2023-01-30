@@ -4,7 +4,7 @@ import EditIcon from "@rsuite/icons/Edit";
 
 import styles from "../../../styles/components/editor/Step.module.css";
 import { FormAlertData, Step } from "../Editor";
-import { classes } from "../../../lib/helpers";
+import { classes } from "../../../lib/helpers.client";
 import { t, Trans } from "@lingui/macro";
 
 const ReviewItem = (props: {

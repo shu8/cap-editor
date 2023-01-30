@@ -1,5 +1,5 @@
 import { DateRangePicker, TagPicker } from "rsuite";
-import { getStartOfToday } from "../../../lib/helpers";
+import { getStartOfToday } from "../../../lib/helpers.client";
 import { FormAlertData, StepProps } from "../Editor";
 import SeverityCertaintyMatrix from "../SeverityCertaintyMatrix";
 import UrgencySlider from "../UrgencySlider";

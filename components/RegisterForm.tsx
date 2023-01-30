@@ -1,7 +1,7 @@
 import styles from "../styles/components/AuthenticateForm.module.css";
 import { Button, Form, Message, SelectPicker, useToaster } from "rsuite";
 import { useEffect, useState } from "react";
-import { HandledError, updateState } from "../lib/helpers";
+import { HandledError, updateState } from "../lib/helpers.client";
 import ErrorMessage from "./ErrorMessage";
 import { t, Trans } from "@lingui/macro";
 

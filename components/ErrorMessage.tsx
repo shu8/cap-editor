@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro";
 import { Message } from "rsuite";
-import { HandledError } from "../lib/helpers";
+import { HandledError } from "../lib/helpers.client";
 
 export default function ErrorMessage({
   error,

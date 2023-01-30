@@ -1,5 +1,5 @@
 import styles from "../../../styles/components/editor/Step.module.css";
-import { classes } from "../../../lib/helpers";
+import { classes } from "../../../lib/helpers.client";
 import { FormAlertData, StepProps } from "../Editor";
 import { Button } from "rsuite";
 import { t, Trans } from "@lingui/macro";

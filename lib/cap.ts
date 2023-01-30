@@ -1,9 +1,12 @@
 import { FormAlertData } from "../components/editor/Editor";
-import { validate as validateJSON } from 'jsonschema';
+import { validate as validateJSON } from "jsonschema";
 import { CAPV12JSONSchema, CAPV12Schema } from "./types/cap.schema";
-import { formatDate } from "./helpers";
+import { formatDate } from "./helpers.client";
 
-export const mapFormAlertDataToCapSchema = (alertData: FormAlertData, id: string): CAPV12JSONSchema => {
+export const mapFormAlertDataToCapSchema = (
+  alertData: FormAlertData,
+  id: string
+): CAPV12JSONSchema => {
   // Type as `any` for now because this object needs to next be validated against the JSON schema
   const alert: any = {
     identifier: id,
