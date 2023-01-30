@@ -29,7 +29,7 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <div className="wrapper">
-        <I18nProvider i18n={i18n}>
+        <I18nProvider i18n={i18n} forceRenderOnLocaleChange={true}>
           <Header />
           <Component {...pageProps} />
           <Footer />

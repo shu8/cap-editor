@@ -3,12 +3,13 @@ import Head from "next/head";
 import styles from "../styles/Verify.module.css";
 import { ERRORS } from "../lib/errors";
 import prisma from "../lib/prisma";
-import { Button, Message, Modal, TagPicker, useToaster } from "rsuite";
+import { Button, Message, Modal, TagPicker } from "rsuite";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
 import { HandledError } from "../lib/helpers.client";
 import ErrorMessage from "../components/ErrorMessage";
 import { t, Trans } from "@lingui/macro";
+import { useToasterI18n } from "../lib/useToasterI18n";
 
 type Props = {
   userToBeVerified: {
@@ -58,7 +59,7 @@ export default function VerifyUser({
   userToBeVerified,
   verificationToken,
 }: Props) {
-  const toaster = useToaster();
+  const toaster = useToasterI18n();
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [roles, setRoles] = useState([]);
 

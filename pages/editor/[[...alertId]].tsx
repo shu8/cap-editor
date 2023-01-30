@@ -14,10 +14,11 @@ import {
 import { authOptions } from "../api/auth/[...nextauth]";
 import { CAPV12JSONSchema } from "../../lib/types/cap.schema";
 import { ERRORS } from "../../lib/errors";
-import { Message, useToaster } from "rsuite";
+import { Message } from "rsuite";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useRouter } from "next/router";
 import { t } from "@lingui/macro";
+import { useToasterI18n } from "../../lib/useToasterI18n";
 
 type Props = {
   alertingAuthority: AlertingAuthority;
@@ -167,7 +168,7 @@ export default function EditorPage(props: Props) {
     to: new Date(props.defaultAlertData.to),
   };
 
-  const toaster = useToaster();
+  const toaster = useToasterI18n();
   const router = useRouter();
 
   // If ?template query param exists, hide it from user

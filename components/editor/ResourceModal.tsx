@@ -1,8 +1,9 @@
 import { t, Trans } from "@lingui/macro";
 import { useState } from "react";
-import { Button, Form, Message, Modal, Schema, useToaster } from "rsuite";
+import { Button, Form, Message, Modal, Schema } from "rsuite";
 import { HandledError } from "../../lib/helpers.client";
 import { Resource } from "../../lib/types/types";
+import { useToasterI18n } from "../../lib/useToasterI18n";
 
 const getMimeType = async (url: string): Promise<string> => {
   try {
@@ -25,7 +26,7 @@ export default function ResourceModal({
   onSubmit: (resource: Resource | null) => void;
   language: string;
 }) {
-  const toaster = useToaster();
+  const toaster = useToasterI18n();
   const [data, setData] = useState<Resource>({
     resourceDesc: "",
     uri: "",

@@ -1,9 +1,10 @@
 import styles from "../styles/components/AuthenticateForm.module.css";
-import { Button, Form, Message, SelectPicker, useToaster } from "rsuite";
+import { Button, Form, Message, SelectPicker } from "rsuite";
 import { useEffect, useState } from "react";
 import { HandledError, updateState } from "../lib/helpers.client";
 import ErrorMessage from "./ErrorMessage";
 import { t, Trans } from "@lingui/macro";
+import { useToasterI18n } from "../lib/useToasterI18n";
 
 type RegisterData = {
   name: string;
@@ -12,7 +13,7 @@ type RegisterData = {
 };
 
 export default function RegisterForm({ email = "" }) {
-  const toaster = useToaster();
+  const toaster = useToasterI18n();
   const [alertingAuthorities, setAlertingAuthorities] = useState([]);
   const [formData, setFormData] = useState<RegisterData>({
     name: "",

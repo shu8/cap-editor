@@ -1,11 +1,12 @@
 import styles from "../../../styles/components/editor/Step.module.css";
-import { Form, SelectPicker, TagInput, TagPicker, useToaster } from "rsuite";
+import { Form, SelectPicker, TagInput, TagPicker } from "rsuite";
 import { FormAlertData, StepProps } from "../Editor";
 import { classes, HandledError } from "../../../lib/helpers.client";
 import { useState } from "react";
 import ErrorMessage from "../../ErrorMessage";
 import { Alert } from "@prisma/client";
 import { t, Trans } from "@lingui/macro";
+import { useToasterI18n } from "../../../lib/useToasterI18n";
 
 const STATUSES = ["Actual", "Exercise", "System", "Test", "Draft"];
 const MESSAGE_TYPES = ["Alert", "Update", "Cancel", "Ack", "Error"];
@@ -20,7 +21,7 @@ export default function MetadataStep({
   addresses,
   references,
 }: Partial<FormAlertData> & StepProps) {
-  const toaster = useToaster();
+  const toaster = useToasterI18n();
   const [referenceOptions, setReferenceOptions] = useState<Alert[]>([]);
   const fetchReferenceOptions = () => {
     fetch("/api/alerts?json=true")

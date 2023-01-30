@@ -1,7 +1,8 @@
 import { t, Trans } from "@lingui/macro";
-import { useEffect, useState } from "react";
-import { TagPicker, useToaster } from "rsuite";
+import { useState } from "react";
+import { TagPicker } from "rsuite";
 import { HandledError, useMountEffect } from "../../../lib/helpers.client";
+import { useToasterI18n } from "../../../lib/useToasterI18n";
 import ErrorMessage from "../../ErrorMessage";
 import { FormAlertData, StepProps } from "../Editor";
 
@@ -10,7 +11,7 @@ export default function MapStep({
   regions = {},
   countryCode,
 }: Partial<FormAlertData> & StepProps & { countryCode: string }) {
-  const toaster = useToaster();
+  const toaster = useToasterI18n();
   const [countries, setCountries] = useState([]);
 
   const fetchCountries = async () => {

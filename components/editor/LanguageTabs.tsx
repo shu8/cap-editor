@@ -1,11 +1,12 @@
 import ISO6391 from "iso-639-1";
 import { ReactNode, useState } from "react";
-import { Button, Message, Modal, SelectPicker, useToaster } from "rsuite";
+import { Button, Message, Modal, SelectPicker } from "rsuite";
 import CloseOutlineIcon from "@rsuite/icons/CloseOutline";
 
 import styles from "../../styles/components/editor/LanguageTabs.module.css";
 import { classes } from "../../lib/helpers.client";
 import { t, Trans } from "@lingui/macro";
+import { useToasterI18n } from "../../lib/useToasterI18n";
 
 type Props = {
   languages: string[];
@@ -17,7 +18,7 @@ type Props = {
 };
 
 export default function LanguageTabs(props: Props) {
-  const toaster = useToaster();
+  const toaster = useToasterI18n();
   const [showChooseLanguageModal, setShowChooseLanguageModal] = useState(false);
   const [newLanguage, setNewLanguage] = useState("");
 

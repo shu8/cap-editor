@@ -7,7 +7,6 @@ import {
   Input,
   Message,
   SelectPicker,
-  useToaster,
 } from "rsuite";
 import { forwardRef, useEffect, useState } from "react";
 import ISO6391 from "iso-639-1";
@@ -24,6 +23,7 @@ import ErrorMessage from "../../ErrorMessage";
 import ResourceModal from "../ResourceModal";
 import LanguageTabs from "../LanguageTabs";
 import { t, Trans } from "@lingui/macro";
+import { useToasterI18n } from "../../../lib/useToasterI18n";
 
 const Textarea = forwardRef((props, ref) => (
   <Input {...props} ref={ref} rows={5} as="textarea" />
@@ -67,7 +67,7 @@ export default function TextStep({
   urgency,
   textLanguages,
 }: Partial<FormAlertData> & StepProps & { countryCode: string }) {
-  const toaster = useToaster();
+  const toaster = useToasterI18n();
   const [showResourceModal, setShowResourceModal] = useState(false);
   const [language, setLanguage] = useState(Object.keys(textLanguages!)[0]);
   const [whatNowMessages, setWhatNowMessages] = useState<WhatNowResponse[]>([]);
