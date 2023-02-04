@@ -1,6 +1,9 @@
+import LanguageSelector from "./LanguageSelector";
+
 export default function Footer() {
   return (
     <footer>
+      <LanguageSelector />
       <a
         href="https://github.com/shu8/cap-editor"
         target="_blank"

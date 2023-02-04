@@ -32,6 +32,7 @@ nav {
 footer {
   display: flex;
   justify-content: space-evenly;
+  align-items: center;
   padding-top: 5px;
   margin-top: 10px;
   box-sizing: content-box;

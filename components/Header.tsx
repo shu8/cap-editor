@@ -6,33 +6,6 @@ import { signOut, useSession } from "next-auth/react";
 import { Trans } from "@lingui/macro";
 import { ArrowDown } from "@rsuite/icons";
 
-const LanguageSelector = ({ appearance = "primary" }) => (
-  <Dropdown
-    renderToggle={(props, ref) => (
-      <Button
-        {...props}
-        ref={ref}
-        appearance={appearance}
-        size="md"
-        color="violet"
-      >
-        <Trans>Language</Trans>
-        <ArrowDown />
-      </Button>
-    )}
-  >
-    <Link href="#" locale="en">
-      <Dropdown.Item>English</Dropdown.Item>
-    </Link>
-    <Link href="#" locale="fr">
-      <Dropdown.Item>Français</Dropdown.Item>
-    </Link>
-    <Link href="#" locale="es">
-      <Dropdown.Item>Español</Dropdown.Item>
-    </Link>
-  </Dropdown>
-);
-
 export default function Header() {
   const { data: session } = useSession();
 
@@ -48,7 +21,6 @@ export default function Header() {
       <div>
         {session && (
           <>
-            <LanguageSelector appearance="ghost" />
             <Link href="/editor">
               <Button
                 appearance="ghost"
@@ -82,7 +54,6 @@ export default function Header() {
 
         {!session && (
           <>
-            <LanguageSelector />
             <Link href="/register" className={styles.button}>
               <Button
                 appearance="primary"
