@@ -33,21 +33,25 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     return { redirect };
   }
 
-  const userToBeVerified = await prisma.user.findFirst({
-    where: { alertingAuthorityVerificationToken },
-    include: { alertingAuthority: { select: { name: true } } },
-  });
+  const userAndAlertingAuthority =
+    await prisma.userAlertingAuthorities.findFirst({
+      where: { alertingAuthorityVerificationToken },
+      include: {
+        alertingAuthority: { select: { name: true, id: true } },
+        user: { select: { email: true, name: true } },
+      },
+    });
 
-  if (!userToBeVerified) return { redirect };
+  if (!userAndAlertingAuthority) return { redirect };
 
   return {
     props: {
       userToBeVerified: {
-        email: userToBeVerified.email,
-        name: userToBeVerified.name,
+        email: userAndAlertingAuthority.user.email,
+        name: userAndAlertingAuthority.user.name,
         alertingAuthority: {
-          id: userToBeVerified.alertingAuthorityId,
-          name: userToBeVerified.alertingAuthority.name,
+          id: userAndAlertingAuthority.alertingAuthority.id,
+          name: userAndAlertingAuthority.alertingAuthority.name,
         },
       },
       verificationToken: alertingAuthorityVerificationToken,
@@ -159,10 +163,10 @@ export default function VerifyUser({
 
           <ul className={styles.list}>
             <li>
-              <Trans>Name</Trans>:{userToBeVerified.name}
+              <Trans>Name</Trans>: {userToBeVerified.name}
             </li>
             <li>
-              <Trans>Email</Trans>:{userToBeVerified.email}
+              <Trans>Email</Trans>: {userToBeVerified.email}
             </li>
           </ul>
 

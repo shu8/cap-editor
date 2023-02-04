@@ -1,29 +1,23 @@
 import styles from "../styles/components/AuthenticateForm.module.css";
-import { Button, Form, Message, SelectPicker } from "rsuite";
+import { Button, Form, Message } from "rsuite";
 import { useEffect, useState } from "react";
 import { HandledError, updateState } from "../lib/helpers.client";
 import ErrorMessage from "./ErrorMessage";
 import { t, Trans } from "@lingui/macro";
 import { useToasterI18n } from "../lib/useToasterI18n";
+import Link from "next/link";
 
 type RegisterData = {
   name: string;
   email: string;
-  alertingAuthorityId: string;
 };
 
 export default function RegisterForm({ email = "" }) {
   const toaster = useToasterI18n();
-  const [alertingAuthorities, setAlertingAuthorities] = useState([]);
-  const [formData, setFormData] = useState<RegisterData>({
-    name: "",
-    email,
-    alertingAuthorityId: "",
-  });
+  const [formData, setFormData] = useState<RegisterData>({ name: "", email });
 
   useEffect(() => updateState(setFormData, { email }), [email]);
 
-  // TODO fix styling of select items (height of virtualised cells)
   return (
     <div className={styles.wrapper}>
       <h1>Register</h1>
@@ -38,7 +32,6 @@ export default function RegisterForm({ email = "" }) {
             body: JSON.stringify({
               name: formData.name,
               email: formData.email,
-              alertingAuthorityId: formData.alertingAuthorityId,
             }),
           })
             .then((res) => res.json())
@@ -47,8 +40,8 @@ export default function RegisterForm({ email = "" }) {
               toaster.push(
                 <Message type="success" duration={0} closable>
                   <Trans>
-                    Registration successful. You will receive an email once your
-                    Alerting Authority has approved your account.
+                    Registration successful. You can now{" "}
+                    <Link href="/login">login</Link>.
                   </Trans>
                 </Message>
               );
@@ -74,44 +67,6 @@ export default function RegisterForm({ email = "" }) {
             name="email"
             type="email"
             placeholder="me@example.com"
-          />
-        </Form.Group>
-
-        <Form.Group controlId="alertingAuthorityId">
-          <Form.ControlLabel>
-            <Trans>Alerting Authority</Trans>
-          </Form.ControlLabel>
-          <Form.Control
-            style={{ width: "400px" }}
-            name="alertingAuthorityId"
-            accepter={SelectPicker}
-            onOpen={() =>
-              fetch("/api/alertingAuthorities")
-                .then((res) => res.json())
-                .then((res) => {
-                  if (res.error) throw new HandledError(res.message);
-                  return setAlertingAuthorities(res.result);
-                })
-                .catch((err) =>
-                  toaster.push(
-                    <ErrorMessage
-                      error={err}
-                      action={t`fetching alerting authorities`}
-                    />
-                  )
-                )
-            }
-            virtualized
-            groupBy="countryCode"
-            labelKey="name"
-            valueKey="id"
-            sort={(isGroup) => {
-              return (a, b) =>
-                (isGroup ? a.groupTitle > b.groupTitle : a.name > b.name)
-                  ? 1
-                  : -1;
-            }}
-            data={alertingAuthorities}
           />
         </Form.Group>
 

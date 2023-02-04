@@ -1,13 +1,15 @@
 import styles from "../styles/components/Header.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import { Button, Dropdown } from "rsuite";
+import { Button } from "rsuite";
 import { signOut, useSession } from "next-auth/react";
 import { Trans } from "@lingui/macro";
-import { ArrowDown } from "@rsuite/icons";
+import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
+import AlertingAuthoritySelector from "./AlertingAuthoritySelector";
 
 export default function Header() {
   const { data: session } = useSession();
+  const [alertingAuthorityId] = useAlertingAuthorityLocalStorage();
 
   return (
     <nav className={styles.nav}>
@@ -21,7 +23,11 @@ export default function Header() {
       <div>
         {session && (
           <>
-            <Link href="/editor">
+            <AlertingAuthoritySelector
+              alertingAuthorities={session.user.alertingAuthorities}
+            />
+
+            <Link href={`/editor?alertingAuthority=${alertingAuthorityId}`}>
               <Button
                 appearance="ghost"
                 color="violet"

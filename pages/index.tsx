@@ -9,14 +9,24 @@ import styles from "../styles/Home.module.css";
 import { fetcher } from "../lib/helpers.client";
 import Alert from "../components/Alert";
 import Link from "next/link";
+import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
 
 export default function Home() {
   const { data: session } = useSession();
+  const [alertingAuthorityId, setAlertingAuthorityId] =
+    useAlertingAuthorityLocalStorage();
+
   const {
     data: alerts,
     error,
     isLoading,
-  } = useSWR("/api/alerts?json=1", fetcher);
+  } = useSWR(
+    alertingAuthorityId
+      ? `/api/alerts?alerting_authority=${alertingAuthorityId}&json=1`
+      : null,
+    fetcher
+  );
+
 
   const alertsByStatus: {
     published: DBAlert[];
@@ -85,7 +95,7 @@ export default function Home() {
               />
             )}
 
-            {error && (
+            {(error || alerts?.error) && (
               <Message type="error">
                 <Trans>There was an error loading the alerts</Trans>
               </Message>

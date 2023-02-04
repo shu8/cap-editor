@@ -1,60 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { randomBytes } from "crypto";
-import { AlertingAuthority } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 
-import prisma from '../../lib/prisma';
-import { sendEmail } from "../../lib/email";
-import { fetchWMOAlertingAuthorities } from "../../lib/helpers.server";
+import prisma from "../../lib/prisma";
 import { withErrorHandler } from "../../lib/apiErrorHandler";
 
 async function handleRegisterUser(req: NextApiRequest, res: NextApiResponse) {
-  const { name, email, alertingAuthorityId } = req.body;
+  const { name, email } = req.body;
 
   if (!name || !email) {
-    throw new ApiError(400, 'You did not provide your valid details');
+    throw new ApiError(400, "You did not provide your valid details");
   }
 
-  const alertingAuthorities: AlertingAuthority[] = await fetchWMOAlertingAuthorities();
-  const alertingAuthority = alertingAuthorities.find(a => a.id === alertingAuthorityId);
-
-  if (!alertingAuthority) {
-    throw new ApiError(400, 'You did not choose a valid Alerting Authority');
-  }
-
-  const alertingAuthorityVerificationToken = randomBytes(32).toString('hex');
-  await prisma.user.create({
-    data: {
-      name,
-      email,
-      // TODO hash the token in the db
-      alertingAuthorityVerificationToken,
-      alertingAuthority: {
-        connectOrCreate: {
-          where: { id: alertingAuthority.id },
-          create: {
-            id: alertingAuthority.id,
-            name: alertingAuthority.name,
-            author: alertingAuthority.author,
-            countryCode: alertingAuthority.countryCode,
-            // TODO polygon isn't given for all AAs by WMO
-            polygon: alertingAuthority.polygon
-          },
-        }
-      }
-    }
-  });
-
-  // TODO what if the registering user _is_ the AA author? skip this step?
-  await sendEmail({
-    subject: `New user registered for ${alertingAuthority.name}`,
-    to: alertingAuthority.author,
-    body: `Please verify this user has permission to create alerts for your Alerting Authority`,
-    url: `${process.env.BASE_URL}/verify?token=${alertingAuthorityVerificationToken}`,
-    urlText: 'Verify user now',
-    title: 'New user verification required'
-  });
-
+  await prisma.user.create({ data: { name, email } });
   return res.json({ error: false });
 }
 
@@ -63,7 +20,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return handleRegisterUser(req, res);
   }
 
-  return res.status(405).send('Method not allowed');
+  return res.status(405).send("Method not allowed");
 }
 
 export default withErrorHandler(handler);

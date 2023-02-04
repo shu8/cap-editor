@@ -1,0 +1,11 @@
+.alertingAuthoritySelectorName {
+  text-overflow: ellipsis;
+  width: 150px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.fullWidth {
+  width: auto;
+}

@@ -7,6 +7,19 @@ export type Resource = {
   mimeType: string;
 };
 
+export type AlertingAuthority = {
+  id: string;
+  name: string;
+  countryCode: string;
+  roles: Role[];
+};
+
+export type LocalStorageState = {
+  getAlertingAuthorityId: () => string | null;
+  setAlertingAuthorityId: (id: string) => void;
+  removeAlertingAuthorityId: () => void;
+};
+
 export type WhatNowResponse = {
   id: string;
   countryCode: string;
@@ -45,8 +58,10 @@ export type WhatNowResponse = {
 declare module "next-auth" {
   interface Session {
     user: {
-      roles: Role[];
       email: string;
-    } & DefaultSession['user'];
+      alertingAuthorities: {
+        [key: string]: AlertingAuthority;
+      };
+    } & DefaultSession["user"];
   }
 }

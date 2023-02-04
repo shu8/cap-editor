@@ -76,8 +76,8 @@ export default function Map({
   alertingAuthority,
   enableInteraction = false,
 }: Partial<FormAlertData> & {
-  onRegionsChange: (regions: FormAlertData["regions"]) => null;
-  alertingAuthority: AlertingAuthority;
+  onRegionsChange: (regions: FormAlertData["regions"]) => void;
+  alertingAuthority: AlertingAuthority | null;
   enableInteraction: boolean;
 }) {
   useGeographic();
@@ -100,7 +100,7 @@ export default function Map({
   const metersPerUnit = map?.getView().getProjection().getMetersPerUnit();
 
   const alertingAuthorityPolygonCoordinates: any = [
-    alertingAuthority.polygon?.split(" ").map((c) =>
+    alertingAuthority?.polygon?.split(" ").map((c) =>
       c
         .split(",")
         .map((c) => +c)

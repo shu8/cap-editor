@@ -9,6 +9,41 @@ import { deleteCookie, getCookie } from "cookies-next";
 import prisma from "../../../lib/prisma";
 import { ERRORS } from "../../../lib/errors";
 import redis from "../../../lib/redis";
+import { AlertingAuthority } from "../../../lib/types/types";
+
+const getUser = async (email: string) => {
+  const user = await prisma.user.findFirst({
+    where: { email },
+    include: {
+      UserAlertingAuthorities: {
+        select: {
+          alertingAuthority: {
+            select: { name: true, countryCode: true, id: true },
+          },
+          roles: true,
+        },
+        where: {
+          alertingAuthorityVerified: { not: null },
+          user: { email },
+        },
+      },
+    },
+  });
+  return user;
+};
+
+const mapAlertingAuthorities = (
+  user: NonNullable<Awaited<ReturnType<typeof getUser>>>
+) =>
+  user.UserAlertingAuthorities.reduce((acc, cur) => {
+    acc[cur.alertingAuthority.id] = {
+      id: cur.alertingAuthority.id,
+      name: cur.alertingAuthority.name,
+      countryCode: cur.alertingAuthority.countryCode,
+      roles: cur.roles,
+    };
+    return acc;
+  }, {});
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -118,28 +153,36 @@ export const authOptions: AuthOptions = {
       // If user doesn't exist in db yet, they need to register first
       if (!dbUser) return `/register?email=${user.email}`;
 
-      // If user is in db, but their AS hasn't verified them, they can't login yet
-      if (!dbUser.alertingAuthorityVerified) {
-        return `/error/${ERRORS.ACCOUNT_NOT_VERIFIED_YET.slug}`;
-      }
+      // If user is in db, but their AA hasn't verified them, they can't login yet
+      // TODO move this to a persistent banner when logged in, preventing them from doing anything
+      // if (!dbUser.alertingAuthorityVerified) {
+      //   return `/error/${ERRORS.ACCOUNT_NOT_VERIFIED_YET.slug}`;
+      // }
 
       // In all other cases, allow login
       return true;
     },
     async jwt({ token, account, profile }) {
-      if (account) {
-        const user = await prisma.user.findFirst({
-          where: { id: profile?.sub },
-          select: { roles: true },
-        });
+      if (account && profile?.email) {
+        const user = await getUser(profile?.email);
         if (!user) return token;
-
-        token.roles = user.roles;
+        token.alertingAuthorities = mapAlertingAuthorities(user);
       }
       return token;
     },
     async session({ session, token }) {
-      session.user.roles = token.roles as Role[];
+      session.user.alertingAuthorities = (token.alertingAuthorities || {}) as {
+        string: AlertingAuthority;
+      };
+
+      // Only do (expensive) DB call if there is a pending session update from elsewhere in app for this user
+      if (await redis.SREM("pendingSessionUpdates", session.user.email)) {
+        const user = await getUser(session.user.email);
+        if (user) {
+          token.name = user.name;
+          token.alertingAuthorities = mapAlertingAuthorities(user);
+        }
+      }
       return session;
     },
   },

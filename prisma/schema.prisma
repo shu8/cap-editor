@@ -38,21 +38,17 @@ model Session {
 }
 
 model User {
-  id                                 String            @id @default(cuid())
-  name                               String
-  email                              String            @unique
-  emailVerified                      DateTime?
-  image                              String?
-  alertingAuthorityId                String
-  alertingAuthority                  AlertingAuthority @relation(fields: [alertingAuthorityId], references: [id], onDelete: Cascade)
-  alertingAuthorityVerified          DateTime?
-  alertingAuthorityVerificationToken String?
-  webauthnId                         String?
-  roles                              Role[]
-  accounts                           Account[]
-  sessions                           Session[]
-  authenticators                     Authenticator[]
-  Alert                              Alert[]
+  id                      String                    @id @default(cuid())
+  email                   String                    @unique
+  name                    String?
+  emailVerified           DateTime?
+  image                   String?
+  webauthnId              String?
+  accounts                Account[]
+  sessions                Session[]
+  authenticators          Authenticator[]
+  Alert                   Alert[]
+  UserAlertingAuthorities UserAlertingAuthorities[]
 
   @@map("users")
 }
@@ -67,22 +63,27 @@ model VerificationToken {
 }
 
 model Alert {
-  id      String      @id
-  status  AlertStatus @default(DRAFT)
-  creator User        @relation(fields: [userId], references: [id])
-  data    Json
-  userId  String
+  id                  String            @id
+  status              AlertStatus       @default(DRAFT)
+  creator             User              @relation(fields: [userId], references: [id])
+  data                Json
+  userId              String
+  alertingAuthorityId String
+  alertingAuthority   AlertingAuthority @relation(fields: [alertingAuthorityId], references: [id])
+  sharedAlerts        SharedAlert[]
 
   @@map("alerts")
 }
 
 model AlertingAuthority {
-  id          String  @id
-  author      String
-  countryCode String
-  name        String
-  polygon     String?
-  users       User[]
+  id                           String                    @id
+  author                       String
+  countryCode                  String
+  name                         String
+  polygon                      String?
+  // TODO rename to `UserAlertingAuthorities`
+  UserAlertingAuthoritiesRoles UserAlertingAuthorities[]
+  Alert                        Alert[]
 
   @@map("alerting_authorities")
 }
@@ -99,6 +100,20 @@ model Authenticator {
   user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("authenticators")
+}
+
+
+model UserAlertingAuthorities {
+  userId                             String
+  alertingAuthorityId                String
+  alertingAuthorityVerificationToken String?
+  alertingAuthorityVerified          DateTime?
+  roles                              Role[]
+
+  user              User              @relation(fields: [userId], references: [id])
+  alertingAuthority AlertingAuthority @relation(fields: [alertingAuthorityId], references: [id])
+
+  @@id([userId, alertingAuthorityId])
 }
 
 enum Role {

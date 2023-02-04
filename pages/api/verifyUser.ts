@@ -4,6 +4,7 @@ import { ApiError } from "next/dist/server/api-utils";
 import prisma from "../../lib/prisma";
 import { sendEmail } from "../../lib/email";
 import { withErrorHandler } from "../../lib/apiErrorHandler";
+import redis from "../../lib/redis";
 
 async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
   const alertingAuthorityVerificationToken = req.body.verificationToken;
@@ -11,30 +12,42 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
     throw new ApiError(400, "You did not provide a valid verification token");
   }
 
-  const user = await prisma.user.findFirst({
-    where: { alertingAuthorityVerificationToken },
-    include: { alertingAuthority: { select: { name: true } } },
-  });
-
-  if (!user) {
-    throw new ApiError(400, "You did not provide a valid verification token");
-  }
-
   if (typeof req.body.verified !== "boolean") {
     throw new ApiError(400, "You did not provide a valid verification result");
   }
 
+  const userAndAlertingAuthority =
+    await prisma.userAlertingAuthorities.findFirst({
+      where: { alertingAuthorityVerificationToken },
+      include: {
+        alertingAuthority: { select: { name: true, id: true } },
+        user: { select: { email: true } },
+      },
+    });
+
+  if (!userAndAlertingAuthority) {
+    throw new ApiError(400, "You did not provide a valid verification token");
+  }
+
   if (req.body.verified === false) {
     await sendEmail({
-      subject: `Account verification rejected for ${user.alertingAuthority.name}`,
-      to: user.email,
-      body: `Your account was not approved for ${user.alertingAuthority.name}. As a result, your account has been deleted. Please try registering with a new account if you believe there has been a mistake or you would like to choose a different Alerting Authority.`,
+      subject: `Account verification rejected for ${userAndAlertingAuthority.alertingAuthority.name}`,
+      to: userAndAlertingAuthority.user.email,
+      body: `Your account was not approved for ${userAndAlertingAuthority.alertingAuthority.name}. As a result, your account has been deleted. Please try registering with a new account if you believe there has been a mistake or you would like to choose a different Alerting Authority.`,
       title: "Account verification rejected",
       url: `${process.env.BASE_URL}`,
       urlText: "Visit the CAP Editor now",
     });
 
-    await prisma.user.delete({ where: { email: user.email } });
+    await prisma.userAlertingAuthorities.delete({
+      where: {
+        userId_alertingAuthorityId: {
+          alertingAuthorityId: userAndAlertingAuthority.alertingAuthority.id,
+          userId: userAndAlertingAuthority.userId,
+        },
+      },
+    });
+
     return res.json({ error: false });
   }
 
@@ -45,8 +58,13 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
     );
   }
 
-  await prisma.user.update({
-    where: { email: user.email },
+  await prisma.userAlertingAuthorities.update({
+    where: {
+      userId_alertingAuthorityId: {
+        alertingAuthorityId: userAndAlertingAuthority.alertingAuthority.id,
+        userId: userAndAlertingAuthority.userId,
+      },
+    },
     data: {
       alertingAuthorityVerificationToken: null,
       alertingAuthorityVerified: new Date(),
@@ -54,9 +72,15 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
     },
   });
 
+  // Update this user's session when they next fetch it (so they don't have to re-login)
+  await redis.SADD(
+    "pendingSessionUpdates",
+    userAndAlertingAuthority.user.email
+  );
+
   await sendEmail({
-    subject: `Account verification complete for ${user.alertingAuthority.name}`,
-    to: user.email,
+    subject: `Account verification complete for ${userAndAlertingAuthority.alertingAuthority.name}`,
+    to: userAndAlertingAuthority.user.email,
     body: "Your account has now been verified by your Alerting Authority!",
     title: "Account verified",
     url: `${process.env.BASE_URL}/login`,
