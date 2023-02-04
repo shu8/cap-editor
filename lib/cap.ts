@@ -17,47 +17,53 @@ export const mapFormAlertDataToCapSchema = (
     // source
     scope: alertData.scope,
     ...(alertData.restriction && { restriction: alertData.restriction }),
-    ...(alertData.addresses?.length && { addresses: alertData.addresses?.map(a => `"${a}"`).join(' ') }),
+    ...(alertData.addresses?.length && {
+      addresses: alertData.addresses?.map((a) => `"${a}"`).join(" "),
+    }),
     // code
     // note
-    ...(alertData.references?.length && { references: alertData.references?.join(' ') }),
+    ...(alertData.references?.length && {
+      references: alertData.references?.join(" "),
+    }),
     // incidents,
-    info: Object.entries(alertData.textLanguages).map(([language, languageData]) => ({
-      language,
-      category: alertData.category,
-      event: languageData.event,
-      responseType: alertData.actions,
-      urgency: alertData.urgency,
-      severity: alertData.severity,
-      certainty: alertData.certainty,
-      // audience
-      // eventCode
-      // effective
-      onset: alertData.from,
-      expires: alertData.to,
-      senderName: process.env.AA_NAME,
-      headline: languageData.headline,
-      description: languageData.description,
-      instruction: languageData.instruction,
-      web: `${process.env.BASE_URL}/feed/${id}`,
-      contact: process.env.AA_EMAIL,
-      // parameter
-      resource: languageData.resources,
-      area: Object.entries(alertData.regions).map(([regionName, data]) => ({
-        areaDesc: regionName,
-        ...(typeof data?.[0] === 'string' && { circle: data }),
-        ...(typeof data?.[0] !== 'string' && { polygon: data }),
-        // geocode
-        // altitude
-        // ceiling
-      })),
-    }))
+    info: Object.entries(alertData.textLanguages).map(
+      ([language, languageData]) => ({
+        language,
+        category: alertData.category,
+        event: languageData.event,
+        responseType: alertData.actions,
+        urgency: alertData.urgency,
+        severity: alertData.severity,
+        certainty: alertData.certainty,
+        // audience
+        // eventCode
+        // effective
+        onset: alertData.from,
+        expires: alertData.to,
+        senderName: process.env.AA_NAME,
+        headline: languageData.headline,
+        description: languageData.description,
+        instruction: languageData.instruction,
+        web: `${process.env.BASE_URL}/feed/${id}`,
+        contact: process.env.AA_EMAIL,
+        // parameter
+        resource: languageData.resources,
+        area: Object.entries(alertData.regions).map(([regionName, data]) => ({
+          areaDesc: regionName,
+          ...(typeof data?.[0] === "string" && { circle: data }),
+          ...(typeof data?.[0] !== "string" && { polygon: data }),
+          // geocode
+          // altitude
+          // ceiling
+        })),
+      })
+    ),
   };
 
   const validationResult = validateJSON(alert, CAPV12Schema);
   if (!validationResult.valid) {
     console.error(validationResult);
-    throw 'Invalid alert details';
+    throw "Invalid alert details";
   }
 
   return alert as CAPV12JSONSchema;

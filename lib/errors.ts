@@ -9,9 +9,13 @@ export const ERRORS = {
     slug: "invalid-verification-token",
     message: t`Your verification link is invalid or expired.`,
   },
+  AA_NOT_ALLOWED: {
+    slug: "alerting-authority-forbidden",
+    message: t`Your account does not have permission to edit alerts for this Alerting Authority. You may request to connect to this Alerting Authority via your Settings page if you are a member of it.`,
+  },
   NOT_ALLOWED_CREATE_ALERTS: {
     slug: "alert-creation-denied",
-    message: t`Your account does not have permission to create new alerts; you may edit an alert from the homepage.`,
+    message: t`Your account does not have permission to create new alerts for this Alerting Authority; you may edit an alert from the homepage, or request your Alerting Authority administrator to grant you permission to create new alerts.`,
   },
   ALERT_NOT_FOUND: {
     slug: "alert-not-found",

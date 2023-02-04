@@ -19,6 +19,7 @@ import SplitButton from "../SplitButton";
 import { useRouter } from "next/router";
 import { Resource } from "../../lib/types/types";
 import { t, Trans } from "@lingui/macro";
+import { ShareOutline } from "@rsuite/icons";
 
 const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];
@@ -57,6 +58,8 @@ export type StepProps = {
 
 type Props = {
   onSubmit: (alertData: FormAlertData, alertStatus: AlertStatus) => void;
+  onShareAlert: (email: string) => void;
+  isShareable: boolean;
   defaultAlertData: FormAlertData;
   alertingAuthority: AlertingAuthority;
   roles: Role[];
@@ -217,6 +220,22 @@ export default function Editor(props: Props) {
         <div>
           <h3>
             {alertData.identifier ? t`Edit alert` : t`New alert`}: {step}
+            {props.existingAlertStatus === "DRAFT" && props.isShareable && (
+              <span
+                title={t`Collaborate on this alert with someone`}
+                className={styles.shareIcon}
+                onClick={() => {
+                  const email = window.prompt(
+                    "Please enter the email address of the user you wish to invite to collaborate"
+                  );
+                  if (!email) return;
+
+                  props.onShareAlert(email);
+                }}
+              >
+                <ShareOutline />
+              </span>
+            )}
           </h3>
           {alertData.identifier && (
             <>

@@ -48,6 +48,7 @@ model User {
   sessions                Session[]
   authenticators          Authenticator[]
   Alert                   Alert[]
+  sharedAlerts            SharedAlert[]
   UserAlertingAuthorities UserAlertingAuthorities[]
 
   @@map("users")
@@ -102,6 +103,16 @@ model Authenticator {
   @@map("authenticators")
 }
 
+model SharedAlert {
+  id      String   @id @default(cuid())
+  userId  String
+  alertId String
+  expires DateTime @default(dbgenerated("NOW() + interval '24 hours'"))
+  user    User     @relation(fields: [userId], references: [id])
+  alert   Alert    @relation(fields: [alertId], references: [id])
+
+  @@map("shared_alerts")
+}
 
 model UserAlertingAuthorities {
   userId                             String

@@ -27,6 +27,11 @@ export default function Home() {
     fetcher
   );
 
+  const {
+    data: sharedAlerts,
+    error: sharedAlertsError,
+    isLoading: sharedAlertsLoading,
+  } = useSWR("/api/alerts/shared", fetcher);
 
   const alertsByStatus: {
     published: DBAlert[];
@@ -128,6 +133,31 @@ export default function Home() {
                 )}
               </>
             )}
+
+            {!sharedAlertsError &&
+              !sharedAlerts?.error &&
+              sharedAlerts?.alerts.length > 0 && (
+                <Panel
+                  header={`Shared alerts`}
+                  className={styles.alertStatusWrapper}
+                  defaultExpanded={true}
+                  collapsible
+                  bordered
+                >
+                  <p className={styles.sharedAlertsDescription}>
+                    <Trans>
+                      The folllowing alerts have been shared with you to
+                      collaborate on
+                    </Trans>
+                    :
+                  </p>
+                  <div className={styles.alertsWrapper}>
+                    {sharedAlerts.alerts.map((a) => (
+                      <Alert key={`alert-${a.id}`} alert={a} />
+                    ))}
+                  </div>
+                </Panel>
+              )}
           </>
         )}
       </main>

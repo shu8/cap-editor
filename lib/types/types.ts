@@ -50,7 +50,7 @@ export type WhatNowResponse = {
         recover: string[];
       };
     };
-  },
+  };
   createdAt: string;
   updatedAt: string;
 };

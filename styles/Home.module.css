@@ -7,3 +7,7 @@
   gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
 }
+
+.sharedAlertsDescription {
+  text-transform: none;
+}
