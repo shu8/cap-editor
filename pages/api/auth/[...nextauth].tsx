@@ -162,9 +162,9 @@ export const authOptions: AuthOptions = {
       // In all other cases, allow login
       return true;
     },
-    async jwt({ token, account, profile }) {
-      if (account && profile?.email) {
-        const user = await getUser(profile?.email);
+    async jwt({ token, account }) {
+      if (account && token?.email) {
+        const user = await getUser(token?.email);
         if (!user) return token;
         token.alertingAuthorities = mapAlertingAuthorities(user);
       }

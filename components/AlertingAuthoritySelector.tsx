@@ -40,7 +40,7 @@ const AlertingAuthoritySelector = ({
           color="violet"
         >
           <i>Alerting Authority: </i>
-          {!!alertingAuthorityId && (
+          {!!alertingAuthorities[alertingAuthorityId] && (
             <span
               className={classes(
                 styles.alertingAuthoritySelectorName,
