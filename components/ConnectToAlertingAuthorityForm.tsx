@@ -1,4 +1,4 @@
-import { Button, Form, Message, SelectPicker } from "rsuite";
+import { Button, Form, Loader, Message, SelectPicker } from "rsuite";
 import { useEffect, useState } from "react";
 import { HandledError, updateState } from "../lib/helpers.client";
 import ErrorMessage from "./ErrorMessage";
@@ -80,6 +80,12 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
                   )
                 )
             }
+            renderMenu={(menu) => {
+              if (alertingAuthorities.length === 0) {
+                return <Loader style={{ margin: "auto", padding: "10px" }} />;
+              }
+              return menu;
+            }}
             virtualized
             groupBy="countryCode"
             labelKey="name"
