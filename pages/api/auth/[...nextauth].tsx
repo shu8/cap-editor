@@ -179,8 +179,8 @@ export const authOptions: AuthOptions = {
       if (await redis.SREM("pendingSessionUpdates", session.user.email)) {
         const user = await getUser(session.user.email);
         if (user) {
-          token.name = user.name;
-          token.alertingAuthorities = mapAlertingAuthorities(user);
+          session.user.name = user.name;
+          session.user.alertingAuthorities = mapAlertingAuthorities(user);
         }
       }
       return session;
