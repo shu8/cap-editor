@@ -59,6 +59,15 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
                 Authority for approval.
               </Trans>
             </p>
+            <p>
+              <i>
+                <Trans>
+                  Please choose the 'Other' option if your Alerting Authority is
+                  not listed. In this case, your request will be sent to an IFRC
+                  contact for approval.
+                </Trans>
+              </i>
+            </p>
           </Form.ControlLabel>
           <Form.Control
             style={{ width: "400px" }}
@@ -69,7 +78,7 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
                 .then((res) => res.json())
                 .then((res) => {
                   if (res.error) throw new HandledError(res.message);
-                  return setAlertingAuthorities(res.result);
+                  setAlertingAuthorities(res.result);
                 })
                 .catch((err) =>
                   toaster.push(
@@ -91,12 +100,17 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
             labelKey="name"
             valueKey="id"
             sort={(isGroup) => {
-              return (a, b) =>
-                (isGroup ? a.groupTitle > b.groupTitle : a.name > b.name)
+              return (a, b) => {
+                if (isGroup && a.groupTitle === "Other") return -1;
+                return (isGroup ? a.groupTitle > b.groupTitle : a.name > b.name)
                   ? 1
                   : -1;
+              };
             }}
-            data={alertingAuthorities}
+            data={[
+              ...alertingAuthorities,
+              { countryCode: "Other", name: "Other", id: "other" },
+            ]}
           />
         </Form.Group>
 

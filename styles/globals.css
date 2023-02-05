@@ -44,6 +44,10 @@ a {
   text-decoration: none;
 }
 
+p a {
+  color: revert;
+}
+
 p {
   margin-bottom: 5px;
 }

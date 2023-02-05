@@ -58,6 +58,15 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
     );
   }
 
+  const isCustomAA =
+    userAndAlertingAuthority.alertingAuthorityId.startsWith("ifrc:");
+  if (isCustomAA && !req.body.name) {
+    throw new ApiError(
+      400,
+      "You did not provide a valid name for this new IFRC-managed Alerting Authority"
+    );
+  }
+
   await prisma.userAlertingAuthorities.update({
     where: {
       userId_alertingAuthorityId: {
@@ -69,6 +78,9 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
       alertingAuthorityVerificationToken: null,
       alertingAuthorityVerified: new Date(),
       roles: req.body.roles,
+      ...(isCustomAA && {
+        alertingAuthority: { update: { name: req.body.name } },
+      }),
     },
   });
 

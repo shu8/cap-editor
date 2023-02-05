@@ -19,6 +19,7 @@ declare global {
       AA_URI: string;
       AA_DESCRIPTION: string;
       REDIS_HOST: string;
+      IFRC_AA_VERIFIER_EMAIL: string;
     }
   }
 }

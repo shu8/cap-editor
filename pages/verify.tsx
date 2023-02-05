@@ -3,7 +3,7 @@ import Head from "next/head";
 import styles from "../styles/Verify.module.css";
 import { ERRORS } from "../lib/errors";
 import prisma from "../lib/prisma";
-import { Button, Message, Modal, TagPicker } from "rsuite";
+import { Button, Input, Message, Modal, TagPicker } from "rsuite";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
 import { HandledError } from "../lib/helpers.client";
@@ -66,12 +66,18 @@ export default function VerifyUser({
   const toaster = useToasterI18n();
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [roles, setRoles] = useState([]);
+  const [nameOtherAA, setNameOtherAA] = useState("");
 
   const verifyUser = (verified: boolean) => {
     fetch("/api/verifyUser", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ verificationToken, verified, roles }),
+      body: JSON.stringify({
+        verificationToken,
+        verified,
+        roles,
+        ...(isOtherAA && { name: nameOtherAA }),
+      }),
     })
       .then((res) => res.json())
       .then((res) => {
@@ -89,6 +95,11 @@ export default function VerifyUser({
       );
   };
 
+  /**
+   * Whether the user chose 'other' as their AA, and therefore needing approval from the IFRC
+   */
+  const isOtherAA = userToBeVerified.alertingAuthority.id.startsWith("ifrc:");
+
   return (
     <>
       <Head>
@@ -103,6 +114,23 @@ export default function VerifyUser({
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            {isOtherAA && (
+              <>
+                <p>
+                  <Trans>
+                    Please enter the name of this new IFRC-managed 'Alerting
+                    Authority'
+                  </Trans>
+                  :
+                </p>
+                <Input
+                  value={nameOtherAA}
+                  onChange={(v) => setNameOtherAA(v)}
+                  placeholder="e.g., Bermuda"
+                />
+                <br />
+              </>
+            )}
             <p>
               <Trans>Please select the role(s) for this user</Trans>:
             </p>
@@ -133,7 +161,7 @@ export default function VerifyUser({
               color="green"
               onClick={() => verifyUser(true)}
             >
-              <Trans>Activate this user&apos;s account</Trans>
+              <Trans>Approve this user</Trans>
             </Button>
           </Modal.Footer>
         </Modal>
@@ -152,14 +180,42 @@ export default function VerifyUser({
             </>
           }
         >
-          <p>
-            <Trans>
-              The following user has requested to register with the CAP Editor.
-              Please confirm they are part of your Alerting Authority (
-              <i>{userToBeVerified.alertingAuthority.id}</i>) to enable their
-              account.
-            </Trans>
-          </p>
+          {isOtherAA ? (
+            <p>
+              <Trans>
+                The following user has requested to register with the CAP
+                Editor. They have been unable to locate their Alerting Authority
+                in the{" "}
+                <a
+                  href="https://alertingauthority.wmo.int/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  WMO Register of Alerting Authorities
+                </a>{" "}
+                so have requested their account be manually verified by the
+                IFRC.
+              </Trans>
+              <br />
+              <Trans>
+                <strong>
+                  If you believe there is already an appropriate Alerting
+                  Authority within the WMO Register of Alerting Authorities
+                </strong>
+                , please choose the "No" option below and ask the user to
+                connect to the correct Alerting Authority.
+              </Trans>
+            </p>
+          ) : (
+            <p>
+              <Trans>
+                The following user has requested to register with the CAP
+                Editor. Please confirm they are part of your Alerting Authority
+                (<i>{userToBeVerified.alertingAuthority.id}</i>) to enable their
+                account.
+              </Trans>
+            </p>
+          )}
 
           <ul className={styles.list}>
             <li>

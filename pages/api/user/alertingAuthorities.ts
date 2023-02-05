@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { randomBytes } from "crypto";
+import { randomBytes, randomUUID } from "crypto";
 import { AlertingAuthority } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 
@@ -25,12 +25,22 @@ async function handleConnectToAlertingAuthority(
     );
   }
 
-  const alertingAuthorities: AlertingAuthority[] =
-    await fetchWMOAlertingAuthorities();
+  if (alertingAuthorityId === "other") {
+  } else {
+  }
 
-  const alertingAuthority = alertingAuthorities.find(
-    (a) => a.id === alertingAuthorityId
-  );
+  const alertingAuthority: AlertingAuthority | undefined =
+    alertingAuthorityId === "other"
+      ? {
+          author: process.env.IFRC_AA_VERIFIER_EMAIL,
+          id: `ifrc:${randomUUID()}`,
+          name: "Other Alerting Authority",
+          countryCode: null,
+          polygon: null,
+        }
+      : (await fetchWMOAlertingAuthorities()).find(
+          (a) => a.id === alertingAuthorityId
+        );
 
   if (!alertingAuthority) {
     throw new ApiError(400, "You did not choose a valid Alerting Authority");
@@ -43,7 +53,7 @@ async function handleConnectToAlertingAuthority(
   if (!user?.name) {
     throw new ApiError(
       401,
-      "You must provide your name via the Settings page before you can join an Alerting Authority"
+      "You must provide your name via the Settings page before you can connect to an Alerting Authority"
     );
   }
 
