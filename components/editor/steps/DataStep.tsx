@@ -1,4 +1,4 @@
-import { DateRangePicker, TagPicker } from "rsuite";
+import { DateRangePicker, SelectPicker, TagPicker } from "rsuite";
 import { getStartOfToday } from "../../../lib/helpers.client";
 import { FormAlertData, StepProps } from "../Editor";
 import SeverityCertaintyMatrix from "../SeverityCertaintyMatrix";
@@ -73,10 +73,46 @@ export default function DataStep({
           onChange={(urgency: string) => onUpdate({ urgency })}
         />
       </div>
-      <div>
-        {severity && <div>Severity: {severity}.</div>}
-        {certainty && <div>Certainty: {certainty}.</div>}
-        {urgency && <div>Urgency: {urgency}.</div>}
+      <div className={styles.severityCertaintyUrgencyWrapper}>
+        <div>
+          Severity:{" "}
+          <SelectPicker
+            data={["Minor", "Moderate", "Severe"].map((t) => ({
+              label: t,
+              value: t,
+            }))}
+            cleanable={false}
+            placeholder="Choose"
+            value={severity}
+            onChange={(v) => onUpdate({ severity: v! })}
+          />
+        </div>
+        <div>
+          Certainty:{" "}
+          <SelectPicker
+            data={["Likely", "Possible", "Unlikely"].map((t) => ({
+              label: t,
+              value: t,
+            }))}
+            cleanable={false}
+            placeholder="Choose"
+            value={certainty}
+            onChange={(v) => onUpdate({ certainty: v! })}
+          />
+        </div>
+        <div>
+          Urgency:{" "}
+          <SelectPicker
+            data={["Immediate", "Expected", "Future"].map((t) => ({
+              label: t,
+              value: t,
+            }))}
+            cleanable={false}
+            placeholder="Choose"
+            value={urgency}
+            onChange={(v) => onUpdate({ urgency: v! })}
+          />
+        </div>
       </div>
 
       <h4>
