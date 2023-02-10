@@ -1,3 +1,8 @@
 .btn {
   margin-left: 10px;
 }
+
+.sideBySide {
+  display: flex;
+  justify-content: space-between;
+}

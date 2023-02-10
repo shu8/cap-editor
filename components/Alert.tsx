@@ -1,10 +1,11 @@
 import { Button, Panel, Tag } from "rsuite";
 import { Alert as DBAlert } from "@prisma/client";
+import { Trans } from "@lingui/macro";
 import Link from "next/link";
+import Image from "next/image";
 
 import styles from "../styles/components/Alert.module.css";
 import { CAPV12JSONSchema } from "../lib/types/cap.schema";
-import { Trans } from "@lingui/macro";
 
 const colors = {
   urgency: {
@@ -77,28 +78,39 @@ export default function Alert({ alert }: { alert: DBAlert }) {
         </>
       }
     >
-      <p>
-        <Trans>Sent</Trans>: {new Date(alertData.sent).toString()}
-        <br />
-        <Trans>Expires</Trans>: {expiryDate.toString()}
-      </p>
-      <p>
-        <Tag as="span" color="green">
-          {alertData.msgType}
-        </Tag>
-        <Tag as="span" color="green">
-          {alertData.status}
-        </Tag>
-        <Tag as="span" color={colors.urgency[info?.urgency]}>
-          {info?.urgency}
-        </Tag>
-        <Tag as="span" color={colors.certainty[info?.certainty]}>
-          {info?.certainty}
-        </Tag>
-        <Tag as="span" color={colors.severity[info?.severity]}>
-          {info?.severity}
-        </Tag>
-      </p>
+      <div className={styles.sideBySide}>
+        <div>
+          <p>
+            <Trans>Sent</Trans>: {new Date(alertData.sent).toString()}
+            <br />
+            <Trans>Expires</Trans>: {expiryDate.toString()}
+          </p>
+          <p>
+            <Tag as="span" color="green">
+              {alertData.msgType}
+            </Tag>
+            <Tag as="span" color="green">
+              {alertData.status}
+            </Tag>
+            <Tag as="span" color={colors.urgency[info?.urgency]}>
+              {info?.urgency}
+            </Tag>
+            <Tag as="span" color={colors.certainty[info?.certainty]}>
+              {info?.certainty}
+            </Tag>
+            <Tag as="span" color={colors.severity[info?.severity]}>
+              {info?.severity}
+            </Tag>
+          </p>
+        </div>
+
+        <Image
+          src={`/api/alerts/${alert.id}/image`}
+          width={200}
+          height={220}
+          alt="Alert image"
+        />
+      </div>
     </Panel>
   );
 }
