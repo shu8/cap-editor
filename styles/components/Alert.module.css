@@ -6,3 +6,30 @@
   display: flex;
   justify-content: space-between;
 }
+
+.alertDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.socialMediaShareIconsWrapper {
+  margin-top: auto;
+  display: flex;
+  text-transform: none;
+}
+
+.socialMediaIconsWrapper {
+  display: flex;
+  margin-left: 10px;
+}
+
+.socialMediaIcon svg {
+  width: 1.2em;
+  height: 1.2em;
+  fill: #000;
+  stroke: none;
+}
+
+.socialMediaIcon {
+  margin-right: 15px;
+}

@@ -86,6 +86,6 @@ main {
   margin-top: -5em;
 }
 
-.centered-message > * {
+.centered-message>* {
   font-size: 1.2em;
 }
