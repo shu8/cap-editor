@@ -36,6 +36,9 @@ async function handleUpdateAlert(
         include: { user: { select: { email: true } } },
         where: { expires: { gt: new Date() } },
       },
+      alertingAuthority: {
+        select: { name: true, author: true },
+      },
     },
   });
 
@@ -106,6 +109,7 @@ async function handleUpdateAlert(
 
   try {
     const newAlert: CAPV12JSONSchema = mapFormAlertDataToCapSchema(
+      alert.alertingAuthority,
       alertData,
       alertId
     );
