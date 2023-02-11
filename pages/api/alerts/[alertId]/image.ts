@@ -36,11 +36,21 @@ async function handleRenderImage(
       });
     }
     if (area.polygon) {
-      map.addMultiPolygon({
-        coords: area.polygon.map((r) => r.map((a) => a.reverse()).reverse()),
-        color: "#FF0000FF",
-        width: 1,
-      });
+      if (Array.isArray(area.polygon[0][0])) {
+        map.addMultiPolygon({
+          coords: area.polygon.map((r) =>
+            r.map((a) => (Array.isArray(a) ? a.reverse() : a)).reverse()
+          ),
+          color: "#FF0000FF",
+          width: 1,
+        });
+      } else {
+        map.addPolygon({
+          coords: area.polygon.map((r) => r.reverse()),
+          color: "#FF0000FF",
+          width: 1,
+        });
+      }
     }
   }
 

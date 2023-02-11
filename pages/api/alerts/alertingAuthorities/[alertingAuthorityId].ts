@@ -30,6 +30,7 @@ async function handleNewAlert(
       alertingAuthorityVerified: { not: null },
       user: { email: session.user.email },
     },
+    include: { alertingAuthority: { select: { name: true, author: true } } },
   });
 
   if (!alertingAuthority) {
@@ -56,6 +57,7 @@ async function handleNewAlert(
 
   try {
     const alert: CAPV12JSONSchema = mapFormAlertDataToCapSchema(
+      alertingAuthority.alertingAuthority,
       alertData,
       identifier
     );

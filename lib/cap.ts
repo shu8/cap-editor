@@ -4,13 +4,15 @@ import { CAPV12JSONSchema, CAPV12Schema } from "./types/cap.schema";
 import { formatDate } from "./helpers.client";
 
 export const mapFormAlertDataToCapSchema = (
+  alertingAuthority: { name: string; author: string },
   alertData: FormAlertData,
   id: string
 ): CAPV12JSONSchema => {
   // Type as `any` for now because this object needs to next be validated against the JSON schema
   const alert: any = {
     identifier: id,
-    sender: process.env.AA_EMAIL,
+    // TODO should this be a different email?
+    sender: alertingAuthority.author,
     sent: formatDate(new Date()),
     status: alertData.status,
     msgType: alertData.msgType,
@@ -40,12 +42,13 @@ export const mapFormAlertDataToCapSchema = (
         // effective
         onset: alertData.from,
         expires: alertData.to,
-        senderName: process.env.AA_NAME,
+        senderName: alertingAuthority.name,
         headline: languageData.headline,
         description: languageData.description,
         instruction: languageData.instruction,
         web: `${process.env.BASE_URL}/feed/${id}`,
-        contact: process.env.AA_EMAIL,
+        // TODO should this be a different email?
+        contact: alertingAuthority.author,
         // parameter
         resource: languageData.resources,
         area: Object.entries(alertData.regions).map(([regionName, data]) => ({

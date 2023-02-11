@@ -265,20 +265,27 @@
                   "items": {
                     "type": "array",
                     "items": {
-                      "type": "array",
-                      "items": {
-                        "anyOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "number"
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "anyOf": [
+                              {
+                                "type": "array",
+                                "items": {
+                                  "type": "number"
+                                }
+                              },
+                              {
+                                "type": "number"
+                              }
+                            ]
                           }
-                        ]
-                      }
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
                     }
                   }
                 },
