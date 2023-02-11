@@ -22,7 +22,7 @@ export default function Home() {
     isLoading,
   } = useSWR(
     alertingAuthorityId
-      ? `/api/alerts?alerting_authority=${alertingAuthorityId}&json=1`
+      ? `/api/alerts/alertingAuthorities/${alertingAuthorityId}?json=1`
       : null,
     fetcher
   );
