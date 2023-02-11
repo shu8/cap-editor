@@ -26,9 +26,7 @@ import { useSession } from "next-auth/react";
 
 type Props = {
   defaultAlertData: (FormAlertData & { from: string; to: string }) | undefined;
-  editingAlert:
-    | { id: string; status: AlertStatus; alertingAuthorityId: string }
-    | undefined;
+  editingAlert: { id: string; status: AlertStatus } | undefined;
   alertingAuthority: AlertingAuthority | undefined;
   isShared: boolean;
 };
@@ -193,11 +191,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
     if (!isTemplate) {
       defaultAlertData.identifier = alertData.identifier;
-      editingAlert = {
-        id: alertData.identifier,
-        status: alert.status,
-        alertingAuthorityId: alert.alertingAuthorityId,
-      };
+      editingAlert = { id: alertData.identifier, status: alert.status };
     }
   } else {
     defaultAlertData = {
@@ -351,9 +345,7 @@ export default function EditorPage(props: Props) {
             fetch(
               props.editingAlert
                 ? `/api/alerts/${props.editingAlert.id}`
-                : `/api/alerts/alertingAuthorities/${
-                    props.editingAlert!.alertingAuthorityId
-                  }`,
+                : `/api/alerts/alertingAuthorities/${alertingAuthorityId}`,
               {
                 method: props.editingAlert ? "PUT" : "POST",
                 headers: { "Content-Type": "application/json" },
