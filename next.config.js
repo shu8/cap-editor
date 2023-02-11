@@ -15,6 +15,10 @@ const nextConfig = {
         source: "/api/webauthn/register",
         destination: "/api/auth/webauthn/register",
       },
+      {
+        source: "/geojson-regions",
+        destination: "/api/geojson",
+      },
     ];
   },
   typescript: {

@@ -18,7 +18,7 @@ const getUser = async (email: string) => {
       UserAlertingAuthorities: {
         select: {
           alertingAuthority: {
-            select: { name: true, countryCode: true, id: true },
+            select: { name: true, countryCode: true, id: true, polygon: true },
           },
           roles: true,
         },
@@ -40,6 +40,7 @@ const mapAlertingAuthorities = (
       id: cur.alertingAuthority.id,
       name: cur.alertingAuthority.name,
       countryCode: cur.alertingAuthority.countryCode,
+      polygon: cur.alertingAuthority.polygon,
       roles: cur.roles,
     };
     return acc;

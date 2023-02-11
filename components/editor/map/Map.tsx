@@ -1,4 +1,4 @@
-import { EffectCallback, useEffect, useRef, useState } from "react";
+import { EffectCallback, useEffect, useMemo, useRef, useState } from "react";
 import OLView from "ol/View";
 import OLMap from "ol/Map";
 import OSM from "ol/source/OSM";
@@ -48,10 +48,6 @@ const CircleImage = () => (
 );
 
 const geojsonFormat = new GeoJSON();
-const defaultFeaturesSource = new OLVectorSource({
-  url: "/countries.geojson",
-  format: geojsonFormat,
-});
 const OSMSource = new OSM();
 const selectedStyle = new Style({
   stroke: new Stroke({ color: "rgba(255, 0, 0, 0.2)" }),
@@ -97,6 +93,16 @@ export default function Map({
       style: selectedStyle,
     })
   );
+
+  const defaultFeaturesSource = useMemo(
+    () =>
+      new OLVectorSource({
+        url: `/geojson-regions?countryCode=${alertingAuthority?.countryCode}`,
+        format: geojsonFormat,
+      }),
+    [alertingAuthority]
+  );
+
   const metersPerUnit = map?.getView().getProjection().getMetersPerUnit();
 
   const alertingAuthorityPolygonCoordinates: any = [
@@ -122,7 +128,6 @@ export default function Map({
     Object.keys(regions).forEach((r) => {
       const feature = defaultFeaturesSource.getFeatureById(r);
       if (feature && selectedFeaturesSource.hasFeature(feature)) return;
-
       if (feature?.get("ADMIN") != null) {
         // Handle default country features
         selectedFeaturesSource.addFeature(feature);
@@ -247,7 +252,7 @@ export default function Map({
       if (!e.feature) return;
 
       const id = e.feature.getId();
-      if (id && regions[id]) return;
+      if (id && regions[id]?.length) return;
 
       const regionName = e.feature?.get("ADMIN");
       if (regionName) {
