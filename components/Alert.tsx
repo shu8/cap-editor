@@ -68,7 +68,7 @@ export default function Alert({ alert }: { alert: DBAlert }) {
           <a
             className={styles.btn}
             target="_blank"
-            href={`/feed/${alertData.identifier}`}
+            href={`/feed/${alert.id}`}
             rel="noreferrer"
           >
             <Button appearance="ghost" color="violet" size="xs">

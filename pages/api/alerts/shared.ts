@@ -6,7 +6,7 @@ import { Prisma } from "@prisma/client";
 
 import prisma from "../../../lib/prisma";
 import { authOptions } from "../auth/[...nextauth]";
-import { formatFeedAsXML } from "../../../lib/xml/helpers";
+import { formatAlertingAuthorityFeedAsXML } from "../../../lib/xml/helpers";
 import { CAPV12JSONSchema } from "../../../lib/types/cap.schema";
 import { FormAlertData } from "../../../components/editor/Editor";
 import { mapFormAlertDataToCapSchema } from "../../../lib/cap";
