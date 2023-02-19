@@ -5,6 +5,7 @@ import { prismaMock } from "./setup";
 import { randomUUID } from "crypto";
 import { mapFormAlertDataToCapSchema } from "../../lib/cap";
 import { formatDate } from "../../lib/helpers.client";
+import { Role } from "@prisma/client";
 
 export const mockUserOnce = (mockUserDetails) => {
   const originalModuleClient = jest.requireActual("next-auth/react") as any;
@@ -69,12 +70,16 @@ export const createUser = async ({
     data: {
       email,
       name,
-      roles,
-      alertingAuthorityVerificationToken: "token",
-      alertingAuthority: {
-        connectOrCreate: {
-          create: alertingAuthority,
-          where: { id: alertingAuthority.id },
+      UserAlertingAuthorities: {
+        create: {
+          alertingAuthority: {
+            connectOrCreate: {
+              create: alertingAuthority,
+              where: { id: alertingAuthority.id },
+            },
+          },
+          alertingAuthorityVerificationToken: "token",
+          roles: roles as Role[],
         },
       },
     },

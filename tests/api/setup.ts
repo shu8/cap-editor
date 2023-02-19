@@ -20,7 +20,7 @@ const mockPrisma = new PrismaClient({
 
 let migrationsRan = false;
 const tableNamesCsv = Prisma.dmmf.datamodel.models
-  .map((m) => `"${DATABASE_SCHEMA_NAME}"."${m.dbName}"`)
+  .map((m) => `"${DATABASE_SCHEMA_NAME}"."${m.dbName || m.name}"`)
   .join(", ");
 
 const prismaBinary = path.join("./", "node_modules", ".bin", "prisma");
@@ -62,8 +62,8 @@ jest.mock("nodemailer", () => ({
   }),
 }));
 
-jest.mock("../../lib/helpers", () => {
-  const originalHelpers = jest.requireActual("../../lib/helpers") as any;
+jest.mock("../../lib/helpers.server", () => {
+  const originalHelpers = jest.requireActual("../../lib/helpers.server") as any;
 
   return {
     __esModule: true,
