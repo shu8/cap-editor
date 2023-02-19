@@ -8,8 +8,6 @@ async function handleGetAlertingAuthorityFeeds(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const alerts = await prisma.alert.findMany();
-
   // /feed simply returns list of all AAs and their feed URLs
   const alertingAuthorities = await prisma.alertingAuthority.findMany();
   res.setHeader("Content-Type", "application/xml");

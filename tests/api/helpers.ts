@@ -34,23 +34,33 @@ export const mockUserOnce = (mockUserDetails) => {
   );
 };
 
+const defaultAlertingAuthority = {
+  id: "aa",
+  name: "AA",
+  countryCode: "GB",
+  roles: ["ADMIN"],
+};
+
 export const users = {
   editor: {
     email: "editor@example.com",
     name: "Editor",
     image: "",
+    alertingAuthorities: { aa: defaultAlertingAuthority },
     roles: ["EDITOR"],
   },
   validator: {
     email: "validator@example.com",
     name: "Validator",
     image: "",
+    alertingAuthorities: { aa: defaultAlertingAuthority },
     roles: ["VALIDATOR"],
   },
   admin: {
     email: "admin@example.com",
     name: "Admin",
     image: "",
+    alertingAuthorities: { aa: defaultAlertingAuthority },
     roles: ["ADMIN"],
   },
 };
