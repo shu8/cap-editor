@@ -10,6 +10,13 @@ import { Role } from "@prisma/client";
 export const mockUserOnce = (mockUserDetails) => {
   const originalModuleClient = jest.requireActual("next-auth/react") as any;
   const originalModuleServer = jest.requireActual("next-auth") as any;
+
+  if (mockUserDetails.alertingAuthority) {
+    mockUserDetails.alertingAuthorities = {
+      [mockUserDetails.alertingAuthority.id]: mockUserDetails.alertingAuthority,
+    };
+  }
+
   const mockSession = {
     user: mockUserDetails,
     expires: new Date(Date.now() + 2 * 86400).toISOString(),
@@ -39,6 +46,7 @@ const defaultAlertingAuthority = {
   name: "AA",
   countryCode: "GB",
   roles: ["ADMIN"],
+  author: "aa@example.com",
 };
 
 export const users = {
@@ -46,21 +54,21 @@ export const users = {
     email: "editor@example.com",
     name: "Editor",
     image: "",
-    alertingAuthorities: { aa: defaultAlertingAuthority },
+    alertingAuthority: defaultAlertingAuthority,
     roles: ["EDITOR"],
   },
   validator: {
     email: "validator@example.com",
     name: "Validator",
     image: "",
-    alertingAuthorities: { aa: defaultAlertingAuthority },
+    alertingAuthority: defaultAlertingAuthority,
     roles: ["VALIDATOR"],
   },
   admin: {
     email: "admin@example.com",
     name: "Admin",
     image: "",
-    alertingAuthorities: { aa: defaultAlertingAuthority },
+    alertingAuthority: defaultAlertingAuthority,
     roles: ["ADMIN"],
   },
 };
@@ -75,6 +83,7 @@ export const createUser = async ({
     id: "aa",
     name: "AA",
   },
+  alertingAuthorityVerified = false,
 } = {}) => {
   return await prismaMock.user.create({
     data: {
@@ -84,11 +93,21 @@ export const createUser = async ({
         create: {
           alertingAuthority: {
             connectOrCreate: {
-              create: alertingAuthority,
+              create: {
+                id: alertingAuthority.id,
+                name: alertingAuthority.name,
+                countryCode: alertingAuthority.countryCode,
+                author: alertingAuthority.author,
+              },
               where: { id: alertingAuthority.id },
             },
           },
-          alertingAuthorityVerificationToken: "token",
+          ...(alertingAuthorityVerified && {
+            alertingAuthorityVerified: new Date(),
+          }),
+          ...(!alertingAuthorityVerified && {
+            alertingAuthorityVerificationToken: "token",
+          }),
           roles: roles as Role[],
         },
       },

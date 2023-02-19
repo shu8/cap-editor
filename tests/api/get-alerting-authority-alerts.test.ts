@@ -10,7 +10,7 @@ import { prismaMock } from "./setup";
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");
-describe("GET /api/alerts/alertingAuthority/:id", () => {
+describe("GET /api/alerts/alertingAuthorities/:id", () => {
   test("404 when AA does not exist", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",

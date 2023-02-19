@@ -2,27 +2,20 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { expect, test, describe, jest } from "@jest/globals";
 import { createMocks } from "node-mocks-http";
 import { formatDate, getStartOfToday } from "../../lib/helpers.client";
-import handleAlerts from "../../pages/api/alerts/index";
+import handleAlertingAuthorityAlerts from "../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]";
 import { createUser, mockUserOnce, users } from "./helpers";
 import { prismaMock } from "./setup";
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");
-describe("POST /api/alerts", () => {
-  test("alert status must be supplied", async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: "POST",
-    });
-    await handleAlerts(req, res);
-    expect(res._getStatusCode()).toEqual(400);
-  });
-
-  test("valid alert status must be supplied", async () => {
+describe("POST /api/alerts/alertingAuthorities/:id", () => {
+  test("AA must be supplied", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
       body: { status: "foo" },
     });
-    await handleAlerts(req, res);
+    await createUser();
+    await handleAlertingAuthorityAlerts(req, res);
     expect(res._getStatusCode()).toEqual(400);
   });
 
@@ -30,19 +23,55 @@ describe("POST /api/alerts", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
       body: { status: "PUBLISHED" },
+      query: { alertingAuthorityId: "aa" },
     });
-    await handleAlerts(req, res);
+    await handleAlertingAuthorityAlerts(req, res);
     expect(res._getStatusCode()).toEqual(401);
   });
 
+  test("alert status must be supplied", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      query: { alertingAuthorityId: "aa" },
+    });
+    mockUserOnce(users.admin);
+    await handleAlertingAuthorityAlerts(req, res);
+    expect(res._getStatusCode()).toEqual(400);
+  });
+
+  test("valid alert status must be supplied", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { status: "foo" },
+      query: { alertingAuthorityId: "aa" },
+    });
+    mockUserOnce(users.admin);
+    await handleAlertingAuthorityAlerts(req, res);
+    expect(res._getStatusCode()).toEqual(400);
+  });
+
+  test("AA must exist", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { status: "foo" },
+      query: { alertingAuthorityId: "aa" },
+    });
+    await createUser();
+    mockUserOnce(users.admin);
+    await handleAlertingAuthorityAlerts(req, res);
+    expect(res._getStatusCode()).toEqual(400);
+  });
+
   ["DRAFT", "TEMPLATE", "PUBLISHED"].forEach((alertStatus) => {
-    test(`validators cannot directly create new alerts of any status (${alertStatus}`, async () => {
+    test(`validators cannot directly create new alerts of any status (${alertStatus})`, async () => {
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: "POST",
         body: { status: alertStatus },
+        query: { alertingAuthorityId: "aa" },
       });
+      await createUser({ ...users.validator, alertingAuthorityVerified: true });
       mockUserOnce(users.validator);
-      await handleAlerts(req, res);
+      await handleAlertingAuthorityAlerts(req, res);
       expect(res._getStatusCode()).toEqual(403);
     });
   });
@@ -52,9 +81,15 @@ describe("POST /api/alerts", () => {
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: "POST",
         body: { status: "PUBLISHED" },
+        query: { alertingAuthorityId: "aa" },
+      });
+
+      await createUser({
+        ...users[userType.toLowerCase()],
+        alertingAuthorityVerified: true,
       });
       mockUserOnce(users[userType.toLowerCase()]);
-      await handleAlerts(req, res);
+      await handleAlertingAuthorityAlerts(req, res);
       expect(res._getStatusCode()).toEqual(403);
     });
   });
@@ -62,6 +97,7 @@ describe("POST /api/alerts", () => {
   test("alert data must be valid", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
+      query: { alertingAuthorityId: "aa" },
       body: {
         status: "TEMPLATE",
         data: {
@@ -92,15 +128,21 @@ describe("POST /api/alerts", () => {
       },
     });
     mockUserOnce(users.admin);
-    await handleAlerts(req, res);
+    await handleAlertingAuthorityAlerts(req, res);
     expect(res._getStatusCode()).toEqual(400);
     expect((await prismaMock.alert.findMany()).length).toEqual(0);
   });
 
   test("valid alert data should be saved", async () => {
-    await createUser({ roles: ["ADMIN"], email: "admin@example.com" });
+    await createUser({
+      roles: ["ADMIN"],
+      email: "admin@example.com",
+      alertingAuthorityVerified: true,
+    });
+
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
+      query: { alertingAuthorityId: "aa" },
       body: {
         status: "TEMPLATE",
         data: {
@@ -131,7 +173,7 @@ describe("POST /api/alerts", () => {
       },
     });
     mockUserOnce(users.admin);
-    await handleAlerts(req, res);
+    await handleAlertingAuthorityAlerts(req, res);
     expect(res._getStatusCode()).toEqual(200);
     expect(JSON.parse(res._getData()).identifier).toBeTruthy();
     expect((await prismaMock.alert.findMany()).length).toEqual(1);
