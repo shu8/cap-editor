@@ -25,10 +25,6 @@ async function handleConnectToAlertingAuthority(
     );
   }
 
-  if (alertingAuthorityId === "other") {
-  } else {
-  }
-
   const alertingAuthority: AlertingAuthority | undefined =
     alertingAuthorityId === "other"
       ? {

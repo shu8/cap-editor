@@ -12,6 +12,13 @@ const mockWMOData = [
     countryCode: "GB",
     polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
   },
+  {
+    name: "Test AA",
+    id: "aa2",
+    author: "aa2@example.com",
+    countryCode: "GB",
+    polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
+  },
 ];
 
 describe("/api/alertingAuthorities", () => {
