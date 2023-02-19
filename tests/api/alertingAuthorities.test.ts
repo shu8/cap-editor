@@ -13,7 +13,7 @@ const mockWMOData = [
     polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
   },
   {
-    name: "Test AA",
+    name: "Test AA 2",
     id: "aa2",
     author: "aa2@example.com",
     countryCode: "GB",

@@ -70,7 +70,6 @@ export const users = {
 };
 
 export const createUser = async ({
-  roles = ["ADMIN"],
   email = "admin@example.com",
   name = "Foo",
   alertingAuthority = defaultAlertingAuthority,
@@ -99,7 +98,7 @@ export const createUser = async ({
           ...(!alertingAuthorityVerified && {
             alertingAuthorityVerificationToken: "token",
           }),
-          roles: roles as Role[],
+          roles: alertingAuthority.roles,
         },
       },
     },

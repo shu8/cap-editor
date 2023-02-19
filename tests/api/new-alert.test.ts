@@ -5,6 +5,7 @@ import { formatDate, getStartOfToday } from "../../lib/helpers.client";
 import handleAlertingAuthorityAlerts from "../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]";
 import { createUser, mockUserOnce, users } from "./helpers";
 import { prismaMock } from "./setup";
+import { userAgent } from "next/server";
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");
@@ -134,11 +135,7 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
   });
 
   test("valid alert data should be saved", async () => {
-    await createUser({
-      roles: ["ADMIN"],
-      email: "admin@example.com",
-      alertingAuthorityVerified: true,
-    });
+    await createUser({ ...users.admin, alertingAuthorityVerified: true });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",

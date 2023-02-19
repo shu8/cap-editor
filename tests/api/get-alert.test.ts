@@ -39,7 +39,9 @@ describe("GET /api/alerts/:id", () => {
         id: uuid,
         status: "PUBLISHED",
         userId: user.id,
+        alertingAuthorityId: "aa",
         data: mapFormAlertDataToCapSchema(
+          { name: "AA", author: "aa@example.com" },
           {
             category: ["Geo"],
             regions: {},
