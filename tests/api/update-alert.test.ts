@@ -8,6 +8,35 @@ import handleAlert from "../../pages/api/alerts/[alertId]";
 import { createAlert, createUser, mockUserOnce, users } from "./helpers";
 import { prismaMock } from "./setup";
 
+const validAlertData = {
+  status: "PUBLISHED",
+  data: {
+    category: ["Geo"],
+    regions: {},
+    from: formatDate(new Date()),
+    to: formatDate(getStartOfToday()),
+    actions: ["Prepare"],
+    certainty: "Observed",
+    severity: "Extreme",
+    urgency: "Immediate",
+    status: "Actual",
+    msgType: "Alert",
+    scope: "Public",
+    restriction: "",
+    addresses: [],
+    references: [],
+    textLanguages: {
+      en: {
+        event: "Test",
+        headline: "Test",
+        description: "Test",
+        instruction: "Test",
+        resources: [],
+      },
+    },
+  },
+};
+
 jest.mock("next-auth/react");
 jest.mock("next-auth");
 describe("PUT /api/alerts/:id", () => {
@@ -41,13 +70,85 @@ describe("PUT /api/alerts/:id", () => {
     expect(res._getStatusCode()).toEqual(401);
   });
 
-  test("editors cannot publish existing alerts", async () => {
+  test("user must be part of alert AA and verified", async () => {
+    const alert = await createAlert({ status: "TEMPLATE" });
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
-      query: { alertId: "foo" },
+      query: { alertId: alert.id },
+      body: validAlertData,
+    });
+
+    await createUser({ ...users.editor, alertingAuthorityVerified: false });
+    mockUserOnce(users.editor);
+    await handleAlert(req, res);
+    expect(res._getStatusCode()).toEqual(403);
+  });
+
+  test("user can have alert shared with them", async () => {
+    const alert = await createAlert({ status: "DRAFT" });
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "PUT",
+      query: { alertId: alert.id },
+      body: validAlertData,
+    });
+
+    const editor = await createUser({
+      roles: [],
+      email: "guest@example.com",
+      name: "Guest",
+      alertingAuthorityVerified: false,
+    });
+    await prismaMock.sharedAlert.create({
+      data: { alertId: alert.id, userId: editor.id },
+    });
+    mockUserOnce({
+      email: "guest@example.com",
+      name: "Guest",
+      image: "",
+      alertingAuthority: {},
+    });
+    await handleAlert(req, res);
+    expect(res._getStatusCode()).toEqual(403);
+  });
+
+  ["TEMPLATE", "PUBLISHED"].forEach((status) => {
+    test(`guest users cannot edit ${status} alerts`, async () => {
+      const alert = await createAlert({ status });
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "PUT",
+        query: { alertId: alert.id },
+        body: validAlertData,
+      });
+
+      const editor = await createUser({
+        roles: [],
+        email: "guest@example.com",
+        name: "Guest",
+        alertingAuthorityVerified: false,
+      });
+      await prismaMock.sharedAlert.create({
+        data: { alertId: alert.id, userId: editor.id },
+      });
+      mockUserOnce({
+        email: "guest@example.com",
+        name: "Guest",
+        image: "",
+        alertingAuthority: {},
+      });
+      await handleAlert(req, res);
+      expect(res._getStatusCode()).toEqual(410);
+    });
+  });
+
+  test("editors cannot publish existing alerts", async () => {
+    const alert = await createAlert();
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "PUT",
+      query: { alertId: alert.id },
       body: { status: "PUBLISHED" },
     });
 
+    await createUser({ ...users.editor, alertingAuthorityVerified: true });
     mockUserOnce(users.editor);
     await handleAlert(req, res);
     expect(res._getStatusCode()).toEqual(403);
@@ -60,13 +161,16 @@ describe("PUT /api/alerts/:id", () => {
       body: { status: "PUBLISHED" },
     });
 
+    await createUser({ ...users.admin, alertingAuthorityVerified: true });
     mockUserOnce(users.admin);
     await handleAlert(req, res);
     expect(res._getStatusCode()).toEqual(404);
   });
 
   test("cannot edit already-published alerts", async () => {
-    const alert = await createAlert();
+    const alert = await createAlert({
+      userDetails: { ...users.admin, alertingAuthorityVerified: true },
+    });
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { alertId: alert.id },
@@ -79,7 +183,10 @@ describe("PUT /api/alerts/:id", () => {
   });
 
   test("validators cannot edit a template", async () => {
-    const alert = await createAlert({ status: "TEMPLATE" });
+    const alert = await createAlert({
+      status: "TEMPLATE",
+      userDetails: { ...users.validator, alertingAuthorityVerified: true },
+    });
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { alertId: alert.id },
@@ -92,7 +199,10 @@ describe("PUT /api/alerts/:id", () => {
   });
 
   test("requires valid alert data", async () => {
-    const alert = await createAlert({ status: "TEMPLATE" });
+    const alert = await createAlert({
+      status: "TEMPLATE",
+      userDetails: { ...users.admin, alertingAuthorityVerified: true },
+    });
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { alertId: alert.id },
@@ -132,38 +242,14 @@ describe("PUT /api/alerts/:id", () => {
   });
 
   test("updates alert when valid data provided", async () => {
-    const alert = await createAlert({ status: "TEMPLATE" });
+    const alert = await createAlert({
+      status: "TEMPLATE",
+      userDetails: { ...users.admin, alertingAuthorityVerified: true },
+    });
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { alertId: alert.id },
-      body: {
-        status: "PUBLISHED",
-        data: {
-          category: ["Geo"],
-          regions: {},
-          from: formatDate(new Date()),
-          to: formatDate(getStartOfToday()),
-          actions: ["Prepare"],
-          certainty: "Observed",
-          severity: "Extreme",
-          urgency: "Immediate",
-          status: "Actual",
-          msgType: "Alert",
-          scope: "Public",
-          restriction: "",
-          addresses: [],
-          references: [],
-          textLanguages: {
-            en: {
-              event: "Test",
-              headline: "Test",
-              description: "Test",
-              instruction: "Test",
-              resources: [],
-            },
-          },
-        },
-      },
+      body: validAlertData,
     });
 
     mockUserOnce(users.admin);

@@ -11,33 +11,33 @@ export const mockUserOnce = (mockUserDetails) => {
   const originalModuleClient = jest.requireActual("next-auth/react") as any;
   const originalModuleServer = jest.requireActual("next-auth") as any;
 
-  if (mockUserDetails.alertingAuthority) {
-    mockUserDetails.alertingAuthorities = {
+  const userDetails = mockUserDetails ? { ...mockUserDetails } : null;
+  if (userDetails?.alertingAuthority) {
+    userDetails.alertingAuthorities = {
       [mockUserDetails.alertingAuthority.id]: mockUserDetails.alertingAuthority,
     };
+    delete userDetails.alertingAuthority;
   }
 
-  const mockSession = {
-    user: mockUserDetails,
-    expires: new Date(Date.now() + 2 * 86400).toISOString(),
-  };
-
-  if (!mockUserDetails) {
+  if (!userDetails) {
     useSession.mockReturnValueOnce({ data: null, status: "unauthenticated" });
     unstable_getServerSession.mockReturnValueOnce(null);
     return;
   }
 
+  const mockSession = {
+    user: userDetails,
+    expires: new Date(Date.now() + 2 * 86400).toISOString(),
+  };
+
   useSession.mockReturnValueOnce(
-    mockUserDetails
+    userDetails
       ? { data: mockSession, status: "authenticated" }
       : originalModuleClient.useSession
   );
 
   unstable_getServerSession.mockReturnValueOnce(
-    mockUserDetails
-      ? mockSession
-      : originalModuleServer.unstable_getServerSession
+    userDetails ? mockSession : originalModuleServer.unstable_getServerSession
   );
 };
 
@@ -45,7 +45,6 @@ const defaultAlertingAuthority = {
   id: "aa",
   name: "AA",
   countryCode: "GB",
-  roles: ["ADMIN"],
   author: "aa@example.com",
 };
 
@@ -54,22 +53,19 @@ export const users = {
     email: "editor@example.com",
     name: "Editor",
     image: "",
-    alertingAuthority: defaultAlertingAuthority,
-    roles: ["EDITOR"],
+    alertingAuthority: { ...defaultAlertingAuthority, roles: ["EDITOR"] },
   },
   validator: {
     email: "validator@example.com",
     name: "Validator",
     image: "",
-    alertingAuthority: defaultAlertingAuthority,
-    roles: ["VALIDATOR"],
+    alertingAuthority: { ...defaultAlertingAuthority, roles: ["VALIDATOR"] },
   },
   admin: {
     email: "admin@example.com",
     name: "Admin",
     image: "",
-    alertingAuthority: defaultAlertingAuthority,
-    roles: ["ADMIN"],
+    alertingAuthority: { ...defaultAlertingAuthority, roles: ["ADMIN"] },
   },
 };
 
@@ -77,12 +73,7 @@ export const createUser = async ({
   roles = ["ADMIN"],
   email = "admin@example.com",
   name = "Foo",
-  alertingAuthority = {
-    author: "aa@example.com",
-    countryCode: "GB",
-    id: "aa",
-    name: "AA",
-  },
+  alertingAuthority = defaultAlertingAuthority,
   alertingAuthorityVerified = false,
 } = {}) => {
   return await prismaMock.user.create({
@@ -115,18 +106,23 @@ export const createUser = async ({
   });
 };
 
-export const createAlert = async ({ status = "PUBLISHED" } = {}) => {
+export const createAlert = async ({
+  status = "PUBLISHED",
+  userDetails = null,
+} = {}) => {
   const future = new Date();
   future.setDate(future.getDate() + 1);
   const uuid = randomUUID();
-  const user = await createUser();
+  const user = userDetails ? await createUser(userDetails) : await createUser();
 
   return await prismaMock.alert.create({
     data: {
       id: uuid,
       status,
+      alertingAuthorityId: "aa",
       userId: user.id,
       data: mapFormAlertDataToCapSchema(
+        { name: "AA", author: "AA@example.com" },
         {
           category: ["Geo"],
           regions: {},
