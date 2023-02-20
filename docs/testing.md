@@ -12,4 +12,8 @@ To run API tests, run `pnpm test:api`. This also outputs the overall coverage.
 
 The CAP Editor component is the core component tested in the frontend due to its complexities and size.
 
-TODO: add details
+The frontend tests use [Jest](https://jestjs.io/) and the [Testing Library (React)](https://testing-library.com/).
+
+To run the frontend tests, run `pnpm test:frontend`. This also outputs the overall coverage.
+
+?> Jest coverage for React does not seem 100% accurate, so be careful when analysing the coverage report.

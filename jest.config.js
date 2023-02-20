@@ -1,6 +1,19 @@
+/** @type {import('jest').Config} */
 module.exports = {
   clearMocks: true,
-  testEnvironment: "node",
-  testMatch: ["**/tests/**/*.test.ts"],
-  setupFilesAfterEnv: ["<rootDir>/tests/api/setup.ts"],
+  projects: [
+    {
+      testEnvironment: "node",
+      testMatch: ["**/tests/api/**/*.test.ts"],
+      setupFilesAfterEnv: ["<rootDir>/tests/api/setup.ts"],
+    },
+    {
+      testEnvironment: "jsdom",
+      testMatch: ["**/tests/frontend/**/*.test.tsx"],
+      moduleNameMapper: {
+        "\\.css$": "identity-obj-proxy",
+      },
+      transformIgnorePatterns: ["/node_modules/(?!ol)/"],
+    },
+  ],
 };

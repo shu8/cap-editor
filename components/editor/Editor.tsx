@@ -16,7 +16,6 @@ import SummaryStep from "./steps/SummaryStep";
 import MetadataStep from "./steps/MetadataStep";
 import { AlertingAuthority, AlertStatus, Role } from "@prisma/client";
 import SplitButton from "../SplitButton";
-import { useRouter } from "next/router";
 import { Resource } from "../../lib/types/types";
 import { t, Trans } from "@lingui/macro";
 import { ShareOutline } from "@rsuite/icons";
@@ -28,7 +27,7 @@ export type FormAlertData = {
   // Only present if an Alert is being edited (instead of created)
   identifier?: string;
   category: string[];
-  regions: { [key: string]: number[] };
+  regions: { [key: string]: number[] | number[][] };
   from: Date | string;
   to: Date | string;
   actions: string[];
@@ -58,6 +57,7 @@ export type StepProps = {
 
 type Props = {
   onSubmit: (alertData: FormAlertData, alertStatus: AlertStatus) => void;
+  onCancel: () => void;
   onShareAlert: (email: string) => void;
   isShareable: boolean;
   defaultAlertData: FormAlertData;
@@ -67,7 +67,6 @@ type Props = {
 };
 
 export default function Editor(props: Props) {
-  const router = useRouter();
   const [step, setStep] = useState<Step>(STEPS[0]);
   const [alertData, setAlertData] = useState(props.defaultAlertData);
 
@@ -157,8 +156,6 @@ export default function Editor(props: Props) {
     isValid: () =>
       STEPS.filter((s) => s !== "summary").every((s) => steps[s].isValid()),
   };
-
-  console.log("alert data", alertData);
 
   const currentStepIndex = STEPS.indexOf(step);
   const isStepDataValid = steps[step]?.isValid() ?? false;
@@ -292,7 +289,7 @@ export default function Editor(props: Props) {
                 t`Are you sure you want to cancel editing this alert?`
               )
             ) {
-              router.push("/");
+              props.onCancel();
             }
           }}
         >
