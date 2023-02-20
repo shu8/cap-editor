@@ -26,7 +26,7 @@ To configure email, you need SMTP credentials for a mail server.
 
 You can use transactional email providers like [Mailjet](https://www.mailjet.com/), [Mailgun](https://www.mailgun.com/), [Sendgrid](https://sendgrid.com/), etc. Many of these have a free tier allowing a certain number of emails per month for free. Most of the below configuration options will be provided to you by your email provider.
 
-The [development Docker Compose](../docker-compose.yml) configuration includes [Mailhog](https://github.com/mailhog/MailHog), a dummy SMTP server that catches all outgoing emails and presents them in a user-friendly UI for ease in development.
+The [development Docker Compose](https://github.com/shu8/cap-editor/tree/main/docker-compose.yml) configuration includes [Mailhog](https://github.com/mailhog/MailHog), a dummy SMTP server that catches all outgoing emails and presents them in a user-friendly UI for ease in development.
 
 ##### `EMAIL_SERVER_HOST`
 
@@ -58,7 +58,7 @@ Example: `/tls`
 
 This is the path to the directory in which the private key for the TLS certificate used by the system is stored in.
 
-Note that when using the [production Docker Compose](../docker-compose-prod.yml) configuration, the TLS certificate is managed by Caddy, which is then read-only mounted to the host to the `./docker-volumes/caddy/data` directory. This host directory is then also read-only mounted within the Next.js container at the path `/tls`, so that the two containers can share the private key.
+Note that when using the [production Docker Compose](https://github.com/shu8/cap-editor/tree/main/docker-compose-prod.yml) configuration, the TLS certificate is managed by Caddy, which is then read-only mounted to the host to the `./docker-volumes/caddy/data` directory. This host directory is then also read-only mounted within the Next.js container at the path `/tls`, so that the two containers can share the private key.
 
 ##### `PRIVATE_KEY_FILENAME`
 

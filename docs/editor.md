@@ -1,6 +1,6 @@
 # Editor (UI)
 
-The core Editor frontend is written as the [`Editor` component](../components/editor/Editor.tsx).
+The core Editor frontend is written as the [`Editor` component](https://github.com/shu8/cap-editor/tree/main/components/editor/Editor.tsx).
 
 The Editor includes the following steps and mappings to the CAP protocol:
 

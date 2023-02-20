@@ -21,6 +21,6 @@ Other aspects of the system can be found via the navigation bar on the left.
 
 ## API
 
-This Next.js app includes various [API endpoints](https://nextjs.org/docs/api-routes/introduction) stored in the [`pages/api`](../pages/api) directory. These files are mapped to the URL `/api/*`.
+This Next.js app includes various [API endpoints](https://nextjs.org/docs/api-routes/introduction) stored in the [`pages/api`](https://github.com/shu8/cap-editor/tree/main/pages/api) directory. These files are mapped to the URL `/api/*`.
 
-!> Some endpoints have been mapped to more user-friendly URLs via the [`next.config.js`](../next.config.js) file. For example, `/feed` is internally mapped to `/api/alerts`.
+!> Some endpoints have been mapped to more user-friendly URLs via the [`next.config.js`](https://github.com/shu8/cap-editor/tree/main/next.config.js) file. For example, `/feed` is internally mapped to `/api/alerts`.

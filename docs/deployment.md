@@ -11,7 +11,7 @@
 
    !> Make sure you [configure the system entirely](./configuration.md).
 
-3. Start the Docker containers using the [`docker-compose-prod.yml`](../docker-compose-prod.yml) configuration:
+3. Start the Docker containers using the [`docker-compose-prod.yml`](https://github.com/shu8/cap-editor/tree/main/docker-compose-prod.yml) configuration:
 
    ```bash
    docker-compose -f docker-compose-prod.yml up -d --build
