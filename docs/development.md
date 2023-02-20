@@ -13,6 +13,8 @@
 
 2. Create a [`.env`](./.env) file based on the [`.env.example`](./.env.example) file
 
+   !> Make sure you [configure the system entirely](./configuration.md).
+
 3. Start the Docker containers (the development configuration at [`./docker-compose.yml`](./docker-compose.yml) includes [Mailhog](https://github.com/mailhog/MailHog), a fake SMTP server for easier development)
 
 ```bash

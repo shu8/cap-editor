@@ -12,7 +12,6 @@ In the below architecture diagram, the _feed server_ is this Next.js app.
 
 For more details about:
 
-- the CAP Editor (backend), see the [API](./api.md) documentation
 - the CAP Editor (UI), see the [Editor](./editor.md) documentation
 - development, see the [Development](./development.md) documentation
 - deployment, see the [Deployment](./deployment.md) documentation
@@ -20,10 +19,8 @@ For more details about:
 
 Other aspects of the system can be found via the navigation bar on the left.
 
-## Learn More
+## API
 
-To learn more about Next.js, take a look at the following resources:
+This Next.js app includes various [API endpoints](https://nextjs.org/docs/api-routes/introduction) stored in the [`pages/api`](../pages/api) directory. These files are mapped to the URL `/api/*`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+!> Some endpoints have been mapped to more user-friendly URLs via the [`next.config.js`](../next.config.js) file. For example, `/feed` is internally mapped to `/api/alerts`.

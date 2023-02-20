@@ -2,11 +2,20 @@
 
 ## Overview
 
-Deployment is the same as the development steps, however step 4 is not required as the Next.js app will be built and run as a Docker Container when using the [`./docker-compose-prod.yml`](./docker-compose-prod.yml) configuration:
+1. Ensure you have the following dependencies installed:
 
-```bash
-docker-compose -f docker-compose-prod.yml up -d --build
-```
+- Docker
+- Docker Compose
+
+2. Create a [`.env`](./.env) file based on the [`.env.example`](./.env.example) file
+
+   !> Make sure you [configure the system entirely](./configuration.md).
+
+3. Start the Docker containers using the [`docker-compose-prod.yml`](../docker-compose-prod.yml) configuration:
+
+   ```bash
+   docker-compose -f docker-compose-prod.yml up -d --build
+   ```
 
 [Caddy](https://caddyserver.com/) is used as a web server and reverse proxy in the production configuration. The platform will be accessible on port 80 (redirected to HTTPS) and 443, so these ports must be whitelisted in any firewalls.
 
