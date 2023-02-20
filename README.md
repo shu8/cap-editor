@@ -1,6 +1,6 @@
 # CAP Editor
 
-<img src="./.github/cap-logo.gif" align="right"
+<img src="./docs/images/cap-logo.gif" align="right"
      alt="Common Alerting Protocol logo" width="150" height="60">
 
 The CAP Editor is a web-based platform for creating, reviewing, managing, and publishing [CAP v1.2](http://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2-os.html)-formatted emergency and hazard alerts.
@@ -23,13 +23,13 @@ Features:
 Dashboard:
 
 <p align="center">
-  <img src="./.github/dashboard.png" alt="Dashboard" width="80%">
+  <img src="./docs/images/dashboard.png" alt="Dashboard" width="80%">
 </p>
 
 Editor:
 
 <p align="center">
-  <img src="./.github/editor.png" alt="CAP Editor" width="80%" align="center">
+  <img src="./docs/images/editor.png" alt="CAP Editor" width="80%" align="center">
 </p>
 
 ## Usage
@@ -43,7 +43,7 @@ This is a [Next.js](https://nextjs.org/) project.
 In the below architecture diagram, the _feed server_ is this Next.js app.
 
 <p align="center">
-  <img src="./.github/architecture.png" alt="System Architecture" width="80%" align="center">
+  <img src="./docs/images/architecture.png" alt="System Architecture" width="80%" align="center">
 </p>
 
 ## Development
