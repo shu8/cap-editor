@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 import MIMEType from "whatwg-mimetype";
 
@@ -7,7 +7,7 @@ import { withErrorHandler } from "../../lib/apiErrorHandler";
 import { authOptions } from "./auth/[...nextauth]";
 
 async function handleGetMimeType(req: NextApiRequest, res: NextApiResponse) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   if (!session) throw new ApiError(401, "You are not logged in");
 
   const { url } = req.query;

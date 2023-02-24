@@ -1,7 +1,7 @@
 import { t, Trans } from "@lingui/macro";
 import { AlertStatus } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -47,11 +47,7 @@ const redirect = (url: string) => ({
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) return redirect("/login");
 
   // First, check if user wants to edit an alert through /editor/ID

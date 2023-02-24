@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
 import { withErrorHandler } from "../../lib/apiErrorHandler";
@@ -14,7 +14,7 @@ async function handleGetWhatNowMessages(
     throw new ApiError(400, "You did not supply a country code");
   }
 
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   if (!session) throw new ApiError(403, "You are not logged in");
 
   const redisKey = `whatnow:${req.query.countryCode}`;

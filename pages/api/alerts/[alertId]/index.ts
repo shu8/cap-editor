@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
 import { FormAlertData } from "../../../../components/editor/Editor";
@@ -26,7 +26,7 @@ async function handleUpdateAlert(
     throw new ApiError(400, "You did not provide a valid alert status");
   }
 
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   if (!session) throw new ApiError(401, "You are not logged in");
 
   const alert = await prisma.alert.findFirst({

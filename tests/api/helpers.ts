@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { jest } from "@jest/globals";
 import { prismaMock } from "./setup";
 import { randomUUID } from "crypto";
@@ -21,7 +21,7 @@ export const mockUserOnce = (mockUserDetails) => {
 
   if (!userDetails) {
     useSession.mockReturnValueOnce({ data: null, status: "unauthenticated" });
-    unstable_getServerSession.mockReturnValueOnce(null);
+    getServerSession.mockReturnValueOnce(null);
     return;
   }
 
@@ -36,8 +36,8 @@ export const mockUserOnce = (mockUserDetails) => {
       : originalModuleClient.useSession
   );
 
-  unstable_getServerSession.mockReturnValueOnce(
-    userDetails ? mockSession : originalModuleServer.unstable_getServerSession
+  getServerSession.mockReturnValueOnce(
+    userDetails ? mockSession : originalModuleServer.getServerSession
   );
 };
 

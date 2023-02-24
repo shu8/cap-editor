@@ -1,7 +1,7 @@
 import { t, Trans } from "@lingui/macro";
 import { startRegistration } from "@simplewebauthn/browser";
 import { GetServerSideProps } from "next";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { Button, Message, Panel } from "rsuite";
@@ -92,11 +92,7 @@ export default function SettingsPage() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) {
     return { redirect: { destination: "/login", permanent: false } };
   }

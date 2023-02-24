@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
 import { FormAlertData } from "../../../../components/editor/Editor";
@@ -17,7 +17,7 @@ async function handleNewAlert(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   if (!session) throw new ApiError(401, "You are not logged in");
 
   if (!["TEMPLATE", "PUBLISHED", "DRAFT"].includes(req.body.status)) {
@@ -88,7 +88,7 @@ async function handleGetAlerts(
 
   // JSON returns all alerts, unsigned, inc. draft and template, as long as you are logged in
   if (json) {
-    const session = await unstable_getServerSession(req, res, authOptions);
+    const session = await getServerSession(req, res, authOptions);
     if (!session) throw new ApiError(403, "You are not logged in");
 
     if (!session.user.alertingAuthorities[alertingAuthorityId]) {

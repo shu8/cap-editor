@@ -4,7 +4,7 @@ import {
 } from "@simplewebauthn/server";
 import { randomBytes } from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
 import { withErrorHandler } from "../../../../lib/apiErrorHandler";
@@ -114,7 +114,7 @@ async function handleUserRegistration(
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   if (!session?.user) throw new ApiError(401, "You are not logged in");
 
   if (req.method === "GET") {
