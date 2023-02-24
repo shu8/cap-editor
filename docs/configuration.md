@@ -66,13 +66,13 @@ Example: `example.com.key`
 
 This is the filename of the private key for the TLS certificate used by the system.
 
-##### `WEBAUTHN_RELAYING_PARTY_NAME`
+##### `WEBAUTHN_RELYING_PARTY_NAME`
 
 Example: `CAP Editor`
 
 This should represent the name of the application. If it is a specific deployment of the CAP Editor, this should be included.
 
-##### `WEBAUTHN_RELAYING_PARTY_ID`
+##### `WEBAUTHN_RELYING_PARTY_ID`
 
 Example: `example.com`
 

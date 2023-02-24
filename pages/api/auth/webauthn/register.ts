@@ -33,8 +33,8 @@ async function handleGetUserRegistrationOptions(
 
   const userWebauthnId = randomBytes(32).toString("hex");
   const options = generateRegistrationOptions({
-    rpID: process.env.WEBAUTHN_RELAYING_PARTY_ID,
-    rpName: process.env.WEBAUTHN_RELAYING_PARTY_NAME,
+    rpID: process.env.WEBAUTHN_RELYING_PARTY_ID,
+    rpName: process.env.WEBAUTHN_RELYING_PARTY_NAME,
     userID: userWebauthnId,
     userName: session.user.name as string,
     attestationType: "none",
@@ -78,7 +78,7 @@ async function handleUserRegistration(
 
   const { verified, registrationInfo } = await verifyRegistrationResponse({
     credential,
-    expectedRPID: process.env.WEBAUTHN_RELAYING_PARTY_ID,
+    expectedRPID: process.env.WEBAUTHN_RELYING_PARTY_ID,
     expectedOrigin: process.env.WEBAUTHN_ORIGIN,
     expectedChallenge: challenge,
     requireUserVerification: true,

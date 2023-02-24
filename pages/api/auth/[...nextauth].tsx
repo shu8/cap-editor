@@ -114,7 +114,7 @@ export const authOptions: AuthOptions = {
               credential,
               expectedChallenge: expectedChallenge,
               expectedOrigin: process.env.WEBAUTHN_ORIGIN,
-              expectedRPID: process.env.WEBAUTHN_RELAYING_PARTY_ID,
+              expectedRPID: process.env.WEBAUTHN_RELYING_PARTY_ID,
               authenticator: user.Authenticators[0],
               requireUserVerification: true,
             });
