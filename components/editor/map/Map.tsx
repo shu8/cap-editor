@@ -226,7 +226,6 @@ export default function Map({
         if (selectedFeaturesSource.hasFeature(feature)) return;
 
         // Don't show hover colour for features not inside user's AA
-        // TODO also do this for selection
         if (
           !alertingAuthorityRegion
             .getGeometry()

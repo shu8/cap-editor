@@ -100,7 +100,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     // and that they have permission to create an alert for that AA.
     let alertingAuthorityId = context.query?.alertingAuthority;
 
-    // If the AA hasnt't been specified as ?alertingAuthority query param
+    // If the AA hasn't been specified as ?alertingAuthority query param
     // but the user only has one AA, then by-default, choose this one
     if (typeof alertingAuthorityId !== "string") {
       const userAlertingAuthorities = Object.keys(
@@ -108,7 +108,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       );
       if (userAlertingAuthorities.length === 1) {
         alertingAuthorityId = userAlertingAuthorities[0];
-        // TODO can we also append the AA id as query param to the URL anyway?
       } else {
         return { props: {} };
       }

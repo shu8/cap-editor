@@ -73,7 +73,8 @@ async function handleConnectToAlertingAuthority(
     },
   });
 
-  // TODO what if the registering user _is_ the AA author? skip this step?
+  // Note: if the registering user is the same as the author, they will still receive
+  //  a verification email (as the AA author), where they can assign their own roles
   await sendEmail({
     subject: `New user registered for ${alertingAuthority.name}`,
     to: alertingAuthority.author,
