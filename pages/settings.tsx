@@ -47,8 +47,9 @@ export default function SettingsPage() {
                     <Message type="success" duration={0} closable>
                       <Trans>
                         This device has been successfully registered for
-                        WebAuthn authentication.
+                        WebAuthn authentication
                       </Trans>
+                      .
                     </Message>
                   );
                 } else {

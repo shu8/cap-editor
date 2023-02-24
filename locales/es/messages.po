@@ -13,192 +13,221 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: pages/verify.tsx:200
+msgid "<0>If you believe there is already an appropriate Alerting Authority within the WMO Register of Alerting Authorities</0>, please choose the \"No\" option below and ask the user to connect to the correct Alerting Authority."
+msgstr ""
+
 #: pages/auth/verify-request.tsx:22
 msgid "A sign in link has been sent to your email address."
 msgstr "Un link para conectarse ha sido enviado a su dirección email."
 
-#: pages/verify.tsx:76
+#: pages/verify.tsx:87
 msgid "Account successfully verified"
 msgstr "Cuenta verificada con éxito"
 
 #: pages/verify.tsx:131
-msgid "Activate this user's account"
-msgstr "Activar la cuenta de este usuario"
+#~ msgid "Activate this user's account"
+#~ msgstr "Activar la cuenta de este usuario"
 
-#: components/editor/LanguageTabs.tsx:107
+#: components/editor/LanguageTabs.tsx:108
 msgid "Add another language?"
 msgstr "¿Quiere agregar otro lenguaje?"
 
-#: components/editor/LanguageTabs.tsx:69
+#: components/editor/LanguageTabs.tsx:70
 msgid "Add language"
 msgstr "Agregar lenguaje"
 
-#: components/editor/ResourceModal.tsx:39
+#: components/editor/ResourceModal.tsx:41
 msgid "Add resource"
 msgstr "Agregar recurso"
 
-#: components/editor/steps/MetadataStep.tsx:119
+#: components/editor/steps/MetadataStep.tsx:121
 msgid "Addresses"
 msgstr "Dirigida a"
 
-#: pages/verify.tsx:112
+#: pages/verify.tsx:145
 msgid "Admin"
 msgstr "Administrador"
 
-#: components/editor/Editor.tsx:222
+#: components/editor/Editor.tsx:240
 msgid "Alert ID"
 msgstr "ID de la alerta"
 
-#: components/RegisterForm.tsx:81
-msgid "Alerting Authority"
-msgstr "Autoridad de Alerta"
+#: pages/editor/[[...alertId]].tsx:361
+msgid "Alert successfully submitted."
+msgstr ""
 
-#: components/editor/Editor.tsx:272
+#: components/RegisterForm.tsx:81
+#~ msgid "Alerting Authority"
+#~ msgstr "Autoridad de Alerta"
+
+#: pages/editor/[[...alertId]].tsx:323
+msgid "An invitation email to collaborate on this Alert has been sent."
+msgstr ""
+
+#: pages/verify.tsx:164
+msgid "Approve this user"
+msgstr ""
+
+#: components/editor/Editor.tsx:290
 msgid "Are you sure you want to cancel editing this alert?"
 msgstr "¿Está seguro(a) que quiere cancelar la edición de esta alerta?"
 
-#: components/editor/LanguageTabs.tsx:92
+#: components/editor/LanguageTabs.tsx:93
 msgid "Are you sure you want to delete this language and all its contents?"
 msgstr "¿Está seguro(a) que quiere cancelar la alerta en este lenguaje y todo su contenido?"
 
-#: components/editor/Editor.tsx:279
-#: components/editor/LanguageTabs.tsx:51
-#: components/editor/ResourceModal.tsx:103
-#: pages/verify.tsx:124
+#: components/editor/Editor.tsx:297
+#: components/editor/LanguageTabs.tsx:52
+#: components/editor/ResourceModal.tsx:105
+#: pages/verify.tsx:157
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: components/editor/SeverityCertaintyMatrix.tsx:37
+#: components/editor/SeverityCertaintyMatrix.tsx:36
 msgid "Certainty"
 msgstr "Certidumbre"
 
-#: components/editor/steps/CategoryStep.tsx:25
+#: components/editor/steps/CategoryStep.tsx:26
 msgid "Chemical, Biological, Radiological, Nuclear or High-Yield Explosive threat or attack"
 msgstr "Químico, Biológico, Radiológico, Nuclear, Amenaza o ataque explosivo de alto rendimiento"
 
-#: components/editor/steps/CategoryStep.tsx:38
+#: components/editor/steps/CategoryStep.tsx:39
 msgid "Choose a category (or multiple) for the alert."
 msgstr "Seleccione una (o varias) categorías para esta alerta."
 
-#: components/editor/steps/TextStep.tsx:206
+#: components/editor/LanguageTabs.tsx:30
+#: components/editor/LanguageTabs.tsx:35
+msgid "Choose a language"
+msgstr ""
+
+#: components/editor/steps/TextStep.tsx:209
 msgid "Choose event to auto-fill from WhatNow?"
 msgstr "Elija un evento para auto-llenar contenido desde la plataforma WhatNow"
 
 #: components/editor/LanguageTabs.tsx:29
-msgid "Choose language"
-msgstr "Elija el lenguaje"
+#~ msgid "Choose language"
+#~ msgstr "Elija el lenguaje"
 
-#: components/editor/steps/MapStep.tsx:37
+#: components/editor/steps/MapStep.tsx:39
 msgid "Choose the location of the alert, by either selecting from the dropdown menu, clicking the map, or using the drawing tool."
 msgstr "Elija la ubicación de la alerta, ya sea seleccionando un area desde el menú desplegable, haciendo click en el mapa, o utilizando la herramienta de dibujo."
 
-#: components/editor/steps/DataStep.tsx:86
+#: components/editor/steps/DataStep.tsx:123
 msgid "Choose the recommended actions for the audience of the alert, using the dropdown menu."
 msgstr "Elija las acciones recomendadas para la audiencia de las alertas, usando el menú desplegable."
 
-#: components/editor/steps/DataStep.tsx:57
+#: components/editor/steps/DataStep.tsx:58
 msgid "Choose the severity (function of impact/intensity and certainty) and urgency level of the alert, by either selecting from the dropdown menu or by clicking the corresponding level in the matrix and slider."
 msgstr "Elija la severidad (función de el impacto/intensidad y la certidumbre) y el nivel de urgencia de la alerta, sea seleccionando del menú desplegable o haciendo click en el nivel correspondiente en la matriz y en el control deslizante."
 
-#: components/Header.tsx:30
+#: components/editor/Editor.tsx:223
+msgid "Collaborate on this alert with someone"
+msgstr ""
+
+#: components/ConnectToAlertingAuthorityForm.tsx:120
+msgid "Connect to Alerting Authority"
+msgstr ""
+
+#: components/Header.tsx:37
 msgid "Create alert"
 msgstr "Crear una alerta"
 
-#: components/editor/LanguageTabs.tsx:88
+#: components/editor/LanguageTabs.tsx:89
 msgid "Delete language?"
 msgstr "¿Eliminar el lenguaje?"
 
-#: components/editor/steps/TextStep.tsx:54
+#: components/editor/steps/TextStep.tsx:57
 msgid "Delete?"
 msgstr "¿Eliminar?"
 
-#: components/editor/steps/TextStep.tsx:201
+#: components/editor/steps/TextStep.tsx:204
 msgid "Description"
 msgstr "Descripción"
 
-#: components/editor/steps/MetadataStep.tsx:163
+#: components/editor/steps/MetadataStep.tsx:165
 msgid "Does this Alert reference any previous Alerts?"
 msgstr "¿Esta alerta hace referencia a alertas previas?"
 
-#: components/Alert.tsx:65
-#: components/editor/Editor.tsx:218
+#: components/Alert.tsx:86
+#: components/editor/Editor.tsx:220
 msgid "Edit alert"
 msgstr "Modificar la alerta"
 
-#: pages/verify.tsx:113
+#: pages/verify.tsx:146
 msgid "Editor"
 msgstr "Editor"
 
 #: components/AuthenticateForm.tsx:22
-#: components/RegisterForm.tsx:69
-#: pages/verify.tsx:164
+#: components/RegisterForm.tsx:64
+#: pages/verify.tsx:225
 msgid "Email"
 msgstr "Correo Electrónico"
 
-#: components/Alert.tsx:86
+#: components/Alert.tsx:108
 msgid "Expires"
 msgstr "Expira"
 
-#: components/editor/steps/CategoryStep.tsx:16
+#: components/editor/steps/CategoryStep.tsx:17
 msgid "Fire supression & rescue"
 msgstr "Extinción de incendios y rescate"
 
-#: components/editor/steps/CategoryStep.tsx:10
+#: components/editor/steps/CategoryStep.tsx:11
 msgid "General emergency & public safety"
 msgstr "Emergencia general y seguridad pública"
 
-#: components/editor/steps/CategoryStep.tsx:8
+#: components/editor/steps/CategoryStep.tsx:9
 msgid "Geophysical (e.g., landslide)"
 msgstr "Geofísico (por ejemplo, derrumbe)"
 
-#: components/editor/steps/TextStep.tsx:185
+#: components/editor/steps/TextStep.tsx:188
 msgid "Headline"
 msgstr "Título"
 
-#: components/editor/steps/TextStep.tsx:268
+#: components/editor/steps/TextStep.tsx:271
 msgid "If necessary, add links to resources (in {0}) that offer complementary, non-essential information to the alert."
 msgstr "Si necesario, agregue links a recursos (en {0}) que ofrezcan información complementaria, no esencial a la alerta."
 
-#: components/editor/SeverityCertaintyMatrix.tsx:88
+#: components/editor/SeverityCertaintyMatrix.tsx:87
 msgid "Impact/Intensity"
 msgstr "Impacto / Intensidad"
 
-#: components/Header.tsx:66
-#: components/editor/LanguageTabs.tsx:35
-#: components/editor/LanguageTabs.tsx:76
+#: components/LanguageSelector.tsx:11
+#: components/editor/LanguageTabs.tsx:36
+#: components/editor/LanguageTabs.tsx:77
 msgid "Language"
 msgstr "Lenguaje"
 
-#: components/editor/steps/CategoryStep.tsx:12
+#: components/editor/steps/CategoryStep.tsx:13
 msgid "Law enforcement, military, homeland & local/private security"
 msgstr ""
 
-#: components/editor/steps/TextStep.tsx:265
+#: components/editor/steps/TextStep.tsx:268
 msgid "Link to external resources"
 msgstr "Link a recursos externos"
 
-#: pages/index.tsx:84
+#: pages/index.tsx:99
 msgid "Loading alerts..."
 msgstr "Cargando las alertas ..."
 
 #: components/AuthenticateForm.tsx:10
-#: components/Header.tsx:93
+#: components/Header.tsx:79
 msgid "Login"
 msgstr "Conectarse"
 
-#: components/Header.tsx:50
+#: components/Header.tsx:57
 msgid "Logout"
 msgstr "Desconectyarse"
 
-#: components/editor/steps/CategoryStep.tsx:17
+#: components/editor/steps/CategoryStep.tsx:18
 msgid "Medical & public health"
 msgstr "Salud médica y salud pública"
 
-#: components/editor/steps/MetadataStep.tsx:59
+#: components/editor/steps/MetadataStep.tsx:61
 msgid "Message type"
 msgstr "Tipo de mensaje"
 
-#: components/editor/steps/CategoryStep.tsx:9
+#: components/editor/steps/CategoryStep.tsx:10
 msgid "Meteorological (inc. flood)"
 msgstr "Metereológico (inc. inundación)"
 
@@ -223,12 +252,13 @@ msgstr "Metereológico (inc. inundación)"
 msgid "NONE"
 msgstr "NADA"
 
-#: components/RegisterForm.tsx:62
-#: pages/verify.tsx:161
+#: components/RegisterForm.tsx:57
+#: components/UpdatePersonalDetailsForm.tsx:51
+#: pages/verify.tsx:222
 msgid "Name"
 msgstr "Nombre"
 
-#: components/editor/Editor.tsx:218
+#: components/editor/Editor.tsx:220
 msgid "New alert"
 msgstr "Nueva alerta"
 
@@ -236,15 +266,15 @@ msgstr "Nueva alerta"
 msgid "Next"
 msgstr "Siguiente"
 
-#: pages/index.tsx:109
+#: pages/index.tsx:124
 msgid "No alerts"
 msgstr "Sin alertas"
 
-#: pages/verify.tsx:174
+#: pages/verify.tsx:235
 msgid "No, this user is not a part of my Alerting Authority:<0/>Do not activate their account."
 msgstr "No, este usuario no hace parte de mi agencia (Autoridad de Alerta): <0 /> No activar su cuenta."
 
-#: components/editor/steps/CategoryStep.tsx:28
+#: components/editor/steps/CategoryStep.tsx:29
 msgid "Other"
 msgstr "Otro"
 
@@ -252,149 +282,186 @@ msgstr "Otro"
 msgid "Please check your email"
 msgstr "Por favor consultar su correo electrónico"
 
-#: components/editor/LanguageTabs.tsx:59
+#: components/editor/LanguageTabs.tsx:60
 msgid "Please choose a language to add"
 msgstr "Por favor seleccione un lenguaje a agregar"
 
-#: components/editor/Editor.tsx:178
+#: components/ConnectToAlertingAuthorityForm.tsx:65
+msgid "Please choose the 'Other' option if your Alerting Authority is not listed. In this case, your request will be sent to an IFRC contact for approval."
+msgstr ""
+
+#: pages/editor/[[...alertId]].tsx:268
+msgid "Please choose which Alerting Authority you wish to create an alert for:"
+msgstr ""
+
+#: components/editor/Editor.tsx:180
 msgid "Please complete the details first"
 msgstr "Por favor complete los detalles primero"
 
-#: components/editor/steps/MetadataStep.tsx:108
+#: components/editor/steps/MetadataStep.tsx:110
 msgid "Please describe the rule for limiting the distribution of this <0>Restricted</0> Alert."
 msgstr "Por favor describa la regla para limitar la distribución de la Alerta <0> Restringida </0>."
 
-#: components/editor/ResourceModal.tsx:50
+#: pages/verify.tsx:120
+msgid "Please enter the name of this new IFRC-managed 'Alerting Authority'"
+msgstr ""
+
+#: pages/editor/[[...alertId]].tsx:252
+msgid "Please login"
+msgstr ""
+
+#: components/editor/ResourceModal.tsx:52
 msgid "Please provide a description of the resource"
 msgstr "Por favor provea de una descripción al recurso"
 
-#: components/editor/ResourceModal.tsx:53
+#: components/editor/ResourceModal.tsx:55
 msgid "Please provide a valid URL of the resource"
 msgstr "Por favor provea una URL válida"
 
-#: components/editor/ResourceModal.tsx:60
+#: components/editor/ResourceModal.tsx:62
 msgid "Please provide a valid description and URL"
 msgstr "Por favor provea una descripción y una URL válida"
 
-#: components/editor/steps/MetadataStep.tsx:132
+#: components/editor/steps/MetadataStep.tsx:134
 msgid "Please provide the IDs/addresses of the intended recipients of this <0>Private</0> Alert."
 msgstr "Por favor provea los IDs/direcciones de los destinatarios provistos de esta Alerta <0> Privada </0>."
+
+#: pages/settings.tsx:82
+msgid "Please provide your name (above) before connecting to your Alerting Authority"
+msgstr ""
 
 #: components/editor/steps/SummaryStep.tsx:45
 msgid "Please review and confirm the alert's information presented below."
 msgstr "Por favor revisar y confirmar la información de la alerta presentada abajo."
 
-#: pages/verify.tsx:102
+#: pages/verify.tsx:135
 msgid "Please select the role(s) for this user"
 msgstr "Por favor seleccionar el(los) rol(es) para este usuario"
 
-#: components/editor/steps/CategoryStep.tsx:18
+#: components/ConnectToAlertingAuthorityForm.tsx:57
+msgid "Please use the form below to connect to Alerting Authorities that you are part of. Your request will be sent to your Alerting Authority for approval."
+msgstr ""
+
+#: components/editor/steps/CategoryStep.tsx:19
 msgid "Pollution & other environmental"
 msgstr "Polución y otras cuestiones medioambientales"
 
-#: components/editor/steps/CategoryStep.tsx:19
+#: components/editor/steps/CategoryStep.tsx:20
 msgid "Public & private transportation"
 msgstr "Transporte público y privado"
 
-#: components/editor/Editor.tsx:199
+#: components/editor/Editor.tsx:201
 msgid "Publish alert now"
 msgstr "Publicar alerta ahora"
 
-#: components/editor/steps/DataStep.tsx:83
+#: components/editor/steps/DataStep.tsx:120
 msgid "Recommended Actions"
 msgstr "Acciones Recomendadas"
 
-#: components/editor/steps/MetadataStep.tsx:142
+#: components/editor/steps/MetadataStep.tsx:144
 msgid "References"
 msgstr "Referencias"
 
-#: components/Header.tsx:84
-#: components/RegisterForm.tsx:119
+#: components/Header.tsx:70
+#: components/RegisterForm.tsx:76
 msgid "Register"
 msgstr "Registrarse"
 
-#: pages/index.tsx:71
+#: pages/index.tsx:86
 msgid "Register with your Alerting Authority"
 msgstr "Registrarse con su agencia (Autoridad de Alerta)I"
 
-#: components/RegisterForm.tsx:48
-msgid "Registration successful. You will receive an email once your Alerting Authority has approved your account."
-msgstr "Inscripción exitosa. Usted recibirá un e-mail una vez que su agencia (Autoridad de Alerta) apruebe su cuenta."
+#: components/RegisterForm.tsx:43
+msgid "Registration successful. You can now <0>login</0>."
+msgstr ""
 
-#: components/editor/steps/CategoryStep.tsx:15
+#: components/RegisterForm.tsx:48
+#~ msgid "Registration successful. You will receive an email once your Alerting Authority has approved your account."
+#~ msgstr "Inscripción exitosa. Usted recibirá un e-mail una vez que su agencia (Autoridad de Alerta) apruebe su cuenta."
+
+#: components/editor/steps/CategoryStep.tsx:16
 msgid "Rescue & recovery"
 msgstr "Rescate y Recuperación"
 
-#: components/editor/steps/MetadataStep.tsx:99
+#: components/editor/steps/MetadataStep.tsx:101
 msgid "Restriction"
 msgstr "Restricción"
 
-#: components/editor/ResourceModal.tsx:106
+#: components/UpdatePersonalDetailsForm.tsx:58
+#: components/editor/ResourceModal.tsx:108
 msgid "Save"
 msgstr "Guardar"
 
-#: components/editor/Editor.tsx:201
+#: components/editor/Editor.tsx:203
 msgid "Save as"
 msgstr "Guardar como"
 
-#: components/editor/steps/MetadataStep.tsx:74
+#: components/editor/steps/MetadataStep.tsx:76
 msgid "Scope"
 msgstr "Alcance"
 
 #: components/editor/LanguageTabs.tsx:34
-msgid "Select a language"
-msgstr "Seleccione un lenguaje"
+#~ msgid "Select a language"
+#~ msgstr "Seleccione un lenguaje"
 
-#: pages/verify.tsx:109
+#: pages/verify.tsx:142
 msgid "Select role(s): Admin/Editor/Validator"
 msgstr "Seleccione un(os) rol(es): administrador / editor / validador"
 
-#: components/editor/steps/DataStep.tsx:33
+#: components/editor/steps/DataStep.tsx:34
 msgid "Select the start and end time of the alert from the calendar."
 msgstr "Seleccione la hora de comienzo y de fin de la alerta desde el calendario."
 
-#: components/Alert.tsx:84
+#: components/Alert.tsx:106
 msgid "Sent"
 msgstr "Enviado"
 
-#: components/Header.tsx:40
-#: pages/settings.tsx:21
+#: components/Header.tsx:47
+#: pages/settings.tsx:27
 msgid "Settings"
 msgstr "Ajustes"
 
-#: components/editor/steps/DataStep.tsx:54
+#: components/editor/steps/DataStep.tsx:55
 msgid "Severity, Certainty, & Urgency"
 msgstr "Severidad, Certidumbre & Urgencia"
 
-#: components/editor/steps/MetadataStep.tsx:44
+#: components/editor/steps/MetadataStep.tsx:46
 msgid "Status"
 msgstr "Status"
 
-#: pages/index.tsx:61
+#: pages/index.tsx:76
 msgid "The CAP Editor tool allows you to create public hazard and emergency alerts and immediately publish them to an XML-based feed."
 msgstr "La herramienta CAP Editor le permite crear alertas públicas de riesgos y emergencias e inmediatamente publicarlas a un feed basado en XML."
 
-#: pages/verify.tsx:151
+#: pages/index.tsx:148
+msgid "The folllowing alerts have been shared with you to collaborate on"
+msgstr ""
+
+#: pages/verify.tsx:211
 msgid "The following user has requested to register with the CAP Editor. Please confirm they are part of your Alerting Authority (<0>{0}</0>) to enable their account."
 msgstr "El usuario siguiente a solicitado inscribirse en el CAP Editor. Por favor confirmar que este usuario es parte de su agencia (Autoridad de Alerta) (<0> {0} </0>) para activar su cuenta."
+
+#: pages/verify.tsx:185
+msgid "The following user has requested to register with the CAP Editor. They have been unable to locate their Alerting Authority in the <0>WMO Register of Alerting Authorities</0> so have requested their account be manually verified by the IFRC."
+msgstr ""
 
 #: components/ErrorMessage.tsx:15
 msgid "There was an error"
 msgstr "Hubo un error"
 
-#: components/editor/ResourceModal.tsx:16
+#: components/editor/ResourceModal.tsx:18
 msgid "There was an error accessing this resource. It may be currently unavailable."
 msgstr "Hubo un error accediendo a este recurso. Puede estar momentaneamente indisponible."
 
-#: pages/index.tsx:90
+#: pages/index.tsx:105
 msgid "There was an error loading the alerts"
 msgstr "Hubo un error cargando las alertas"
 
-#: pages/auth/login.tsx:61
+#: pages/auth/login.tsx:58
 msgid "There was an error logging in. Please try again later or contact your administrator if the issue persists."
 msgstr "Hubo un error en la conexión. Por favor ensaye más tarde o contacte a su administrador si el problema persiste."
 
-#: pages/error/index.tsx:13
+#: pages/error/index.tsx:12
 msgid "There was an error logging in. Your token may have expired"
 msgstr "Hubo un error en la conexión. Su token puede haver expirado."
 
@@ -403,106 +470,124 @@ msgid "There was an error {action}. Please try again later or contact your admin
 msgstr "Hubo un error {Action}. Por favor ensaye más tarde o contacte a su administrador si el problema persiste."
 
 #: pages/error/[errorName].tsx:19
-msgid "There was an unexpected error. Please try again"
-msgstr "Hubo un error inesperado. Por favor intente de nuevo"
+#~ msgid "There was an unexpected error. Please try again"
+#~ msgstr "Hubo un error inesperado. Por favor intente de nuevo"
 
-#: pages/error/index.tsx:24
+#: pages/error/[errorName].tsx:19
+#: pages/error/index.tsx:23
 msgid "There was an unexpected error. Please try again later or contact your administrator if the issue persists"
 msgstr "Hubo un error inesperado. Por favor ensaye más tarde o contacte a su administrador si el problema persiste."
 
-#: pages/settings.tsx:41
-msgid "This device has been successfully registered for WebAuthn authentication."
-msgstr "Este dispositivo ha sido registrado exitosamente por la autenticación WebAuthn."
+#: pages/settings.tsx:48
+msgid "This device has been successfully registered for WebAuthn authentication"
+msgstr ""
 
-#: components/editor/Editor.tsx:201
+#: pages/settings.tsx:41
+#~ msgid "This device has been successfully registered for WebAuthn authentication."
+#~ msgstr "Este dispositivo ha sido registrado exitosamente por la autenticación WebAuthn."
+
+#: components/editor/Editor.tsx:203
 msgid "Update"
 msgstr "Refrescar"
 
-#: components/Alert.tsx:77
+#: components/Alert.tsx:97
 msgid "Use as template for new alert"
 msgstr "Usar como plantilla para una nueva alerta"
 
-#: pages/verify.tsx:97
+#: pages/verify.tsx:113
 msgid "User Roles"
 msgstr "Roles de usuario"
 
-#: components/editor/steps/CategoryStep.tsx:21
+#: components/editor/steps/CategoryStep.tsx:22
 msgid "Utility, telecommunication & other non-transport infrastructure"
 msgstr "Servicios públicos, telecomunicaciones y otras infraestructuras no relacionadas con el transporte"
 
-#: pages/verify.tsx:114
+#: pages/verify.tsx:147
 msgid "Validator"
 msgstr "Validador"
 
-#: pages/verify.tsx:144
+#: pages/verify.tsx:177
 msgid "Verify User"
 msgstr "Verificar el usuario"
 
-#: components/Alert.tsx:53
+#: components/Alert.tsx:75
 msgid "View alert"
 msgstr "Mostrar la alerta"
 
-#: components/editor/steps/TextStep.tsx:169
+#: components/editor/steps/TextStep.tsx:172
 msgid "What is the event this alert pertains to?"
 msgstr "¿A qué evento pertenece esta alerta?"
 
-#: components/editor/map/Map.tsx:373
+#: components/editor/map/Map.tsx:380
 msgid "What is the name of this region?"
 msgstr "¿Cuál es el nombre de la región?"
 
-#: components/editor/steps/TextStep.tsx:222
+#: components/editor/steps/TextStep.tsx:225
 msgid "WhatNow provides pre-written messages and instructions you can use for certain events. Use the dropdown to select one of these as a template, or provide your own Description and Instructions."
 msgstr "WhatNow provee los mensajes y las instrucciones pre-escritas que usted puede utilizar para cierto tipo de eventos. Use el menú desplegable para seleccionar una de ellas como plantilla, o provea su propia Descripción e Instrucción."
 
-#: pages/verify.tsx:186
+#: pages/verify.tsx:247
 msgid "Yes, this user is part of my Alerting Authority."
 msgstr "Sí, este usuario es parte de mi agencia (Autoridad de Alerta)."
 
-#: components/editor/steps/TextStep.tsx:141
+#: components/editor/steps/TextStep.tsx:144
 msgid "You cannot delete all languages. Please select a new language to keep first"
 msgstr "No puede borrar todos los lenguaje. Por favor seleccione un nuevo lenguaje para dejarlo primero."
 
-#: pages/error/index.tsx:12
+#: pages/error/index.tsx:11
 msgid "You do not have permission to log in yet. Your account may not be verified yet"
 msgstr "Usted no tiene permisos para conectarse todavía. Su cuenta no ha podido ser verificada aún"
 
-#: components/RegisterForm.tsx:64
+#: components/RegisterForm.tsx:59
+#: components/UpdatePersonalDetailsForm.tsx:53
 msgid "Your name"
 msgstr "Su nombre"
 
-#: components/editor/steps/TextStep.tsx:179
-#: components/editor/steps/TextStep.tsx:195
+#: components/UpdatePersonalDetailsForm.tsx:33
+msgid "Your personal details were updated successfully"
+msgstr ""
+
+#: components/ConnectToAlertingAuthorityForm.tsx:42
+msgid "Your request has been sent to your Alerting Authority; you will receive an email once they have approved your access."
+msgstr ""
+
+#: components/editor/steps/TextStep.tsx:182
+#: components/editor/steps/TextStep.tsx:198
 msgid "characters"
 msgstr "caracteres"
 
-#: components/editor/ResourceModal.tsx:84
+#: components/editor/ResourceModal.tsx:86
 msgid "e.g., image of flood (please use {language} language)"
 msgstr "por ejemplo, imagen de la inundación (por favor utilice el lenguaje {lenguaje})"
 
-#: components/editor/steps/TextStep.tsx:91
+#: components/editor/steps/TextStep.tsx:94
 msgid "fetching WhatNow messages"
 msgstr "Trayendo los mensajes de WhatNow"
 
-#: components/RegisterForm.tsx:98
+#: components/ConnectToAlertingAuthorityForm.tsx:88
 msgid "fetching alerting authorities"
 msgstr "Trayendo las Autoridades de Alerta"
 
-#: components/editor/steps/MapStep.tsx:25
+#: components/editor/steps/MapStep.tsx:27
 msgid "fetching map regions"
 msgstr "Trayendo las regiones del mapa"
 
-#: components/editor/steps/MetadataStep.tsx:34
+#: components/editor/steps/MetadataStep.tsx:36
 msgid "fetching past alerts"
 msgstr "Trayendo alerts pasadas"
 
-#: pages/settings.tsx:55
+#: pages/settings.tsx:63
 msgid "registering for WebAuthn"
 msgstr "Registrarse a WebAuthn"
 
-#: pages/editor/[[...alertId]].tsx:229
+#: pages/editor/[[...alertId]].tsx:332
+msgid "sharing the alert"
+msgstr ""
+
+#: pages/editor/[[...alertId]].tsx:368
 msgid "submitting the alert"
 msgstr "enviando la alerta"
 
-#: pages/verify.tsx:82
+#: pages/verify.tsx:93
 msgid "verifying the account"
 msgstr "verificando la cuenta"

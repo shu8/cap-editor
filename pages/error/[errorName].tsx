@@ -16,7 +16,7 @@ export default function ErrorPage() {
       <main className="centered-message">
         <Message type="error">
           {Object.values(ERRORS).find((e) => e.slug === errorName)?.message ??
-            t`There was an unexpected error. Please try again`}
+            t`There was an unexpected error. Please try again later or contact your administrator if the issue persists`}
         </Message>
       </main>
     </>

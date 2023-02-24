@@ -27,12 +27,12 @@ export default function LanguageTabs(props: Props) {
       {showChooseLanguageModal && (
         <Modal open>
           <Modal.Title>
-            <Trans>Choose language</Trans>
+            <Trans>Choose a language</Trans>
           </Modal.Title>
 
           <Modal.Body>
             <SelectPicker
-              placeholder={t`Select a language`}
+              placeholder={t`Choose a language`}
               label={t`Language`}
               data={ISO6391.getAllNames().map((l) => ({
                 label: l,
