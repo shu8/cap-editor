@@ -9,11 +9,11 @@ async function handleGetCountries(req: NextApiRequest, res: NextApiResponse) {
   if (req.query.countryCode) {
     return res.json({
       countries: countries.features
-        .filter((f) => f.properties.ISO_A3 === req.query.countryCode)
-        .map((f) => f.id),
+        .filter((f: any) => f.properties.ISO_A3 === req.query.countryCode)
+        .map((f: any) => f.id),
     });
   }
-  return res.json({ countries: countries.features.map((f) => f.id) });
+  return res.json({ countries: countries.features.map((f: any) => f.id) });
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

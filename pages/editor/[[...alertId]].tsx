@@ -62,11 +62,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     alert = await prisma.alert.findFirst({
       where: { id: alertId },
       include: {
-        sharedAlerts: {
-          include: { user: { select: { email: true } } },
+        SharedAlerts: {
+          include: { User: { select: { email: true } } },
           where: { expires: { gt: new Date() } },
         },
-        alertingAuthority: {
+        AlertingAuthority: {
           select: {
             name: true,
             countryCode: true,
@@ -81,11 +81,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       session.user.alertingAuthorities?.[alert.alertingAuthorityId] ?? null;
 
     // The user must be part of this AA to edit it, or this alert must be shared with them
-    isShared = !!alert.sharedAlerts.find(
-      (s) => s.user.email === session.user.email
+    isShared = !!alert.SharedAlerts.find(
+      (s) => s.User.email === session.user.email
     );
     if (isShared) {
-      alertingAuthority = alert.alertingAuthority;
+      alertingAuthority = alert.AlertingAuthority;
     } else if (!alertingAuthority) {
       return redirect(`/error/${ERRORS.AA_NOT_ALLOWED.slug}`);
     }

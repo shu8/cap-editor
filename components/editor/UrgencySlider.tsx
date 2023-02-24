@@ -1,6 +1,12 @@
 import { Slider } from "rsuite";
 
-export default function UrgencySlider({ onChange, urgency }) {
+export default function UrgencySlider({
+  onChange,
+  urgency,
+}: {
+  onChange: (v: string) => void;
+  urgency: string;
+}) {
   const labels = ["Future", "Expected", "Immediate"];
 
   return (

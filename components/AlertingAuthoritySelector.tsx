@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { Button, Dropdown } from "rsuite";
 
 import { classes } from "../lib/helpers.client";
+import { UserAlertingAuthorities } from "../lib/types/types";
 import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
 import styles from "../styles/components/AlertingAuthoritySelector.module.css";
 
@@ -12,6 +13,10 @@ const AlertingAuthoritySelector = ({
   alertingAuthorities = {},
   appendToQuery = false,
   fullWidth = false,
+}: {
+  alertingAuthorities: UserAlertingAuthorities;
+  appendToQuery: boolean;
+  fullWidth: boolean;
 }) => {
   const router = useRouter();
   const [alertingAuthorityId, setAlertingAuthorityId] =

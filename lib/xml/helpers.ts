@@ -4,6 +4,7 @@ import { XMLBuilder } from "fast-xml-parser";
 
 import { REDIS_PREFIX_SIGNED_ALERTS } from "../constants";
 import redis from "../redis";
+import { CAPV12JSONSchema } from "../types/cap.schema";
 
 const builder = new XMLBuilder({
   format: true,
@@ -17,14 +18,16 @@ const CAPGenerator = new Capgen({
 });
 
 export const formatAlertAsXML = (alert: Alert): string => {
-  const info = alert?.data?.info;
+  const info = (alert.data as CAPV12JSONSchema).info;
   if (info) {
     for (let i = 0; i < info.length; i++) {
-      for (let j = 0; j < info[i].area.length; j++) {
-        const area = info[i].area[j];
+      if (!info[i].area) continue;
+
+      for (let j = 0; j < info[i].area!.length; j++) {
+        const area = info[i].area![j];
         area.areaDesc = area.areaDesc.replace("custom-", "");
         if (typeof area.polygon !== "undefined") {
-          area.polygon = area.polygon.map((p) => p.join(" "));
+          area.polygon = area.polygon.map((p: number[]) => p.join(" ")) as any;
         }
       }
     }
@@ -51,20 +54,21 @@ export const formatAlertingAuthorityFeedAsXML = async (
   const numAlerts = alerts.length;
   for (let i = 0; i < numAlerts; i++) {
     const alert = alerts[i];
+    const data = alert.data as CAPV12JSONSchema;
     const lastSignedAt = await redis.HGET(
       `${REDIS_PREFIX_SIGNED_ALERTS}:${alert.id}`,
       "last_signed_at"
     );
     entries.push({
       id: alert.id,
-      title: alert.data?.info?.[0]?.headline ?? "Alert",
+      title: data.info?.[0]?.headline ?? "Alert",
       link: {
         "@_href": `${process.env.BASE_URL}/feed/${alert.id}`,
       },
       updated: lastSignedAt
         ? new Date(+lastSignedAt).toISOString()
         : new Date().toISOString(),
-      published: new Date(alert.data.sent).toISOString(),
+      published: new Date(data.sent).toISOString(),
     });
   }
 

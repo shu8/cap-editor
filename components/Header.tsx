@@ -26,6 +26,8 @@ export default function Header() {
           <>
             <AlertingAuthoritySelector
               alertingAuthorities={session.user.alertingAuthorities}
+              appendToQuery={false}
+              fullWidth={false}
             />
 
             <Link href={`/editor?alertingAuthority=${alertingAuthorityId}`}>

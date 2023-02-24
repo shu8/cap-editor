@@ -24,7 +24,7 @@ import { FormAlertData, StepProps } from "../Editor";
 import LanguageTabs from "../LanguageTabs";
 import ResourceModal from "../ResourceModal";
 
-const Textarea = forwardRef((props, ref) => (
+const Textarea = forwardRef((props: any, ref) => (
   <Input {...props} ref={ref} rows={5} as="textarea" />
 ));
 Textarea.displayName = "Textarea";
@@ -77,8 +77,11 @@ export default function TextStep({
     getDefaultInstructionTypes(urgency!)
   );
 
-  const updateField = (field, value) => {
-    textLanguages![language][field] = value;
+  const updateField = (
+    field: "event" | "headline" | "description" | "instruction" | "resources",
+    value: string | Resource[]
+  ) => {
+    textLanguages![language]![field] = value;
     onUpdate({ textLanguages: { ...textLanguages } });
   };
 
@@ -135,7 +138,7 @@ export default function TextStep({
         languages={Object.keys(textLanguages!)}
         language={language}
         onDeleteLanguage={(l) => {
-          if (Object.keys(textLanguages).length > 1) {
+          if (Object.keys(textLanguages!).length > 1) {
             delete textLanguages![l];
             onUpdate({ textLanguages: { ...textLanguages } });
           } else {

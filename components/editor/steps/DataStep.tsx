@@ -42,7 +42,7 @@ export default function DataStep({
         ranges={[]}
         isoWeek
         cleanable={false}
-        value={[from, to]}
+        value={[from as Date, to as Date]}
         character=" to "
         disabledDate={(date) => date < getStartOfToday()}
         onChange={(dates) =>
@@ -63,8 +63,8 @@ export default function DataStep({
       </p>
       <div className={styles.sideBySide}>
         <SeverityCertaintyMatrix
-          certainty={certainty}
-          severity={severity}
+          certainty={certainty!}
+          severity={severity!}
           onChange={(data: { certainty: string; severity: string }) =>
             onUpdate(data)
           }

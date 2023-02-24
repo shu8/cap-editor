@@ -1,6 +1,7 @@
-import { EffectCallback, useEffect } from "react";
+import React, { EffectCallback, useEffect } from "react";
 
-export const classes = (...args) => args.filter((c) => !!c).join(" ");
+export const classes = (...args: any) =>
+  args.filter((c: string) => !!c).join(" ");
 
 export const getStartOfToday = () => {
   const date = new Date();
@@ -14,8 +15,11 @@ export const getEndOfYesterday = () => {
   return date;
 };
 
-export const updateState = (setter, data) => {
-  setter((old) => ({ ...old, ...data }));
+export const updateState = (
+  setter: React.Dispatch<React.SetStateAction<any>>,
+  data: any
+) => {
+  setter((old: any) => ({ ...old, ...data }));
 };
 
 export const camelise = (str: string) => {
@@ -27,7 +31,8 @@ export const camelise = (str: string) => {
   return ret;
 };
 
-export const fetcher = (...args) => fetch(...args).then((res) => res.json());
+export const fetcher = (...args: any) =>
+  fetch(...args).then((res) => res.json());
 
 // In part, from https://stackoverflow.com/a/17415677
 export const formatDate = (date: Date) => {

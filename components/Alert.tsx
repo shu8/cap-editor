@@ -3,6 +3,7 @@ import { Alert as DBAlert } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { Button, Panel, Tag } from "rsuite";
+import { TypeAttributes } from "rsuite/esm/@types/common";
 
 import { CAPV12JSONSchema } from "../lib/types/cap.schema";
 import styles from "../styles/components/Alert.module.css";
@@ -50,9 +51,11 @@ const generateSocialMediaText = (
 
 export default function Alert({ alert }: { alert: DBAlert }) {
   const alertData = alert.data as CAPV12JSONSchema;
-  const info = alertData.info?.[0];
+  const info = alertData.info![0] as NonNullable<
+    CAPV12JSONSchema["info"]
+  >[number];
 
-  const expiryDate = new Date(info?.expires);
+  const expiryDate = new Date(info.expires!);
   const expired = expiryDate < new Date();
   const socialMediaEncodedUrl = encodeURIComponent(
     new URL(`/feed/${alert.id}`, window.location.origin).toString()
@@ -114,13 +117,22 @@ export default function Alert({ alert }: { alert: DBAlert }) {
             <Tag as="span" color="green">
               {alertData.status}
             </Tag>
-            <Tag as="span" color={colors.urgency[info?.urgency]}>
+            <Tag
+              as="span"
+              color={colors.urgency[info.urgency] as TypeAttributes.Color}
+            >
               {info?.urgency}
             </Tag>
-            <Tag as="span" color={colors.certainty[info?.certainty]}>
+            <Tag
+              as="span"
+              color={colors.certainty[info.certainty] as TypeAttributes.Color}
+            >
               {info?.certainty}
             </Tag>
-            <Tag as="span" color={colors.severity[info?.severity]}>
+            <Tag
+              as="span"
+              color={colors.severity[info.severity] as TypeAttributes.Color}
+            >
               {info?.severity}
             </Tag>
           </p>

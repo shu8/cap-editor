@@ -152,7 +152,7 @@ export default function Home() {
                     :
                   </p>
                   <div className={styles.alertsWrapper}>
-                    {sharedAlerts.alerts.map((a) => (
+                    {sharedAlerts.alerts.map((a: DBAlert) => (
                       <Alert key={`alert-${a.id}`} alert={a} />
                     ))}
                   </div>

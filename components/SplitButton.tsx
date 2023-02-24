@@ -34,7 +34,7 @@ export default function SplitButton({
               <Dropdown.Menu
                 onSelect={(eventKey) => {
                   onClose();
-                  setOptionIndex(eventKey);
+                  setOptionIndex(parseInt(eventKey ?? "0", 10));
                 }}
               >
                 {options.map((o, i) => (

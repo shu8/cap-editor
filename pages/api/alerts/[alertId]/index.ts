@@ -145,16 +145,21 @@ async function handleGetAlert(
     // Don't sign alerts that haven't been published or have expired
     if (
       alert.status !== "PUBLISHED" ||
-      new Date(alert?.data?.info?.[0]?.expires) < new Date()
+      new Date(alert.data!.info?.[0]?.expires) < new Date()
     ) {
       res.setHeader("Content-Type", "application/xml");
       return res.status(200).send(formatAlertAsXML(alert));
     }
 
     const redisKey = `${REDIS_PREFIX_SIGNED_ALERTS}:${alert.id}`;
-    let signedXML = await redis.HGET(redisKey, "signed_xml");
+    let signedXML: string | null | undefined = await redis.HGET(
+      redisKey,
+      "signed_xml"
+    );
+
     if (!signedXML) {
       signedXML = await sign(alert);
+      if (!signedXML) return res.status(500).send("Failed to sign alert");
 
       // Cache, and expire every 20 days
       await redis.HSET(redisKey, [

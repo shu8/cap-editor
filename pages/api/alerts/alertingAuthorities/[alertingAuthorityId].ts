@@ -124,7 +124,7 @@ async function handleGetAlerts(
         author: alertingAuthorityAlerts.author,
       },
       alertingAuthorityAlerts.Alerts.filter(
-        (a) => new Date(a.data?.info?.[0]?.expires) >= new Date()
+        (a) => new Date(a.data!.info?.[0]?.expires) >= new Date()
       )
     )
   );

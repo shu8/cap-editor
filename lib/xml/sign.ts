@@ -11,6 +11,7 @@ export async function sign(alert: Alert) {
   const alertXml = Parse(formatAlertAsXML(alert));
   const signed = new SignedXml(alertXml);
   const privateKey = await getPrivateKey();
+  if (!privateKey) return null;
 
   await signed.Sign({ name: "ECDSA", hash: "SHA-512" }, privateKey, alertXml, {
     references: [{ hash: "SHA-512", transforms: ["enveloped", "c14n"] }],

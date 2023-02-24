@@ -1,3 +1,4 @@
 {
-  "jestrunner.jestCommand": "pnpm jest"
+  "jestrunner.jestCommand": "pnpm jest",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true
 }

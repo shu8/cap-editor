@@ -6,18 +6,29 @@ export default function SeverityCertaintyMatrix({
   onChange,
   certainty,
   severity,
+}: {
+  onChange: (data: { certainty: string; severity: string }) => void;
+  certainty: string;
+  severity: string;
 }) {
-  const Cell = ({ colorStyle, cellCertainty, cellSeverity }) => (
+  const Cell = (props: {
+    colorStyle: string;
+    cellCertainty: string;
+    cellSeverity: string;
+  }) => (
     <div
       className={classes(
         styles.cell,
-        colorStyle,
-        cellCertainty === certainty &&
-          cellSeverity === severity &&
+        props.colorStyle,
+        props.cellCertainty === certainty &&
+          props.cellSeverity === severity &&
           styles.selected
       )}
       onClick={() =>
-        onChange({ certainty: cellCertainty, severity: cellSeverity })
+        onChange({
+          certainty: props.cellCertainty,
+          severity: props.cellSeverity,
+        })
       }
     />
   );

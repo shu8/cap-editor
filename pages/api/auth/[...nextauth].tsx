@@ -11,7 +11,7 @@ import {
 } from "../../../lib/constants";
 import prisma from "../../../lib/prisma";
 import redis from "../../../lib/redis";
-import { AlertingAuthority } from "../../../lib/types/types";
+import { UserAlertingAuthorities } from "../../../lib/types/types";
 
 const getUser = async (email: string) => {
   const user = await prisma.user.findFirst({
@@ -46,7 +46,7 @@ const mapAlertingAuthorities = (
       roles: cur.roles,
     };
     return acc;
-  }, {});
+  }, {} as UserAlertingAuthorities);
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -80,6 +80,8 @@ export const authOptions: AuthOptions = {
       async authorize(cred, req) {
         try {
           const credential = req.body;
+          if (!credential) return null;
+
           credential.clientExtensionResults = {
             appid: credential.appid,
             credProps: credential.credProps,
@@ -174,9 +176,8 @@ export const authOptions: AuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user.alertingAuthorities = (token.alertingAuthorities || {}) as {
-        string: AlertingAuthority;
-      };
+      session.user.alertingAuthorities = (token.alertingAuthorities ||
+        {}) as UserAlertingAuthorities;
 
       // Only do (expensive) DB call if there is a pending session update from elsewhere in app for this user
       if (

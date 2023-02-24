@@ -7,10 +7,16 @@ export type Resource = {
   mimeType: string;
 };
 
+export type UserAlertingAuthorities = {
+  [k: string]: AlertingAuthority & {
+    polygon: string | null;
+  };
+};
+
 export type AlertingAuthority = {
   id: string;
   name: string;
-  countryCode: string;
+  countryCode: string | null;
   roles: Role[];
 };
 
@@ -59,9 +65,7 @@ declare module "next-auth" {
   interface Session {
     user: {
       email: string;
-      alertingAuthorities: {
-        [key: string]: AlertingAuthority;
-      };
+      alertingAuthorities: UserAlertingAuthorities;
     } & DefaultSession["user"];
   }
 }

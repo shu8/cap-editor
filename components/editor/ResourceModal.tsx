@@ -46,7 +46,7 @@ export default function ResourceModal({
         <Form
           layout="horizontal"
           formValue={data}
-          onChange={setData}
+          onChange={(d) => setData(d as Resource)}
           model={Schema.Model({
             description: Schema.Types.StringType().isRequired(
               t`Please provide a description of the resource`

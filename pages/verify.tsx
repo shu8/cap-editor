@@ -37,8 +37,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     await prisma.userAlertingAuthorities.findFirst({
       where: { alertingAuthorityVerificationToken },
       include: {
-        alertingAuthority: { select: { name: true, id: true } },
-        user: { select: { email: true, name: true } },
+        AlertingAuthority: { select: { name: true, id: true } },
+        User: { select: { email: true, name: true } },
       },
     });
 
@@ -47,11 +47,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   return {
     props: {
       userToBeVerified: {
-        email: userAndAlertingAuthority.user.email,
-        name: userAndAlertingAuthority.user.name,
+        email: userAndAlertingAuthority.User.email,
+        name: userAndAlertingAuthority.User.name!,
         alertingAuthority: {
-          id: userAndAlertingAuthority.alertingAuthority.id,
-          name: userAndAlertingAuthority.alertingAuthority.name,
+          id: userAndAlertingAuthority.AlertingAuthority.id,
+          name: userAndAlertingAuthority.AlertingAuthority.name,
         },
       },
       verificationToken: alertingAuthorityVerificationToken,

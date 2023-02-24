@@ -5,6 +5,7 @@ import StaticMaps from "staticmaps";
 
 import { withErrorHandler } from "../../../../lib/apiErrorHandler";
 import prisma from "../../../../lib/prisma";
+import { CAPV12JSONSchema } from "../../../../lib/types/cap.schema";
 
 const clip = (str: string, length: number) => {
   if (str.length <= length) return str;
@@ -21,18 +22,21 @@ async function handleRenderImage(
 
   const map = new StaticMaps({ width: 300, height: 300 });
   const imageMessageOffset = 50;
-  const areas = alert.data?.info?.[0].area ?? [];
+  const data = alert.data as CAPV12JSONSchema;
 
+  const areas = data.info?.[0].area ?? [];
   for (let i = 0; i < areas.length; i++) {
     const area = areas[i];
     if (area.circle) {
-      const [center, radius] = area.circle.split(" ");
-      map.addCircle({
-        coord: center
-          .split(",")
-          .map((x: string) => +x)
-          .reverse(),
-        radius,
+      area.circle.forEach((circle) => {
+        const [center, radius] = circle.split(" ");
+        map.addCircle({
+          coord: center
+            .split(",")
+            .map((x: string) => +x)
+            .reverse() as [number, number],
+          radius: +radius,
+        });
       });
     }
     if (area.polygon) {
@@ -65,15 +69,13 @@ async function handleRenderImage(
         input: {
           text: {
             text: `<span foreground='black' font_weight='bold' allow_breaks='true'>${clip(
-              alert.data?.info?.[0].headline,
+              data.info![0].headline ?? "Alert",
               26
-            )}: ${alert.data?.info?.[0].urgency}\n${clip(
-              alert.data?.info?.[0].responseType.join(", "),
+            )}: ${data.info![0].urgency}\n${clip(
+              data.info![0].responseType!.join(", "),
               36
-            )}\n${new Date(
-              alert.data?.info?.[0].onset
-            ).toDateString()} - ${new Date(
-              alert.data?.info?.[0].expires
+            )}\n${new Date(data.info![0].onset!).toDateString()} - ${new Date(
+              data.info![0].expires!
             ).toDateString()}</span>`,
             font: "Times New Roman",
             height: 10,
