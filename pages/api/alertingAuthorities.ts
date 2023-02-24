@@ -11,7 +11,11 @@ async function handleGetAlertingAuthorities(
   return res.json({ result: data });
 }
 
-// TODO: WMO returns some AAs with same GUIDs -- how to handle?
+// Note: as of 2023-02-24, the WMO Register of AAs returns 2 AA records with the same GUID:
+//  urn:oid:2.49.0.0.626.0 and urn:oid:2.49.0.0.768.0. These seem to be referring to the same
+//  AA based on their country code, email and name.
+// We handle this by taking the first record in the list for a given ID.
+// The best solution would be to fix this in the Register itself.
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     return handleGetAlertingAuthorities(req, res);
