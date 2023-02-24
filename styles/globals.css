@@ -79,6 +79,12 @@ main {
   pointer-events: fill;
 }
 
+.rs-picker-select-menu-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .centered-message {
   align-items: center;
   height: 100%;

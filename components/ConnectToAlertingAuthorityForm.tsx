@@ -19,7 +19,6 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
 
   useEffect(() => updateState(setFormData, { email }), [email]);
 
-  // TODO fix styling of select items (height of virtualised cells)
   return (
     <div>
       <Form
@@ -95,6 +94,9 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
                 return <Loader style={{ margin: "auto", padding: "10px" }} />;
               }
               return menu;
+            }}
+            renderMenuItem={(node, item) => {
+              return <span title={item.name}>{item.name}</span>;
             }}
             virtualized
             groupBy="countryCode"
