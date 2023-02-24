@@ -1,4 +1,4 @@
-Name: Test Frontend components
+name: Test Frontend components
 
 on:
   push:
