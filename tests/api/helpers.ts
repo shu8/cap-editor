@@ -79,9 +79,9 @@ export const createUser = async ({
     data: {
       email,
       name,
-      UserAlertingAuthorities: {
+      AlertingAuthorities: {
         create: {
-          alertingAuthority: {
+          AlertingAuthority: {
             connectOrCreate: {
               create: {
                 id: alertingAuthority.id,

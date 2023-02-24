@@ -77,7 +77,7 @@ describe("/api/user/alertingAuthorities", () => {
     const alertingAuthority =
       await prismaMock.userAlertingAuthorities.findFirst({
         where: {
-          alertingAuthority: { name: { equals: "Other Alerting Authority" } },
+          AlertingAuthority: { name: { equals: "Other Alerting Authority" } },
         },
       });
     expect(alertingAuthority?.alertingAuthorityVerificationToken).toBeTruthy();

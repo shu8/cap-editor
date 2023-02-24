@@ -66,7 +66,7 @@ describe("/api/verifyUser", () => {
     await handleVerifyUser(req, res);
     const users = await prismaMock.user.findMany({
       include: {
-        UserAlertingAuthorities: {
+        AlertingAuthorities: {
           select: {
             alertingAuthorityVerificationToken: true,
             alertingAuthorityVerified: true,
@@ -77,14 +77,14 @@ describe("/api/verifyUser", () => {
     });
 
     expect(users.length).toEqual(1);
-    expect(users[0].UserAlertingAuthorities.length).toEqual(1);
+    expect(users[0].AlertingAuthorities.length).toEqual(1);
     expect(
-      users[0].UserAlertingAuthorities[0].alertingAuthorityVerificationToken
+      users[0].AlertingAuthorities[0].alertingAuthorityVerificationToken
     ).toEqual(null);
     expect(
-      users[0].UserAlertingAuthorities[0].alertingAuthorityVerified
+      users[0].AlertingAuthorities[0].alertingAuthorityVerified
     ).toBeTruthy();
-    expect(users[0].UserAlertingAuthorities[0].roles).toEqual(["ADMIN"]);
+    expect(users[0].AlertingAuthorities[0].roles).toEqual(["ADMIN"]);
   });
 
   test("AA name must be provided for Other AAs", async () => {

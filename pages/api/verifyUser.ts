@@ -80,7 +80,7 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
       alertingAuthorityVerified: new Date(),
       roles: req.body.roles,
       ...(isCustomAA && {
-        alertingAuthority: { update: { name: req.body.name } },
+        AlertingAuthority: { update: { name: req.body.name } },
       }),
     },
   });
