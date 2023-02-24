@@ -13,16 +13,16 @@ const getUser = async (email: string) => {
   const user = await prisma.user.findFirst({
     where: { email },
     include: {
-      UserAlertingAuthorities: {
+      AlertingAuthorities: {
         select: {
-          alertingAuthority: {
+          AlertingAuthority: {
             select: { name: true, countryCode: true, id: true, polygon: true },
           },
           roles: true,
         },
         where: {
           alertingAuthorityVerified: { not: null },
-          user: { email },
+          User: { email },
         },
       },
     },
@@ -33,12 +33,12 @@ const getUser = async (email: string) => {
 const mapAlertingAuthorities = (
   user: NonNullable<Awaited<ReturnType<typeof getUser>>>
 ) =>
-  user.UserAlertingAuthorities.reduce((acc, cur) => {
-    acc[cur.alertingAuthority.id] = {
-      id: cur.alertingAuthority.id,
-      name: cur.alertingAuthority.name,
-      countryCode: cur.alertingAuthority.countryCode,
-      polygon: cur.alertingAuthority.polygon,
+  user.AlertingAuthorities.reduce((acc, cur) => {
+    acc[cur.AlertingAuthority.id] = {
+      id: cur.AlertingAuthority.id,
+      name: cur.AlertingAuthority.name,
+      countryCode: cur.AlertingAuthority.countryCode,
+      polygon: cur.AlertingAuthority.polygon,
       roles: cur.roles,
     };
     return acc;
@@ -100,10 +100,10 @@ export const authOptions: AuthOptions = {
 
           const user = await prisma.user.findFirst({
             where: { webauthnId: credential.response.userHandle },
-            select: { authenticators: true, email: true, name: true, id: true },
+            select: { Authenticators: true, email: true, name: true, id: true },
           });
 
-          if (!user?.authenticators.length) return null;
+          if (!user?.Authenticators.length) return null;
 
           const { verified, authenticationInfo } =
             await verifyAuthenticationResponse({
@@ -111,7 +111,7 @@ export const authOptions: AuthOptions = {
               expectedChallenge: expectedChallenge,
               expectedOrigin: process.env.WEBAUTHN_ORIGIN,
               expectedRPID: process.env.WEBAUTHN_RELAYING_PARTY_ID,
-              authenticator: user.authenticators[0],
+              authenticator: user.Authenticators[0],
               requireUserVerification: true,
             });
 
@@ -119,7 +119,7 @@ export const authOptions: AuthOptions = {
             await prisma.user.update({
               where: { email: user.email },
               data: {
-                authenticators: {
+                Authenticators: {
                   update: {
                     where: {
                       credentialID:

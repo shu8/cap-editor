@@ -72,7 +72,7 @@ pnpm install
 5. Run the database migrations:
 
 ```bash
-pnpm migrate
+pnpm db:migrate
 ```
 
 6. Run the Next.js development server:

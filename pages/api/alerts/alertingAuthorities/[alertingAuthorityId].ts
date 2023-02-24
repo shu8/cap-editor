@@ -28,9 +28,9 @@ async function handleNewAlert(
     where: {
       alertingAuthorityId,
       alertingAuthorityVerified: { not: null },
-      user: { email: session.user.email },
+      User: { email: session.user.email },
     },
-    include: { alertingAuthority: { select: { name: true, author: true } } },
+    include: { AlertingAuthority: { select: { name: true, author: true } } },
   });
 
   if (!alertingAuthority) {
@@ -57,7 +57,7 @@ async function handleNewAlert(
 
   try {
     const alert: CAPV12JSONSchema = mapFormAlertDataToCapSchema(
-      alertingAuthority.alertingAuthority,
+      alertingAuthority.AlertingAuthority,
       alertData,
       identifier
     );
@@ -67,7 +67,7 @@ async function handleNewAlert(
         data: alert as Prisma.InputJsonValue,
         creator: { connect: { email: session.user.email } },
         status: req.body.status,
-        alertingAuthority: {
+        AlertingAuthority: {
           connect: { id: alertingAuthority.alertingAuthorityId },
         },
       },
@@ -106,7 +106,7 @@ async function handleGetAlerts(
 
   const alertingAuthorityAlerts = await prisma.alertingAuthority.findFirst({
     where: { id: alertingAuthorityId },
-    include: { Alert: { where: { status: "PUBLISHED" } } },
+    include: { Alerts: { where: { status: "PUBLISHED" } } },
   });
 
   if (!alertingAuthorityAlerts) {
@@ -123,7 +123,7 @@ async function handleGetAlerts(
         // TODO should this be a generic AA email rather than the author's email? where to get it from?
         author: alertingAuthorityAlerts.author,
       },
-      alertingAuthorityAlerts.Alert.filter(
+      alertingAuthorityAlerts.Alerts.filter(
         (a) => new Date(a.data?.info?.[0]?.expires) >= new Date()
       )
     )

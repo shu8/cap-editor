@@ -22,7 +22,7 @@ async function handleGetUserRegistrationOptions(
   session: Session
 ) {
   const authenticators = await prisma.authenticator.findMany({
-    where: { user: { email: session.user.email as string } },
+    where: { User: { email: session.user.email as string } },
     select: {
       credentialID: true,
       credentialDeviceType: true,
@@ -92,7 +92,7 @@ async function handleUserRegistration(
     await prisma.user.update({
       where: { email: session.user.email as string },
       data: {
-        authenticators: {
+        Authenticators: {
           create: {
             counter: registrationInfo.counter,
             credentialPublicKey: registrationInfo.credentialPublicKey,

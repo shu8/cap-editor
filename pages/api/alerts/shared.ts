@@ -16,8 +16,8 @@ async function handleGetSharedAlerts(
   const user = await prisma.user.findFirst({
     where: { email: session.user.email },
     include: {
-      sharedAlerts: {
-        include: { alert: true },
+      SharedAlerts: {
+        include: { Alert: true },
         where: { expires: { gt: new Date() } },
       },
     },
@@ -25,7 +25,7 @@ async function handleGetSharedAlerts(
 
   return res.json({
     error: false,
-    alerts: user?.sharedAlerts.map((a) => a.alert),
+    alerts: user?.SharedAlerts.map((a) => a.Alert),
   });
 }
 

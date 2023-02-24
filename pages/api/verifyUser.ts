@@ -20,8 +20,8 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
     await prisma.userAlertingAuthorities.findFirst({
       where: { alertingAuthorityVerificationToken },
       include: {
-        alertingAuthority: { select: { name: true, id: true } },
-        user: { select: { email: true } },
+        AlertingAuthority: { select: { name: true, id: true } },
+        User: { select: { email: true } },
       },
     });
 
@@ -31,9 +31,9 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
 
   if (req.body.verified === false) {
     await sendEmail({
-      subject: `Account verification rejected for ${userAndAlertingAuthority.alertingAuthority.name}`,
-      to: userAndAlertingAuthority.user.email,
-      body: `Your account was not approved for ${userAndAlertingAuthority.alertingAuthority.name}. As a result, your account has been deleted. Please try registering with a new account if you believe there has been a mistake or you would like to choose a different Alerting Authority.`,
+      subject: `Account verification rejected for ${userAndAlertingAuthority.AlertingAuthority.name}`,
+      to: userAndAlertingAuthority.User.email,
+      body: `Your account was not approved for ${userAndAlertingAuthority.AlertingAuthority.name}. As a result, your account has been deleted. Please try registering with a new account if you believe there has been a mistake or you would like to choose a different Alerting Authority.`,
       title: "Account verification rejected",
       url: `${process.env.BASE_URL}`,
       urlText: "Visit the CAP Editor now",
@@ -42,7 +42,7 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
     await prisma.userAlertingAuthorities.delete({
       where: {
         userId_alertingAuthorityId: {
-          alertingAuthorityId: userAndAlertingAuthority.alertingAuthority.id,
+          alertingAuthorityId: userAndAlertingAuthority.AlertingAuthority.id,
           userId: userAndAlertingAuthority.userId,
         },
       },
@@ -70,7 +70,7 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
   await prisma.userAlertingAuthorities.update({
     where: {
       userId_alertingAuthorityId: {
-        alertingAuthorityId: userAndAlertingAuthority.alertingAuthority.id,
+        alertingAuthorityId: userAndAlertingAuthority.AlertingAuthority.id,
         userId: userAndAlertingAuthority.userId,
       },
     },
@@ -87,12 +87,12 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
   // Update this user's session when they next fetch it (so they don't have to re-login)
   await redis.SADD(
     "pendingSessionUpdates",
-    userAndAlertingAuthority.user.email
+    userAndAlertingAuthority.User.email
   );
 
   await sendEmail({
-    subject: `Account verification complete for ${userAndAlertingAuthority.alertingAuthority.name}`,
-    to: userAndAlertingAuthority.user.email,
+    subject: `Account verification complete for ${userAndAlertingAuthority.AlertingAuthority.name}`,
+    to: userAndAlertingAuthority.User.email,
     body: "Your account has now been verified by your Alerting Authority!",
     title: "Account verified",
     url: `${process.env.BASE_URL}/login`,

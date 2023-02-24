@@ -32,11 +32,11 @@ async function handleUpdateAlert(
   const alert = await prisma.alert.findFirst({
     where: { id: alertId },
     include: {
-      sharedAlerts: {
-        include: { user: { select: { email: true } } },
+      SharedAlerts: {
+        include: { User: { select: { email: true } } },
         where: { expires: { gt: new Date() } },
       },
-      alertingAuthority: {
+      AlertingAuthority: {
         select: { name: true, author: true },
       },
     },
@@ -52,8 +52,8 @@ async function handleUpdateAlert(
   const alertingAuthority =
     session.user.alertingAuthorities[alert.alertingAuthorityId];
 
-  const isShared = !!alert.sharedAlerts.find(
-    (s) => s.user.email === session.user.email
+  const isShared = !!alert.SharedAlerts.find(
+    (s) => s.User.email === session.user.email
   );
 
   // User must be part of AA or the alert must have been shared with them
@@ -109,7 +109,7 @@ async function handleUpdateAlert(
 
   try {
     const newAlert: CAPV12JSONSchema = mapFormAlertDataToCapSchema(
-      alert.alertingAuthority,
+      alert.AlertingAuthority,
       alertData,
       alertId
     );

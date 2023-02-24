@@ -1,4 +1,4 @@
-import { AlertingAuthority } from "@prisma/client";
+import { AlertingAuthority } from ".prisma/client";
 import { randomBytes, randomUUID } from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
@@ -57,9 +57,9 @@ async function handleConnectToAlertingAuthority(
   await prisma.user.update({
     where: { email: session.user.email },
     data: {
-      UserAlertingAuthorities: {
+      AlertingAuthorities: {
         create: {
-          alertingAuthority: {
+          AlertingAuthority: {
             connectOrCreate: {
               // TODO alertingAuthority.polygon isn't given for all AAs by WMO
               create: alertingAuthority,

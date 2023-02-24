@@ -58,8 +58,8 @@ async function handleShareAlert(
 
   await prisma.sharedAlert.create({
     data: {
-      alert: { connect: { id: alert.id } },
-      user: {
+      Alert: { connect: { id: alert.id } },
+      User: {
         connectOrCreate: {
           create: { email },
           where: { email },

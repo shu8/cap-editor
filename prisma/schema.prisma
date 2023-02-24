@@ -38,18 +38,18 @@ model Session {
 }
 
 model User {
-  id                      String                    @id @default(cuid())
-  email                   String                    @unique
-  name                    String?
-  emailVerified           DateTime?
-  image                   String?
-  webauthnId              String?
-  accounts                Account[]
-  sessions                Session[]
-  authenticators          Authenticator[]
-  Alert                   Alert[]
-  sharedAlerts            SharedAlert[]
-  UserAlertingAuthorities UserAlertingAuthorities[]
+  id                  String                    @id @default(cuid())
+  email               String                    @unique
+  name                String?
+  emailVerified       DateTime?
+  image               String?
+  webauthnId          String?
+  accounts            Account[]
+  sessions            Session[]
+  Authenticators      Authenticator[]
+  CreatedAlerts       Alert[]
+  SharedAlerts        SharedAlert[]
+  AlertingAuthorities UserAlertingAuthorities[]
 
   @@map("users")
 }
@@ -70,21 +70,20 @@ model Alert {
   data                Json
   userId              String
   alertingAuthorityId String
-  alertingAuthority   AlertingAuthority @relation(fields: [alertingAuthorityId], references: [id])
-  sharedAlerts        SharedAlert[]
+  AlertingAuthority   AlertingAuthority @relation(fields: [alertingAuthorityId], references: [id])
+  SharedAlerts        SharedAlert[]
 
   @@map("alerts")
 }
 
 model AlertingAuthority {
-  id                           String                    @id
-  author                       String
-  countryCode                  String?
-  name                         String
-  polygon                      String?
-  // TODO rename to `UserAlertingAuthorities`
-  UserAlertingAuthoritiesRoles UserAlertingAuthorities[]
-  Alert                        Alert[]
+  id          String                    @id
+  author      String
+  countryCode String?
+  name        String
+  polygon     String?
+  Users       UserAlertingAuthorities[]
+  Alerts      Alert[]
 
   @@map("alerting_authorities")
 }
@@ -98,7 +97,7 @@ model Authenticator {
   credentialBackedUp   Boolean
   transports           String[]
   userId               String
-  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("authenticators")
 }
@@ -108,8 +107,8 @@ model SharedAlert {
   userId  String
   alertId String
   expires DateTime @default(dbgenerated("NOW() + interval '24 hours'"))
-  user    User     @relation(fields: [userId], references: [id])
-  alert   Alert    @relation(fields: [alertId], references: [id])
+  User    User     @relation(fields: [userId], references: [id])
+  Alert   Alert    @relation(fields: [alertId], references: [id])
 
   @@map("shared_alerts")
 }
@@ -121,10 +120,11 @@ model UserAlertingAuthorities {
   alertingAuthorityVerified          DateTime?
   roles                              Role[]
 
-  user              User              @relation(fields: [userId], references: [id])
-  alertingAuthority AlertingAuthority @relation(fields: [alertingAuthorityId], references: [id])
+  User              User              @relation(fields: [userId], references: [id])
+  AlertingAuthority AlertingAuthority @relation(fields: [alertingAuthorityId], references: [id])
 
   @@id([userId, alertingAuthorityId])
+  @@map("user_alerting_authorities")
 }
 
 enum Role {

@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'EDITOR', 'VALIDATOR');
 
+-- CreateEnum
+CREATE TYPE "AlertStatus" AS ENUM ('PUBLISHED', 'TEMPLATE', 'DRAFT');
+
 -- CreateTable
 CREATE TABLE "accounts" (
     "id" TEXT NOT NULL,
@@ -32,15 +35,11 @@ CREATE TABLE "sessions" (
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "name" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
-    "alertingAuthorityId" TEXT NOT NULL,
-    "alertingAuthorityVerified" TIMESTAMP(3),
-    "alertingAuthorityVerificationToken" TEXT,
     "webauthnId" TEXT,
-    "roles" "Role"[],
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -55,7 +54,10 @@ CREATE TABLE "verification_tokens" (
 -- CreateTable
 CREATE TABLE "alerts" (
     "id" TEXT NOT NULL,
+    "status" "AlertStatus" NOT NULL DEFAULT 'DRAFT',
     "data" JSONB NOT NULL,
+    "userId" TEXT NOT NULL,
+    "alertingAuthorityId" TEXT NOT NULL,
 
     CONSTRAINT "alerts_pkey" PRIMARY KEY ("id")
 );
@@ -64,7 +66,7 @@ CREATE TABLE "alerts" (
 CREATE TABLE "alerting_authorities" (
     "id" TEXT NOT NULL,
     "author" TEXT NOT NULL,
-    "countryCode" TEXT NOT NULL,
+    "countryCode" TEXT,
     "name" TEXT NOT NULL,
     "polygon" TEXT,
 
@@ -82,6 +84,27 @@ CREATE TABLE "authenticators" (
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "authenticators_pkey" PRIMARY KEY ("credentialID")
+);
+
+-- CreateTable
+CREATE TABLE "shared_alerts" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "alertId" TEXT NOT NULL,
+    "expires" TIMESTAMP(3) NOT NULL DEFAULT NOW() + interval '24 hours',
+
+    CONSTRAINT "shared_alerts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_alerting_authorities" (
+    "userId" TEXT NOT NULL,
+    "alertingAuthorityId" TEXT NOT NULL,
+    "alertingAuthorityVerificationToken" TEXT,
+    "alertingAuthorityVerified" TIMESTAMP(3),
+    "roles" "Role"[],
+
+    CONSTRAINT "user_alerting_authorities_pkey" PRIMARY KEY ("userId","alertingAuthorityId")
 );
 
 -- CreateIndex
@@ -106,7 +129,22 @@ ALTER TABLE "accounts" ADD CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userI
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_alertingAuthorityId_fkey" FOREIGN KEY ("alertingAuthorityId") REFERENCES "alerting_authorities"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "alerts" ADD CONSTRAINT "alerts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "alerts" ADD CONSTRAINT "alerts_alertingAuthorityId_fkey" FOREIGN KEY ("alertingAuthorityId") REFERENCES "alerting_authorities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "authenticators" ADD CONSTRAINT "authenticators_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "shared_alerts" ADD CONSTRAINT "shared_alerts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "shared_alerts" ADD CONSTRAINT "shared_alerts_alertId_fkey" FOREIGN KEY ("alertId") REFERENCES "alerts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_alerting_authorities" ADD CONSTRAINT "user_alerting_authorities_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_alerting_authorities" ADD CONSTRAINT "user_alerting_authorities_alertingAuthorityId_fkey" FOREIGN KEY ("alertingAuthorityId") REFERENCES "alerting_authorities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
