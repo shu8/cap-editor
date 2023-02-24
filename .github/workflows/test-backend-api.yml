@@ -1,0 +1,22 @@
+Name: Test Backend API
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-backend-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: bahmutov/npm-install@v1
+
+      - name: Start PostgreSQL Docker container for testing
+        run: docker-compose -f docker-compose-test.yml up -d
+
+      - name: Run backend API tests
+        run: npm run test:api
