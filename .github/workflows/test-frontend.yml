@@ -1,4 +1,4 @@
-name: Test Frontend components
+name: Frontend (React) tests
 
 on:
   push:
