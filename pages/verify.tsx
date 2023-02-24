@@ -28,14 +28,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     permanent: false,
   };
 
-  const alertingAuthorityVerificationToken = context.query.token;
-  if (typeof alertingAuthorityVerificationToken !== "string") {
+  const { token: verificationToken } = context.query;
+  if (typeof verificationToken !== "string") {
     return { redirect };
   }
 
   const userAndAlertingAuthority =
     await prisma.userAlertingAuthorities.findFirst({
-      where: { alertingAuthorityVerificationToken },
+      where: { verificationToken },
       include: {
         AlertingAuthority: { select: { name: true, id: true } },
         User: { select: { email: true, name: true } },
@@ -54,7 +54,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
           name: userAndAlertingAuthority.AlertingAuthority.name,
         },
       },
-      verificationToken: alertingAuthorityVerificationToken,
+      verificationToken,
     },
   };
 };

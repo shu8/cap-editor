@@ -8,8 +8,8 @@ import prisma from "../../lib/prisma";
 import redis from "../../lib/redis";
 
 async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
-  const alertingAuthorityVerificationToken = req.body.verificationToken;
-  if (!alertingAuthorityVerificationToken) {
+  const { verificationToken } = req.body;
+  if (!verificationToken) {
     throw new ApiError(400, "You did not provide a valid verification token");
   }
 
@@ -19,7 +19,7 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
 
   const userAndAlertingAuthority =
     await prisma.userAlertingAuthorities.findFirst({
-      where: { alertingAuthorityVerificationToken },
+      where: { verificationToken },
       include: {
         AlertingAuthority: { select: { name: true, id: true } },
         User: { select: { email: true } },
@@ -76,8 +76,8 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
       },
     },
     data: {
-      alertingAuthorityVerificationToken: null,
-      alertingAuthorityVerified: new Date(),
+      verificationToken: null,
+      verified: new Date(),
       roles: req.body.roles,
       ...(isCustomAA && {
         AlertingAuthority: { update: { name: req.body.name } },

@@ -27,7 +27,7 @@ async function handleNewAlert(
   const alertingAuthority = await prisma.userAlertingAuthorities.findFirst({
     where: {
       alertingAuthorityId,
-      alertingAuthorityVerified: { not: null },
+      verified: { not: null },
       User: { email: session.user.email },
     },
     include: { AlertingAuthority: { select: { name: true, author: true } } },

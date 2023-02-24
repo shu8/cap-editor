@@ -53,7 +53,7 @@ async function handleConnectToAlertingAuthority(
     );
   }
 
-  const alertingAuthorityVerificationToken = randomBytes(32).toString("hex");
+  const verificationToken = randomBytes(32).toString("hex");
   await prisma.user.update({
     where: { email: session.user.email },
     data: {
@@ -65,9 +65,7 @@ async function handleConnectToAlertingAuthority(
               where: { id: alertingAuthority.id },
             },
           },
-          alertingAuthorityVerificationToken: hash(
-            alertingAuthorityVerificationToken
-          ),
+          verificationToken: hash(verificationToken),
         },
       },
     },
@@ -79,7 +77,7 @@ async function handleConnectToAlertingAuthority(
     subject: `New user registered for ${alertingAuthority.name}`,
     to: alertingAuthority.author,
     body: `Please verify this user has permission to create alerts for your Alerting Authority`,
-    url: `${process.env.BASE_URL}/verify?token=${alertingAuthorityVerificationToken}`,
+    url: `${process.env.BASE_URL}/verify?token=${verificationToken}`,
     urlText: "Verify user now",
     title: "New user verification required",
   });

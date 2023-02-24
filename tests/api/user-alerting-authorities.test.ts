@@ -59,7 +59,7 @@ describe("/api/user/alertingAuthorities", () => {
 
     const alertingAuthority =
       await prismaMock.userAlertingAuthorities.findFirst();
-    expect(alertingAuthority?.alertingAuthorityVerificationToken).toBeTruthy();
+    expect(alertingAuthority?.verificationToken).toBeTruthy();
     expect(alertingAuthority?.userId).toEqual(user.id);
     expect(alertingAuthority?.alertingAuthorityId).toEqual("aa");
   });
@@ -80,7 +80,7 @@ describe("/api/user/alertingAuthorities", () => {
           AlertingAuthority: { name: { equals: "Other Alerting Authority" } },
         },
       });
-    expect(alertingAuthority?.alertingAuthorityVerificationToken).toBeTruthy();
+    expect(alertingAuthority?.verificationToken).toBeTruthy();
     expect(alertingAuthority?.userId).toEqual(user.id);
     expect(alertingAuthority?.alertingAuthorityId?.startsWith("ifrc:")).toEqual(
       true

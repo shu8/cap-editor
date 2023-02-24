@@ -68,8 +68,8 @@ describe("/api/verifyUser", () => {
       include: {
         AlertingAuthorities: {
           select: {
-            alertingAuthorityVerificationToken: true,
-            alertingAuthorityVerified: true,
+            verificationToken: true,
+            verified: true,
             roles: true,
           },
         },
@@ -78,12 +78,8 @@ describe("/api/verifyUser", () => {
 
     expect(users.length).toEqual(1);
     expect(users[0].AlertingAuthorities.length).toEqual(1);
-    expect(
-      users[0].AlertingAuthorities[0].alertingAuthorityVerificationToken
-    ).toEqual(null);
-    expect(
-      users[0].AlertingAuthorities[0].alertingAuthorityVerified
-    ).toBeTruthy();
+    expect(users[0].AlertingAuthorities[0].verificationToken).toEqual(null);
+    expect(users[0].AlertingAuthorities[0].verified).toBeTruthy();
     expect(users[0].AlertingAuthorities[0].roles).toEqual(["ADMIN"]);
   });
 

@@ -100,8 +100,8 @@ CREATE TABLE "shared_alerts" (
 CREATE TABLE "user_alerting_authorities" (
     "userId" TEXT NOT NULL,
     "alertingAuthorityId" TEXT NOT NULL,
-    "alertingAuthorityVerificationToken" TEXT,
-    "alertingAuthorityVerified" TIMESTAMP(3),
+    "verificationToken" TEXT,
+    "verified" TIMESTAMP(3),
     "roles" "Role"[],
 
     CONSTRAINT "user_alerting_authorities_pkey" PRIMARY KEY ("userId","alertingAuthorityId")

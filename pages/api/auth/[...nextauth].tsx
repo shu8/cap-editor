@@ -25,7 +25,7 @@ const getUser = async (email: string) => {
           roles: true,
         },
         where: {
-          alertingAuthorityVerified: { not: null },
+          verified: { not: null },
           User: { email },
         },
       },

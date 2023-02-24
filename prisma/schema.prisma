@@ -114,11 +114,11 @@ model SharedAlert {
 }
 
 model UserAlertingAuthorities {
-  userId                             String
-  alertingAuthorityId                String
-  alertingAuthorityVerificationToken String?
-  alertingAuthorityVerified          DateTime?
-  roles                              Role[]
+  userId              String
+  alertingAuthorityId String
+  verificationToken   String?
+  verified            DateTime?
+  roles               Role[]
 
   User              User              @relation(fields: [userId], references: [id])
   AlertingAuthority AlertingAuthority @relation(fields: [alertingAuthorityId], references: [id])

@@ -93,10 +93,10 @@ export const createUser = async ({
             },
           },
           ...(alertingAuthorityVerified && {
-            alertingAuthorityVerified: new Date(),
+            verified: new Date(),
           }),
           ...(!alertingAuthorityVerified && {
-            alertingAuthorityVerificationToken: "token",
+            verificationToken: "token",
           }),
           roles: alertingAuthority.roles,
         },
