@@ -14,6 +14,7 @@ module.exports = {
         "\\.css$": "identity-obj-proxy",
       },
       transformIgnorePatterns: ["/node_modules/(?!ol)/"],
+      setupFiles: ["<rootDir>/tests/frontend/setup.ts"],
     },
   ],
 };
