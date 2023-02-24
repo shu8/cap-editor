@@ -1,28 +1,28 @@
+import { t, Trans } from "@lingui/macro";
+import { AlertStatus } from "@prisma/client";
+import { GetServerSideProps } from "next";
+import { unstable_getServerSession } from "next-auth";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { Message } from "rsuite";
 import Editor, { FormAlertData } from "../../components/editor/Editor";
 import prisma from "../../lib/prisma";
-import { unstable_getServerSession } from "next-auth";
-import { AlertStatus, Role } from "@prisma/client";
-import { GetServerSideProps } from "next";
 
+import AlertingAuthoritySelector from "../../components/AlertingAuthoritySelector";
+import ErrorMessage from "../../components/ErrorMessage";
+import { ERRORS } from "../../lib/errors";
 import {
   formatDate,
   getStartOfToday,
   HandledError,
   useMountEffect,
 } from "../../lib/helpers.client";
-import { authOptions } from "../api/auth/[...nextauth]";
 import { CAPV12JSONSchema } from "../../lib/types/cap.schema";
-import { ERRORS } from "../../lib/errors";
-import { Message } from "rsuite";
-import ErrorMessage from "../../components/ErrorMessage";
-import { useRouter } from "next/router";
-import { t, Trans } from "@lingui/macro";
-import { useToasterI18n } from "../../lib/useToasterI18n";
 import { AlertingAuthority } from "../../lib/types/types";
 import { useAlertingAuthorityLocalStorage } from "../../lib/useLocalStorageState";
-import AlertingAuthoritySelector from "../../components/AlertingAuthoritySelector";
-import { useSession } from "next-auth/react";
+import { useToasterI18n } from "../../lib/useToasterI18n";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 type Props = {
   defaultAlertData: (FormAlertData & { from: string; to: string }) | undefined;

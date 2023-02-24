@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 
-import prisma from "../../lib/prisma";
-import { sendEmail } from "../../lib/email";
 import { withErrorHandler } from "../../lib/apiErrorHandler";
+import { sendEmail } from "../../lib/email";
+import prisma from "../../lib/prisma";
 import redis from "../../lib/redis";
 
 async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {

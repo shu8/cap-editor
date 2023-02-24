@@ -1,11 +1,11 @@
-import { Button, Panel, Tag } from "rsuite";
+import { Trans } from "@lingui/macro";
 import { Alert as DBAlert } from "@prisma/client";
-import { t, Trans } from "@lingui/macro";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { Button, Panel, Tag } from "rsuite";
 
-import styles from "../styles/components/Alert.module.css";
 import { CAPV12JSONSchema } from "../lib/types/cap.schema";
+import styles from "../styles/components/Alert.module.css";
 
 const colors = {
   urgency: {

@@ -1,12 +1,13 @@
-import styles from "../../../styles/components/editor/Step.module.css";
-import { Form, SelectPicker, TagInput, TagPicker } from "rsuite";
-import { FormAlertData, StepProps } from "../Editor";
-import { classes, HandledError } from "../../../lib/helpers.client";
-import { useState } from "react";
-import ErrorMessage from "../../ErrorMessage";
-import { Alert } from "@prisma/client";
 import { t, Trans } from "@lingui/macro";
+import { Alert } from "@prisma/client";
+import { useState } from "react";
+import { Form, SelectPicker, TagInput, TagPicker } from "rsuite";
+
+import { classes, HandledError } from "../../../lib/helpers.client";
 import { useToasterI18n } from "../../../lib/useToasterI18n";
+import styles from "../../../styles/components/editor/Step.module.css";
+import ErrorMessage from "../../ErrorMessage";
+import { FormAlertData, StepProps } from "../Editor";
 
 const STATUSES = ["Actual", "Exercise", "System", "Test", "Draft"];
 const MESSAGE_TYPES = ["Alert", "Update", "Cancel", "Ack", "Error"];

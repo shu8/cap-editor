@@ -1,17 +1,17 @@
+import { Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { Prisma } from "@prisma/client";
 import { ApiError } from "next/dist/server/api-utils";
 
 import { FormAlertData } from "../../../../components/editor/Editor";
+import { withErrorHandler } from "../../../../lib/apiErrorHandler";
+import { mapFormAlertDataToCapSchema } from "../../../../lib/cap";
 import prisma from "../../../../lib/prisma";
+import redis from "../../../../lib/redis";
+import { CAPV12JSONSchema } from "../../../../lib/types/cap.schema";
+import { formatAlertAsXML } from "../../../../lib/xml/helpers";
 import { sign } from "../../../../lib/xml/sign";
 import { authOptions } from "../../auth/[...nextauth]";
-import { CAPV12JSONSchema } from "../../../../lib/types/cap.schema";
-import { mapFormAlertDataToCapSchema } from "../../../../lib/cap";
-import { formatAlertAsXML } from "../../../../lib/xml/helpers";
-import { withErrorHandler } from "../../../../lib/apiErrorHandler";
-import redis from "../../../../lib/redis";
 
 async function handleUpdateAlert(
   req: NextApiRequest,

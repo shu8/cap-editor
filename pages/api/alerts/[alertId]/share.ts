@@ -2,10 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
-import prisma from "../../../../lib/prisma";
-import { authOptions } from "../../auth/[...nextauth]";
 import { withErrorHandler } from "../../../../lib/apiErrorHandler";
 import { sendEmail } from "../../../../lib/email";
+import prisma from "../../../../lib/prisma";
+import { authOptions } from "../../auth/[...nextauth]";
 
 async function handleShareAlert(
   req: NextApiRequest,

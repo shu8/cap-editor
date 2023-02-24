@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
-import StaticMaps from "staticmaps";
 import sharp from "sharp";
+import StaticMaps from "staticmaps";
 
-import prisma from "../../../../lib/prisma";
 import { withErrorHandler } from "../../../../lib/apiErrorHandler";
+import prisma from "../../../../lib/prisma";
 
 const clip = (str: string, length: number) => {
   if (str.length <= length) return str;

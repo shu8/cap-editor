@@ -1,10 +1,11 @@
+import { Trans } from "@lingui/macro";
 import { DateRangePicker, SelectPicker, TagPicker } from "rsuite";
+
 import { getStartOfToday } from "../../../lib/helpers.client";
+import styles from "../../../styles/components/editor/Step.module.css";
 import { FormAlertData, StepProps } from "../Editor";
 import SeverityCertaintyMatrix from "../SeverityCertaintyMatrix";
 import UrgencySlider from "../UrgencySlider";
-import styles from "../../../styles/components/editor/Step.module.css";
-import { Trans } from "@lingui/macro";
 
 // CAP info.responseType
 const ACTIONS = [

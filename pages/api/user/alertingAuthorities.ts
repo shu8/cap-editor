@@ -1,13 +1,13 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { randomBytes, randomUUID } from "crypto";
 import { AlertingAuthority } from "@prisma/client";
+import { randomBytes, randomUUID } from "crypto";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { unstable_getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
-import prisma from "../../../lib/prisma";
+import { withErrorHandler } from "../../../lib/apiErrorHandler";
 import { sendEmail } from "../../../lib/email";
 import { fetchWMOAlertingAuthorities } from "../../../lib/helpers.server";
-import { withErrorHandler } from "../../../lib/apiErrorHandler";
-import { unstable_getServerSession } from "next-auth";
+import prisma from "../../../lib/prisma";
 import { authOptions } from "../auth/[...nextauth]";
 
 async function handleConnectToAlertingAuthority(

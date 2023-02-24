@@ -1,16 +1,16 @@
+import { Prisma } from "@prisma/client";
+import { randomUUID } from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { randomUUID } from "crypto";
 import { ApiError } from "next/dist/server/api-utils";
-import { Prisma } from "@prisma/client";
 
-import prisma from "../../../../lib/prisma";
-import { authOptions } from "../../auth/[...nextauth]";
-import { formatAlertingAuthorityFeedAsXML } from "../../../../lib/xml/helpers";
-import { CAPV12JSONSchema } from "../../../../lib/types/cap.schema";
 import { FormAlertData } from "../../../../components/editor/Editor";
-import { mapFormAlertDataToCapSchema } from "../../../../lib/cap";
 import { withErrorHandler } from "../../../../lib/apiErrorHandler";
+import { mapFormAlertDataToCapSchema } from "../../../../lib/cap";
+import prisma from "../../../../lib/prisma";
+import { CAPV12JSONSchema } from "../../../../lib/types/cap.schema";
+import { formatAlertingAuthorityFeedAsXML } from "../../../../lib/xml/helpers";
+import { authOptions } from "../../auth/[...nextauth]";
 
 async function handleNewAlert(
   alertingAuthorityId: string,

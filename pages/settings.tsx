@@ -1,15 +1,16 @@
+import { t, Trans } from "@lingui/macro";
 import { startRegistration } from "@simplewebauthn/browser";
-import { Button, Message, Panel } from "rsuite";
-import Head from "next/head";
-import ErrorMessage from "../components/ErrorMessage";
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
-import { t, Trans } from "@lingui/macro";
-import ConnectToAlertingAuthorityForm from "../components/ConnectToAlertingAuthorityForm";
-import UpdatePersonalDetailsForm from "../components/UpdatePersonalDetailsForm";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
+import { Button, Message, Panel } from "rsuite";
+
+import ConnectToAlertingAuthorityForm from "../components/ConnectToAlertingAuthorityForm";
+import ErrorMessage from "../components/ErrorMessage";
+import UpdatePersonalDetailsForm from "../components/UpdatePersonalDetailsForm";
 import { useToasterI18n } from "../lib/useToasterI18n";
+import { authOptions } from "./api/auth/[...nextauth]";
 
 export default function SettingsPage() {
   const toaster = useToasterI18n();

@@ -1,11 +1,11 @@
-import { Button, Form, Message } from "rsuite";
-import { useState } from "react";
-import { HandledError } from "../lib/helpers.client";
-import ErrorMessage from "./ErrorMessage";
 import { t, Trans } from "@lingui/macro";
-import { useToasterI18n } from "../lib/useToasterI18n";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import { Button, Form, Message } from "rsuite";
+
+import { HandledError } from "../lib/helpers.client";
+import { useToasterI18n } from "../lib/useToasterI18n";
+import ErrorMessage from "./ErrorMessage";
 
 type Data = { name: string };
 export default function UpdatePersonalDetailsForm() {

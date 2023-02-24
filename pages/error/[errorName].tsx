@@ -1,8 +1,8 @@
+import { t } from "@lingui/macro";
 import Head from "next/head";
-import { ERRORS } from "../../lib/errors";
 import { useRouter } from "next/router";
 import { Message } from "rsuite";
-import { t } from "@lingui/macro";
+import { ERRORS } from "../../lib/errors";
 
 export default function ErrorPage() {
   const router = useRouter();

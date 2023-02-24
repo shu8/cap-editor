@@ -1,31 +1,38 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { generateAuthenticationOptions } from "@simplewebauthn/server";
 import { setCookie } from "cookies-next";
-import { generateAuthenticationOptions } from '@simplewebauthn/server';
 import { randomUUID } from "crypto";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import redis from "../../../../lib/redis";
 import { withErrorHandler } from "../../../../lib/apiErrorHandler";
+import redis from "../../../../lib/redis";
 
-async function getUserAuthenticationOptions(req: NextApiRequest, res: NextApiResponse) {
+async function getUserAuthenticationOptions(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const tempUserId = randomUUID();
   const cookieExpiry = new Date();
   cookieExpiry.setMinutes(cookieExpiry.getMinutes() + 5);
 
-  setCookie('webauthn-user-id', tempUserId, {
+  setCookie("webauthn-user-id", tempUserId, {
     req,
     res,
     expires: cookieExpiry,
     maxAge: 60 * 5,
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production'
+    secure: process.env.NODE_ENV === "production",
   });
 
   const options = generateAuthenticationOptions({
-    userVerification: 'preferred',
+    userVerification: "preferred",
   });
 
   // Expire after 5 minutes
-  await redis.HSET(`webauthn-auth:${tempUserId}`, 'challenge', options.challenge);
+  await redis.HSET(
+    `webauthn-auth:${tempUserId}`,
+    "challenge",
+    options.challenge
+  );
   await redis.expire(`webauthn-auth:${tempUserId}`, 60 * 5);
 
   return res.json(options);
@@ -36,7 +43,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return getUserAuthenticationOptions(req, res);
   }
 
-  return res.status(405).send('Method not allowed');
+  return res.status(405).send("Method not allowed");
 }
 
 export default withErrorHandler(handler);

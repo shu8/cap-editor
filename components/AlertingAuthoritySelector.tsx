@@ -1,11 +1,12 @@
-import styles from "../styles/components/AlertingAuthoritySelector.module.css";
 import { ArrowDown } from "@rsuite/icons";
-import { Button, Dropdown } from "rsuite";
-import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
-import { useRouter } from "next/router";
-import { classes } from "../lib/helpers.client";
-import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { Button, Dropdown } from "rsuite";
+
+import { classes } from "../lib/helpers.client";
+import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
+import styles from "../styles/components/AlertingAuthoritySelector.module.css";
 
 const AlertingAuthoritySelector = ({
   alertingAuthorities = {},

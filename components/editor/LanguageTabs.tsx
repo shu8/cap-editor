@@ -1,12 +1,12 @@
+import { t, Trans } from "@lingui/macro";
+import CloseOutlineIcon from "@rsuite/icons/CloseOutline";
 import ISO6391 from "iso-639-1";
 import { ReactNode, useState } from "react";
 import { Button, Message, Modal, SelectPicker } from "rsuite";
-import CloseOutlineIcon from "@rsuite/icons/CloseOutline";
 
-import styles from "../../styles/components/editor/LanguageTabs.module.css";
 import { classes } from "../../lib/helpers.client";
-import { t, Trans } from "@lingui/macro";
 import { useToasterI18n } from "../../lib/useToasterI18n";
+import styles from "../../styles/components/editor/LanguageTabs.module.css";
 
 type Props = {
   languages: string[];

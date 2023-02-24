@@ -1,14 +1,15 @@
-import Head from "next/head";
-import { signIn, useSession } from "next-auth/react";
-import AuthenticateForm from "../../components/AuthenticateForm";
-import { startAuthentication } from "@simplewebauthn/browser";
-import { useEffect } from "react";
+import { Trans } from "@lingui/macro";
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { signIn, useSession } from "next-auth/react";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { Message } from "rsuite";
-import { Trans } from "@lingui/macro";
+
+import { startAuthentication } from "@simplewebauthn/browser";
+import AuthenticateForm from "../../components/AuthenticateForm";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await unstable_getServerSession(

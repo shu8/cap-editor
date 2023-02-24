@@ -1,13 +1,11 @@
-import NextAuth, { AuthOptions } from "next-auth";
-import EmailProvider from "next-auth/providers/email";
-import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { verifyAuthenticationResponse } from "@simplewebauthn/server";
-import { Role } from "@prisma/client";
 import { deleteCookie, getCookie } from "cookies-next";
+import NextAuth, { AuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import EmailProvider from "next-auth/providers/email";
 
 import prisma from "../../../lib/prisma";
-import { ERRORS } from "../../../lib/errors";
 import redis from "../../../lib/redis";
 import { AlertingAuthority } from "../../../lib/types/types";
 

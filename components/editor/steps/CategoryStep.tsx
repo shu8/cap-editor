@@ -1,8 +1,9 @@
-import styles from "../../../styles/components/editor/Step.module.css";
-import { classes } from "../../../lib/helpers.client";
-import { FormAlertData, StepProps } from "../Editor";
-import { Button } from "rsuite";
 import { t, Trans } from "@lingui/macro";
+import { Button } from "rsuite";
+
+import { classes } from "../../../lib/helpers.client";
+import styles from "../../../styles/components/editor/Step.module.css";
+import { FormAlertData, StepProps } from "../Editor";
 
 const CATEGORIES = [
   { label: t`Geophysical (e.g., landslide)`, value: "Geo" },

@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
+import { withErrorHandler } from "../../../lib/apiErrorHandler";
 import prisma from "../../../lib/prisma";
 import { formatAlertingAuthoritiesAsXML } from "../../../lib/xml/helpers";
-import { withErrorHandler } from "../../../lib/apiErrorHandler";
 
 async function handleGetAlertingAuthorityFeeds(
   req: NextApiRequest,

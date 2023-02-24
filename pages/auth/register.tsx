@@ -1,7 +1,8 @@
-import Head from "next/head";
-import RegisterForm from "../../components/RegisterForm";
-import { unstable_getServerSession } from "next-auth";
 import { GetServerSideProps } from "next";
+import { unstable_getServerSession } from "next-auth";
+import Head from "next/head";
+
+import RegisterForm from "../../components/RegisterForm";
 import { authOptions } from "../api/auth/[...nextauth]";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

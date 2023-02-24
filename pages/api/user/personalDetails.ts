@@ -1,15 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { randomBytes } from "crypto";
-import { AlertingAuthority } from "@prisma/client";
+import { unstable_getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
-import prisma from "../../../lib/prisma";
-import { sendEmail } from "../../../lib/email";
-import { fetchWMOAlertingAuthorities } from "../../../lib/helpers.server";
 import { withErrorHandler } from "../../../lib/apiErrorHandler";
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
+import prisma from "../../../lib/prisma";
 import redis from "../../../lib/redis";
+import { authOptions } from "../auth/[...nextauth]";
 
 async function handleUpdatePersonalDetails(
   req: NextApiRequest,

@@ -1,9 +1,10 @@
-import { Button, Form, Loader, Message, SelectPicker } from "rsuite";
-import { useEffect, useState } from "react";
-import { HandledError, updateState } from "../lib/helpers.client";
-import ErrorMessage from "./ErrorMessage";
 import { t, Trans } from "@lingui/macro";
+import { useEffect, useState } from "react";
+import { Button, Form, Loader, Message, SelectPicker } from "rsuite";
+
+import { HandledError, updateState } from "../lib/helpers.client";
 import { useToasterI18n } from "../lib/useToasterI18n";
+import ErrorMessage from "./ErrorMessage";
 
 type RegisterData = {
   alertingAuthorityId: string;

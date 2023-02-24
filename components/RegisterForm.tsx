@@ -1,11 +1,12 @@
-import styles from "../styles/components/AuthenticateForm.module.css";
-import { Button, Form, Message } from "rsuite";
-import { useEffect, useState } from "react";
-import { HandledError, updateState } from "../lib/helpers.client";
-import ErrorMessage from "./ErrorMessage";
 import { t, Trans } from "@lingui/macro";
-import { useToasterI18n } from "../lib/useToasterI18n";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Button, Form, Message } from "rsuite";
+
+import { HandledError, updateState } from "../lib/helpers.client";
+import { useToasterI18n } from "../lib/useToasterI18n";
+import styles from "../styles/components/AuthenticateForm.module.css";
+import ErrorMessage from "./ErrorMessage";
 
 type RegisterData = {
   name: string;

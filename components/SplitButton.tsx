@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp } from "@rsuite/icons";
+import { ArrowUp } from "@rsuite/icons";
 import { useState } from "react";
 import {
   Button,

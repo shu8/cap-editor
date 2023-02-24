@@ -1,24 +1,25 @@
+import { t, Trans } from "@lingui/macro";
+import { AlertingAuthority, AlertStatus, Role } from "@prisma/client";
+import { ShareOutline } from "@rsuite/icons";
 import "ol/ol.css";
-import styles from "../../styles/components/editor/Editor.module.css";
-import { Button } from "rsuite";
 import { useState } from "react";
+import { Button } from "rsuite";
+
 import {
   classes,
   getEndOfYesterday,
   updateState,
 } from "../../lib/helpers.client";
+import { Resource } from "../../lib/types/types";
+import styles from "../../styles/components/editor/Editor.module.css";
+import SplitButton from "../SplitButton";
+import Map from "./map/Map";
 import CategoryStep from "./steps/CategoryStep";
 import DataStep from "./steps/DataStep";
-import TextStep from "./steps/TextStep";
-import Map from "./map/Map";
 import MapStep from "./steps/MapStep";
-import SummaryStep from "./steps/SummaryStep";
 import MetadataStep from "./steps/MetadataStep";
-import { AlertingAuthority, AlertStatus, Role } from "@prisma/client";
-import SplitButton from "../SplitButton";
-import { Resource } from "../../lib/types/types";
-import { t, Trans } from "@lingui/macro";
-import { ShareOutline } from "@rsuite/icons";
+import SummaryStep from "./steps/SummaryStep";
+import TextStep from "./steps/TextStep";
 
 const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];

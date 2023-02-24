@@ -1,15 +1,15 @@
-import Head from "next/head";
-import { useSession } from "next-auth/react";
-import { Button, Loader, Message, Panel } from "rsuite";
+import { t, Trans } from "@lingui/macro";
 import { Alert as DBAlert } from "@prisma/client";
-import { Trans, t } from "@lingui/macro";
+import { useSession } from "next-auth/react";
+import Head from "next/head";
+import Link from "next/link";
+import { Button, Loader, Message, Panel } from "rsuite";
 import useSWR from "swr";
 
-import styles from "../styles/Home.module.css";
-import { fetcher } from "../lib/helpers.client";
 import Alert from "../components/Alert";
-import Link from "next/link";
+import { fetcher } from "../lib/helpers.client";
 import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
   const { data: session } = useSession();

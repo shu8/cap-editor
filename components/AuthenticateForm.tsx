@@ -1,7 +1,7 @@
-import { signIn } from "next-auth/react";
-import styles from "../styles/components/AuthenticateForm.module.css";
-import { Button, Form } from "rsuite";
 import { Trans } from "@lingui/macro";
+import { signIn } from "next-auth/react";
+import { Button, Form } from "rsuite";
+import styles from "../styles/components/AuthenticateForm.module.css";
 
 export default function AuthenticateForm() {
   return (

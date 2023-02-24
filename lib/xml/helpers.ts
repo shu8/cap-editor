@@ -1,6 +1,6 @@
-import { Alert, AlertingAuthority } from ".prisma/client";
-import { XMLBuilder } from "fast-xml-parser";
 import { Capgen } from "capgen";
+import { XMLBuilder } from "fast-xml-parser";
+import { Alert, AlertingAuthority } from ".prisma/client";
 import redis from "../redis";
 
 const builder = new XMLBuilder({

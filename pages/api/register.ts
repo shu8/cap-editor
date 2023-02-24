@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 
-import prisma from "../../lib/prisma";
 import { withErrorHandler } from "../../lib/apiErrorHandler";
+import prisma from "../../lib/prisma";
 
 async function handleRegisterUser(req: NextApiRequest, res: NextApiResponse) {
   const { name, email } = req.body;

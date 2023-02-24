@@ -1,29 +1,31 @@
-import { EffectCallback, useEffect, useMemo, useRef, useState } from "react";
-import OLView from "ol/View";
-import OLMap from "ol/Map";
-import OSM from "ol/source/OSM";
-import OLDraw from "ol/interaction/Draw";
-import OLSelect from "ol/interaction/Select";
-import OLVectorSource, { VectorSourceEvent } from "ol/source/Vector";
-import OLFeatureCollection from "ol/Collection";
-import { IconButton } from "rsuite";
+import { t } from "@lingui/macro";
+import { AlertingAuthority } from "@prisma/client";
 import { Icon } from "@rsuite/icons";
-import { useGeographic } from "ol/proj";
-import TileLayer from "./TileLayer";
-import VectorLayer from "./VectorLayer";
-import { Circle, Geometry, Polygon } from "ol/geom";
+import flip from "@turf/flip";
 import Image from "next/image";
-import { Style, Stroke, Fill } from "ol/style";
-import GeoJSON from "ol/format/GeoJSON";
-import Feature from "ol/Feature";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { IconButton } from "rsuite";
+
+import OLFeatureCollection from "ol/Collection";
 import { singleClick } from "ol/events/condition";
-import { FormAlertData } from "../Editor";
+import Feature from "ol/Feature";
+import GeoJSON from "ol/format/GeoJSON";
+import { Circle, Geometry, Polygon } from "ol/geom";
 import { Type } from "ol/geom/Geometry";
 import { defaults as OLDefaultInteractions } from "ol/interaction";
-import { AlertingAuthority } from "@prisma/client";
-import flip from "@turf/flip";
+import OLDraw from "ol/interaction/Draw";
+import OLSelect from "ol/interaction/Select";
+import OLMap from "ol/Map";
+import { useGeographic } from "ol/proj";
+import OSM from "ol/source/OSM";
+import OLVectorSource, { VectorSourceEvent } from "ol/source/Vector";
+import { Fill, Stroke, Style } from "ol/style";
+import OLView from "ol/View";
+
 import { useMountEffect } from "../../../lib/helpers.client";
-import { t } from "@lingui/macro";
+import { FormAlertData } from "../Editor";
+import TileLayer from "./TileLayer";
+import VectorLayer from "./VectorLayer";
 
 // https://www.reshot.com/free-svg-icons/item/free-positioning-polygone-F2AWH4PGVQ/
 const PolygonImage = () => (

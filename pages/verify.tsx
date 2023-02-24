@@ -1,15 +1,15 @@
-import Head from "next/head";
-
-import styles from "../styles/Verify.module.css";
-import { ERRORS } from "../lib/errors";
-import prisma from "../lib/prisma";
-import { Button, Input, Message, Modal, TagPicker } from "rsuite";
-import { GetServerSideProps } from "next";
-import { useState } from "react";
-import { HandledError } from "../lib/helpers.client";
-import ErrorMessage from "../components/ErrorMessage";
 import { t, Trans } from "@lingui/macro";
+import { GetServerSideProps } from "next";
+import Head from "next/head";
+import { useState } from "react";
+import { Button, Input, Message, Modal, TagPicker } from "rsuite";
+
+import ErrorMessage from "../components/ErrorMessage";
+import { ERRORS } from "../lib/errors";
+import { HandledError } from "../lib/helpers.client";
+import prisma from "../lib/prisma";
 import { useToasterI18n } from "../lib/useToasterI18n";
+import styles from "../styles/Verify.module.css";
 
 type Props = {
   userToBeVerified: {

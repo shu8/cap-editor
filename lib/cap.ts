@@ -1,7 +1,7 @@
-import { FormAlertData } from "../components/editor/Editor";
 import { validate as validateJSON } from "jsonschema";
-import { CAPV12JSONSchema, CAPV12Schema } from "./types/cap.schema";
+import { FormAlertData } from "../components/editor/Editor";
 import { formatDate } from "./helpers.client";
+import { CAPV12JSONSchema, CAPV12Schema } from "./types/cap.schema";
 
 export const mapFormAlertDataToCapSchema = (
   alertingAuthority: { name: string; author: string },

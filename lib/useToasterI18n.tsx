@@ -1,6 +1,6 @@
-import { useToaster } from "rsuite";
-import { I18nProvider } from "@lingui/react";
 import { i18n } from "@lingui/core";
+import { I18nProvider } from "@lingui/react";
+import { useToaster } from "rsuite";
 import { ToastContainerProps } from "rsuite/esm/toaster/ToastContainer";
 
 export const useToasterI18n = () => {

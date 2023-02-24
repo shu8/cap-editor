@@ -1,10 +1,11 @@
-import styles from "../styles/components/Header.module.css";
+import { Trans } from "@lingui/macro";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "rsuite";
-import { signOut, useSession } from "next-auth/react";
-import { Trans } from "@lingui/macro";
+
 import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
+import styles from "../styles/components/Header.module.css";
 import AlertingAuthoritySelector from "./AlertingAuthoritySelector";
 
 export default function Header() {

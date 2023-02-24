@@ -1,4 +1,6 @@
-import styles from "../../../styles/components/editor/Step.module.css";
+import { t, Trans } from "@lingui/macro";
+import ISO6391 from "iso-639-1";
+import { forwardRef, useEffect, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -8,22 +10,19 @@ import {
   Message,
   SelectPicker,
 } from "rsuite";
-import { forwardRef, useEffect, useState } from "react";
-import ISO6391 from "iso-639-1";
 
 import {
   camelise,
   HandledError,
   useMountEffect,
 } from "../../../lib/helpers.client";
-import { FormAlertData, StepProps } from "../Editor";
 import { Resource, WhatNowResponse } from "../../../lib/types/types";
-
-import ErrorMessage from "../../ErrorMessage";
-import ResourceModal from "../ResourceModal";
-import LanguageTabs from "../LanguageTabs";
-import { t, Trans } from "@lingui/macro";
 import { useToasterI18n } from "../../../lib/useToasterI18n";
+import styles from "../../../styles/components/editor/Step.module.css";
+import ErrorMessage from "../../ErrorMessage";
+import { FormAlertData, StepProps } from "../Editor";
+import LanguageTabs from "../LanguageTabs";
+import ResourceModal from "../ResourceModal";
 
 const Textarea = forwardRef((props, ref) => (
   <Input {...props} ref={ref} rows={5} as="textarea" />

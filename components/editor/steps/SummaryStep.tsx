@@ -1,11 +1,11 @@
+import { t, Trans } from "@lingui/macro";
+import EditIcon from "@rsuite/icons/Edit";
 import ISO6391 from "iso-639-1";
 import { IconButton } from "rsuite";
-import EditIcon from "@rsuite/icons/Edit";
 
+import { classes } from "../../../lib/helpers.client";
 import styles from "../../../styles/components/editor/Step.module.css";
 import { FormAlertData, Step } from "../Editor";
-import { classes } from "../../../lib/helpers.client";
-import { t, Trans } from "@lingui/macro";
 
 const ReviewItem = (props: {
   field: string;
