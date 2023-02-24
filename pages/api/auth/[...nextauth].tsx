@@ -168,27 +168,27 @@ export const authOptions: AuthOptions = {
       return true;
     },
     async jwt({ token, account }) {
-      if (account && token?.email) {
+      if (!token?.email) return token;
+
+      // Only do (expensive) DB call on first login, or if there is a pending session
+      //  update from elsewhere in app for this user
+      if (
+        account ||
+        (await redis.SREM(REDIS_KEY_PENDING_SESSION_UPDATES, token.email))
+      ) {
         const user = await getUser(token?.email);
         if (!user) return token;
+        token.name = user.name;
         token.alertingAuthorities = mapAlertingAuthorities(user);
       }
+
       return token;
     },
     async session({ session, token }) {
+      if (token.name) session.user.name = token.name;
       session.user.alertingAuthorities = (token.alertingAuthorities ||
         {}) as UserAlertingAuthorities;
 
-      // Only do (expensive) DB call if there is a pending session update from elsewhere in app for this user
-      if (
-        await redis.SREM(REDIS_KEY_PENDING_SESSION_UPDATES, session.user.email)
-      ) {
-        const user = await getUser(session.user.email);
-        if (user) {
-          session.user.name = user.name;
-          session.user.alertingAuthorities = mapAlertingAuthorities(user);
-        }
-      }
       return session;
     },
   },

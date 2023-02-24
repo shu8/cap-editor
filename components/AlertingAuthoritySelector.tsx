@@ -45,7 +45,7 @@ const AlertingAuthoritySelector = ({
           size="md"
           color="violet"
         >
-          <i>Alerting Authority: </i>
+          <i>Alerting Authority</i>:&nbsp;
           {!!alertingAuthorities[alertingAuthorityId] && (
             <span
               className={classes(
