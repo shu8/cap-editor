@@ -1,17 +1,14 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom";
-import Editor from "../../components/editor/Editor";
-import { describe, expect, jest, test } from "@jest/globals";
-import { I18nProvider } from "@lingui/react";
+import { describe, expect, test } from "@jest/globals";
 import { i18n } from "@lingui/core";
-import { messages } from "../../locales/en/messages";
+import { I18nProvider } from "@lingui/react";
 import { Alert as DBAlert } from "@prisma/client";
-import { mapFormAlertDataToCapSchema } from "../../lib/cap";
-import { formatDate } from "../../lib/helpers.client";
-import Alert from "../../components/Alert";
+import "@testing-library/jest-dom";
+import { render, screen } from "@testing-library/react";
 import { randomUUID } from "crypto";
+
+import Alert from "../../components/Alert";
+import { formatDate } from "../../lib/helpers.client";
+import { messages } from "../../locales/en/messages";
 
 const startOfToday = new Date();
 startOfToday.setHours(0, 0, 0, 0);
