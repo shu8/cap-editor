@@ -22,3 +22,5 @@ jobs:
 
       - name: Run backend API tests
         run: npm run test:api
+        env:
+          BASE_URL: http://example.com
