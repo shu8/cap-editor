@@ -137,7 +137,7 @@ export default function Alert({ alert }: { alert: DBAlert }) {
             </Tag>
           </p>
 
-          {alert.status !== "PUBLISHED" && !expired && (
+          {alert.status === "PUBLISHED" && !expired && (
             <p className={styles.socialMediaShareIconsWrapper}>
               <>
                 Share on Social Media:
