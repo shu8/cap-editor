@@ -5,6 +5,10 @@ import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import EmailProvider from "next-auth/providers/email";
 
+import {
+  REDIS_KEY_PENDING_SESSION_UPDATES,
+  REDIS_PREFIX_WEBAUTHN_AUTH_CHALLENGE,
+} from "../../../lib/constants";
 import prisma from "../../../lib/prisma";
 import redis from "../../../lib/redis";
 import { AlertingAuthority } from "../../../lib/types/types";
@@ -93,7 +97,7 @@ export const authOptions: AuthOptions = {
           if (typeof tempWebauthnUserId !== "string") return null;
           deleteCookie("webauthn-user-id", { req });
 
-          const redisKey = `webauthn-auth:${tempWebauthnUserId}`;
+          const redisKey = `${REDIS_PREFIX_WEBAUTHN_AUTH_CHALLENGE}:${tempWebauthnUserId}`;
           const expectedChallenge = await redis.HGET(redisKey, "challenge");
           if (!expectedChallenge) return null;
           await redis.HDEL(redisKey, tempWebauthnUserId);
@@ -175,7 +179,9 @@ export const authOptions: AuthOptions = {
       };
 
       // Only do (expensive) DB call if there is a pending session update from elsewhere in app for this user
-      if (await redis.SREM("pendingSessionUpdates", session.user.email)) {
+      if (
+        await redis.SREM(REDIS_KEY_PENDING_SESSION_UPDATES, session.user.email)
+      ) {
         const user = await getUser(session.user.email);
         if (user) {
           session.user.name = user.name;

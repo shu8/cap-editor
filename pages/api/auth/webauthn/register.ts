@@ -8,6 +8,7 @@ import { Session, getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
 import { withErrorHandler } from "../../../../lib/apiErrorHandler";
+import { REDIS_PREFIX_WEBAUTHN_REGISTER_CHALLENGE } from "../../../../lib/constants";
 import prisma from "../../../../lib/prisma";
 import redis from "../../../../lib/redis";
 import { authOptions } from "../[...nextauth]";
@@ -54,12 +55,9 @@ async function handleGetUserRegistrationOptions(
   });
 
   // Expire challenge after 5 minutes
-  await redis.HSET(
-    `webauthn-register:${session.user.email}`,
-    "challenge",
-    options.challenge
-  );
-  await redis.expire(`webauthn-register:${session.user.email}`, 60 * 5);
+  const redisKey = `${REDIS_PREFIX_WEBAUTHN_REGISTER_CHALLENGE}:${session.user.email}`;
+  await redis.HSET(redisKey, "challenge", options.challenge);
+  await redis.expire(redisKey, 60 * 5);
 
   return res.json(options);
 }
@@ -71,14 +69,12 @@ async function handleUserRegistration(
 ) {
   const credential = req.body;
 
-  const challenge = await redis.HGET(
-    `webauthn-register:${session.user.email}`,
-    "challenge"
-  );
+  const redisKey = `webauthn-register:${session.user.email}`;
+  const challenge = await redis.HGET(redisKey, "challenge");
   if (!challenge) {
     throw new ApiError(403, "Your account cannot register for WebAuthn yet");
   }
-  await redis.del(`webauthn-register:${session.user.email}`);
+  await redis.del(redisKey);
 
   const { verified, registrationInfo } = await verifyRegistrationResponse({
     credential,

@@ -1,6 +1,8 @@
+import { Alert, AlertingAuthority } from ".prisma/client";
 import { Capgen } from "capgen";
 import { XMLBuilder } from "fast-xml-parser";
-import { Alert, AlertingAuthority } from ".prisma/client";
+
+import { REDIS_PREFIX_SIGNED_ALERTS } from "../constants";
 import redis from "../redis";
 
 const builder = new XMLBuilder({
@@ -50,7 +52,7 @@ export const formatAlertingAuthorityFeedAsXML = async (
   for (let i = 0; i < numAlerts; i++) {
     const alert = alerts[i];
     const lastSignedAt = await redis.HGET(
-      `alerts:${alert.id}`,
+      `${REDIS_PREFIX_SIGNED_ALERTS}:${alert.id}`,
       "last_signed_at"
     );
     entries.push({

@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { withErrorHandler } from "../../../../lib/apiErrorHandler";
+import { REDIS_PREFIX_WEBAUTHN_AUTH_CHALLENGE } from "../../../../lib/constants";
 import redis from "../../../../lib/redis";
 
 async function getUserAuthenticationOptions(
@@ -28,12 +29,9 @@ async function getUserAuthenticationOptions(
   });
 
   // Expire after 5 minutes
-  await redis.HSET(
-    `webauthn-auth:${tempUserId}`,
-    "challenge",
-    options.challenge
-  );
-  await redis.expire(`webauthn-auth:${tempUserId}`, 60 * 5);
+  const redisKey = `${REDIS_PREFIX_WEBAUTHN_AUTH_CHALLENGE}:${tempUserId}`;
+  await redis.HSET(redisKey, "challenge", options.challenge);
+  await redis.expire(redisKey, 60 * 5);
 
   return res.json(options);
 }

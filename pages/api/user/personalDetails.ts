@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
 import { withErrorHandler } from "../../../lib/apiErrorHandler";
+import { REDIS_KEY_PENDING_SESSION_UPDATES } from "../../../lib/constants";
 import prisma from "../../../lib/prisma";
 import redis from "../../../lib/redis";
 import { authOptions } from "../auth/[...nextauth]";
@@ -24,7 +25,7 @@ async function handleUpdatePersonalDetails(
     data: { name },
   });
 
-  await redis.SADD("pendingSessionUpdates", session.user.email);
+  await redis.SADD(REDIS_KEY_PENDING_SESSION_UPDATES, session.user.email);
   return res.json({ error: false });
 }
 

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { ApiError } from "next/dist/server/api-utils";
 
 import { withErrorHandler } from "../../lib/apiErrorHandler";
+import { REDIS_KEY_PENDING_SESSION_UPDATES } from "../../lib/constants";
 import { sendEmail } from "../../lib/email";
 import prisma from "../../lib/prisma";
 import redis from "../../lib/redis";
@@ -86,7 +87,7 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
 
   // Update this user's session when they next fetch it (so they don't have to re-login)
   await redis.SADD(
-    "pendingSessionUpdates",
+    REDIS_KEY_PENDING_SESSION_UPDATES,
     userAndAlertingAuthority.User.email
   );
 

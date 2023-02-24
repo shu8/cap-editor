@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
 import { withErrorHandler } from "../../lib/apiErrorHandler";
+import { REDIS_PREFIX_WHATNOW } from "../../lib/constants";
 import redis from "../../lib/redis";
 import { authOptions } from "./auth/[...nextauth]";
 
@@ -17,7 +18,7 @@ async function handleGetWhatNowMessages(
   const session = await getServerSession(req, res, authOptions);
   if (!session) throw new ApiError(403, "You are not logged in");
 
-  const redisKey = `whatnow:${req.query.countryCode}`;
+  const redisKey = `${REDIS_PREFIX_WHATNOW}:${req.query.countryCode}`;
   const cachedData = await redis.GET(redisKey);
   if (cachedData) return res.json({ data: JSON.parse(cachedData) });
 

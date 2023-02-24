@@ -6,6 +6,7 @@ import { ApiError } from "next/dist/server/api-utils";
 import { FormAlertData } from "../../../../components/editor/Editor";
 import { withErrorHandler } from "../../../../lib/apiErrorHandler";
 import { mapFormAlertDataToCapSchema } from "../../../../lib/cap";
+import { REDIS_PREFIX_SIGNED_ALERTS } from "../../../../lib/constants";
 import prisma from "../../../../lib/prisma";
 import redis from "../../../../lib/redis";
 import { CAPV12JSONSchema } from "../../../../lib/types/cap.schema";
@@ -150,18 +151,19 @@ async function handleGetAlert(
       return res.status(200).send(formatAlertAsXML(alert));
     }
 
-    let signedXML = await redis.HGET(`alerts:${alert.id}`, "signed_xml");
+    const redisKey = `${REDIS_PREFIX_SIGNED_ALERTS}:${alert.id}`;
+    let signedXML = await redis.HGET(redisKey, "signed_xml");
     if (!signedXML) {
       signedXML = await sign(alert);
 
       // Cache, and expire every 20 days
-      await redis.HSET(`alerts:${alert.id}`, [
+      await redis.HSET(redisKey, [
         "signed_xml",
         signedXML,
         "last_signed_at",
         new Date().getTime(),
       ]);
-      await redis.expire(`alerts:${alert.id}`, 60 * 60 * 24 * 20);
+      await redis.expire(redisKey, 60 * 60 * 24 * 20);
     }
 
     res.setHeader("Content-Type", "application/xml");
