@@ -14,6 +14,8 @@ jobs:
         uses: actions/checkout@v3
 
       - uses: bahmutov/npm-install@v1
+        with:
+          useLockFile: false
 
       - name: Start PostgreSQL Docker container for testing
         run: docker-compose -f docker-compose-test.yml up -d
