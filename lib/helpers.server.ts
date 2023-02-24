@@ -1,5 +1,6 @@
 import { AlertingAuthority } from "@prisma/client";
 import { XMLParser } from "fast-xml-parser";
+import { createHash } from "node:crypto";
 
 import { REDIS_KEY_WMO_REGISTER_OF_AAS } from "./constants";
 import redis from "./redis";
@@ -30,3 +31,6 @@ export const fetchWMOAlertingAuthorities = async () => {
 
   return data as AlertingAuthority[];
 };
+
+export const hash = (str: string) =>
+  createHash("md5").update(str).digest("hex");

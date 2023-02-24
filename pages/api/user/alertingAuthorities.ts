@@ -6,7 +6,7 @@ import { ApiError } from "next/dist/server/api-utils";
 
 import { withErrorHandler } from "../../../lib/apiErrorHandler";
 import { sendEmail } from "../../../lib/email";
-import { fetchWMOAlertingAuthorities } from "../../../lib/helpers.server";
+import { fetchWMOAlertingAuthorities, hash } from "../../../lib/helpers.server";
 import prisma from "../../../lib/prisma";
 import { authOptions } from "../auth/[...nextauth]";
 
@@ -61,13 +61,13 @@ async function handleConnectToAlertingAuthority(
         create: {
           AlertingAuthority: {
             connectOrCreate: {
-              // TODO alertingAuthority.polygon isn't given for all AAs by WMO
               create: alertingAuthority,
               where: { id: alertingAuthority.id },
             },
           },
-          // TODO hash the token in the db
-          alertingAuthorityVerificationToken,
+          alertingAuthorityVerificationToken: hash(
+            alertingAuthorityVerificationToken
+          ),
         },
       },
     },
