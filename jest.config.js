@@ -16,5 +16,10 @@ module.exports = {
       transformIgnorePatterns: ["/node_modules/(?!ol)/"],
       setupFiles: ["<rootDir>/tests/frontend/setup.ts"],
     },
+    {
+      setupFilesAfterEnv: ["<rootDir>/tests/e2e/setup.ts"],
+      testEnvironment: "<rootDir>/tests/e2e/puppeteer-environment.ts",
+      testMatch: ["**/tests/e2e/**/*.test.ts"],
+    },
   ],
 };
