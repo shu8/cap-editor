@@ -1,0 +1,37 @@
+name: End-to-end tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: bahmutov/npm-install@v1
+        with:
+          useLockFile: false
+
+      - name: Create test private key for signing alerts
+        run: ssh-keygen -m PKCS8 -t ecdsa -f $(pwd)/test-key
+
+      - name: Start Docker containers for testing
+        run: docker-compose -f docker-compose-test-e2e.yml up -d
+
+      - name: Build frontend
+        run: npm run build
+        env:
+          NODE_ENV: test
+
+      - name: Run end-to-end tests
+        run: |
+          # Run Next.js frontend in background
+          npm run start &
+          npm run test:api
+        env:
+          PRIVATE_KEY_FILENAME: test-key
