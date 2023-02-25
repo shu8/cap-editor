@@ -25,7 +25,7 @@ async function handleGetSharedAlerts(
 
   return res.json({
     error: false,
-    alerts: user?.SharedAlerts.map((a) => a.Alert),
+    alerts: user?.SharedAlerts.map((a) => a.Alert) ?? [],
   });
 }
 

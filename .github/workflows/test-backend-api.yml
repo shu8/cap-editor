@@ -21,7 +21,7 @@ jobs:
         run: ssh-keygen -m PKCS8 -t ecdsa -f $(pwd)/test-key
 
       - name: Start PostgreSQL Docker container for testing
-        run: docker-compose -f docker-compose-test.yml up -d
+        run: docker-compose -f docker-compose-test-api.yml up -d
 
       - name: Run backend API tests
         run: npm run test:api
