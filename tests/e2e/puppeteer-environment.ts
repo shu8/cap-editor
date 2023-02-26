@@ -9,7 +9,6 @@ class PuppeteerEnvironment extends NodeEnvironment {
 
   async setup() {
     await super.setup();
-    console.log("setting");
 
     const browser = await puppeteer.launch({
       // headless: false,

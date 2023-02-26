@@ -69,7 +69,7 @@ describe("Login", () => {
     expect(users![0].email).toEqual("foo@example.com");
   });
 
-  test("can registering after redirection and then login with email link", async () => {
+  test("can register after redirection and then login with email link", async () => {
     // Enter email in login screen before registering
     const emailInput = await queries.findByPlaceholderText(
       document,
