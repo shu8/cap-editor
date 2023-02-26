@@ -2,6 +2,7 @@
 
 [![Backend (API) Tests status](https://github.com/shu8/cap-editor/actions/workflows/test-backend-api.yml/badge.svg)](https://github.com/shu8/cap-editor/actions/workflows/test-backend-api.yml)
 [![Frontend (React) Tests status](https://github.com/shu8/cap-editor/actions/workflows/test-frontend.yml/badge.svg)](https://github.com/shu8/cap-editor/actions/workflows/test-frontend.yml)
+[![End-to-end tests](https://github.com/shu8/cap-editor/actions/workflows/test-e2e.yml/badge.svg)](https://github.com/shu8/cap-editor/actions/workflows/test-e2e.yml)
 
 <img src="./docs/images/cap-logo.gif" align="right"
      alt="Common Alerting Protocol logo" width="150" height="60">
