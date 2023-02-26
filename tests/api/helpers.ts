@@ -6,6 +6,7 @@ import { randomUUID } from "crypto";
 import { mapFormAlertDataToCapSchema } from "../../lib/cap";
 import { formatDate } from "../../lib/helpers.client";
 import { Role } from "@prisma/client";
+import { hash } from "../../lib/helpers.server";
 
 export const mockUserOnce = (mockUserDetails) => {
   const originalModuleClient = jest.requireActual("next-auth/react") as any;
@@ -96,7 +97,7 @@ export const createUser = async ({
             verified: new Date(),
           }),
           ...(!alertingAuthorityVerified && {
-            verificationToken: "token",
+            verificationToken: hash("token"),
           }),
           roles: alertingAuthority.roles,
         },
