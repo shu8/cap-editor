@@ -1,5 +1,5 @@
 import { PrismaClient, Prisma } from "@prisma/client";
-import { beforeEach, afterEach, beforeAll, afterAll } from "@jest/globals";
+import { beforeEach, afterEach, jest } from "@jest/globals";
 import { spawnSync } from "child_process";
 import path from "path";
 
@@ -16,7 +16,7 @@ const tableNamesCsv = Prisma.dmmf.datamodel.models
 
 const prismaBinary = path.join("./", "node_modules", ".bin", "prisma");
 
-// Reset db for each test
+// Reset db and browser for each test
 beforeEach(async () => {
   await prisma.$connect();
 
@@ -29,6 +29,9 @@ beforeEach(async () => {
     });
     migrationsRan = true;
   }
+
+  incognito = await browser.createIncognitoBrowserContext();
+  page = await incognito.newPage();
 });
 
 afterEach(async () => {
@@ -37,4 +40,8 @@ afterEach(async () => {
   await fetch("http://localhost:8025/api/v1/messages", {
     method: "DELETE",
   });
+
+  await incognito.close();
 });
+
+jest.setTimeout(10000);

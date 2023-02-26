@@ -1,4 +1,4 @@
-import puppeteer, { Browser, Page } from "puppeteer";
+import puppeteer, { Browser, BrowserContext, Page } from "puppeteer";
 import NodeEnvironment from "jest-environment-node";
 
 // Template class taken from Jest docs: https://jestjs.io/docs/puppeteer
@@ -13,15 +13,16 @@ class PuppeteerEnvironment extends NodeEnvironment {
     const browser = await puppeteer.launch({
       // headless: false,
     });
+    const incognito = await browser.createIncognitoBrowserContext();
     this.global.baseUrl = "http://localhost:3000";
-    this.global.browser = browser;
-    this.global.page = (await browser.pages())[0];
+    this.global.browser = incognito.browser();
+    this.global.incognito = incognito;
+    this.global.page = await incognito.newPage();
   }
 
   async teardown() {
-    this.global.page?.close();
+    this.global.incognito?.close();
     this.global.browser?.close();
-    this.global.server?.destroy();
     await super.teardown();
   }
 }
@@ -31,5 +32,6 @@ module.exports = PuppeteerEnvironment;
 declare global {
   var baseUrl: string;
   var page: Page;
+  var incognito: BrowserContext;
   var browser: Browser;
 }

@@ -1,9 +1,38 @@
+import { Role } from "@prisma/client";
 import { getDocument, queries } from "pptr-testing-library";
 import quotedPrintable from "quoted-printable";
 
-export const createUser = async (email: string, name: string) => {
-  await prisma?.user.create({
-    data: { email, name },
+export const createUser = async (
+  email: string,
+  name: string,
+  alertingAuthority: {
+    verified: Date | null;
+    name: string;
+    roles: Role[];
+  }
+) => {
+  return await prisma?.user.create({
+    data: {
+      email,
+      name,
+      ...(alertingAuthority && {
+        AlertingAuthorities: {
+          create: {
+            AlertingAuthority: {
+              create: {
+                name: alertingAuthority.name,
+                author: "aa@example.com",
+                id: name,
+                countryCode: "GBR",
+                polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
+              },
+            },
+            verified: alertingAuthority.verified,
+            roles: alertingAuthority.roles,
+          },
+        },
+      }),
+    },
   });
 };
 
@@ -14,9 +43,10 @@ export const getEmails = async () => {
 };
 
 export const login = async (email: string) => {
-  await page.goto(`${baseUrl}/login`);
+  await page.goto(`${baseUrl}/login`, { waitUntil: "networkidle0" });
   const document = await getDocument(page);
 
+  await page.screenshot({ path: "./test.png" });
   // Enter email and click login button
   await (
     await queries.findByPlaceholderText(document, "me@example.com")
