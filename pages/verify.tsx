@@ -7,6 +7,7 @@ import { Button, Input, Message, Modal, TagPicker } from "rsuite";
 import ErrorMessage from "../components/ErrorMessage";
 import { ERRORS } from "../lib/errors";
 import { HandledError } from "../lib/helpers.client";
+import { hash } from "../lib/helpers.server";
 import prisma from "../lib/prisma";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import styles from "../styles/Verify.module.css";
@@ -35,7 +36,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   const userAndAlertingAuthority =
     await prisma.userAlertingAuthorities.findFirst({
-      where: { verificationToken },
+      where: { verificationToken: hash(verificationToken) },
       include: {
         AlertingAuthority: { select: { name: true, id: true } },
         User: { select: { email: true, name: true } },
@@ -84,7 +85,8 @@ export default function VerifyUser({
         if (res.error) throw new HandledError(res.message);
         toaster.push(
           <Message type="success" duration={0} closable>
-            <Trans>Account successfully verified</Trans>
+            <Trans>Account successfully</Trans>{" "}
+            {verified ? t`approved` : t`rejected`}
           </Message>
         );
       })

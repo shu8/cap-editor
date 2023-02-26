@@ -7,6 +7,12 @@ export const createUser = async (email: string, name: string) => {
   });
 };
 
+export const getEmails = async () => {
+  return await fetch("http://localhost:8025/api/v2/messages").then((res) =>
+    res.json()
+  );
+};
+
 export const login = async (email: string) => {
   await page.goto(`${baseUrl}/login`);
   const document = await getDocument(page);
@@ -19,9 +25,7 @@ export const login = async (email: string) => {
   await page.waitForNavigation({ waitUntil: "networkidle0" });
 
   // Get login email
-  const emails = await fetch("http://localhost:8025/api/v2/messages").then(
-    (res) => res.json()
-  );
+  const emails = await getEmails();
   const loginUrlMatch = emails.items[emails.items.length - 1].Raw.Data.match(
     /(http[\s\S]*?\n\s*\n)/m
   );
@@ -34,7 +38,11 @@ export const login = async (email: string) => {
   await page.waitForNavigation({ waitUntil: "networkidle0" });
 };
 
-export const mockNetworkResponse = async (method, path, data) => {
+export const mockNetworkResponse = async (
+  method: string,
+  path: string,
+  data: any
+) => {
   await page.setRequestInterception(true);
   page.on("request", (request) => {
     if (request.url().endsWith(path) && request.method() === method) {

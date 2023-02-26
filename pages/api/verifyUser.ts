@@ -4,6 +4,7 @@ import { ApiError } from "next/dist/server/api-utils";
 import { withErrorHandler } from "../../lib/apiErrorHandler";
 import { REDIS_KEY_PENDING_SESSION_UPDATES } from "../../lib/constants";
 import { sendEmail } from "../../lib/email";
+import { hash } from "../../lib/helpers.server";
 import prisma from "../../lib/prisma";
 import redis from "../../lib/redis";
 
@@ -19,7 +20,7 @@ async function handleVerifyUser(req: NextApiRequest, res: NextApiResponse) {
 
   const userAndAlertingAuthority =
     await prisma.userAlertingAuthorities.findFirst({
-      where: { verificationToken },
+      where: { verificationToken: hash(verificationToken) },
       include: {
         AlertingAuthority: { select: { name: true, id: true } },
         User: { select: { email: true } },
