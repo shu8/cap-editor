@@ -4,7 +4,7 @@ declare global {
       BASE_URL: string;
       PRIVATE_KEY_FILENAME: string;
       EMAIL_SERVER_HOST: string;
-      EMAIL_SERVER_PORT: number;
+      EMAIL_SERVER_PORT: string;
       EMAIL_SERVER_USER: string;
       EMAIL_SERVER_PASSWORD: string;
       EMAIL_FROM: string;

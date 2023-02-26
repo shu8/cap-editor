@@ -3,8 +3,8 @@ import NodeEnvironment from "jest-environment-node";
 
 // Template class taken from Jest docs: https://jestjs.io/docs/puppeteer
 class PuppeteerEnvironment extends NodeEnvironment {
-  constructor(config: any) {
-    super(config);
+  constructor(config: any, _context: any) {
+    super(config, _context);
   }
 
   async setup() {

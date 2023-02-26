@@ -1,11 +1,12 @@
 import { Role } from "@prisma/client";
 import { getDocument, queries } from "pptr-testing-library";
+import { ElementHandle } from "puppeteer";
 import quotedPrintable from "quoted-printable";
 
 export const createUser = async (
   email: string,
   name: string,
-  alertingAuthority: {
+  alertingAuthority?: {
     verified: Date | null;
     name: string;
     roles: Role[];
@@ -22,7 +23,7 @@ export const createUser = async (
               create: {
                 name: alertingAuthority.name,
                 author: "aa@example.com",
-                id: name,
+                id: alertingAuthority.name,
                 countryCode: "GBR",
                 polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
               },
@@ -86,3 +87,54 @@ export const mockNetworkResponse = async (
     request.continue();
   });
 };
+
+export async function fillOutEditorForm(document: ElementHandle<Element>) {
+  const [statusInput, messageTypeInput, scopeInput] =
+    await queries.findAllByText(document, "Select");
+
+  await statusInput.click();
+  await (await queries.findByText(document, "Actual")).click();
+
+  await messageTypeInput.click();
+  await (await queries.findByText(document, "Alert")).click();
+
+  await scopeInput.click();
+  await (await queries.findByText(document, "Public")).click();
+
+  await (await queries.findByText(document, "Next")).click();
+
+  await (await queries.findByText(document, "Rescue & recovery")).click();
+  await (await queries.findByText(document, "Next")).click();
+
+  await (await queries.findByText(document, "Select")).click();
+  await (
+    await queries.findByText(document, "England", { exact: false })
+  ).click();
+  await (await queries.findByText(document, "Next")).click();
+
+  const [severitySelector, certaintySelector] = await queries.findAllByText(
+    document,
+    "Choose"
+  );
+
+  await severitySelector.click();
+  await (await queries.findByText(document, "Severe")).click();
+
+  await certaintySelector.click();
+  await (await queries.findByText(document, "Likely")).click();
+
+  await (await queries.findAllByText(document, "Immediate"))[0].click();
+
+  await (await queries.findByText(document, "Select")).click();
+  await (await queries.findByText(document, "Prepare")).click();
+
+  await (await queries.findByText(document, "Next")).click();
+
+  const inputs = await queries.findAllByRole(document, "textbox");
+  await inputs[0].type("Flooding");
+  await inputs[1].type("Headline");
+  await inputs[2].type("Description");
+  await inputs[3].type("Instruction");
+
+  await (await queries.findByText(document, "Next")).click();
+}
