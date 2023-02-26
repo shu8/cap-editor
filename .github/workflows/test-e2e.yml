@@ -34,4 +34,5 @@ jobs:
           npm run start &
           npm run test:e2e
         env:
+          NODE_ENV: test
           PRIVATE_KEY_FILENAME: test-key
