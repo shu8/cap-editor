@@ -11,8 +11,6 @@ beforeEach(async () => {
   document = await getDocument(page);
 });
 
-jest.setTimeout(10000);
-
 describe("Verify", () => {
   test("load page without token query param", async () => {
     await queries.findByText(

@@ -9,7 +9,6 @@ beforeEach(async () => {
   document = await getDocument(page);
 });
 
-jest.setTimeout(10000);
 describe("Login", () => {
   test("load page", async () => {
     expect((await queries.findAllByText(document, "Login")).length).toEqual(2);

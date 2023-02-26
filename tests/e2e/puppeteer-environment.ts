@@ -21,8 +21,7 @@ class PuppeteerEnvironment extends NodeEnvironment {
   }
 
   async teardown() {
-    this.global.incognito?.close();
-    this.global.browser?.close();
+    await this.global.browser?.close();
     await super.teardown();
   }
 }

@@ -12,8 +12,6 @@ beforeEach(async () => {
   document = await getDocument(page);
 });
 
-jest.setTimeout(10000);
-
 describe("Personal Details", () => {
   test("load section", async () => {
     await queries.findByText(document, "Personal Details");

@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 import { getDocument, queries } from "pptr-testing-library";
 import { ElementHandle } from "puppeteer";
 import { formatDate } from "../../lib/helpers.client";
-import { createUser, fillOutEditorForm, login } from "./helpers";
+import { createUser, login } from "./helpers";
 
 var document: ElementHandle<Element>;
 
