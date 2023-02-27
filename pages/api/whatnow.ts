@@ -29,10 +29,17 @@ async function handleGetWhatNowMessages(
     }
   ).then((res) => res.json());
 
-  // Cache WhatNow data for a country for 24 hours
-  redis.SET(redisKey, JSON.stringify(data.data), { EX: 60 * 60 * 24 });
+  if (data?.data) {
+    // Cache WhatNow data for a country for 24 hours
+    redis.SET(redisKey, JSON.stringify(data.data), { EX: 60 * 60 * 24 });
 
-  return res.json({ data: data.data });
+    return res.json({ data: data.data });
+  }
+
+  return res.status(500).json({
+    error: true,
+    message: "There was an unexpected error fetching the WhatNow messages",
+  });
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
