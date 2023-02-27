@@ -78,8 +78,8 @@ export default function Alert({ alert }: { alert: DBAlert }) {
               <Trans>View alert</Trans> ↗
             </Button>
           </a>
-          <Link href={`/editor/${alert.id}`}>
-            {alert.status !== "PUBLISHED" && (
+          {alert.status !== "PUBLISHED" && (
+            <Link href={`/editor/${alert.id}`}>
               <Button
                 className={styles.btn}
                 appearance="ghost"
@@ -88,8 +88,8 @@ export default function Alert({ alert }: { alert: DBAlert }) {
               >
                 <Trans>Edit alert</Trans> 🖉
               </Button>
-            )}
-          </Link>
+            </Link>
+          )}
           <Link href={`/editor?template=${alert.id}`}>
             <Button
               className={styles.btn}
@@ -183,8 +183,8 @@ export default function Alert({ alert }: { alert: DBAlert }) {
 
         <Image
           src={`/api/alerts/${alert.id}/image`}
-          width={200}
-          height={220}
+          width={256}
+          height={299}
           alt="Alert image"
         />
       </div>
