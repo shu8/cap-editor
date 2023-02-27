@@ -51,13 +51,26 @@ describe("Connect to Alerting Authorities", () => {
     });
 
     const selector = await queries.findByText(document, "Select");
-    selector.click();
+    await selector.click();
     await queries.findByText(document, "Test AA");
   });
 
   test("can join Other alerting authority", async () => {
+    await mockNetworkResponse("GET", "/api/alertingAuthorities", {
+      result: [
+        {
+          name: "Test AA",
+          id: "aa",
+          author: "aa@example.com",
+          countryCode: "GB",
+          polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
+        },
+      ],
+    });
+
     const selector = await queries.findByText(document, "Select");
     await selector.click();
+    await queries.findByText(document, "Test AA");
     const aa = await queries.findAllByText(document, "Other");
     await aa[1].click();
 
