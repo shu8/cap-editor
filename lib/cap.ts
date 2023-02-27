@@ -11,7 +11,6 @@ export const mapFormAlertDataToCapSchema = (
   // Type as `any` for now because this object needs to next be validated against the JSON schema
   const alert: any = {
     identifier: id,
-    // TODO should this be a different email?
     sender: alertingAuthority.author,
     sent: formatDate(new Date()),
     status: alertData.status,
@@ -47,7 +46,6 @@ export const mapFormAlertDataToCapSchema = (
         description: languageData.description,
         instruction: languageData.instruction,
         web: `${process.env.BASE_URL}/feed/${id}`,
-        // TODO should this be a different email?
         contact: alertingAuthority.author,
         // parameter
         resource: languageData.resources,

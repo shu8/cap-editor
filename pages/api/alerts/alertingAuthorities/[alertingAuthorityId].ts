@@ -120,7 +120,6 @@ async function handleGetAlerts(
       {
         name: alertingAuthorityAlerts.name,
         id: alertingAuthorityAlerts.id,
-        // TODO should this be a generic AA email rather than the author's email? where to get it from?
         author: alertingAuthorityAlerts.author,
       },
       alertingAuthorityAlerts.Alerts.filter(
