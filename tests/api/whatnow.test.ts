@@ -1,9 +1,9 @@
+import { describe, expect, jest, test } from "@jest/globals";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { expect, jest, test, describe } from "@jest/globals";
 import { createMocks } from "node-mocks-http";
+import redis from "../../lib/redis";
 import handleWhatNow from "../../pages/api/whatnow";
 import { mockUserOnce, users } from "./helpers";
-import redis from "../../lib/redis";
 
 const mockWhatNowData = {
   data: [

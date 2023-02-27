@@ -1,5 +1,5 @@
+import { describe, expect, test } from "@jest/globals";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { expect, test, describe } from "@jest/globals";
 import { createMocks } from "node-mocks-http";
 import handleRegister from "../../pages/api/register";
 import { prismaMock } from "./setup";

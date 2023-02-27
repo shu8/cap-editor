@@ -1,8 +1,8 @@
+import { describe, expect, jest, test } from "@jest/globals";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { expect, test, describe, jest } from "@jest/globals";
 import { createMocks } from "node-mocks-http";
-import handleAlertingAuthorities from "../../pages/api/alertingAuthorities";
 import redis from "../../lib/redis";
+import handleAlertingAuthorities from "../../pages/api/alertingAuthorities";
 
 const mockWMOData = [
   {

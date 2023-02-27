@@ -1,7 +1,7 @@
-import { PrismaClient, Prisma } from "@prisma/client";
-import { jest, beforeEach, afterEach } from "@jest/globals";
-import { randomUUID } from "crypto";
+import { afterEach, beforeEach, jest } from "@jest/globals";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { spawnSync } from "child_process";
+import { randomUUID } from "crypto";
 import path from "path";
 import redisMock from "redis-mock";
 import { promisify } from "util";

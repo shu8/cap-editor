@@ -1,4 +1,4 @@
-import { expect, test, describe, jest } from "@jest/globals";
+import { describe, expect, jest, test } from "@jest/globals";
 import { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import handleShareAlert from "../../pages/api/alerts/[alertId]/share";

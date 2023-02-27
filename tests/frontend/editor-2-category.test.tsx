@@ -1,13 +1,12 @@
-import React from "react";
+import { describe, expect, test } from "@jest/globals";
+import { i18n } from "@lingui/core";
+import { I18nProvider } from "@lingui/react";
+import { Role } from "@prisma/client";
+import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom";
 import Editor from "../../components/editor/Editor";
-import { describe, expect, test } from "@jest/globals";
-import { I18nProvider } from "@lingui/react";
-import { i18n } from "@lingui/core";
 import { messages } from "../../locales/en/messages";
-import { Role } from "@prisma/client";
 
 const startOfToday = new Date();
 startOfToday.setHours(0, 0, 0, 0);

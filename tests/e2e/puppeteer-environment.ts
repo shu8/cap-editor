@@ -1,5 +1,5 @@
-import puppeteer, { Browser, BrowserContext, Page } from "puppeteer";
 import NodeEnvironment from "jest-environment-node";
+import puppeteer, { Browser, BrowserContext, Page } from "puppeteer";
 
 // Template class taken from Jest docs: https://jestjs.io/docs/puppeteer
 class PuppeteerEnvironment extends NodeEnvironment {

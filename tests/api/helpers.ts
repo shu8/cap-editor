@@ -1,12 +1,11 @@
-import { useSession } from "next-auth/react";
-import { getServerSession } from "next-auth";
 import { jest } from "@jest/globals";
-import { prismaMock } from "./setup";
 import { randomUUID } from "crypto";
+import { getServerSession } from "next-auth";
+import { useSession } from "next-auth/react";
 import { mapFormAlertDataToCapSchema } from "../../lib/cap";
 import { formatDate } from "../../lib/helpers.client";
-import { Role } from "@prisma/client";
 import { hash } from "../../lib/helpers.server";
+import { prismaMock } from "./setup";
 
 export const mockUserOnce = (mockUserDetails) => {
   const originalModuleClient = jest.requireActual("next-auth/react") as any;

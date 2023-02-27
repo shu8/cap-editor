@@ -1,5 +1,4 @@
-import { beforeEach, describe, expect, jest, test } from "@jest/globals";
-import { queryByTestId } from "@testing-library/react";
+import { beforeEach, describe, expect, test } from "@jest/globals";
 import { getDocument, queries } from "pptr-testing-library";
 import { ElementHandle } from "puppeteer";
 import { createUser, login, mockNetworkResponse } from "./helpers";
