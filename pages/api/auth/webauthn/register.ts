@@ -69,7 +69,7 @@ async function handleUserRegistration(
 ) {
   const credential = req.body;
 
-  const redisKey = `webauthn-register:${session.user.email}`;
+  const redisKey = `${REDIS_PREFIX_WEBAUTHN_REGISTER_CHALLENGE}:${session.user.email}`;
   const challenge = await redis.HGET(redisKey, "challenge");
   if (!challenge) {
     throw new ApiError(403, "Your account cannot register for WebAuthn yet");
