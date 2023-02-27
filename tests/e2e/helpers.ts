@@ -47,7 +47,6 @@ export const login = async (email: string) => {
   await page.goto(`${baseUrl}/login`, { waitUntil: "networkidle0" });
   const document = await getDocument(page);
 
-  await page.screenshot({ path: "./test.png" });
   // Enter email and click login button
   await (
     await queries.findByPlaceholderText(document, "me@example.com")

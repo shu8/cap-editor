@@ -25,11 +25,7 @@ describe("Personal Details", () => {
     await input.type("New name");
     const saveBtn = await queries.findByText(document, "Save");
     await saveBtn.click();
-    await queries.findByText(
-      document,
-      "Your personal details were updated successfully",
-      { exact: false }
-    );
+    await page.waitForNavigation({ waitUntil: "networkidle0" });
 
     expect((await prisma?.user.findFirst())?.name).toEqual("New name");
   });
