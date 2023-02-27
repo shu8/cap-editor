@@ -13,6 +13,7 @@ type RegisterData = {
 export default function ConnectToAlertingAuthorityForm({ email = "" }) {
   const toaster = useToasterI18n();
   const [alertingAuthorities, setAlertingAuthorities] = useState([]);
+  const [finishedLoading, setFinishedLoading] = useState(false);
   const [formData, setFormData] = useState<RegisterData>({
     alertingAuthorityId: "",
   });
@@ -88,9 +89,10 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
                     />
                   )
                 )
+                .finally(() => setFinishedLoading(true))
             }
             renderMenu={(menu) => {
-              if (alertingAuthorities.length === 0) {
+              if (!finishedLoading) {
                 return <Loader style={{ margin: "auto", padding: "10px" }} />;
               }
               return menu;
