@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Dependencies: openssl, xmlsec1
+# Dependencies: openssl, xmlsec1, xmllint (libxml2-utils), xpath (libxml-xpath-perl)
 
 red=`tput setaf 1`
 green=`tput setaf 2`
@@ -21,8 +21,30 @@ url=$1
 domain=$(echo $url | awk -F[/:] '{print $4}')
 [[ -z "$domain" ]] && err "Invalid URL provided"
 
-progress "Verifying $url"
+temp_dir=$(mktemp --directory)
+trap 'rm -rf -- "$temp_dir"' EXIT
 
+# Fetch provided URL into $alert_path
+progress "Fetching URL"
+alert_path=$(mktemp --tmpdir=$temp_dir)
+wget --quiet --output-document $alert_path $url
+
+# Ensure provided URL is valid XML
+progress ".Verifying valid XML"
+xmllint --noout $alert_path > /dev/null 2>&1
+[[ $? -ne 0 ]] && err "Invalid XML"
+
+# Get the <web> URL in the CAP alert -- this is the host whose TLS cert the
+#  alert should have been signed with
+progress "..Extracting source URL from XML"
+url=$(xpath -q -e 'alert/info/web[1]/text()' $alert_path)
+
+# Ensure the <web> URL is valid
+progress "Verifying $url"
+domain=$(echo $url | awk -F[/:] '{print $4}')
+[[ -z "$domain" ]] && err "Invalid URL provided"
+
+# Verify the TLS certificate of the <web> URL
 progress ".Verifying TLS Certificate"
 verification="$(echo '' | openssl s_client -status -connect $domain:443 2>&1)"
 
@@ -38,16 +60,8 @@ certificate="$(echo "$verification" | sed -n '/-----BEGIN/,/-----END/p')"
 progress "...Extracting Public Key"
 pubkey="$(echo "$certificate" | openssl x509 -pubkey -noout)"
 
-temp_dir=$(mktemp --directory)
-trap 'rm -rf -- "$temp_dir"' EXIT
-
 pubkey_path=$(mktemp --tmpdir=$temp_dir)
 echo "$pubkey" > $pubkey_path
-
-alert_path=$(mktemp --tmpdir=$temp_dir)
-
-progress ".Fetching Alert XML"
-wget --quiet --output-document $alert_path $url
 
 progress "..Verifying XML Signature"
 xmlsec1 --verify --pubkey-pem $pubkey_path $alert_path > /dev/null 2>&1
@@ -55,10 +69,3 @@ xmlsec1 --verify --pubkey-pem $pubkey_path $alert_path > /dev/null 2>&1
 [[ $? -ne 0 ]] && err "Alert Signature Verification failed"
 
 echo "${green}Alert is valid$reset"
-
-# TODO only check the URL written inside the alert
-# https://dzone.com/articles/ocsp-validation-with-openssl
-# openssl s_client -connect revoked.badssl.com:443 < /dev/null 2>&1 |  sed -n '/-----BEGIN/,/-----END/p' > certificate.pem
-# openssl s_client -showcerts -connect revoked.badssl.com:443 < /dev/null 2>&1 |  sed -n '/-----BEGIN/,/-----END/p' > chain.pem
-# OCSP_URL=`openssl x509 -noout -ocsp_uri -in certificate.pem`
-# openssl ocsp -issuer chain.pem -cert certificate.pem -text -url $OCSP_URL
