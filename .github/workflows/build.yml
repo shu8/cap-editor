@@ -1,4 +1,4 @@
-name: Build Docker image and publish to GitHub Packages
+name: Build
 on:
   push:
     branches: "main"
