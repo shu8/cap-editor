@@ -158,12 +158,6 @@ export const authOptions: AuthOptions = {
       // If user doesn't exist in db yet, they need to register first
       if (!dbUser) return `/register?email=${user.email}`;
 
-      // If user is in db, but their AA hasn't verified them, they can't login yet
-      // TODO move this to a persistent banner when logged in, preventing them from doing anything
-      // if (!dbUser.alertingAuthorityVerified) {
-      //   return `/error/${ERRORS.ACCOUNT_NOT_VERIFIED_YET.slug}`;
-      // }
-
       // In all other cases, allow login
       return true;
     },
