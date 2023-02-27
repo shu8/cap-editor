@@ -25,15 +25,16 @@ export default function Login() {
 
   useEffect(() => {
     async function initUsernamelessLogin() {
-      const options = await fetch("/api/webauthn/authenticate").then((res) =>
-        res.json()
-      );
-      const auth = await startAuthentication(options);
-      await signIn("webauthn", {
-        ...auth,
-        ...auth.clientExtensionResults,
-        ...auth.response,
-      });
+      const res = await fetch("/api/webauthn/authenticate");
+      if (res.ok && res.status === 200) {
+        const options = await res.json();
+        const auth = await startAuthentication(options);
+        await signIn("webauthn", {
+          ...auth,
+          ...auth.clientExtensionResults,
+          ...auth.response,
+        });
+      }
     }
 
     if (

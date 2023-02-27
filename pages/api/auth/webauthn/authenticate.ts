@@ -28,12 +28,16 @@ async function getUserAuthenticationOptions(
     userVerification: "preferred",
   });
 
-  // Expire after 5 minutes
-  const redisKey = `${REDIS_PREFIX_WEBAUTHN_AUTH_CHALLENGE}:${tempUserId}`;
-  await redis.HSET(redisKey, "challenge", options.challenge);
-  await redis.expire(redisKey, 60 * 5);
+  if (options?.challenge) {
+    // Expire after 5 minutes
+    const redisKey = `${REDIS_PREFIX_WEBAUTHN_AUTH_CHALLENGE}:${tempUserId}`;
+    await redis.HSET(redisKey, "challenge", options.challenge);
+    await redis.expire(redisKey, 60 * 5);
 
-  return res.json(options);
+    return res.json(options);
+  }
+
+  return res.status(500).end();
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
