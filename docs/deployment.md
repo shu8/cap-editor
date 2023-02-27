@@ -26,3 +26,21 @@ By default, in production, this system uses Let's Encrypt certificates automatic
 If you want to use a different Certificate Authority, you can edit Caddyfile to add the path to your certificate and private key. The filename of the private key **must** be added to the `.env` file under `PRIVATE_KEY_FILENAME`.
 
 You'll also need to update the Docker Compose configuration to share the appropriate directory containing these files.
+
+## Continuous Deployment
+
+All successful builds can be automatically deployed to a hosted instance of the CAP Editor using GitHub Actions.
+
+[The workflow](https://github.com/shu8/cap-editor/blob/main/.github/workflows/deploy.yml) uses the [`Production` GitHub repository environment](https://github.com/shu8/cap-editor/settings/environments), and the following [environment secrets](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment):
+
+- `HOST`: the hostname of the deployed CAP Editor (which will be SSH'd into)
+- `USERNAME`: the user which should be used to SSH into the host
+- `PORT`: the SSH port of the host
+- `KEY`: the private key of the `USERNAME`
+
+In the home directory of `USERNAME`, the following files should be placed, tweaked as required:
+
+- `docker-compose-prod.yml`
+  Ensure the `ghcr.io/shu8/cap-editor` image is used
+
+- `.env`
