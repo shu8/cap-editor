@@ -21,7 +21,7 @@
     "i18n:extract": "cross-env NODE_ENV=development lingui extract",
     "i18n:compile": "lingui compile",
     "test:api": "docker-compose -f docker-compose-test-api.yml up -d && jest --testPathPattern=tests/api --coverage --coverageReporters='text-summary'",
-    "test:e2e": "cross-env NODE_ENV=test docker-compose -f docker-compose-test-e2e.yml up -d && jest --runInBand --testPathPattern=tests/e2e --coverage --coverageReporters='text-summary'",
+    "test:e2e": "cross-env NODE_ENV=test docker-compose -f docker-compose-test-e2e.yml up -d && jest --runInBand --testPathPattern=tests/e2e --coverage --coverageReporters='text-summary' --forceExit",
     "test:frontend": "jest --testPathPattern=tests/frontend --coverage --coverageReporters='text-summary' --silent",
     "docs:dev": "docsify serve docs --port 3001 --open",
     "docs:generate": "docsify generate docs"

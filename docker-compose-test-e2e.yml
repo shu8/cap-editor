@@ -8,17 +8,17 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: test
     ports:
-      - 127.0.0.1:5432:5432
+      - 5432:5432
 
   redis:
     image: redis:7-alpine
     restart: on-failure
     ports:
-      - 127.0.0.1:6379:6379
+      - 6379:6379
 
   mailhog:
     image: mailhog/mailhog
     restart: on-failure
     ports:
-      - 127.0.0.1:1025:1025
-      - 127.0.0.1:8025:8025
+      - 1025:1025
+      - 8025:8025
