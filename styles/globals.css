@@ -95,3 +95,11 @@ main {
 .centered-message>* {
   font-size: 1.2em;
 }
+
+input::placeholder {
+  color: #1A1A1A !important;
+}
+
+.rs-picker-toggle-placeholder {
+  color: #1A1A1A !important;
+}
