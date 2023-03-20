@@ -103,3 +103,7 @@ input::placeholder {
 .rs-picker-toggle-placeholder {
   color: #1A1A1A !important;
 }
+
+.rs-form-help-text {
+  color: #1A1A1A !important;
+}

@@ -142,25 +142,25 @@ export default function MetadataStep({
         <Form.Group>
           <Form.ControlLabel>
             <Trans>References</Trans>
+            <Form.Control
+              block
+              name="references"
+              accepter={TagPicker}
+              data={referenceOptions.map((alert) => ({
+                label: alert.id,
+                value: `${alert.data.sender},${alert.id},${alert.data.sent}`,
+              }))}
+              onChange={(references) => onUpdate({ references })}
+              onOpen={fetchReferenceOptions}
+              sort={() => (a, b) => {
+                if (!a?.data?.sent || !b?.data?.sent) return 1;
+                return new Date(a.data.sent) < new Date(b.data.sent) ? 1 : -1;
+              }}
+              value={references}
+              renderMenuItem={(v) => <div>{v}</div>}
+            />
           </Form.ControlLabel>
 
-          <Form.Control
-            block
-            name="references"
-            accepter={TagPicker}
-            data={referenceOptions.map((alert) => ({
-              label: alert.id,
-              value: `${alert.data.sender},${alert.id},${alert.data.sent}`,
-            }))}
-            onChange={(references) => onUpdate({ references })}
-            onOpen={fetchReferenceOptions}
-            sort={() => (a, b) => {
-              if (!a?.data?.sent || !b?.data?.sent) return 1;
-              return new Date(a.data.sent) < new Date(b.data.sent) ? 1 : -1;
-            }}
-            value={references}
-            renderMenuItem={(v) => <div>{v}</div>}
-          />
           <Form.HelpText>
             <Trans>Does this Alert reference any previous Alerts?</Trans>
           </Form.HelpText>
