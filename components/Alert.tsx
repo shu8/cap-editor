@@ -182,6 +182,7 @@ export default function Alert({ alert }: { alert: DBAlert }) {
         </div>
 
         <Image
+          priority
           src={`/api/alerts/${alert.id}/image`}
           width={256}
           height={299}

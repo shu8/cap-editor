@@ -16,7 +16,13 @@ export default function Header() {
     <nav className={styles.nav}>
       <Link href="/" className={styles.link}>
         <h1 className={styles.header}>
-          <Image src="/cap.png" width="230" height="80" alt="CAP Logo" />
+          <Image
+            src="/cap.png"
+            width="230"
+            height="80"
+            alt="CAP Logo"
+            priority
+          />
           <span className={styles.text}>CAP Editor</span>
         </h1>
       </Link>
