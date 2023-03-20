@@ -216,7 +216,7 @@ export default function Editor(props: Props) {
     <div className={classes(styles.newAlert)}>
       <div className={classes(styles.header)}>
         <div>
-          <h3>
+          <h2>
             {alertData.identifier ? t`Edit alert` : t`New alert`}: {step}
             {props.existingAlertStatus === "DRAFT" && props.isShareable && (
               <span
@@ -234,7 +234,7 @@ export default function Editor(props: Props) {
                 <ShareOutline />
               </span>
             )}
-          </h3>
+          </h2>
           {alertData.identifier && (
             <>
               <Trans>Alert ID</Trans>:{" "}
@@ -251,6 +251,7 @@ export default function Editor(props: Props) {
               <span
                 key={`progress-${s}`}
                 onClick={() => canNavigateToThisStep && setStep(s)}
+                aria-disabled={!canNavigateToThisStep}
                 className={classes(
                   styles.progressItem,
                   s === step && styles.active,

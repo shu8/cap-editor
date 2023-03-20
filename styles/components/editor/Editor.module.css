@@ -48,7 +48,7 @@
 
 .progressItem.active {
   opacity: 1;
-  background-color: grey;
+  background-color: black;
   color: white;
 }
 
