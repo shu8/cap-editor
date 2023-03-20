@@ -27,16 +27,6 @@ model Account {
   @@map("accounts")
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("sessions")
-}
-
 model User {
   id                  String                    @id @default(cuid())
   email               String                    @unique
@@ -45,7 +35,6 @@ model User {
   image               String?
   webauthnId          String?
   accounts            Account[]
-  sessions            Session[]
   Authenticators      Authenticator[]
   CreatedAlerts       Alert[]
   SharedAlerts        SharedAlert[]
