@@ -26,12 +26,13 @@ services:
     restart: on-failure
 
   caddy:
-    image: caddy:2.6-alpine
+    build: ./Dockerfile.caddy
     restart: on-failure
     volumes:
       - ./docker-volumes/caddy/data:/data
       - ./docker-volumes/caddy/config:/config
       - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./erase-alert-cache.sh:/bin/erase-alert-cache.sh
     ports:
       - 80:80
       - 443:443

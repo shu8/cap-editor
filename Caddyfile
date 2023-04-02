@@ -1,3 +1,11 @@
+# See https://caddyserver.com/docs/modules/events.handlers.exec and https://caddyserver.com/docs/caddyfile/options#event-options
+# Ensure the `exec` Caddy plugin is installed
+{
+	events {
+		on cert_obtained exec /bin/erase-alert-cache.sh
+	}
+}
+
 127.0.0.1 {
 	reverse_proxy 127.0.0.1:3000
 }

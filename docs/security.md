@@ -42,3 +42,7 @@ All published alerts (XML) are digitally signed using [XMLDSIG](https://www.w3.o
 To verify an alert, the public key of the original published alert URL must be extracted from its TLS certificate.
 
 Alerts must always be verified against the current XML, and current TLS public key -- never attempt to verify stale XML alerts, as the signature on the alert, or the public key, may be out of date.
+
+Signed alerts are cached in Redis to reduce load on the server. The cache is cleared when the TLS certificate renews, to ensure the next request triggers re-signing of the alert. This is done via the Caddy event system (see [the the Caddy PR](https://github.com/caddyserver/caddy/pull/4912) and docs: [1](https://github.com/caddyserver/caddy/pull/4984), [2](https://caddyserver.com/docs/caddyfile/options#event-options), [3](https://caddyserver.com/docs/modules/events.handlers.exec)), which executes the [`erase-alert-cache.sh`](https://github.com/shu8/cap-editor/tree/main/erase-alert-cache.sh) script whenever a new certificate is obtained (for any reason).
+
+!> This requires the [`exec` Caddy plugin](https://github.com/mholt/caddy-events-exec) to run the script that clears the cache -- this is installed in [`Dockerfile.caddy`](https://github.com/shu8/cap-editor/tree/main/Dockerfile.caddy) which is used in the [`docker-compose-prod.yml`](https://github.com/shu8/cap-editor/tree/main/docker-compose-prod.yml) configuration.
