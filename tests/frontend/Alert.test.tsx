@@ -95,7 +95,10 @@ describe("<Alert>", () => {
 
   test("renders published expired alert correctly", async () => {
     const alert = { ...databaseAlert };
-    alert.data.info[0].expires = new Date();
+    const expiry = new Date();
+    expiry.setMinutes(expiry.getMinutes() - 1);
+    alert.data.info[0].expires = expiry;
+
     render(<Alert alert={alert} />, {
       wrapper: TestingProvider,
     });
