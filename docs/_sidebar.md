@@ -14,3 +14,4 @@
 - Misc
   - [Testing](testing.md)
   - [Future Work](future-work.md)
+- [User Manual](user-manual.md)
