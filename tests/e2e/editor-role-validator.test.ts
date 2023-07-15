@@ -117,7 +117,7 @@ describe("Editor: edit alert (validator)", () => {
     await queries.findByText(document, "Alert");
 
     // No 'references' should be shown initially
-    const referencesField = queries.queryByText(document, "References");
+    const referencesField = await queries.queryByText(document, "References");
     expect(referencesField).toBeNull();
   });
 

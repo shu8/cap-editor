@@ -26,7 +26,7 @@ describe("Editor: new alert (editor)", () => {
     await queries.findByText(document, "Message type");
 
     // No 'references' should be shown initially
-    const referencesField = queries.queryByText(document, "References");
+    const referencesField = await queries.queryByText(document, "References");
     expect(referencesField).toBeNull();
   });
 
@@ -170,7 +170,10 @@ describe("Editor: edit alert (editor)", () => {
     await queries.findByText(document, "Actual");
     await queries.findByText(document, "Message type");
     await queries.findByText(document, "Alert");
-    await queries.findByText(document, "References");
+
+    // No 'references' should be shown initially
+    const referencesField = await queries.queryByText(document, "References");
+    expect(referencesField).toBeNull();
   });
 
   test("can edit draft alert", async () => {
