@@ -133,9 +133,6 @@ export const createAlert = async ({
           urgency: "Immediate",
           status: "Actual",
           msgType: "Alert",
-          scope: "Public",
-          restriction: "",
-          addresses: [],
           references: [],
           textLanguages: {
             en: {

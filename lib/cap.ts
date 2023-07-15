@@ -16,11 +16,9 @@ export const mapFormAlertDataToCapSchema = (
     status: alertData.status,
     msgType: alertData.msgType,
     // source
-    scope: alertData.scope,
-    ...(alertData.restriction && { restriction: alertData.restriction }),
-    ...(alertData.addresses?.length && {
-      addresses: alertData.addresses?.map((a) => `"${a}"`).join(" "),
-    }),
+    scope: "Public",
+    // restriction
+    // addresses
     // code
     // note
     ...(alertData.references?.length && {

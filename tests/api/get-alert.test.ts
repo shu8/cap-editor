@@ -28,9 +28,6 @@ const databaseAlertData: any = {
       urgency: "Immediate",
       status: "Actual",
       msgType: "Alert",
-      scope: "Public",
-      restriction: "",
-      addresses: [],
       references: [],
       textLanguages: {
         en: {

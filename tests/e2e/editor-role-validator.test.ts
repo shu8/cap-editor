@@ -55,7 +55,6 @@ describe("Editor: edit alert (validator)", () => {
           sent: formatDate(from),
           status: "Actual",
           msgType: "Alert",
-          scope: "Public",
           info: [
             {
               language: "en",

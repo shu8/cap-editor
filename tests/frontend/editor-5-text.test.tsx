@@ -47,9 +47,6 @@ const getEditorProps = () => ({
     urgency: "Future",
     status: "Actual",
     msgType: "Alert",
-    scope: "Public",
-    restriction: "",
-    addresses: [],
     references: [],
     textLanguages: {
       en: {

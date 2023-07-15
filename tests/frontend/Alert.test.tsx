@@ -37,7 +37,6 @@ const databaseAlert: DBAlert = {
     sent: formatDate(from),
     status: "Actual",
     msgType: "Alert",
-    scope: "Public",
     info: [
       {
         language: "en",

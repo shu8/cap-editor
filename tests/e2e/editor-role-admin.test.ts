@@ -132,7 +132,6 @@ describe("Editor: edit alert (admin)", () => {
           sent: formatDate(from),
           status: "Actual",
           msgType: "Alert",
-          scope: "Public",
           info: [
             {
               language: "en",

@@ -166,11 +166,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       urgency: info?.urgency ?? "",
       status: alertData.status,
       msgType: alertData.msgType,
-      scope: alertData.scope,
-      restriction: alertData.restriction ?? "",
-      addresses: alertData.addresses
-        ? alertData.addresses?.match(/\w+|"[^"]+"/g) ?? []
-        : [],
       references: alertData.references ? alertData.references.split(" ") : [],
       textLanguages: alertData.info?.reduce((acc, info) => {
         acc[info.language as string] = {
@@ -200,9 +195,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       urgency: "",
       status: "",
       msgType: "",
-      scope: "",
-      restriction: "",
-      addresses: [],
       references: [],
       textLanguages: {
         en: {

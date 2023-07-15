@@ -19,9 +19,6 @@ const validAlertData = {
     urgency: "Immediate",
     status: "Actual",
     msgType: "Alert",
-    scope: "Public",
-    restriction: "",
-    addresses: [],
     references: [],
     textLanguages: {
       en: {
@@ -217,9 +214,6 @@ describe("PUT /api/alerts/:id", () => {
           urgency: "Immediate",
           status: "Actual",
           msgType: "Alert",
-          scope: "Public",
-          restriction: "",
-          addresses: [],
           references: [],
           textLanguages: {
             en: {

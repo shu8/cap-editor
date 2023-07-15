@@ -55,15 +55,6 @@ export default function SummaryStep({
             field="Message Type"
             value={alertData.msgType ?? t`NONE`}
           />
-          <ReviewItem field="Scope" value={alertData.scope ?? t`NONE`} />
-          <ReviewItem
-            field="Restriction"
-            value={alertData.restriction ?? t`NONE`}
-          />
-          <ReviewItem
-            field="Addresses"
-            value={alertData.addresses?.join("; ") ?? t`NONE`}
-          />
           <ReviewItem
             field="References"
             value={alertData.references?.join("; ") ?? t`NONE`}

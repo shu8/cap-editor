@@ -1,7 +1,7 @@
 import { t, Trans } from "@lingui/macro";
 import { Alert } from "@prisma/client";
 import { useState } from "react";
-import { Form, SelectPicker, TagInput, TagPicker } from "rsuite";
+import { Form, SelectPicker, TagPicker } from "rsuite";
 
 import { classes, HandledError } from "../../../lib/helpers.client";
 import { useToasterI18n } from "../../../lib/useToasterI18n";
@@ -9,17 +9,13 @@ import styles from "../../../styles/components/editor/Step.module.css";
 import ErrorMessage from "../../ErrorMessage";
 import { FormAlertData, StepProps } from "../Editor";
 
-const STATUSES = ["Actual", "Exercise", "System", "Test", "Draft"];
-const MESSAGE_TYPES = ["Alert", "Update", "Cancel", "Ack", "Error"];
-const SCOPES = ["Public", "Restricted", "Private"];
+const STATUSES = ["Actual", "Exercise", "System", "Test"];
+const MESSAGE_TYPES = ["Alert", "Update", "Cancel"];
 
 export default function MetadataStep({
   onUpdate,
   status,
   msgType,
-  scope,
-  restriction,
-  addresses,
   references,
 }: Partial<FormAlertData> & StepProps) {
   const toaster = useToasterI18n();
@@ -71,100 +67,35 @@ export default function MetadataStep({
             value={msgType}
           />
         </Form.Group>
-        <Form.Group>
-          <Form.ControlLabel>
-            <Trans>Scope</Trans>
-          </Form.ControlLabel>
-          <Form.Control
-            block
-            name="scope"
-            cleanable={false}
-            searchable={false}
-            onChange={(scope) => {
-              const updateData = { scope, addresses, restriction };
-              if (scope !== "Private") {
-                updateData.addresses = [];
-              } else if (scope !== "Restricted") {
-                updateData.restriction = "";
-              }
-              onUpdate(updateData);
-            }}
-            accepter={SelectPicker}
-            data={SCOPES.map((s) => ({ label: s, value: s }))}
-            value={scope}
-          />
-        </Form.Group>
 
-        {scope === "Restricted" && (
-          <Form.Group className={classes(styles.indent)}>
+        {["Update", "Cancel"].includes(msgType!) && (
+          <Form.Group>
             <Form.ControlLabel>
-              <Trans>Restriction</Trans>
+              <Trans>References</Trans>
+              <Form.Control
+                block
+                name="references"
+                accepter={TagPicker}
+                data={referenceOptions.map((alert) => ({
+                  label: alert.id,
+                  value: `${alert.data.sender},${alert.id},${alert.data.sent}`,
+                }))}
+                onChange={(references) => onUpdate({ references })}
+                onOpen={fetchReferenceOptions}
+                sort={() => (a, b) => {
+                  if (!a?.data?.sent || !b?.data?.sent) return 1;
+                  return new Date(a.data.sent) < new Date(b.data.sent) ? 1 : -1;
+                }}
+                value={references}
+                renderMenuItem={(v) => <div>{v}</div>}
+              />
             </Form.ControlLabel>
-            <Form.Control
-              block
-              name="restriction"
-              onChange={(restriction) => onUpdate({ restriction })}
-              value={restriction}
-            />
+
             <Form.HelpText>
-              <Trans>
-                Please describe the rule for limiting the distribution of this{" "}
-                <i>Restricted</i> Alert.
-              </Trans>
+              <Trans>Does this Alert reference any previous Alerts?</Trans>
             </Form.HelpText>
           </Form.Group>
         )}
-
-        {scope === "Private" && (
-          <Form.Group className={classes(styles.indent)}>
-            <Form.ControlLabel>
-              <Trans>Addresses</Trans>
-            </Form.ControlLabel>
-            <Form.Control
-              block
-              name="addresses"
-              cleanable={false}
-              onChange={(addresses) => onUpdate({ addresses: addresses ?? [] })}
-              accepter={TagInput}
-              trigger={["Enter", "Space", "Comma"]}
-              value={addresses}
-              data={[]}
-            />
-            <Form.HelpText>
-              <Trans>
-                Please provide the IDs/addresses of the intended recipients of
-                this <i>Private</i> Alert.
-              </Trans>
-            </Form.HelpText>
-          </Form.Group>
-        )}
-
-        <Form.Group>
-          <Form.ControlLabel>
-            <Trans>References</Trans>
-            <Form.Control
-              block
-              name="references"
-              accepter={TagPicker}
-              data={referenceOptions.map((alert) => ({
-                label: alert.id,
-                value: `${alert.data.sender},${alert.id},${alert.data.sent}`,
-              }))}
-              onChange={(references) => onUpdate({ references })}
-              onOpen={fetchReferenceOptions}
-              sort={() => (a, b) => {
-                if (!a?.data?.sent || !b?.data?.sent) return 1;
-                return new Date(a.data.sent) < new Date(b.data.sent) ? 1 : -1;
-              }}
-              value={references}
-              renderMenuItem={(v) => <div>{v}</div>}
-            />
-          </Form.ControlLabel>
-
-          <Form.HelpText>
-            <Trans>Does this Alert reference any previous Alerts?</Trans>
-          </Form.HelpText>
-        </Form.Group>
       </Form>
     </div>
   );

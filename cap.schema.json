@@ -23,8 +23,7 @@
         "Actual",
         "Exercise",
         "System",
-        "Test",
-        "Draft"
+        "Test"
       ]
     },
     "msgType": {
@@ -32,9 +31,7 @@
       "enum": [
         "Alert",
         "Update",
-        "Cancel",
-        "Ack",
-        "Error"
+        "Cancel"
       ]
     },
     "source": {
@@ -43,9 +40,7 @@
     "scope": {
       "type": "string",
       "enum": [
-        "Public",
-        "Restricted",
-        "Private"
+        "Public"
       ]
     },
     "restriction": {

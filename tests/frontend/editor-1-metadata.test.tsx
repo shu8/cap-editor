@@ -39,9 +39,6 @@ const editorProps = {
     urgency: "",
     status: "",
     msgType: "",
-    scope: "",
-    restriction: "",
-    addresses: [],
     references: [],
     textLanguages: {
       en: {
@@ -89,46 +86,32 @@ describe("<Editor> step 1 metadata", () => {
     const inputs = await screen.findAllByText("Select");
     await user.click(inputs[1]);
     await user.click(screen.getByText("Alert"));
+
+    // No 'references' should be shown if msgType=Alert
+    const referencesField = screen.queryByText("References");
+    expect(referencesField).toBeNull();
   });
 
-  test("can select scope", async () => {
+  test("shows references if msgType=update", async () => {
     const user = userEvent.setup();
 
     render(<Editor {...editorProps} />, { wrapper: TestingProvider });
 
     const inputs = await screen.findAllByText("Select");
-    await user.click(inputs[2]);
-    await user.click(screen.getByText("Public"));
+    await user.click(inputs[1]);
+    await user.click(screen.getByText("Update"));
+    await screen.findByText("References");
   });
 
-  test("shows restriction if scope=restricted", async () => {
+  test("shows references if msgType=cancel", async () => {
     const user = userEvent.setup();
 
     render(<Editor {...editorProps} />, { wrapper: TestingProvider });
 
     const inputs = await screen.findAllByText("Select");
-    await user.click(inputs[2]);
-    await user.click(screen.getByText("Restricted"));
-
-    const textInputs = screen.queryAllByRole("textbox");
-    const restrictedInput = textInputs.find(
-      (i) => (i as HTMLInputElement).name === "restriction"
-    );
-    expect(restrictedInput).toBeTruthy();
-
-    await screen.findByText("Restriction");
-    await user.type(restrictedInput!, "Test");
-  });
-
-  test("shows addresses if scope=private", async () => {
-    const user = userEvent.setup();
-
-    render(<Editor {...editorProps} />, { wrapper: TestingProvider });
-
-    const inputs = await screen.findAllByText("Select");
-    await user.click(inputs[2]);
-    await user.click(screen.getByText("Private"));
-    await screen.findByText("Addresses");
+    await user.click(inputs[1]);
+    await user.click(screen.getAllByText("Cancel")[1]);
+    await screen.findByText("References");
   });
 
   test("cancel button handled when confirmation true", async () => {

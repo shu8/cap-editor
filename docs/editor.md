@@ -8,10 +8,10 @@ The Editor includes the following steps and mappings to the CAP protocol:
 
   - Status (`alert.status`)
   - Message Type (`alert.msgType`)
-  - Scope (`alert.scope`)
-    - _if 'restricted'_: Restriction (`alert.restriction`)
-    - _if 'private'_: Addresses (`alert.addresses`)
   - References (`alert.references`)
+    - This is only supported when `alert.msgType` is `Update` or `Cancel`
+
+  `alert.scope` is always `Public`. The values `Restricted` and `Private` are not supported as the platform is not intended for such messages (and so the `alert.restriction` and `alert.addresses` are also not supported)
 
 - Category (`alert.info[].category`)
 

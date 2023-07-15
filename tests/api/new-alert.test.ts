@@ -111,9 +111,6 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
           urgency: "Immediate",
           status: "Actual",
           msgType: "Alert",
-          scope: "Public",
-          restriction: "",
-          addresses: [],
           references: [],
           textLanguages: {
             en: {
@@ -152,9 +149,6 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
           urgency: "Immediate",
           status: "Actual",
           msgType: "Alert",
-          scope: "Public",
-          restriction: "",
-          addresses: [],
           references: [],
           textLanguages: {
             en: {

@@ -47,9 +47,6 @@ const editorProps = {
     urgency: "",
     status: "Actual",
     msgType: "Alert",
-    scope: "Public",
-    restriction: "",
-    addresses: [],
     references: [],
     textLanguages: {
       en: {

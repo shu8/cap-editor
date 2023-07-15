@@ -37,9 +37,6 @@ export type FormAlertData = {
   urgency: string;
   status: string;
   msgType: string;
-  scope: string;
-  restriction: string;
-  addresses: string[];
   references: string[];
   textLanguages: {
     [key: string]: {
@@ -83,18 +80,10 @@ export default function Editor(props: Props) {
           onUpdate={onUpdate}
           status={alertData.status}
           msgType={alertData.msgType}
-          scope={alertData.scope}
-          restriction={alertData.restriction}
-          addresses={alertData.addresses}
           references={alertData.references}
         />
       ),
-      isValid: () =>
-        !!alertData.status &&
-        !!alertData.msgType &&
-        !!alertData.scope &&
-        (alertData.scope !== "Private" || alertData.addresses.length > 0) &&
-        (alertData.scope !== "Restricted" || !!alertData.restriction),
+      isValid: () => !!alertData.status && !!alertData.msgType,
     },
     category: {
       render: () => (

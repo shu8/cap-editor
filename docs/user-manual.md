@@ -75,7 +75,7 @@ To create an alert based on an existing alert, click the 'Use as template for ne
 
 The interface for all three of these options is the same. Editing alerts is split into 6 steps:
 
-1. Metadata: the status, message type, scope, references of the alert
+1. Metadata: the status, message type, references of the alert (if message type is Public or Cancel)
 2. Category: what type(s) of alert this is
 3. Map: the exact regions affected by the alert
 4. Data: the start/end time, severity/certainty/urgency of the alert, and the recommended actions to be taken

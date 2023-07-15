@@ -125,9 +125,6 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
               urgency: "Immediate",
               status: "Actual",
               msgType: "Alert",
-              scope: "Public",
-              restriction: "",
-              addresses: [],
               references: [],
               textLanguages: {
                 en: {
@@ -160,9 +157,6 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
               urgency: "Immediate",
               status: "Actual",
               msgType: "Alert",
-              scope: "Public",
-              restriction: "",
-              addresses: [],
               references: [],
               textLanguages: {
                 en: {
@@ -195,9 +189,6 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
               urgency: "Immediate",
               status: "Actual",
               msgType: "Alert",
-              scope: "Public",
-              restriction: "",
-              addresses: [],
               references: [],
               textLanguages: {
                 en: {

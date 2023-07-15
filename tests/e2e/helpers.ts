@@ -88,7 +88,7 @@ export const mockNetworkResponse = async (
 };
 
 export async function fillOutEditorForm(document: ElementHandle<Element>) {
-  const [statusInput, messageTypeInput, scopeInput] =
+  const [statusInput, messageTypeInput] =
     await queries.findAllByText(document, "Select");
 
   await statusInput.click();
@@ -96,9 +96,6 @@ export async function fillOutEditorForm(document: ElementHandle<Element>) {
 
   await messageTypeInput.click();
   await (await queries.findByText(document, "Alert")).click();
-
-  await scopeInput.click();
-  await (await queries.findByText(document, "Public")).click();
 
   await (await queries.findByText(document, "Next")).click();
 
