@@ -3,6 +3,15 @@ generator client {
   output   = "../node_modules/.prisma/client"
 }
 
+generator erd {
+  // provider                  = "prisma-erd-generator"
+  // output                    = "ERD.svg"
+  // includeRelationFromFields = true
+  // theme                     = "neutral"
+  provider              = "prisma-dbml-generator"
+  includeRelationFields = false
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
