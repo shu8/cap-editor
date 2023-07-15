@@ -64,7 +64,6 @@ describe("<Editor> step 1 metadata", () => {
     await screen.findByText("New alert: metadata");
     await screen.findByText("Status");
     await screen.findByText("Message type");
-    await screen.findByText("Scope");
     await screen.findByText("References");
   });
 

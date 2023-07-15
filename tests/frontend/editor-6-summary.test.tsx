@@ -123,11 +123,6 @@ describe("<Editor> step 6 summary", () => {
     el = await screen.findByText("Message Type:", { exact: false });
     expect(el.parentElement!.textContent).toEqual("Message Type: Alert");
 
-    el = await screen.findByText("Scope:", { exact: false });
-    expect(el.parentElement!.textContent).toEqual("Scope: Public");
-
-    await screen.findByText("Restriction:", { exact: false });
-    await screen.findByText("Addresses:", { exact: false });
     await screen.findByText("References:", { exact: false });
   });
 

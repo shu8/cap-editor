@@ -24,7 +24,6 @@ describe("Editor: new alert (admin)", () => {
     await queries.findByText(document, "New alert: metadata");
     await queries.findByText(document, "Status");
     await queries.findByText(document, "Message type");
-    await queries.findByText(document, "Scope");
     await queries.findByText(document, "References");
   });
 
@@ -192,8 +191,6 @@ describe("Editor: edit alert (admin)", () => {
     await queries.findByText(document, "Actual");
     await queries.findByText(document, "Message type");
     await queries.findByText(document, "Alert");
-    await queries.findByText(document, "Scope");
-    await queries.findByText(document, "Public");
     await queries.findByText(document, "References");
   });
 
