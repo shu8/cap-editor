@@ -2,6 +2,7 @@ import { t } from "@lingui/macro";
 import { AlertingAuthority } from "@prisma/client";
 import { Icon } from "@rsuite/icons";
 import flip from "@turf/flip";
+import truncate from "@turf/truncate";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { IconButton } from "rsuite";
@@ -26,6 +27,8 @@ import { useMountEffect } from "../../../lib/helpers.client";
 import { FormAlertData } from "../Editor";
 import TileLayer from "./TileLayer";
 import VectorLayer from "./VectorLayer";
+
+const COORDINATE_PRECISION = 3;
 
 // https://www.reshot.com/free-svg-icons/item/free-positioning-polygone-F2AWH4PGVQ/
 const PolygonImage = () => (
@@ -261,6 +264,11 @@ export default function Map({
 
         const geoJsonFeature = geojsonFormat.writeFeatureObject(e.feature);
         flip(geoJsonFeature, { mutate: true });
+        truncate(geoJsonFeature, {
+          precision: COORDINATE_PRECISION,
+          mutate: true,
+        });
+
         onRegionsChange({
           ...regions,
           [regionName]: geoJsonFeature.geometry.coordinates.flat(),
@@ -280,6 +288,10 @@ export default function Map({
         if (geometryType === "Polygon") {
           const geoJsonFeature = geojsonFormat.writeFeatureObject(e.feature);
           flip(geoJsonFeature, { mutate: true });
+          truncate(geoJsonFeature, {
+            precision: COORDINATE_PRECISION,
+            mutate: true,
+          });
 
           onRegionsChange({
             ...regions,
@@ -297,7 +309,12 @@ export default function Map({
           // CAP needs radius in km after a space character
           onRegionsChange({
             ...regions,
-            [`custom-${name}`]: [`${center.reverse().join(",")} ${radiusKm}`],
+            [`custom-${name}`]: [
+              `${center
+                .reverse()
+                .map((n) => n.toFixed(COORDINATE_PRECISION))
+                .join(",")} ${radiusKm}`,
+            ],
           });
         }
       }

@@ -22,6 +22,7 @@ specifiers:
   '@testing-library/react': ^14.0.0
   '@testing-library/user-event': ^14.4.3
   '@turf/flip': ^6.5.0
+  '@turf/truncate': ^6.5.0
   '@types/node': 18.11.15
   '@types/nodemailer': ^6.4.7
   '@types/react': 18.0.26
@@ -83,6 +84,7 @@ dependencies:
   '@simplewebauthn/browser': 6.2.2
   '@simplewebauthn/server': 6.2.2
   '@turf/flip': 6.5.0
+  '@turf/truncate': 6.5.0
   capgen: 1.0.8
   cookies-next: 2.1.1
   fast-xml-parser: 4.1.2
@@ -2784,6 +2786,13 @@ packages:
     resolution: {integrity: sha512-RrArvtsV0vdsCBegoBtOalgdSOfkBrTJ07VkpiCnq/491W67hnMWmDu7e6Ztw0C3WldRYTXkg3SumfdzZxLBHA==}
     dependencies:
       '@turf/helpers': 6.5.0
+    dev: false
+
+  /@turf/truncate/6.5.0:
+    resolution: {integrity: sha512-pFxg71pLk+eJj134Z9yUoRhIi8vqnnKvCYwdT4x/DQl/19RVdq1tV3yqOT3gcTQNfniteylL5qV1uTBDV5sgrg==}
+    dependencies:
+      '@turf/helpers': 6.5.0
+      '@turf/meta': 6.5.0
     dev: false
 
   /@types/aria-query/4.2.2:
