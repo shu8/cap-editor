@@ -3,7 +3,7 @@ name: Frontend (React) tests
 on:
   push:
     branches:
-      - main
+      - "**"
   pull_request:
 
 jobs:
