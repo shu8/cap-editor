@@ -24,7 +24,10 @@ describe("Editor: new alert (editor)", () => {
     await queries.findByText(document, "New alert: metadata");
     await queries.findByText(document, "Status");
     await queries.findByText(document, "Message type");
-    await queries.findByText(document, "References");
+
+    // No 'references' should be shown initially
+    const referencesField = queries.queryByText(document, "References");
+    expect(referencesField).toBeNull();
   });
 
   test("correct alert submit actions shown for editor", async () => {

@@ -64,7 +64,10 @@ describe("<Editor> step 1 metadata", () => {
     await screen.findByText("New alert: metadata");
     await screen.findByText("Status");
     await screen.findByText("Message type");
-    await screen.findByText("References");
+
+    // No 'references' should be shown initially
+    const referencesField = screen.queryByText("References");
+    expect(referencesField).toBeNull();
   });
 
   test("can select status", async () => {
@@ -85,10 +88,6 @@ describe("<Editor> step 1 metadata", () => {
     const inputs = await screen.findAllByText("Select");
     await user.click(inputs[1]);
     await user.click(screen.getByText("Alert"));
-
-    // No 'references' should be shown if msgType=Alert
-    const referencesField = screen.queryByText("References");
-    expect(referencesField).toBeNull();
   });
 
   test("shows references if msgType=update", async () => {
