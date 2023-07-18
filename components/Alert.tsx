@@ -31,6 +31,7 @@ export default function Alert({ alert }: { alert: DBAlert }) {
     CAPV12JSONSchema["info"]
   >[number];
 
+  const onsetDate = new Date(info.onset!);
   const expiryDate = new Date(info.expires!);
   const expired = expiryDate < new Date();
   const socialMediaEncodedUrl = encodeURIComponent(
@@ -82,7 +83,7 @@ export default function Alert({ alert }: { alert: DBAlert }) {
       <div className={styles.sideBySide}>
         <div className={styles.alertDetails}>
           <p>
-            <Trans>Sent</Trans>: {new Date(alertData.sent).toString()}
+            <Trans>Onset</Trans>: {onsetDate.toString()}
             <br />
             <Trans>Expires</Trans>: {expiryDate.toString()}
           </p>

@@ -34,12 +34,14 @@ export default function Home() {
   } = useSWR("/api/alerts/shared", fetcher);
 
   const alertsByStatus: {
-    published: DBAlert[];
+    active: DBAlert[];
+    future: DBAlert[];
     draft: DBAlert[];
     template: DBAlert[];
     expired: DBAlert[];
   } = {
-    published: [],
+    active: [],
+    future: [],
     draft: [],
     template: [],
     expired: [],
@@ -53,10 +55,17 @@ export default function Home() {
       } else if (alert.status === "TEMPLATE") {
         alertsByStatus.template.push(alert);
       } else if (alert.status === "PUBLISHED") {
-        if (new Date(alert?.data?.info?.[0]?.expires) < new Date()) {
+        const alreadyExpired =
+          new Date(alert?.data?.info?.[0]?.expires) < new Date();
+        const alreadyBegan =
+          new Date(alert?.data?.info?.[0]?.onset) < new Date();
+
+        if (alreadyExpired) {
           alertsByStatus.expired.push(alert);
+        } else if (alreadyBegan) {
+          alertsByStatus.active.push(alert);
         } else {
-          alertsByStatus.published.push(alert);
+          alertsByStatus.future.push(alert);
         }
       }
     }
