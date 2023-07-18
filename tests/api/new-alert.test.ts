@@ -143,7 +143,7 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
           regions: {},
           from: formatDate(getStartOfToday()),
           to: formatDate(new Date()),
-          actions: ["Shelter"],
+          actions: [],
           certainty: "Observed",
           severity: "Extreme",
           urgency: "Immediate",

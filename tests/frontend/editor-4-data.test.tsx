@@ -181,6 +181,27 @@ describe("<Editor> step 4 data", () => {
     ).toBe(true);
   });
 
+  test("does not need to choose recommended actions", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<Editor {...editorProps} />, {
+      wrapper: TestingProvider,
+    });
+
+    await user.click(screen.getByText("Next"));
+    await user.click(screen.getByText("Next"));
+    await user.click(screen.getByText("Next"));
+
+    await user.click(container.getElementsByClassName("cell")[0]);
+    await screen.findByText("Minor");
+    await screen.findByText("Likely");
+
+    await user.click(screen.getByText("Future"));
+
+    expect(
+      ((await screen.findByText("Next")) as HTMLButtonElement).disabled
+    ).toBe(false);
+  });
+
   test("can click next button after form completed", async () => {
     const user = userEvent.setup();
     const { container } = render(<Editor {...editorProps} />, {

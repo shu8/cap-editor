@@ -37,13 +37,17 @@ export interface CAPV12JSONSchema2 {
       ...("Geo" | "Met" | "Safety" | "Rescue" | "Fire" | "Health" | "Env" | "Transport" | "Infra" | "CBRNE" | "Other")[]
     ];
     event: string;
-    /**
-     * @minItems 1
-     */
-    responseType?: [
-      "Shelter" | "Evacuate" | "Prepare" | "Execute" | "Avoid" | "Monitor" | "Assess" | "AllClear" | "None",
-      ...("Shelter" | "Evacuate" | "Prepare" | "Execute" | "Avoid" | "Monitor" | "Assess" | "AllClear" | "None")[]
-    ];
+    responseType?: (
+      | "Shelter"
+      | "Evacuate"
+      | "Prepare"
+      | "Execute"
+      | "Avoid"
+      | "Monitor"
+      | "Assess"
+      | "AllClear"
+      | "None"
+    )[];
     urgency: "Immediate" | "Expected" | "Future" | "Past" | "Unknown";
     severity: "Extreme" | "Severe" | "Moderate" | "Minor" | "Unknown";
     certainty: "Observed" | "Likely" | "Possible" | "Unlikely" | "Unknown";
@@ -184,7 +188,6 @@ export const CAPV12Schema =
           },
           "responseType": {
             "type": "array",
-            "minItems": 1,
             "items": {
               "type": "string",
               "enum": [

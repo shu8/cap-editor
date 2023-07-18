@@ -122,8 +122,7 @@ export default function Editor(props: Props) {
         alertData.to > alertData.from &&
         !!alertData.severity &&
         !!alertData.certainty &&
-        !!alertData.urgency &&
-        alertData.actions.length > 0,
+        !!alertData.urgency,
     },
     text: {
       render: () => (

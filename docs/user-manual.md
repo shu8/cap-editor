@@ -78,7 +78,7 @@ The interface for all three of these options is the same. Editing alerts is spli
 1. Metadata: the status, message type, references of the alert (if message type is Public or Cancel)
 2. Category: what type(s) of alert this is
 3. Map: the exact regions affected by the alert
-4. Data: the start/end time, severity/certainty/urgency of the alert, and the recommended actions to be taken
+4. Data: the start/end time, severity/certainty/urgency of the alert, and the recommended actions (if any) to be taken
 5. Text: the title, headline, description, instruction of the alert, and any links to external resources
 6. Summary: a summary of the information provided in the previous steps
 
