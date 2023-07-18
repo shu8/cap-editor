@@ -247,7 +247,6 @@ export default function EditorPage(props: Props) {
     );
   }
 
-  console.log(session);
   if (!props.isShared && (!alertingAuthorityId || !props.defaultAlertData)) {
     return (
       <>
@@ -353,6 +352,7 @@ export default function EditorPage(props: Props) {
                   </Message>,
                   { placement: "bottomCenter" }
                 );
+                router.push("/");
               })
               .catch((err) =>
                 toaster.push(
