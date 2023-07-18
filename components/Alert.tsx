@@ -8,30 +8,6 @@ import { TypeAttributes } from "rsuite/esm/@types/common";
 import { CAPV12JSONSchema } from "../lib/types/cap.schema";
 import styles from "../styles/components/Alert.module.css";
 
-const colors = {
-  urgency: {
-    Immediate: "red",
-    Expected: "orange",
-    Future: "yellow",
-    Past: "cyan",
-    Unknown: "blue",
-  },
-  certainty: {
-    Likely: "red",
-    Observed: "orange",
-    Possible: "yellow",
-    Unlikely: "cyan",
-    Unknown: "blue",
-  },
-  severity: {
-    Severe: "red",
-    Extreme: "orange",
-    Moderate: "yellow",
-    Minor: "cyan",
-    Unknown: "blue",
-  },
-};
-
 const generateSocialMediaText = (
   info: NonNullable<CAPV12JSONSchema["info"]>[number] | undefined
 ) => {
@@ -111,28 +87,19 @@ export default function Alert({ alert }: { alert: DBAlert }) {
             <Trans>Expires</Trans>: {expiryDate.toString()}
           </p>
           <p>
-            <Tag as="span" color="green">
+            <Tag as="span" color="blue">
               {alertData.msgType}
             </Tag>
-            <Tag as="span" color="green">
+            <Tag as="span" color="blue">
               {alertData.status}
             </Tag>
-            <Tag
-              as="span"
-              color={colors.urgency[info.urgency] as TypeAttributes.Color}
-            >
+            <Tag as="span" color="blue">
               {info?.urgency}
             </Tag>
-            <Tag
-              as="span"
-              color={colors.certainty[info.certainty] as TypeAttributes.Color}
-            >
+            <Tag as="span" color="blue">
               {info?.certainty}
             </Tag>
-            <Tag
-              as="span"
-              color={colors.severity[info.severity] as TypeAttributes.Color}
-            >
+            <Tag as="span" color="blue">
               {info?.severity}
             </Tag>
           </p>
