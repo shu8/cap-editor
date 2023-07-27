@@ -20,7 +20,13 @@ const getUser = async (email: string) => {
       AlertingAuthorities: {
         select: {
           AlertingAuthority: {
-            select: { name: true, countryCode: true, id: true, polygon: true },
+            select: {
+              name: true,
+              countryCode: true,
+              id: true,
+              polygon: true,
+              defaultTimezone: true,
+            },
           },
           roles: true,
         },
@@ -43,6 +49,7 @@ const mapAlertingAuthorities = (
       name: cur.AlertingAuthority.name,
       countryCode: cur.AlertingAuthority.countryCode,
       polygon: cur.AlertingAuthority.polygon,
+      defaultTimezone: cur.AlertingAuthority.defaultTimezone,
       roles: cur.roles,
     };
     return acc;

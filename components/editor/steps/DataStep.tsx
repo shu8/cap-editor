@@ -6,6 +6,7 @@ import styles from "../../../styles/components/editor/Step.module.css";
 import { FormAlertData, StepProps } from "../Editor";
 import SeverityCertaintyMatrix from "../SeverityCertaintyMatrix";
 import UrgencySlider from "../UrgencySlider";
+import timezones from "timezones.json";
 
 // CAP info.responseType
 const ACTIONS = [
@@ -27,6 +28,7 @@ export default function DataStep({
   severity,
   urgency,
   actions,
+  timezone,
 }: Partial<FormAlertData> & StepProps) {
   return (
     <div>
@@ -49,7 +51,16 @@ export default function DataStep({
           dates && onUpdate({ from: dates[0], to: dates[1] })
         }
       />
-
+      <br />
+      Timezone:{" "}
+      <SelectPicker
+        size="sm"
+        data={timezones.map((t) => ({ label: t.text, value: t.utc.at(-1) }))}
+        placeholder="Choose"
+        value={timezone}
+        cleanable={false}
+        onChange={(tz) => tz && onUpdate({ timezone: tz })}
+      />
       {/* https://www.metoffice.gov.uk/weather/guides/warnings */}
       <h4>
         <Trans>Severity, Certainty, &amp; Urgency</Trans>

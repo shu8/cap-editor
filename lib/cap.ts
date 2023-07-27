@@ -12,7 +12,7 @@ export const mapFormAlertDataToCapSchema = (
   const alert: any = {
     identifier: id,
     sender: alertingAuthority.author,
-    sent: formatDate(new Date()),
+    sent: formatDate(new Date(), alertData.timezone),
     status: alertData.status,
     msgType: alertData.msgType,
     // source

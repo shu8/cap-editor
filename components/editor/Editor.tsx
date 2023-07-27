@@ -29,6 +29,7 @@ export type FormAlertData = {
   identifier?: string;
   category: string[];
   regions: { [key: string]: number[] | number[][] };
+  timezone: string;
   from: Date | string;
   to: Date | string;
   actions: string[];
@@ -115,6 +116,7 @@ export default function Editor(props: Props) {
           severity={alertData.severity}
           urgency={alertData.urgency}
           actions={alertData.actions}
+          timezone={alertData.timezone}
         />
       ),
       isValid: () =>

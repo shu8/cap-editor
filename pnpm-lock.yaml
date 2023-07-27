@@ -68,6 +68,7 @@ specifiers:
   sharp: ^0.31.3
   staticmaps: ^1.11.1
   swr: ^2.0.3
+  timezones.json: ^1.7.0
   tls: ^0.0.1
   ts-node: ^10.9.1
   typescript: ^4.9.5
@@ -102,6 +103,7 @@ dependencies:
   sharp: 0.31.3
   staticmaps: 1.11.1
   swr: 2.0.3_react@18.2.0
+  timezones.json: 1.7.0
   tls: 0.0.1
   usehooks-ts: 2.9.1_biqbaboplfbrettd7655fr4n2y
   whatwg-mimetype: 3.0.0
@@ -9188,6 +9190,10 @@ packages:
       es5-ext: 0.10.62
       next-tick: 1.1.0
     dev: true
+
+  /timezones.json/1.7.0:
+    resolution: {integrity: sha512-qzreOP+2sNmx6S3Cys0pEyI6t4qX0VPb4oFYMePUrYvQeBszGazzNpvWuAAGENGmpw7GoAND255NTkEQeXryvg==}
+    dev: false
 
   /tiny-glob/0.2.9:
     resolution: {integrity: sha512-g/55ssRPUjShh+xkfx9UPDXqhckHEsHr4Vd9zX55oSdGZc/MD0m3sferOkwWtp98bv+kcVfEHtRJgBVJzelrzg==}

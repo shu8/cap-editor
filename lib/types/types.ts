@@ -17,6 +17,7 @@ export type AlertingAuthority = {
   id: string;
   name: string;
   countryCode: string | null;
+  defaultTimezone: string;
   roles: Role[];
 };
 

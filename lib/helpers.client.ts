@@ -1,4 +1,5 @@
 import React, { EffectCallback, useEffect } from "react";
+import timezones from "timezones.json";
 
 export const classes = (...args: any) =>
   args.filter((c: string) => !!c).join(" ");
@@ -35,9 +36,9 @@ export const fetcher = (...args: any) =>
   fetch(...args).then((res) => res.json());
 
 // In part, from https://stackoverflow.com/a/17415677
-export const formatDate = (date: Date) => {
+export const formatDate = (date: Date, timezone: string = "Etc/GMT") => {
+  const offset = timezones.find((t) => t.utc.includes(timezone))!.offset;
   const pad = (num: number) => num.toString().padStart(2, "0");
-  const tzo = -date.getTimezoneOffset();
 
   return (
     date.getFullYear() +
@@ -51,10 +52,10 @@ export const formatDate = (date: Date) => {
     pad(date.getMinutes()) +
     ":" +
     pad(date.getSeconds()) +
-    (tzo < 0 ? "-" : "+") +
-    pad(tzo / 60) +
+    (offset < 0 ? "-" : "+") +
+    pad(Math.floor(Math.abs(offset))) +
     ":" +
-    pad(Math.abs(tzo) % 60)
+    (offset % 0.5 === 0 ? "30" : "00")
   );
 };
 

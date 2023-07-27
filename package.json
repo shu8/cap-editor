@@ -53,6 +53,7 @@
     "sharp": "^0.31.3",
     "staticmaps": "^1.11.1",
     "swr": "^2.0.3",
+    "timezones.json": "^1.7.0",
     "tls": "^0.0.1",
     "usehooks-ts": "^2.9.1",
     "whatwg-mimetype": "^3.0.0",

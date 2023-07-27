@@ -276,6 +276,8 @@ export default function EditorPage(props: Props) {
     ...props.defaultAlertData,
     from: new Date(props.defaultAlertData!.from),
     to: new Date(props.defaultAlertData!.to),
+    timezone:
+      session!.user.alertingAuthorities[alertingAuthorityId].defaultTimezone,
   };
 
   return (
@@ -338,7 +340,9 @@ export default function EditorPage(props: Props) {
                 body: JSON.stringify(
                   { status: alertStatus, data: alertData },
                   function (k, v) {
-                    return this[k] instanceof Date ? formatDate(this[k]) : v;
+                    return this[k] instanceof Date
+                      ? formatDate(this[k], alertData.timezone)
+                      : v;
                   }
                 ),
               }
