@@ -11,10 +11,13 @@ import ErrorMessage from "../components/ErrorMessage";
 import UpdatePersonalDetailsForm from "../components/UpdatePersonalDetailsForm";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import { authOptions } from "./api/auth/[...nextauth]";
+import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
+import UpdateAlertingAuthorityDetailsForm from "../components/UpdateAlertingAuthorityDetailsForm";
 
 export default function SettingsPage() {
   const toaster = useToasterI18n();
   const { data: session } = useSession();
+  const [alertingAuthorityId] = useAlertingAuthorityLocalStorage();
 
   return (
     <>
@@ -26,6 +29,17 @@ export default function SettingsPage() {
         <h2>
           <Trans>Settings</Trans>
         </h2>
+
+        {session?.user?.alertingAuthorities?.[
+          alertingAuthorityId
+        ]?.roles.includes("ADMIN") && (
+          <Panel header="Alerting Authority settings" bordered>
+            <UpdateAlertingAuthorityDetailsForm
+              alertingAuthorityId={alertingAuthorityId}
+            />
+          </Panel>
+        )}
+
         <Panel header="Security" bordered>
           <Button
             appearance="primary"
