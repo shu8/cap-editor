@@ -5,10 +5,38 @@ import { createUser, login, mockNetworkResponse } from "./helpers";
 
 var document: ElementHandle<Element>;
 beforeEach(async () => {
-  await createUser("foo@example.com", "Foo");
+  await createUser("foo@example.com", "Foo", {
+    verified: new Date(),
+    name: "AA",
+    roles: ["ADMIN"],
+  });
   await login("foo@example.com");
   await page.goto(`${baseUrl}/settings`, { waitUntil: "networkidle0" });
   document = await getDocument(page);
+});
+
+describe("AA settings", () => {
+  test("load section", async () => {
+    await queries.findByText(document, "Alerting Authority settings");
+    await queries.findByText(document, "Default Timezone");
+    await queries.findByText(document, "Contact Address");
+    await queries.findByText(document, "Web URL");
+  });
+
+  test("can update contact and web URL", async () => {
+    const input = await queries.findByPlaceholderText(
+      document,
+      "e.g., metoffice@gov.uk"
+    );
+    await input.type("test@test.com");
+    const saveBtns = await queries.findAllByText(document, "Save");
+    await saveBtns[0].click();
+
+    await page.waitForNavigation({ waitUntil: "networkidle0" });
+    expect((await prisma?.alertingAuthority.findFirst())?.contact).toEqual(
+      "test@test.com"
+    );
+  });
 });
 
 describe("Personal Details", () => {
@@ -22,8 +50,9 @@ describe("Personal Details", () => {
   test("can update name", async () => {
     const input = await queries.findByPlaceholderText(document, "Your name");
     await input.type("New name");
-    const saveBtn = await queries.findByText(document, "Save");
-    await saveBtn.click();
+
+    const saveBtns = await queries.findAllByText(document, "Save");
+    await saveBtns[1].click();
     await page.waitForNavigation({ waitUntil: "networkidle0" });
 
     expect((await prisma?.user.findFirst())?.name).toEqual("New name");
