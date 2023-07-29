@@ -34,12 +34,12 @@ progress ".Verifying valid XML"
 xmllint --noout $alert_path > /dev/null 2>&1
 [[ $? -ne 0 ]] && err "Invalid XML"
 
-# Get the <web> URL in the CAP alert -- this is the host whose TLS cert the
+# Get the CANONICAL_URL parameter in the CAP alert -- this is the host whose TLS cert the
 #  alert should have been signed with
 progress "..Extracting source URL from XML"
-url=$(xpath -q -e 'alert/info/web[1]/text()' $alert_path)
+url=$(xpath -q -e 'alert/info/parameter[valueName="CANONICAL_URL"]/value/text()' $alert_path)
 
-# Ensure the <web> URL is valid
+# Ensure the CANONICAL_URL is valid
 progress "Verifying $url"
 domain=$(echo $url | awk -F[/:] '{print $4}')
 [[ -z "$domain" ]] && err "Invalid URL provided"

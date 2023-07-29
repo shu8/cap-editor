@@ -48,6 +48,10 @@ export const mapFormAlertDataToCapSchema = (
         headline: languageData.headline,
         description: languageData.description,
         instruction: languageData.instruction,
+        parameter: {
+          valueName: "CANONICAL_URL",
+          value: `${process.env.BASE_URL}/feed/${id}`,
+        },
         web: alertingAuthority.web ?? "",
         contact: alertingAuthority.contact ?? "",
         // parameter
