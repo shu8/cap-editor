@@ -16,7 +16,7 @@ Features:
 - Create **multilingual alerts**
 - Dynamic **images** for alerts to share on social media or other dissemination methods
 - **Invite guest users** to collaborate on alerts with limited access
-- **User roles**: editor (create/edit draft alerts), validator (edit/publish draft alerts), administrator (create/publish any alert)
+- **User roles**: composer (create/edit draft alerts), approver (edit/publish draft alerts), administrator (create/publish any alert)
 - **User-friendly alert creation UI**: individual steps, prefilled defaults, graphical map with circle/polygon drawing
 - **[WhatNow](https://whatnow.preparecenter.org/) integration** for pre-filled multilingual alert instruction and descriptions
 - **Digital Signatures** with [XMLDSIG](https://www.w3.org/TR/xmldsig-core1/)

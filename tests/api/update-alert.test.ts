@@ -73,8 +73,8 @@ describe("PUT /api/alerts/:id", () => {
       body: validAlertData,
     });
 
-    await createUser({ ...users.editor, alertingAuthorityVerified: false });
-    mockUserOnce(users.editor);
+    await createUser({ ...users.composer, alertingAuthorityVerified: false });
+    mockUserOnce(users.composer);
     await handleAlert(req, res);
     expect(res._getStatusCode()).toEqual(403);
   });
@@ -143,8 +143,8 @@ describe("PUT /api/alerts/:id", () => {
       body: { status: "PUBLISHED" },
     });
 
-    await createUser({ ...users.editor, alertingAuthorityVerified: true });
-    mockUserOnce(users.editor);
+    await createUser({ ...users.composer, alertingAuthorityVerified: true });
+    mockUserOnce(users.composer);
     await handleAlert(req, res);
     expect(res._getStatusCode()).toEqual(403);
   });
@@ -173,22 +173,6 @@ describe("PUT /api/alerts/:id", () => {
     });
 
     mockUserOnce(users.admin);
-    await handleAlert(req, res);
-    expect(res._getStatusCode()).toEqual(403);
-  });
-
-  test("validators cannot edit a template", async () => {
-    const alert = await createAlert({
-      status: "TEMPLATE",
-      userDetails: { ...users.validator, alertingAuthorityVerified: true },
-    });
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: "PUT",
-      query: { alertId: alert.id },
-      body: { status: "PUBLISHED" },
-    });
-
-    mockUserOnce(users.validator);
     await handleAlert(req, res);
     expect(res._getStatusCode()).toEqual(403);
   });

@@ -181,7 +181,7 @@ export default function Editor(props: Props) {
       ? [props.existingAlertStatus]
       : ["DRAFT", "TEMPLATE"];
 
-    if (props.roles.includes("VALIDATOR") || props.roles.includes("ADMIN")) {
+    if (props.roles.includes("APPROVER") || props.roles.includes("ADMIN")) {
       options.push("PUBLISHED");
     }
 

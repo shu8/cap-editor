@@ -125,7 +125,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     // Validators are not allowed to create new alerts -- they can only edit
     if (
       !alertingAuthority.roles.includes("ADMIN") &&
-      !alertingAuthority.roles.includes("EDITOR")
+      !alertingAuthority.roles.includes("COMPOSER")
     ) {
       return redirect(`/error/${ERRORS.NOT_ALLOWED_CREATE_ALERTS.slug}`);
     }
@@ -293,7 +293,7 @@ export default function EditorPage(props: Props) {
               : `editor-${new Date().getTime()}`
           }
           alertingAuthority={props.alertingAuthority}
-          roles={props.isShared ? ["EDITOR"] : props.alertingAuthority!.roles}
+          roles={props.isShared ? ["COMPOSER"] : props.alertingAuthority!.roles}
           defaultAlertData={defaultAlertData}
           {...(props.editingAlert && {
             existingAlertStatus: props.editingAlert.status,

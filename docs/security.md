@@ -9,11 +9,11 @@ At the highest level, there are three roles:
 1. Administrator
    Admins can perform any action under their respective AAs.
 
-2. Editor
-   Editors can edit any non-published alert, create new draft/template alerts, but cannot publish any alert.
+2. Composer
+   Composers can edit any non-published alert, create new draft/template alerts, but cannot publish any alert.
 
-3. Validator
-   Validators can edit and publish any draft alert.
+3. Approver
+   Approvers can edit/create and publish any draft alert.
 
 A user can have one or more roles, however there is largely a hierarchy in these roles.
 

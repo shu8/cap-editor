@@ -20,7 +20,7 @@ It has been created in collaboration with the [International Federation of Red C
 - **[WMO Register of Alerting Authorities integration](https://alertingauthority.wmo.int/)**: users must be verified by their Alerting Authority to use the platform
 - Create **template and draft alerts**
 - Create **multilingual alerts**
-- **User roles**: editor (create/edit draft alerts), validator (edit/publish draft alerts), administrator (create/publish any alert)
+- **User roles**: composer (view/create/edit draft alerts), approver (viewc/create/edit/publish draft alerts), administrator (create/publish any alert)
 - **User-friendly alert creation UI**: individual steps, prefilled defaults, graphical map with circle/polygon drawing
 - **[WhatNow](https://whatnow.preparecenter.org/) integration** for pre-filled multilingual alert instruction and descriptions
 - **Digital Signatures** with [XMLDSIG](https://www.w3.org/TR/xmldsig-core1/)

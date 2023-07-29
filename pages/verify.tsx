@@ -141,12 +141,12 @@ export default function VerifyUser({
               cleanable={false}
               searchable={false}
               value={roles}
-              placeholder={t`Select role(s): Admin/Editor/Validator`}
+              placeholder={t`Select role(s): Admin/Composer/Approver`}
               onChange={(v) => setRoles(v)}
               data={[
                 { label: t`Admin`, value: "ADMIN" },
-                { label: t`Editor`, value: "EDITOR" },
-                { label: t`Validator`, value: "VALIDATOR" },
+                { label: t`Composer`, value: "COMPOSER" },
+                { label: t`Approver`, value: "APPROVER" },
               ]}
             />
           </Modal.Body>

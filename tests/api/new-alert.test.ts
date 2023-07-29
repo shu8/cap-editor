@@ -63,35 +63,43 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
   });
 
   ["DRAFT", "TEMPLATE", "PUBLISHED"].forEach((alertStatus) => {
-    test(`validators cannot directly create new alerts of any status (${alertStatus})`, async () => {
+    test(`approvers can directly create new alerts of any status (${alertStatus})`, async () => {
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: "POST",
         body: { status: alertStatus },
         query: { alertingAuthorityId: "aa" },
       });
-      await createUser({ ...users.validator, alertingAuthorityVerified: true });
-      mockUserOnce(users.validator);
+      await createUser({ ...users.approver, alertingAuthorityVerified: true });
+      mockUserOnce(users.approver);
       await handleAlertingAuthorityAlerts(req, res);
-      expect(res._getStatusCode()).toEqual(403);
+      expect(res._getStatusCode()).toEqual(200);
     });
   });
 
-  ["EDITOR", "VALIDATOR"].forEach((userType) => {
-    test(`${userType}s cannot publish new alerts directly`, async () => {
+  ["DRAFT", "TEMPLATE"].forEach((alertStatus) => {
+    test(`composers can directly create new alerts of some statuses (${alertStatus})`, async () => {
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: "POST",
-        body: { status: "PUBLISHED" },
+        body: { status: alertStatus },
         query: { alertingAuthorityId: "aa" },
       });
-
-      await createUser({
-        ...users[userType.toLowerCase()],
-        alertingAuthorityVerified: true,
-      });
-      mockUserOnce(users[userType.toLowerCase()]);
+      await createUser({ ...users.approver, alertingAuthorityVerified: true });
+      mockUserOnce(users.approver);
       await handleAlertingAuthorityAlerts(req, res);
-      expect(res._getStatusCode()).toEqual(403);
+      expect(res._getStatusCode()).toEqual(200);
     });
+  });
+
+  test(`composers cannot create new PUBLISHED alerts`, async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { status: "PUBLISHED" },
+      query: { alertingAuthorityId: "aa" },
+    });
+    await createUser({ ...users.composer, alertingAuthorityVerified: true });
+    mockUserOnce(users.composer);
+    await handleAlertingAuthorityAlerts(req, res);
+    expect(res._getStatusCode()).toEqual(403);
   });
 
   test("alert data must be valid", async () => {

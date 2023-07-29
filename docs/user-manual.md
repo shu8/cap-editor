@@ -41,11 +41,11 @@ There may be cases where your AA is not listed in the dropdown menu. In this cas
 
 When you connect to an AA, its author must approve your account. They will also assign the access rights you have, of which there are up to 3 possible:
 
-- Editor: edit any non-published alert, and create draft/template alerts
-- Validator: edit any existing draft alert, and publish any valid existing draft alert
+- Composer: edit any non-published alert, and create draft/template alerts
+- Approver: edit/create any existing draft alert, and publish any valid existing draft alert
 - Administrator: edit any non-published alert, create draft/template alerts, and publish any valid alert
 
-In practice, this only affects what you see in the Editor interface -- for example, if you are assigned as an _editor_, then you will not see a button to 'publish' alerts.
+In practice, this only affects what you see in the Editor interface -- for example, if you are assigned as an _composer_, then you will not see a button to 'publish' alerts.
 
 # Handling multiple Alerting Authorities
 

@@ -4,39 +4,94 @@ import { randomUUID } from "crypto";
 import { getDocument, queries } from "pptr-testing-library";
 import { ElementHandle } from "puppeteer";
 import { formatDate } from "../../lib/helpers.client";
-import { createUser, login } from "./helpers";
+import { createUser, fillOutEditorForm, login } from "./helpers";
 
 var document: ElementHandle<Element>;
 
-describe("Editor: new alert (validator)", () => {
+describe("Editor: new alert (composer)", () => {
   beforeEach(async () => {
     await createUser("foo@example.com", "Foo", {
       verified: new Date(),
       name: "AA",
-      roles: ["VALIDATOR"],
+      roles: ["COMPOSER"],
     });
     await login("foo@example.com");
     await page.goto(`${baseUrl}/editor`, { waitUntil: "networkidle0" });
     document = await getDocument(page);
   });
 
-  test("cannot load editor for new alert", async () => {
-    await queries.findByText(
+  test("load editor", async () => {
+    await queries.findByText(document, "New alert: metadata");
+    await queries.findByText(document, "Status");
+    await queries.findByText(document, "Message type");
+
+    // No 'references' should be shown initially
+    const referencesField = await queries.queryByText(document, "References");
+    expect(referencesField).toBeNull();
+  });
+
+  test("correct alert submit actions shown for editor", async () => {
+    await fillOutEditorForm(document);
+
+    const saveBtn = await queries.findByText(document, "Save as draft");
+    const multiBtnArrow = (await saveBtn.evaluateHandle(
+      (el) => el.nextElementSibling
+    )) as ElementHandle;
+
+    await multiBtnArrow!.asElement()!.click();
+    await queries.findAllByText(document, "Save as draft");
+    await queries.findByText(document, "Save as template");
+    expect(await queries.queryByText(document, "Publish alert now")).toBeNull();
+  });
+
+  test("new alert can be saved as draft by editor", async () => {
+    await fillOutEditorForm(document);
+
+    const saveBtn = await queries.findByText(document, "Save as draft");
+    await saveBtn.click();
+    await queries.findByText(document, "Alert successfully submitted.");
+
+    const alerts = await prisma!.alert.findMany();
+    expect(alerts).toBeTruthy();
+    expect(alerts.length).toEqual(1);
+    expect(alerts[0].status).toEqual("DRAFT");
+    expect(alerts[0].data).toBeTruthy();
+  });
+
+  test("new alert can be saved as template by editor", async () => {
+    await fillOutEditorForm(document);
+
+    const saveBtn = await queries.findByText(document, "Save as draft");
+    const multiBtnArrow = (await saveBtn.evaluateHandle(
+      (el) => el.nextElementSibling
+    )) as ElementHandle;
+
+    await multiBtnArrow!.asElement()!.click();
+    const saveTemplateBtn = await queries.findByText(
       document,
-      "Your account does not have permission to create new alerts",
-      { exact: false }
+      "Save as template"
     );
+    await saveTemplateBtn.click();
+
+    await (await queries.findByText(document, "Save as template")).click();
+    await queries.findByText(document, "Alert successfully submitted.");
+
+    const alerts = await prisma!.alert.findMany();
+    expect(alerts).toBeTruthy();
+    expect(alerts.length).toEqual(1);
+    expect(alerts[0].status).toEqual("TEMPLATE");
+    expect(alerts[0].data).toBeTruthy();
   });
 });
 
-describe("Editor: edit alert (validator)", () => {
+describe("Editor: edit alert (composer)", () => {
   let alertId: string | undefined;
 
   beforeEach(async () => {
     const user = await createUser("foo@example.com", "Foo", {
       verified: new Date(),
       name: "AA",
-      roles: ["VALIDATOR"],
+      roles: ["COMPOSER"],
     });
 
     const uuid = randomUUID();
@@ -138,27 +193,5 @@ describe("Editor: edit alert (validator)", () => {
     expect(
       ((await prisma!.alert.findFirst())?.data as Prisma.JsonObject).status
     ).toEqual("Exercise");
-  });
-
-  test("can publish draft alert", async () => {
-    await (await queries.findByText(document, "Next")).click();
-    await (await queries.findByText(document, "Next")).click();
-    await (await queries.findByText(document, "Next")).click();
-    await (await queries.findByText(document, "Next")).click();
-    await (await queries.findByText(document, "Next")).click();
-
-    const saveBtn = await queries.findByText(document, "Update draft");
-    const multiBtnArrow = (await saveBtn.evaluateHandle(
-      (el) => el.nextElementSibling
-    )) as ElementHandle;
-
-    await multiBtnArrow!.asElement()!.click();
-    const publishBtn = await queries.findByText(document, "Publish alert now");
-    await publishBtn.click();
-    await (await queries.findByText(document, "Publish alert now")).click();
-
-    await queries.findByText(document, "Alert successfully submitted.");
-
-    expect((await prisma!.alert.findFirst())?.status).toEqual("PUBLISHED");
   });
 });

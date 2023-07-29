@@ -1,26 +1,11 @@
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, jest, test } from "@jest/globals";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import handleAlertingAuthoritiesSettings from "../../pages/api/alertingAuthorities/[alertingAuthorityId]/settings";
 import { createUser, mockUserOnce, users } from "./helpers";
 
-const mockWMOData = [
-  {
-    name: "Test AA",
-    id: "aa",
-    author: "aa@example.com",
-    countryCode: "GB",
-    polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
-  },
-  {
-    name: "Test AA 2",
-    id: "aa2",
-    author: "aa2@example.com",
-    countryCode: "GB",
-    polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
-  },
-];
-
+jest.mock("next-auth/react");
+jest.mock("next-auth");
 describe("GET /api/alertingAuthorities/:id/settings", () => {
   test("rejects not-provided AA ID", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
@@ -86,7 +71,7 @@ describe("POST /api/alertingAuthorities/:id/settings", () => {
     });
 
     await createUser({ ...users.admin, alertingAuthorityVerified: true });
-    mockUserOnce(users.editor);
+    mockUserOnce(users.composer);
     await handleAlertingAuthoritiesSettings(req, res);
     expect(res._getStatusCode()).toEqual(403);
   });

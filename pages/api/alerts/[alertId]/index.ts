@@ -75,13 +75,13 @@ async function handleUpdateAlert(
     }
   }
 
-  const roles = isShared ? ["EDITOR"] : alertingAuthority.roles;
+  const roles = isShared ? ["COMPOSER"] : alertingAuthority.roles;
 
-  // i.e., only admins and validators can publish an existing alert
+  // i.e., only admins and approvers can publish an existing alert
   if (
     req.body.status === "PUBLISHED" &&
     !roles.includes("ADMIN") &&
-    !roles.includes("VALIDATOR")
+    !roles.includes("APPROVER")
   ) {
     throw new ApiError(403, "You do not have permission to publish alerts");
   }
@@ -91,18 +91,6 @@ async function handleUpdateAlert(
     throw new ApiError(
       403,
       "You cannot edit an alert that has already been published"
-    );
-  }
-
-  // i.e., only admins and editors can edit a template
-  if (
-    alert.status === "TEMPLATE" &&
-    !roles.includes("ADMIN") &&
-    !roles.includes("EDITOR")
-  ) {
-    throw new ApiError(
-      403,
-      "You do not have permission to edit template alerts"
     );
   }
 

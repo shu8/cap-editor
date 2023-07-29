@@ -51,7 +51,7 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
       query: { json: true, alertingAuthorityId: "aa" },
     });
     await createUser();
-    mockUserOnce(users.editor);
+    mockUserOnce(users.composer);
     await handleAlertingAuthorityAlerts(req, res);
     expect(res._getStatusCode()).toEqual(200);
     expect(JSON.parse(res._getData())).toEqual({ error: false, alerts: [] });
@@ -62,7 +62,7 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
       method: "GET",
       query: { json: true, alertingAuthorityId: "aa2" },
     });
-    mockUserOnce(users.editor);
+    mockUserOnce(users.composer);
     await handleAlertingAuthorityAlerts(req, res);
     expect(res._getStatusCode()).toEqual(401);
   });

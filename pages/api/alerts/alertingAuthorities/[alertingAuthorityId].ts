@@ -42,12 +42,7 @@ async function handleNewAlert(
 
   const roles = alertingAuthority.roles;
 
-  // i.e., if they are only a VALIDATOR, then they can only publish existing drafted alerts (not POST new ones)
-  if (!roles.includes("ADMIN") && !roles.includes("EDITOR")) {
-    throw new ApiError(403, "You do not have permission to create new alerts");
-  }
-
-  // i.e., only admins can request to publish a new alert (a validator must update the status of an existing alert and an editor can only edit drafts/templates)
+  // i.e., only admins can request to publish a new alert (an APPROVER must update the status of an existing alert and an editor can only edit drafts/templates)
   if (!roles.includes("ADMIN") && req.body.status === "PUBLISHED") {
     throw new ApiError(403, "You do not have permission to publish new alerts");
   }

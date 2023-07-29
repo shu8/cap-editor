@@ -130,8 +130,8 @@ model UserAlertingAuthorities {
 
 enum Role {
   ADMIN
-  EDITOR
-  VALIDATOR
+  COMPOSER
+  APPROVER
 }
 
 enum AlertStatus {

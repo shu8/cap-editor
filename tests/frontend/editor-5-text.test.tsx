@@ -59,7 +59,7 @@ const getEditorProps = () => ({
     },
   },
   isShareable: false,
-  roles: ["EDITOR"] as Role[],
+  roles: ["COMPOSER"] as Role[],
   onShareAlert: () => null,
   onSubmit: () => null,
   onCancel: () => null,

@@ -49,17 +49,17 @@ const defaultAlertingAuthority = {
 };
 
 export const users = {
-  editor: {
-    email: "editor@example.com",
-    name: "Editor",
+  composer: {
+    email: "composer@example.com",
+    name: "Composer",
     image: "",
-    alertingAuthority: { ...defaultAlertingAuthority, roles: ["EDITOR"] },
+    alertingAuthority: { ...defaultAlertingAuthority, roles: ["COMPOSER"] },
   },
-  validator: {
-    email: "validator@example.com",
-    name: "Validator",
+  approver: {
+    email: "approver@example.com",
+    name: "Approver",
     image: "",
-    alertingAuthority: { ...defaultAlertingAuthority, roles: ["VALIDATOR"] },
+    alertingAuthority: { ...defaultAlertingAuthority, roles: ["APPROVER"] },
   },
   admin: {
     email: "admin@example.com",

@@ -89,7 +89,7 @@ describe("/api/whatnow", () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockWhatNowData) })
     );
-    mockUserOnce(users.validator);
+    mockUserOnce(users.approver);
     await handleWhatNow(req, res);
     expect(res._getStatusCode()).toEqual(200);
     expect(JSON.parse(res._getData()).data?.[0]?.id).toEqual("255");

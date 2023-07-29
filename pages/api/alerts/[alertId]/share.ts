@@ -41,12 +41,6 @@ async function handleShareAlert(
     );
   }
 
-  // i.e., only admins and editors can share an existing alert
-  const roles = alertingAuthority.roles;
-  if (!roles.includes("ADMIN") && !roles.includes("EDITOR")) {
-    throw new ApiError(403, "You do not have permission to share alerts");
-  }
-
   // i.e., only draft alerts can be shared
   if (alert.status !== "DRAFT") {
     throw new ApiError(403, "Only draft alerts can be shared");

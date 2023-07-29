@@ -62,9 +62,9 @@ describe("POST /api/alerts/:id/share", () => {
     expect(res._getStatusCode()).toEqual(403);
   });
 
-  test("validators cannot share alerts", async () => {
+  test("approvers cannot share alerts", async () => {
     const alert = await createAlert({
-      userDetails: { ...users.validator, alertingAuthorityVerified: true },
+      userDetails: { ...users.approver, alertingAuthorityVerified: true },
     });
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
@@ -72,7 +72,7 @@ describe("POST /api/alerts/:id/share", () => {
       body: { email: "guest@example.com" },
     });
 
-    mockUserOnce(users.validator);
+    mockUserOnce(users.approver);
     await handleShareAlert(req, res);
     expect(res._getStatusCode()).toEqual(403);
   });
