@@ -8,6 +8,30 @@ import { prismaMock } from "./setup";
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");
+
+const validAlertData = {
+  category: ["Geo"],
+  regions: {},
+  from: formatDate(getStartOfToday()),
+  to: formatDate(new Date()),
+  actions: [],
+  certainty: "Observed",
+  severity: "Extreme",
+  urgency: "Immediate",
+  status: "Actual",
+  msgType: "Alert",
+  references: [],
+  textLanguages: {
+    en: {
+      event: "Test",
+      headline: "Test",
+      description: "Test",
+      instruction: "Test",
+      resources: [],
+    },
+  },
+};
+
 describe("POST /api/alerts/alertingAuthorities/:id", () => {
   test("AA must be supplied", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
@@ -62,34 +86,6 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
     expect(res._getStatusCode()).toEqual(400);
   });
 
-  ["DRAFT", "TEMPLATE", "PUBLISHED"].forEach((alertStatus) => {
-    test(`approvers can directly create new alerts of any status (${alertStatus})`, async () => {
-      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-        method: "POST",
-        body: { status: alertStatus },
-        query: { alertingAuthorityId: "aa" },
-      });
-      await createUser({ ...users.approver, alertingAuthorityVerified: true });
-      mockUserOnce(users.approver);
-      await handleAlertingAuthorityAlerts(req, res);
-      expect(res._getStatusCode()).toEqual(200);
-    });
-  });
-
-  ["DRAFT", "TEMPLATE"].forEach((alertStatus) => {
-    test(`composers can directly create new alerts of some statuses (${alertStatus})`, async () => {
-      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-        method: "POST",
-        body: { status: alertStatus },
-        query: { alertingAuthorityId: "aa" },
-      });
-      await createUser({ ...users.approver, alertingAuthorityVerified: true });
-      mockUserOnce(users.approver);
-      await handleAlertingAuthorityAlerts(req, res);
-      expect(res._getStatusCode()).toEqual(200);
-    });
-  });
-
   test(`composers cannot create new PUBLISHED alerts`, async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
@@ -138,37 +134,41 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
     expect((await prismaMock.alert.findMany()).length).toEqual(0);
   });
 
+  ["DRAFT", "TEMPLATE", "PUBLISHED"].forEach((alertStatus) => {
+    test(`approvers can directly create new alerts of any status (${alertStatus})`, async () => {
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "POST",
+        body: { status: alertStatus, data: validAlertData },
+        query: { alertingAuthorityId: "aa" },
+      });
+      await createUser({ ...users.approver, alertingAuthorityVerified: true });
+      mockUserOnce(users.approver);
+      await handleAlertingAuthorityAlerts(req, res);
+      expect(res._getStatusCode()).toEqual(200);
+    });
+  });
+
+  ["DRAFT", "TEMPLATE"].forEach((alertStatus) => {
+    test(`composers can directly create new alerts of some statuses (${alertStatus})`, async () => {
+      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+        method: "POST",
+        body: { status: alertStatus, data: validAlertData },
+        query: { alertingAuthorityId: "aa" },
+      });
+      await createUser({ ...users.approver, alertingAuthorityVerified: true });
+      mockUserOnce(users.approver);
+      await handleAlertingAuthorityAlerts(req, res);
+      expect(res._getStatusCode()).toEqual(200);
+    });
+  });
+
   test("valid alert data should be saved", async () => {
     await createUser({ ...users.admin, alertingAuthorityVerified: true });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
       query: { alertingAuthorityId: "aa" },
-      body: {
-        status: "TEMPLATE",
-        data: {
-          category: ["Geo"],
-          regions: {},
-          from: formatDate(getStartOfToday()),
-          to: formatDate(new Date()),
-          actions: [],
-          certainty: "Observed",
-          severity: "Extreme",
-          urgency: "Immediate",
-          status: "Actual",
-          msgType: "Alert",
-          references: [],
-          textLanguages: {
-            en: {
-              event: "Test",
-              headline: "Test",
-              description: "Test",
-              instruction: "Test",
-              resources: [],
-            },
-          },
-        },
-      },
+      body: { status: "TEMPLATE", data: validAlertData },
     });
     mockUserOnce(users.admin);
     await handleAlertingAuthorityAlerts(req, res);

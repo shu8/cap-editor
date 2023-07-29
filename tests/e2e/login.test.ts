@@ -140,7 +140,8 @@ describe("Login", () => {
     document = await getDocument(page);
 
     // Make sure we are now logged in
-    await queries.findByText(document, "published alerts");
+    await queries.findByText(document, "active alerts");
+    await queries.findByText(document, "future alerts");
     await queries.findByText(document, "draft alerts");
     await queries.findByText(document, "template alerts");
     await queries.findByText(document, "expired alerts");

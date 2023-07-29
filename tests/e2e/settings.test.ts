@@ -44,7 +44,7 @@ describe("Personal Details", () => {
     await queries.findByText(document, "Personal Details");
     await queries.findByText(document, "Name");
     await queries.findByPlaceholderText(document, "Your name");
-    await queries.findByText(document, "Save");
+    await queries.findAllByText(document, "Save");
   });
 
   test("can update name", async () => {
