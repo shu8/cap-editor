@@ -6,6 +6,12 @@ import { ApiError } from "next/dist/server/api-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
+type UpdateData = {
+  contact?: string;
+  web?: string;
+  defaultTimezone?: string;
+};
+
 async function handleUpdateAlertingAuthority(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -28,13 +34,14 @@ async function handleUpdateAlertingAuthority(
     );
   }
 
+  const data: UpdateData = {};
+  ["contact", "web", "defaultTimezone"].forEach((prop) => {
+    if (req.body[prop]) data[prop as keyof UpdateData] = req.body[prop];
+  });
+
   await prisma.alertingAuthority.update({
     where: { id: alertingAuthorityId },
-    data: {
-      contact: req.body.contact,
-      web: req.body.web,
-      defaultTimezone: req.body.defaultTimezone,
-    },
+    data,
   });
 
   return res.json({ error: false });

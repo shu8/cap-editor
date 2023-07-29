@@ -51,19 +51,6 @@ describe("GET /api/alertingAuthorities/:id/settings", () => {
 });
 
 describe("POST /api/alertingAuthorities/:id/settings", () => {
-  test("rejects invalid AA", async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: "POST",
-      query: { alertingAuthorityId: "foo" },
-      body: { contact: "contact@aa.com" },
-    });
-
-    await createUser({ ...users.admin, alertingAuthorityVerified: true });
-    mockUserOnce(users.admin);
-    await handleAlertingAuthoritiesSettings(req, res);
-    expect(res._getStatusCode()).toEqual(404);
-  });
-
   test("requires admin auth", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
@@ -75,6 +62,19 @@ describe("POST /api/alertingAuthorities/:id/settings", () => {
     mockUserOnce(users.composer);
     await handleAlertingAuthoritiesSettings(req, res);
     expect(res._getStatusCode()).toEqual(403);
+  });
+
+  test("rejects invalid AA", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      query: { alertingAuthorityId: "foo" },
+      body: { contact: "contact@aa.com" },
+    });
+
+    await createUser({ ...users.admin, alertingAuthorityVerified: true });
+    mockUserOnce(users.admin);
+    await handleAlertingAuthoritiesSettings(req, res);
+    expect(res._getStatusCode()).toEqual(404);
   });
 
   test("saves AA settings", async () => {
