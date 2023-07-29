@@ -30,7 +30,11 @@ async function handleNewAlert(
       verified: { not: null },
       User: { email: session.user.email },
     },
-    include: { AlertingAuthority: { select: { name: true, author: true } } },
+    include: {
+      AlertingAuthority: {
+        select: { name: true, author: true, contact: true, web: true },
+      },
+    },
   });
 
   if (!alertingAuthority) {

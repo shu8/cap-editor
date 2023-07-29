@@ -4,7 +4,12 @@ import { formatDate } from "./helpers.client";
 import { CAPV12JSONSchema, CAPV12Schema } from "./types/cap.schema";
 
 export const mapFormAlertDataToCapSchema = (
-  alertingAuthority: { name: string; author: string },
+  alertingAuthority: {
+    name: string;
+    author: string;
+    contact: string | null;
+    web: string | null;
+  },
   alertData: FormAlertData,
   id: string
 ): CAPV12JSONSchema => {
@@ -43,8 +48,8 @@ export const mapFormAlertDataToCapSchema = (
         headline: languageData.headline,
         description: languageData.description,
         instruction: languageData.instruction,
-        web: `${process.env.BASE_URL}/feed/${id}`,
-        contact: alertingAuthority.author,
+        web: alertingAuthority.web ?? "",
+        contact: alertingAuthority.contact ?? "",
         // parameter
         resource: languageData.resources,
         area: Object.entries(alertData.regions).map(([regionName, data]) => ({

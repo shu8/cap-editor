@@ -113,7 +113,7 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
           userId: user.id,
           alertingAuthorityId: "aa",
           data: mapFormAlertDataToCapSchema(
-            { name: "AA", author: "aa@example.com" },
+            { name: "AA", author: "aa@example.com", web: 'https://example.com', contact: 'example@example.com' },
             {
               category: ["Geo"],
               regions: {},
@@ -145,7 +145,7 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
           userId: user2.id,
           alertingAuthorityId: "aa2",
           data: mapFormAlertDataToCapSchema(
-            { name: "AA2", author: "aa2@example.com" },
+            { name: "AA2", author: "aa2@example.com", web: 'https://example.com', contact: 'example@example.com' },
             {
               category: ["Geo"],
               regions: {},
@@ -177,7 +177,7 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
           userId: user.id,
           alertingAuthorityId: "aa",
           data: mapFormAlertDataToCapSchema(
-            { name: "AA", author: "aa@example.com" },
+            { name: "AA", author: "aa@example.com", web: 'https://example.com', contact: 'example@example.com' },
             {
               category: ["Geo"],
               regions: {},

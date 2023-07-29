@@ -16,7 +16,7 @@ const databaseAlertData: any = {
   status: "PUBLISHED",
   alertingAuthorityId: "aa",
   data: mapFormAlertDataToCapSchema(
-    { name: "AA", author: "aa@example.com" },
+    { name: "AA", author: "aa@example.com", web: 'https://example.com', contact: 'example@example.com' },
     {
       category: ["Geo"],
       regions: {},

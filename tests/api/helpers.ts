@@ -121,7 +121,12 @@ export const createAlert = async ({
       alertingAuthorityId: "aa",
       userId: user.id,
       data: mapFormAlertDataToCapSchema(
-        { name: "AA", author: "AA@example.com" },
+        {
+          name: "AA",
+          author: "AA@example.com",
+          web: "https://example.com",
+          contact: "example@example.com",
+        },
         {
           category: ["Geo"],
           regions: {},

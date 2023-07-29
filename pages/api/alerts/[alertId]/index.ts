@@ -38,7 +38,7 @@ async function handleUpdateAlert(
         where: { expires: { gt: new Date() } },
       },
       AlertingAuthority: {
-        select: { name: true, author: true },
+        select: { name: true, author: true, contact: true, web: true },
       },
     },
   });

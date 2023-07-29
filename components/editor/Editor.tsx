@@ -29,7 +29,7 @@ export type FormAlertData = {
   identifier?: string;
   category: string[];
   regions: { [key: string]: number[] | number[][] };
-  timezone: string;
+  timezone?: string;
   from: Date | string;
   to: Date | string;
   actions: string[];
