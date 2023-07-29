@@ -200,7 +200,7 @@
             "items": {
               "type": "object",
               "properties": {
-                "name": {
+                "valueName": {
                   "type": "string"
                 },
                 "value": {
@@ -208,7 +208,7 @@
                 }
               },
               "required": [
-                "name",
+                "valueName",
                 "value"
               ],
               "additionalProperties": false

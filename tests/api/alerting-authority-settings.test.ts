@@ -14,7 +14,7 @@ describe("GET /api/alertingAuthorities/:id/settings", () => {
       query: { alertingAuthorityId: "aa" },
     });
 
-    await createUser({ ...users.admin, alertingAuthorityVerified: true });
+    await createUser({ ...users.composer, alertingAuthorityVerified: true });
     await handleAlertingAuthoritiesSettings(req, res);
     expect(res._getStatusCode()).toEqual(401);
   });
@@ -24,8 +24,8 @@ describe("GET /api/alertingAuthorities/:id/settings", () => {
       method: "GET",
     });
 
-    await createUser({ ...users.admin, alertingAuthorityVerified: true });
-    mockUserOnce(users.admin);
+    await createUser({ ...users.composer, alertingAuthorityVerified: true });
+    mockUserOnce(users.composer);
     await handleAlertingAuthoritiesSettings(req, res);
     expect(res._getStatusCode()).toEqual(400);
   });
@@ -36,16 +36,16 @@ describe("GET /api/alertingAuthorities/:id/settings", () => {
       query: { alertingAuthorityId: "aa" },
     });
 
-    await createUser({ ...users.admin, alertingAuthorityVerified: true });
-    mockUserOnce(users.admin);
+    await createUser({ ...users.composer, alertingAuthorityVerified: true });
+    mockUserOnce(users.composer);
     await handleAlertingAuthoritiesSettings(req, res);
     expect(JSON.parse(res._getData())).toEqual({
       id: "aa",
       countryCode: "GB",
       name: "AA",
       defaultTimezone: "Etc/GMT",
-      contact: null,
-      web: null,
+      contact: "example@example.com",
+      web: "https://example.com",
     });
   });
 });
@@ -58,7 +58,7 @@ describe("POST /api/alertingAuthorities/:id/settings", () => {
       body: { contact: "contact@aa.com" },
     });
 
-    await createUser({ ...users.admin, alertingAuthorityVerified: true });
+    await createUser({ ...users.composer, alertingAuthorityVerified: true });
     mockUserOnce(users.composer);
     await handleAlertingAuthoritiesSettings(req, res);
     expect(res._getStatusCode()).toEqual(403);

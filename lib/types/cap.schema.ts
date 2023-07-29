@@ -66,7 +66,7 @@ export interface CAPV12JSONSchema2 {
     web?: string;
     contact?: string;
     parameter?: {
-      name: string;
+      valueName: string;
       value: string;
     }[];
     resource?: {
@@ -291,7 +291,7 @@ export const CAPV12Schema =
             "items": {
               "type": "object",
               "properties": {
-                "name": {
+                "valueName": {
                   "type": "string"
                 },
                 "value": {
@@ -299,7 +299,7 @@ export const CAPV12Schema =
                 }
               },
               "required": [
-                "name",
+                "valueName",
                 "value"
               ],
               "additionalProperties": false

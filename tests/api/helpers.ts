@@ -46,6 +46,8 @@ const defaultAlertingAuthority = {
   name: "AA",
   countryCode: "GB",
   author: "aa@example.com",
+  contact: "example@example.com",
+  web: "https://example.com",
 };
 
 export const users = {
@@ -88,6 +90,8 @@ export const createUser = async ({
                 name: alertingAuthority.name,
                 countryCode: alertingAuthority.countryCode,
                 author: alertingAuthority.author,
+                contact: alertingAuthority.contact,
+                web: alertingAuthority.web,
               },
               where: { id: alertingAuthority.id },
             },
