@@ -113,13 +113,18 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
           userId: user.id,
           alertingAuthorityId: "aa",
           data: mapFormAlertDataToCapSchema(
-            { name: "AA", author: "aa@example.com", web: 'https://example.com', contact: 'example@example.com' },
+            {
+              name: "AA",
+              author: "aa@example.com",
+              web: "https://example.com",
+              contact: "example@example.com",
+            },
             {
               category: ["Geo"],
               regions: {},
               from: formatDate(getStartOfToday()),
               to: formatDate(new Date()),
-              actions: ["Shelter"],
+              responseType: ["Shelter"],
               certainty: "Observed",
               severity: "Extreme",
               urgency: "Immediate",
@@ -145,13 +150,18 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
           userId: user2.id,
           alertingAuthorityId: "aa2",
           data: mapFormAlertDataToCapSchema(
-            { name: "AA2", author: "aa2@example.com", web: 'https://example.com', contact: 'example@example.com' },
+            {
+              name: "AA2",
+              author: "aa2@example.com",
+              web: "https://example.com",
+              contact: "example@example.com",
+            },
             {
               category: ["Geo"],
               regions: {},
               from: formatDate(new Date()),
               to: formatDate(future),
-              actions: ["Shelter"],
+              responseType: ["Shelter"],
               certainty: "Observed",
               severity: "Extreme",
               urgency: "Immediate",
@@ -177,13 +187,18 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
           userId: user.id,
           alertingAuthorityId: "aa",
           data: mapFormAlertDataToCapSchema(
-            { name: "AA", author: "aa@example.com", web: 'https://example.com', contact: 'example@example.com' },
+            {
+              name: "AA",
+              author: "aa@example.com",
+              web: "https://example.com",
+              contact: "example@example.com",
+            },
             {
               category: ["Geo"],
               regions: {},
               from: formatDate(new Date()),
               to: formatDate(future),
-              actions: ["Shelter"],
+              responseType: ["Shelter"],
               certainty: "Observed",
               severity: "Extreme",
               urgency: "Immediate",

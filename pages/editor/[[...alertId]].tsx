@@ -6,7 +6,9 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Message } from "rsuite";
-import Editor, { FormAlertData } from "../../components/editor/Editor";
+import EditorSinglePage, {
+  FormAlertData,
+} from "../../components/editor/EditorSinglePage";
 import prisma from "../../lib/prisma";
 
 import AlertingAuthoritySelector from "../../components/AlertingAuthoritySelector";
@@ -71,6 +73,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
             name: true,
             countryCode: true,
             id: true,
+            contact: true,
+            web: true,
           },
         },
       },
@@ -155,28 +159,29 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         acc[area.areaDesc] = area.circle ?? area.polygon;
         return acc;
       }, {}),
-      from: (info?.effective
+      onset: (info?.effective
         ? new Date(info?.effective)
         : getStartOfToday()
       ).toString(),
-      to: (info?.expires ? new Date(info?.expires) : new Date()).toString(),
-      actions: info?.responseType ?? [],
+      expires: (info?.expires
+        ? new Date(info?.expires)
+        : new Date()
+      ).toString(),
+      responseType: info?.responseType ?? [],
       certainty: info?.certainty ?? "",
       severity: info?.severity ?? "",
       urgency: info?.urgency ?? "",
       status: alertData.status,
       msgType: alertData.msgType,
+      contact: info?.contact,
+      web: info?.web,
       references: alertData.references ? alertData.references.split(" ") : [],
-      textLanguages: alertData.info?.reduce((acc, info) => {
-        acc[info.language as string] = {
-          event: info.event ?? "",
-          headline: info.headline ?? "",
-          description: info.description ?? "",
-          instruction: info.instruction ?? "",
-          resources: info.resource ?? [],
-        };
-        return acc;
-      }, {}),
+      language: info?.language,
+      event: info?.event ?? "",
+      headline: info?.headline ?? "",
+      description: info?.description ?? "",
+      instruction: info?.instruction ?? "",
+      resources: info?.resource ?? [],
     };
 
     if (!isTemplate) {
@@ -187,24 +192,23 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     defaultAlertData = {
       category: [],
       regions: {},
-      from: getStartOfToday().toString(),
-      to: new Date().toString(),
-      actions: [],
+      onset: getStartOfToday().toString(),
+      expires: new Date().toString(),
+      responseType: [],
       certainty: "",
       severity: "",
       urgency: "",
       status: "",
       msgType: "",
+      contact: alertingAuthority.contact ?? "",
+      web: alertingAuthority.web ?? "",
       references: [],
-      textLanguages: {
-        en: {
-          event: "",
-          headline: "",
-          description: "",
-          instruction: "",
-          resources: [],
-        },
-      },
+      language: "eng",
+      event: "",
+      headline: "",
+      description: "",
+      instruction: "",
+      resources: [],
     };
   }
 
@@ -274,8 +278,8 @@ export default function EditorPage(props: Props) {
   // Dates were serialised on server; convert back to Date now
   const defaultAlertData: FormAlertData = {
     ...props.defaultAlertData,
-    from: new Date(props.defaultAlertData!.from),
-    to: new Date(props.defaultAlertData!.to),
+    onset: new Date(props.defaultAlertData!.onset),
+    expires: new Date(props.defaultAlertData!.expires),
     timezone:
       session!.user.alertingAuthorities[alertingAuthorityId].defaultTimezone,
   };
@@ -286,7 +290,7 @@ export default function EditorPage(props: Props) {
         <title>CAP Editor - Edit</title>
       </Head>
       <main>
-        <Editor
+        <EditorSinglePage
           key={
             props.editingAlert
               ? `editor-${props.editingAlert.id}`

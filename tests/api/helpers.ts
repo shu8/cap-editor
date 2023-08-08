@@ -136,7 +136,7 @@ export const createAlert = async ({
           regions: {},
           from: formatDate(new Date()),
           to: formatDate(future),
-          actions: ["Shelter"],
+          responseType: ["Shelter"],
           certainty: "Observed",
           severity: "Extreme",
           urgency: "Immediate",

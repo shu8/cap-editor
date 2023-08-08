@@ -35,7 +35,7 @@ export const mapFormAlertDataToCapSchema = (
         language,
         category: alertData.category,
         event: languageData.event,
-        responseType: alertData.actions,
+        responseType: alertData.responseType,
         urgency: alertData.urgency,
         severity: alertData.severity,
         certainty: alertData.certainty,
@@ -48,10 +48,12 @@ export const mapFormAlertDataToCapSchema = (
         headline: languageData.headline,
         description: languageData.description,
         instruction: languageData.instruction,
-        parameter: [{
-          valueName: "CANONICAL_URL",
-          value: `${process.env.BASE_URL}/feed/${id}`,
-        }],
+        parameter: [
+          {
+            valueName: "CANONICAL_URL",
+            value: `${process.env.BASE_URL}/feed/${id}`,
+          },
+        ],
         web: alertingAuthority.web ?? null,
         contact: alertingAuthority.contact ?? null,
         // parameter

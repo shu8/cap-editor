@@ -16,13 +16,18 @@ const databaseAlertData: any = {
   status: "PUBLISHED",
   alertingAuthorityId: "aa",
   data: mapFormAlertDataToCapSchema(
-    { name: "AA", author: "aa@example.com", web: 'https://example.com', contact: 'example@example.com' },
+    {
+      name: "AA",
+      author: "aa@example.com",
+      web: "https://example.com",
+      contact: "example@example.com",
+    },
     {
       category: ["Geo"],
       regions: {},
       from: formatDate(new Date()),
       to: formatDate(future),
-      actions: ["Shelter"],
+      responseType: ["Shelter"],
       certainty: "Observed",
       severity: "Extreme",
       urgency: "Immediate",

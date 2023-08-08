@@ -1,0 +1,46 @@
+.newAlert {
+  margin: 10px 20px;
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+}
+
+.header h3 {
+  display: flex;
+  align-items: center;
+}
+
+.header .shareIcon {
+  cursor: pointer;
+  font-size: 0.8em;
+  margin-left: 5px;
+}
+
+.inputsWrapper {
+  width: 50%;
+}
+
+.inputGroup {
+  margin-bottom: 24px;
+}
+
+.map {
+  flex: 50%;
+}
+
+.footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.alertId {
+  font-family: monospace;
+  text-transform: none;
+}

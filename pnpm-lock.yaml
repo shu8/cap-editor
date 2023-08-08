@@ -42,6 +42,7 @@ specifiers:
   fast-xml-parser: ^4.1.2
   identity-obj-proxy: ^3.0.0
   iso-639-1: ^2.1.15
+  iso-639-3: ^3.0.1
   jest: ^29.4.3
   jest-environment-jsdom: ^29.4.3
   jest-environment-node: ^29.4.3
@@ -90,6 +91,7 @@ dependencies:
   cookies-next: 2.1.1
   fast-xml-parser: 4.1.2
   iso-639-1: 2.1.15
+  iso-639-3: 3.0.1
   jsonschema: 1.4.1
   net: 1.0.2
   next: 13.0.7_kkcfeymwl5j7dlmofmanydspyi
@@ -6136,6 +6138,10 @@ packages:
   /iso-639-1/2.1.15:
     resolution: {integrity: sha512-7c7mBznZu2ktfvyT582E2msM+Udc1EjOyhVRE/0ZsjD9LBtWSm23h3PtiRh2a35XoUsTQQjJXaJzuLjXsOdFDg==}
     engines: {node: '>=6.0'}
+    dev: false
+
+  /iso-639-3/3.0.1:
+    resolution: {integrity: sha512-SdljCYXOexv/JmbQ0tvigHN43yECoscVpe2y2hlEqy/CStXQlroPhZLj7zKLRiGqLJfw8k7B973UAMDoQczVgQ==}
     dev: false
 
   /istanbul-lib-coverage/3.2.0:
