@@ -75,11 +75,11 @@ export default function Map({
   regions = {},
   onRegionsChange,
   alertingAuthority,
-  enableInteraction = false,
+  editingRegion,
 }: Partial<FormAlertData> & {
   onRegionsChange: (regions: FormAlertData["regions"]) => void;
   alertingAuthority: AlertingAuthority | null;
-  enableInteraction: boolean;
+  editingRegion: string;
 }) {
   useGeographic();
   const mapRef = useRef<HTMLDivElement>(null);
@@ -198,11 +198,6 @@ export default function Map({
   });
 
   useEffect(() => {
-    if (!enableInteraction) {
-      select.setActive(false);
-      return;
-    }
-
     select.setActive(true);
 
     const hoverListener = (e) => {
@@ -249,7 +244,7 @@ export default function Map({
       hovered?.setStyle(undefined);
       select.setActive(false);
     };
-  }, [map, enableInteraction]);
+  }, [map]);
 
   useEffect(() => {
     const addFeatureHandler = (e: VectorSourceEvent<Geometry>) => {
@@ -341,7 +336,7 @@ export default function Map({
   }, [map, regions]);
 
   return (
-    <div ref={mapRef} style={{ height: "400px", width: "100%" }}>
+    <div ref={mapRef} style={{ height: "400px", width: "45%" }}>
       <div style={{ position: "relative" }}>
         <TileLayer map={map} source={OSMSource} zIndex={0} />
         <VectorLayer
@@ -357,53 +352,49 @@ export default function Map({
           zIndex={2}
         />
 
-        {enableInteraction &&
-          ["Polygon", "Circle"].map((objectType, i) => (
-            <IconButton
-              key={`draw-btn-${objectType}`}
-              appearance="primary"
-              size="sm"
-              color="violet"
-              title={`Draw ${objectType}`}
-              style={{ position: "absolute", zIndex: 4, right: 0, top: i * 50 }}
-              icon={
-                <Icon
-                  as={objectType === "Polygon" ? PolygonImage : CircleImage}
-                />
+        {["Polygon", "Circle"].map((objectType, i) => (
+          <IconButton
+            key={`draw-btn-${objectType}`}
+            appearance="primary"
+            size="sm"
+            color="violet"
+            title={`Draw ${objectType}`}
+            style={{ position: "absolute", zIndex: 4, right: 0, top: i * 50 }}
+            icon={
+              <Icon
+                as={objectType === "Polygon" ? PolygonImage : CircleImage}
+              />
+            }
+            onClick={() => {
+              const existingDrawInteractions = map
+                ?.getInteractions()
+                .getArray()
+                .filter((i) => i instanceof OLDraw);
+
+              // i.e., user wants to toggle off a draw interaction
+              if (existingDrawInteractions?.length) {
+                existingDrawInteractions?.forEach((i) =>
+                  map?.removeInteraction(i)
+                );
+
+                return;
               }
-              onClick={() => {
-                const existingDrawInteractions = map
-                  ?.getInteractions()
-                  .getArray()
-                  .filter((i) => i instanceof OLDraw);
 
-                // i.e., user wants to toggle off a draw interaction
-                if (existingDrawInteractions?.length) {
-                  existingDrawInteractions?.forEach((i) =>
-                    map?.removeInteraction(i)
-                  );
-
-                  return;
-                }
-
-                const draw = new OLDraw({
-                  features: selectedFeatures,
-                  type: objectType as Type,
-                });
-                draw.on("drawstart", () => select.setActive(false));
-                draw.on("drawend", (e) => {
-                  const name = window.prompt(
-                    t`What is the name of this region?`
-                  );
-                  if (name) e.feature.setProperties({ name });
-                  draw.setActive(false);
-                  map?.removeInteraction(draw);
-                  setTimeout(() => select.setActive(true), 300);
-                });
-                map?.addInteraction(draw);
-              }}
-            />
-          ))}
+              const draw = new OLDraw({
+                features: selectedFeatures,
+                type: objectType as Type,
+              });
+              draw.on("drawstart", () => select.setActive(false));
+              draw.on("drawend", (e) => {
+                e.feature.setProperties({ name: editingRegion });
+                draw.setActive(false);
+                map?.removeInteraction(draw);
+                setTimeout(() => select.setActive(true), 300);
+              });
+              map?.addInteraction(draw);
+            }}
+          />
+        ))}
       </div>
     </div>
   );

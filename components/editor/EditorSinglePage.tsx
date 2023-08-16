@@ -24,6 +24,7 @@ import {
   Headline,
   Instruction,
   Language,
+  MapForm,
   MessageType,
   Onset,
   Resources,
@@ -142,8 +143,8 @@ export default function EditorSinglePage(props: Props) {
         </div>
       </div>
 
-      <div className={styles.inputsWrapper}>
-        <Form fluid>
+      <Form fluid className={styles.editorContainer}>
+        <div className={styles.inputsWrapper}>
           <Headline onUpdate={onUpdate} alertData={alertData} />
           <Event onUpdate={onUpdate} alertData={alertData} />
           <Description onUpdate={onUpdate} alertData={alertData} />
@@ -202,17 +203,16 @@ export default function EditorSinglePage(props: Props) {
           <Divider />
 
           <Resources onUpdate={onUpdate} alertData={alertData} />
-        </Form>
+        </div>
 
-        {/* <div className={classes(styles.map)}>
-            <Map
-              onRegionsChange={(regions) => onUpdate({ regions })}
-              regions={alertData.regions}
-              alertingAuthority={props.alertingAuthority}
-              enableInteraction={step === "map"}
-            />
-          </div> */}
-      </div>
+        <div className={classes(styles.mapFormWrapper)}>
+          <MapForm
+            onUpdate={onUpdate}
+            alertData={alertData}
+            alertingAuthority={props.alertingAuthority}
+          />
+        </div>
+      </Form>
 
       <div className={classes(styles.footer)}>
         <Button

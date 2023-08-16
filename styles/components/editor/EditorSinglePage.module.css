@@ -22,6 +22,11 @@
   margin-left: 5px;
 }
 
+.editorContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
 .inputsWrapper {
   width: 50%;
 }
@@ -30,8 +35,28 @@
   margin-bottom: 24px;
 }
 
-.map {
-  flex: 50%;
+.mapFormWrapper {
+  width: 45%;
+}
+
+.mapForm {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.mapFormGroup {
+  width: 50%;
+}
+
+.countryQuickAddLink {
+  padding: 0;
+  margin: 0;
+}
+
+.countryQuickAddDivider {
+  margin: 0 6px;
+  background-color: grey;
 }
 
 .footer {

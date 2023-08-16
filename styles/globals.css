@@ -85,10 +85,6 @@ main {
   text-overflow: ellipsis;
 }
 
-.rs-picker-toggle {
-  max-width: 200px;
-}
-
 .centered-message {
   align-items: center;
   height: 100%;
