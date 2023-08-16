@@ -1,4 +1,3 @@
-import { t } from "@lingui/macro";
 import { AlertingAuthority } from "@prisma/client";
 import { Icon } from "@rsuite/icons";
 import flip from "@turf/flip";
@@ -8,14 +7,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { IconButton } from "rsuite";
 
 import OLFeatureCollection from "ol/Collection";
-import { singleClick } from "ol/events/condition";
 import Feature from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
 import { Circle, Geometry, Polygon } from "ol/geom";
 import { Type } from "ol/geom/Geometry";
 import { defaults as OLDefaultInteractions } from "ol/interaction";
 import OLDraw from "ol/interaction/Draw";
-import OLSelect from "ol/interaction/Select";
 import OLMap from "ol/Map";
 import { useGeographic } from "ol/proj";
 import OSM from "ol/source/OSM";
@@ -89,14 +86,6 @@ export default function Map({
   );
   const [selectedFeaturesSource] = useState<OLVectorSource>(
     new OLVectorSource({ wrapX: false, features: selectedFeatures })
-  );
-  const [select] = useState(
-    new OLSelect({
-      features: selectedFeatures,
-      toggleCondition: singleClick,
-      filter: (f) => f.getId() !== "alertingAuthority",
-      style: selectedStyle,
-    })
   );
 
   const defaultFeaturesSource = useMemo(
@@ -198,7 +187,7 @@ export default function Map({
       }),
       layers: [],
       overlays: [],
-      interactions: OLDefaultInteractions().extend([select]),
+      interactions: OLDefaultInteractions(),
     });
 
     if (mapRef.current) mapObject.setTarget(mapRef.current);
@@ -208,60 +197,10 @@ export default function Map({
     defaultFeaturesSource?.addFeature(alertingAuthorityRegion);
     defaultFeaturesSource.on("featuresloadend", updateRegionsOnMap);
     return () => {
-      mapObject.removeInteraction(select);
       defaultFeaturesSource.un("featuresloadend", updateRegionsOnMap);
       mapObject.setTarget(undefined);
     };
   });
-
-  useEffect(() => {
-    select.setActive(true);
-
-    const hoverListener = (e) => {
-      if (hovered) {
-        hovered.setStyle(undefined);
-        hovered = null;
-      }
-
-      // If currently drawing (i.e., more than the defaul interactions + the select interaction), don't show hover highlight
-      if (
-        map?.getInteractions().getLength() !==
-        OLDefaultInteractions().getLength() + 1
-      ) {
-        return;
-      }
-
-      map?.forEachFeatureAtPixel(e.pixel, (f) => {
-        const feature = f as Feature;
-
-        // Don't show hover colour over the user's entire AA
-        if (feature.getId() === "alertingAuthority") return;
-
-        // Don't show hover colour if feature already selected
-        if (selectedFeaturesSource.hasFeature(feature)) return;
-
-        // Don't show hover colour for features not inside user's AA
-        if (
-          !alertingAuthorityRegion
-            .getGeometry()
-            ?.containsXY(...map?.getCoordinateFromPixel(e.pixel))
-        ) {
-          return;
-        }
-
-        hovered = feature;
-        feature.setStyle(hoverStyle);
-        return true;
-      });
-    };
-
-    map?.on("pointermove", hoverListener);
-    return () => {
-      map?.un("pointermove", hoverListener);
-      hovered?.setStyle(undefined);
-      select.setActive(false);
-    };
-  }, [map]);
 
   useEffect(() => {
     const addFeatureHandler = (e: VectorSourceEvent<Geometry>) => {
@@ -407,12 +346,10 @@ export default function Map({
                 features: selectedFeatures,
                 type: objectType as Type,
               });
-              draw.on("drawstart", () => select.setActive(false));
               draw.on("drawend", (e) => {
                 e.feature.setProperties({ name: editingRegion });
                 draw.setActive(false);
                 map?.removeInteraction(draw);
-                setTimeout(() => select.setActive(true), 300);
               });
               map?.addInteraction(draw);
             }}
