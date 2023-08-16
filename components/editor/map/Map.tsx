@@ -132,15 +132,25 @@ export default function Map({
 
     Object.keys(regions).forEach((r) => {
       const feature = defaultFeaturesSource.getFeatureById(r);
-      if (feature && selectedFeaturesSource.hasFeature(feature)) return;
+
+      if (
+        feature?.get("ADMIN") != null &&
+        selectedFeaturesSource.hasFeature(feature)
+      ) {
+        return;
+      }
+
       if (feature?.get("ADMIN") != null) {
         // Handle default country features
         selectedFeaturesSource.addFeature(feature);
-      } else if (r.startsWith("custom-")) {
-        // Handle custom features
-        const data = regions[r]?.[0];
-        if (!data) return;
+        return;
+      }
 
+      // Handle custom features
+      const data = regions[r]?.[0];
+      if (!data) return;
+
+      const handleCustomFeature = (data) => {
         if (typeof data === "string") {
           if (!metersPerUnit) return;
 
@@ -155,17 +165,24 @@ export default function Map({
             )
           );
           circleFeature.setId(r);
-          selectedFeaturesSource.addFeature(circleFeature);
+          return circleFeature;
         } else {
-          const polygonFeature = new Feature(new Polygon([data]));
+          const polygonFeature = new Feature(new Polygon([regions[r]]));
           polygonFeature.setId(r);
           const geoJsonFeature =
             geojsonFormat.writeFeatureObject(polygonFeature);
           flip(geoJsonFeature, { mutate: true });
-          selectedFeaturesSource.addFeature(
-            geojsonFormat.readFeature(geoJsonFeature)
-          );
+          return geojsonFormat.readFeature(geoJsonFeature);
         }
+      };
+
+      const existingCustomFeature = selectedFeaturesSource.getFeatureById(r);
+      if (existingCustomFeature) {
+        existingCustomFeature.setGeometry(
+          handleCustomFeature(data)?.getGeometry()
+        );
+      } else {
+        selectedFeaturesSource.addFeature(handleCustomFeature(data));
       }
     });
   };
@@ -290,7 +307,7 @@ export default function Map({
 
           onRegionsChange({
             ...regions,
-            [`custom-${name}`]: geoJsonFeature.geometry.coordinates,
+            [name]: geoJsonFeature.geometry.coordinates.flat(),
           });
         } else {
           const geometry = e.feature.getGeometry() as Circle;
@@ -304,7 +321,7 @@ export default function Map({
           // CAP needs radius in km after a space character
           onRegionsChange({
             ...regions,
-            [`custom-${name}`]: [
+            [name]: [
               `${center
                 .reverse()
                 .map((n) => n.toFixed(COORDINATE_PRECISION))
@@ -366,6 +383,12 @@ export default function Map({
               />
             }
             onClick={() => {
+              if (!editingRegion) {
+                window.alert(
+                  "Please choose/type an area name before drawing the area"
+                );
+              }
+
               const existingDrawInteractions = map
                 ?.getInteractions()
                 .getArray()

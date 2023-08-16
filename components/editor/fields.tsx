@@ -15,7 +15,7 @@ import {
 import { FormAlertData } from "./EditorSinglePage";
 import timezones from "timezones.json";
 import { iso6393 } from "iso-639-3";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HandledError, useMountEffect } from "../../lib/helpers.client";
 import { useToasterI18n } from "../../lib/useToasterI18n";
 import Map from "./map/Map";
@@ -476,6 +476,23 @@ export const MapForm = ({
   const toaster = useToasterI18n();
   const [countries, setCountries] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState("");
+  const [customPolygonInput, setCustomPolygonInput] = useState("");
+
+  const polygonStringToArray = (str: string) => {
+    const arr = [];
+    const coordPairs = str.split(" ");
+    for (let i = 0; i < coordPairs.length; i++) {
+      const nums = coordPairs[i].split(",");
+      const x = +nums[0];
+      const y = +nums[1];
+      if (isNaN(x) || isNaN(y)) return null;
+      arr.push([x, y]);
+    }
+    return arr;
+  };
+
+  const polygonArrayToString = (arr: number[][]) =>
+    arr.map((v: number[]) => v.join(",")).join(" ");
 
   const fetchCountries = async () => {
     fetch(`/api/countries?countryCode=${alertingAuthority.countryCode}`)
@@ -496,6 +513,18 @@ export const MapForm = ({
   });
 
   const regions = { ...alertData.regions };
+  useEffect(() => {
+    // Don't reset custom polygon input whilst user is typing an invalid input
+    if (
+      regions[selectedRegion]?.length === 1 &&
+      regions[selectedRegion][0]?.length === 0
+    ) {
+      return;
+    }
+
+    setCustomPolygonInput(polygonArrayToString(regions[selectedRegion] ?? []));
+  }, [selectedRegion, regions]);
+
   return (
     <div className={styles.mapForm}>
       <Map
@@ -545,7 +574,10 @@ export const MapForm = ({
                   onClick={() => {
                     regions[c] = [];
                     onUpdate({ regions });
-                    setSelectedRegion(c);
+
+                    // The Map component adds the actual coordinates of the quick-added location when it sees a new region with [] coordinates.
+                    // We need to update the selected region only after the coordinates have been updated.
+                    setTimeout(() => setSelectedRegion(c), 0);
                   }}
                 >
                   {c}
@@ -577,10 +609,18 @@ export const MapForm = ({
               <Form.Control
                 name="polygon"
                 accepter={Textarea}
-                value={regions[selectedRegion]}
+                value={customPolygonInput}
+                onChange={(v) => {
+                  setCustomPolygonInput(v);
+                  const arr = polygonStringToArray(v);
+                  regions[selectedRegion] = arr ?? [[]];
+                  onUpdate({ regions });
+                }}
               />
               <Form.HelpText>
                 Use the drawing tool or paste in polygon coordinates
+                (space-delimited coordinate pairs, with matching first and last
+                pair)
               </Form.HelpText>
             </Form.Group>
 
