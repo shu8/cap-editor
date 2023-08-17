@@ -1,5 +1,5 @@
 import { validate as validateJSON } from "jsonschema";
-import { FormAlertData } from "../components/editor/Editor";
+import { FormAlertData } from "../components/editor/EditorSinglePage";
 import { formatDate } from "./helpers.client";
 import { CAPV12JSONSchema, CAPV12Schema } from "./types/cap.schema";
 
@@ -30,11 +30,11 @@ export const mapFormAlertDataToCapSchema = (
       references: alertData.references?.join(" "),
     }),
     // incidents,
-    info: Object.entries(alertData.textLanguages).map(
-      ([language, languageData]) => ({
-        language,
+    info: [
+      {
+        language: alertData.language,
         category: alertData.category,
-        event: languageData.event,
+        event: alertData.event,
         responseType: alertData.responseType,
         urgency: alertData.urgency,
         severity: alertData.severity,
@@ -42,12 +42,12 @@ export const mapFormAlertDataToCapSchema = (
         // audience
         // eventCode
         // effective
-        onset: alertData.from,
-        expires: alertData.to,
+        onset: alertData.onset,
+        expires: alertData.expires,
         senderName: alertingAuthority.name,
-        headline: languageData.headline,
-        description: languageData.description,
-        instruction: languageData.instruction,
+        headline: alertData.headline,
+        description: alertData.description,
+        instruction: alertData.instruction,
         parameter: [
           {
             valueName: "CANONICAL_URL",
@@ -57,7 +57,7 @@ export const mapFormAlertDataToCapSchema = (
         web: alertingAuthority.web ?? null,
         contact: alertingAuthority.contact ?? null,
         // parameter
-        resource: languageData.resources,
+        resource: alertData.resources,
         area: Object.entries(alertData.regions).map(([regionName, data]) => ({
           areaDesc: regionName,
           ...(typeof data?.[0] === "string" && { circle: data }),
@@ -66,8 +66,8 @@ export const mapFormAlertDataToCapSchema = (
           // altitude
           // ceiling
         })),
-      })
-    ),
+      },
+    ],
   };
 
   const validationResult = validateJSON(alert, CAPV12Schema);
