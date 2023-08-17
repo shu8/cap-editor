@@ -67,7 +67,6 @@ export default function VerifyUser({
   const toaster = useToasterI18n();
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [roles, setRoles] = useState([]);
-  const [nameOtherAA, setNameOtherAA] = useState("");
 
   const verifyUser = (verified: boolean) => {
     fetch("/api/verifyUser", {
@@ -77,7 +76,6 @@ export default function VerifyUser({
         verificationToken,
         verified,
         roles,
-        ...(isOtherAA && { name: nameOtherAA }),
       }),
     })
       .then((res) => res.json())
@@ -116,23 +114,6 @@ export default function VerifyUser({
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {isOtherAA && (
-              <>
-                <p>
-                  <Trans>
-                    Please enter the name of this new IFRC-managed 'Alerting
-                    Authority'
-                  </Trans>
-                  :
-                </p>
-                <Input
-                  value={nameOtherAA}
-                  onChange={(v) => setNameOtherAA(v)}
-                  placeholder="e.g., Bermuda"
-                />
-                <br />
-              </>
-            )}
             <p>
               <Trans>Please select the role(s) for this user</Trans>:
             </p>

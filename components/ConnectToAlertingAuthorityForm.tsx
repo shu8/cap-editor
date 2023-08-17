@@ -1,8 +1,8 @@
 import { t, Trans } from "@lingui/macro";
 import { useEffect, useState } from "react";
-import { Button, Form, Loader, Message, SelectPicker } from "rsuite";
+import { Button, Form, InputPicker, Loader, Message } from "rsuite";
 
-import { HandledError, updateState } from "../lib/helpers.client";
+import { HandledError } from "../lib/helpers.client";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import ErrorMessage from "./ErrorMessage";
 
@@ -10,7 +10,7 @@ type RegisterData = {
   alertingAuthorityId: string;
 };
 
-export default function ConnectToAlertingAuthorityForm({ email = "" }) {
+export default function ConnectToAlertingAuthorityForm() {
   const toaster = useToasterI18n();
   const [alertingAuthorities, setAlertingAuthorities] = useState([]);
   const [finishedLoading, setFinishedLoading] = useState(false);
@@ -18,7 +18,11 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
     alertingAuthorityId: "",
   });
 
-  useEffect(() => updateState(setFormData, { email }), [email]);
+  useEffect(() => {
+    if (alertingAuthorities.find((aa) => aa.id === "other")) {
+      setFormData({ alertingAuthorityId: "other" });
+    }
+  }, [alertingAuthorities]);
 
   return (
     <div>
@@ -32,6 +36,9 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               alertingAuthorityId: formData.alertingAuthorityId,
+              ...(formData.alertingAuthorityId === "other" && {
+                name: alertingAuthorities.find((aa) => aa.id === "other")!.name,
+              }),
             }),
           })
             .then((res) => res.json())
@@ -63,19 +70,22 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
             <p>
               <i>
                 <Trans>
-                  Please choose the 'Other' option if your Alerting Authority is
-                  not listed. In this case, your request will be sent to an IFRC
-                  contact for approval.
+                  If your Alerting Authority is not listed, please type in the
+                  name of the Alerting Authority you represent. In this case,
+                  your request will be sent to an IFRC contact for approval.
                 </Trans>
               </i>
             </p>
           </Form.ControlLabel>
+
           <Form.Control
             style={{ width: "400px" }}
             name="alertingAuthorityId"
-            accepter={SelectPicker}
-            onOpen={() =>
-              fetch("/api/alertingAuthorities")
+            accepter={InputPicker}
+            creatable
+            onOpen={() => {
+              if (alertingAuthorities?.length) return;
+              return fetch("/api/alertingAuthorities")
                 .then((res) => res.json())
                 .then((res) => {
                   if (res.error) throw new HandledError(res.message);
@@ -89,8 +99,8 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
                     />
                   )
                 )
-                .finally(() => setFinishedLoading(true))
-            }
+                .finally(() => setFinishedLoading(true));
+            }}
             renderMenu={(menu) => {
               if (!finishedLoading) {
                 return <Loader style={{ margin: "auto", padding: "10px" }} />;
@@ -100,9 +110,16 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
             renderMenuItem={(node, item) => {
               return <span title={item.name}>{item.name}</span>;
             }}
+            onCreate={(value, item) => {
+              setAlertingAuthorities((old) => [
+                ...old,
+                { id: "other", name: item.name, countryCode: "Other" },
+              ]);
+            }}
             virtualized
             groupBy="countryCode"
             labelKey="name"
+            placeholder={t`Select, or type in the name of, your Alerting Authority`}
             valueKey="id"
             sort={(isGroup) => {
               return (a, b) => {
@@ -112,10 +129,7 @@ export default function ConnectToAlertingAuthorityForm({ email = "" }) {
                   : -1;
               };
             }}
-            data={[
-              ...alertingAuthorities,
-              { countryCode: "Other", name: "Other", id: "other" },
-            ]}
+            data={alertingAuthorities}
           />
         </Form.Group>
 

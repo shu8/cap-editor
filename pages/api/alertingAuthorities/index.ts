@@ -8,6 +8,22 @@ async function handleGetAlertingAuthorities(
   res: NextApiResponse
 ) {
   const data = await fetchWMOAlertingAuthorities();
+  const otherAlertingAuthorities =
+    (await prisma?.alertingAuthority.findMany({
+      where: {
+        id: { startsWith: "ifrc:" },
+        Users: { some: { verified: { not: null } } },
+      },
+      select: {
+        name: true,
+        id: true,
+        author: true,
+        countryCode: true,
+        polygon: true,
+      },
+    })) ?? [];
+
+  data.push(...otherAlertingAuthorities);
   return res.json({ result: data });
 }
 

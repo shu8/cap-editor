@@ -17,11 +17,18 @@ async function handleConnectToAlertingAuthority(
   const session = await getServerSession(req, res, authOptions);
   if (!session) throw new ApiError(401, "You are not logged in");
 
-  const { alertingAuthorityId } = req.body;
+  const { alertingAuthorityId, name: customAlertingAuthorityName } = req.body;
   if (!alertingAuthorityId) {
     throw new ApiError(
       400,
       "You did not provide the Alerting Authority you wish to connect to"
+    );
+  }
+
+  if (alertingAuthorityId === "other" && !customAlertingAuthorityName) {
+    throw new ApiError(
+      400,
+      "You did not provide valid details for the Alerting Authority you wish to connect to"
     );
   }
 
@@ -30,8 +37,8 @@ async function handleConnectToAlertingAuthority(
       ? {
           author: process.env.IFRC_AA_VERIFIER_EMAIL,
           id: `ifrc:${randomUUID()}`,
-          name: "Other Alerting Authority",
-          countryCode: null,
+          name: customAlertingAuthorityName,
+          countryCode: "Other",
           polygon: null,
         }
       : (await fetchWMOAlertingAuthorities()).find(
