@@ -47,8 +47,8 @@ export default function Header() {
             <div className={styles.userDetails}>
               <span>{session.user.email}</span>
               <span>
-                {session.user.alertingAuthorities[alertingAuthorityId].roles
-                  .join(", ")
+                {session.user.alertingAuthorities?.[alertingAuthorityId]?.roles
+                  ?.join(", ")
                   .toLowerCase()}
               </span>
               <div>

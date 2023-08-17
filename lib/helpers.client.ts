@@ -36,6 +36,7 @@ export const fetcher = (...args: any) =>
   fetch(...args).then((res) => res.json());
 
 // In part, from https://stackoverflow.com/a/17415677
+// Basically: format the Date as-is as YYYY-MM-DDThh:mm:ss and append "+hh:mm" as per the specified timezone
 export const formatDate = (date: Date, timezone: string = "Etc/GMT") => {
   const offset = timezones.find((t) => t.utc.includes(timezone))!.offset;
   const pad = (num: number) => num.toString().padStart(2, "0");
