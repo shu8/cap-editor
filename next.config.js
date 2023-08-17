@@ -4,10 +4,19 @@ const nextConfig = {
   async rewrites() {
     return [
       { source: "/feed", destination: "/api/alerts" },
+      { source: "/feed/alertingAuthorities", destination: "/api/alerts" },
       { source: "/feed/:id", destination: "/api/alerts/:id" },
       {
         source: "/feed/alertingAuthorities/:id",
         destination: "/api/alerts/alertingAuthorities/:id",
+      },
+      {
+        source: "/feed/alertingAuthorities/:id/:language/rss.xml",
+        destination: "/api/alerts/alertingAuthorities/:id/:language/rss.xml",
+      },
+      {
+        source: "/feed/alertingAuthorities/:id/:language",
+        destination: "/api/alerts/alertingAuthorities/:id/:language/rss.xml",
       },
       { source: "/login", destination: "/auth/login" },
       { source: "/register", destination: "/auth/register" },

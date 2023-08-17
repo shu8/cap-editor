@@ -4,13 +4,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
-import { FormAlertData } from "../../../../components/editor/Editor";
-import { withErrorHandler } from "../../../../lib/apiErrorHandler";
-import { mapFormAlertDataToCapSchema } from "../../../../lib/cap";
-import prisma from "../../../../lib/prisma";
-import { CAPV12JSONSchema } from "../../../../lib/types/cap.schema";
-import { formatAlertingAuthorityFeedAsXML } from "../../../../lib/xml/helpers";
-import { authOptions } from "../../auth/[...nextauth]";
+import { FormAlertData } from "../../../../../components/editor/EditorSinglePage";
+import { withErrorHandler } from "../../../../../lib/apiErrorHandler";
+import { mapFormAlertDataToCapSchema } from "../../../../../lib/cap";
+import prisma from "../../../../../lib/prisma";
+import { CAPV12JSONSchema } from "../../../../../lib/types/cap.schema";
+import { authOptions } from "../../../auth/[...nextauth]";
 
 async function handleNewAlert(
   alertingAuthorityId: string,
@@ -70,6 +69,7 @@ async function handleNewAlert(
         data: alert as Prisma.InputJsonValue,
         creator: { connect: { email: session.user.email } },
         status: req.body.status,
+        language: alertData.language,
         AlertingAuthority: {
           connect: { id: alertingAuthority.alertingAuthorityId },
         },
@@ -80,56 +80,6 @@ async function handleNewAlert(
     console.error(err);
     throw new ApiError(400, "You did not provide valid alert details");
   }
-}
-
-async function handleGetAlerts(
-  alertingAuthorityId: string,
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { json } = req.query;
-
-  // JSON returns all alerts, unsigned, inc. draft, as long as you are logged in
-  if (json) {
-    const session = await getServerSession(req, res, authOptions);
-    if (!session) throw new ApiError(403, "You are not logged in");
-
-    if (!session.user.alertingAuthorities[alertingAuthorityId]) {
-      throw new ApiError(
-        401,
-        "You do not have permission to view JSON alerts for this Alerting Authority"
-      );
-    }
-
-    const alerts = await prisma.alert.findMany({
-      where: { alertingAuthorityId },
-    });
-    return res.json({ error: false, alerts });
-  }
-
-  const alertingAuthorityAlerts = await prisma.alertingAuthority.findFirst({
-    where: { id: alertingAuthorityId },
-    include: { Alerts: { where: { status: "PUBLISHED" } } },
-  });
-
-  if (!alertingAuthorityAlerts) {
-    return res.status(404).send("Alerting Authority not found");
-  }
-
-  // Standard XML feed contains only active published alerts that haven't expired
-  res.setHeader("Content-Type", "application/xml");
-  return res.status(200).send(
-    await formatAlertingAuthorityFeedAsXML(
-      {
-        name: alertingAuthorityAlerts.name,
-        id: alertingAuthorityAlerts.id,
-        author: alertingAuthorityAlerts.author,
-      },
-      alertingAuthorityAlerts.Alerts.filter(
-        (a) => new Date(a.data!.info?.[0]?.expires) >= new Date()
-      )
-    )
-  );
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -144,10 +94,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   if (req.method === "POST") {
     return handleNewAlert(alertingAuthorityId, req, res);
-  }
-
-  if (req.method === "GET") {
-    return handleGetAlerts(alertingAuthorityId, req, res);
   }
 
   return res.status(405).send("Method not allowed");

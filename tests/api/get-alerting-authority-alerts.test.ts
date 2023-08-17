@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { mapFormAlertDataToCapSchema } from "../../lib/cap";
 import { formatDate, getStartOfToday } from "../../lib/helpers.client";
-import handleAlertingAuthorityAlerts from "../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]";
+import handleAlertingAuthorityAlerts from "../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]/[language]";
 import { createUser, mockUserOnce, users } from "./helpers";
 import { prismaMock } from "./setup";
 
@@ -83,12 +83,7 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
     const future = new Date();
     future.setDate(future.getDate() + 1);
 
-    const uuids = [
-      randomUUID(),
-      randomUUID(),
-      randomUUID(),
-      randomUUID(),
-    ];
+    const uuids = [randomUUID(), randomUUID(), randomUUID(), randomUUID()];
 
     await prismaMock.alert.createMany({
       data: [

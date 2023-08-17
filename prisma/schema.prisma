@@ -65,6 +65,7 @@ model Alert {
   id                  String            @id
   status              AlertStatus       @default(DRAFT)
   creator             User              @relation(fields: [userId], references: [id])
+  language            String            @default("eng")
   data                Json
   userId              String
   alertingAuthorityId String

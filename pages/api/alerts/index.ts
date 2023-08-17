@@ -9,11 +9,27 @@ async function handleGetAlertingAuthorityFeeds(
   res: NextApiResponse
 ) {
   // /feed simply returns list of all AAs and their feed URLs
-  const alertingAuthorities = await prisma.alertingAuthority.findMany();
+  const alertingAuthorities = await prisma.alertingAuthority.findMany({
+    include: { Alerts: { select: { language: true } } },
+  });
+
+  const alertingAuthoritiesAndLanguages = [];
+  for (let i = 0; i < alertingAuthorities.length; i++) {
+    const aa = alertingAuthorities[i];
+    const languages = [...new Set(aa.Alerts.map((a) => a.language))];
+    alertingAuthoritiesAndLanguages.push({
+      id: aa.id,
+      title: aa.name,
+      languages,
+    });
+  }
+
   res.setHeader("Content-Type", "application/xml");
   return res
     .status(200)
-    .send(await formatAlertingAuthoritiesAsXML(alertingAuthorities));
+    .send(
+      await formatAlertingAuthoritiesAsXML(alertingAuthoritiesAndLanguages)
+    );
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {

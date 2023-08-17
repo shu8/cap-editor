@@ -48,6 +48,7 @@ export const formatAlertAsXML = (alert: Alert): string => {
 
 export const formatAlertingAuthorityFeedAsXML = async (
   alertingAuthority: Pick<AlertingAuthority, "author" | "id" | "name">,
+  language: string,
   alerts: Alert[]
 ) => {
   const entries = [];
@@ -72,11 +73,12 @@ export const formatAlertingAuthorityFeedAsXML = async (
     });
   }
 
+  const url = `${process.env.BASE_URL}/feed/alertingAuthorities/${alertingAuthority.id}/${language}/rss.xml`;
   const feed = builder.build({
     feed: {
       "@_xmlns": "http://www.w3.org/2005/Atom",
-      id: `${process.env.BASE_URL}/feed/alertingAuthorities/${alertingAuthority.id}`,
-      title: `Alerts for ${alertingAuthority.name}`,
+      id: url,
+      title: `Alerts for ${alertingAuthority.name} (${language})`,
       updated: new Date().toISOString(),
       author: {
         name: alertingAuthority.name,
@@ -84,7 +86,7 @@ export const formatAlertingAuthorityFeedAsXML = async (
       },
       link: {
         "@_rel": "self",
-        "@_href": `${process.env.BASE_URL}/feed/alertingAuthorities/${alertingAuthority.id}`,
+        "@_href": url,
       },
       entry: entries,
     },
@@ -94,19 +96,21 @@ export const formatAlertingAuthorityFeedAsXML = async (
 };
 
 export const formatAlertingAuthoritiesAsXML = (
-  alertingAuthorities: AlertingAuthority[]
+  alertingAuthorities: {
+    id: string;
+    title: string;
+    languages: string[];
+  }[]
 ) => {
-  const entries = [];
-  for (let i = 0; i < alertingAuthorities.length; i++) {
-    const aa = alertingAuthorities[i];
-    entries.push({
-      id: aa.id,
-      title: aa.name,
-      link: {
-        "@_href": `${process.env.BASE_URL}/feed/alertingAuthorities/${aa.id}`,
-      },
-    });
-  }
+  const entries = alertingAuthorities.map((aa) => ({
+    id: aa.id,
+    title: aa.title,
+    link: aa.languages.map((lang) => ({
+      "@_href": `${process.env.BASE_URL}/feed/alertingAuthorities/${aa.id}/${lang}/rss.xml`,
+      "@_xml:lang": lang,
+      "@_hreflang": lang,
+    })),
+  }));
 
   const feed = builder.build({
     feed: {
