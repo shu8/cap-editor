@@ -88,7 +88,6 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
       randomUUID(),
       randomUUID(),
       randomUUID(),
-      randomUUID(),
     ];
 
     await prismaMock.alert.createMany({
@@ -102,13 +101,6 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
         },
         {
           id: uuids[1],
-          status: "TEMPLATE",
-          data: {},
-          alertingAuthorityId: "aa",
-          userId: user.id,
-        },
-        {
-          id: uuids[2],
           status: "PUBLISHED",
           userId: user.id,
           alertingAuthorityId: "aa",
@@ -141,11 +133,11 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
                 },
               },
             },
-            uuids[2]
+            uuids[1]
           ),
         },
         {
-          id: uuids[3],
+          id: uuids[2],
           status: "PUBLISHED",
           userId: user2.id,
           alertingAuthorityId: "aa2",
@@ -178,11 +170,11 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
                 },
               },
             },
-            uuids[3]
+            uuids[2]
           ),
         },
         {
-          id: uuids[4],
+          id: uuids[3],
           status: "PUBLISHED",
           userId: user.id,
           alertingAuthorityId: "aa",
@@ -215,7 +207,7 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
                 },
               },
             },
-            uuids[4]
+            uuids[3]
           ),
         },
       ],

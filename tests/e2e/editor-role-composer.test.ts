@@ -40,7 +40,6 @@ describe("Editor: new alert (composer)", () => {
 
     await multiBtnArrow!.asElement()!.click();
     await queries.findAllByText(document, "Save as draft");
-    await queries.findByText(document, "Save as template");
     expect(await queries.queryByText(document, "Publish alert now")).toBeNull();
   });
 
@@ -55,31 +54,6 @@ describe("Editor: new alert (composer)", () => {
     expect(alerts).toBeTruthy();
     expect(alerts.length).toEqual(1);
     expect(alerts[0].status).toEqual("DRAFT");
-    expect(alerts[0].data).toBeTruthy();
-  });
-
-  test("new alert can be saved as template by editor", async () => {
-    await fillOutEditorForm(document);
-
-    const saveBtn = await queries.findByText(document, "Save as draft");
-    const multiBtnArrow = (await saveBtn.evaluateHandle(
-      (el) => el.nextElementSibling
-    )) as ElementHandle;
-
-    await multiBtnArrow!.asElement()!.click();
-    const saveTemplateBtn = await queries.findByText(
-      document,
-      "Save as template"
-    );
-    await saveTemplateBtn.click();
-
-    await (await queries.findByText(document, "Save as template")).click();
-    await queries.findByText(document, "Alert successfully submitted.");
-
-    const alerts = await prisma!.alert.findMany();
-    expect(alerts).toBeTruthy();
-    expect(alerts.length).toEqual(1);
-    expect(alerts[0].status).toEqual("TEMPLATE");
     expect(alerts[0].data).toBeTruthy();
   });
 });

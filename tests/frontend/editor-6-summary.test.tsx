@@ -227,7 +227,7 @@ describe("<Editor> step 6 summary", () => {
     expect(el.parentElement!.textContent).toEqual("Resources: Test Resource");
   });
 
-  test("only has save as draft and save as template option", async () => {
+  test("only has save as draft option", async () => {
     const user = userEvent.setup();
     const onSubmit = jest.fn();
     render(<Editor {...editorProps} onSubmit={onSubmit} />, {
@@ -245,9 +245,6 @@ describe("<Editor> step 6 summary", () => {
     )) as HTMLButtonElement;
     expect(button).toBeTruthy();
     expect(button.disabled!).toBe(false);
-
-    await user.click(button.nextElementSibling!);
-    await screen.findByText("Save as template");
 
     await user.click(button);
     expect(onSubmit).toBeCalledTimes(1);

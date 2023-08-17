@@ -103,7 +103,7 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
       method: "POST",
       query: { alertingAuthorityId: "aa" },
       body: {
-        status: "TEMPLATE",
+        status: "DRAFT",
         data: {
           category: ["Geo"],
           regions: {},
@@ -134,7 +134,7 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
     expect((await prismaMock.alert.findMany()).length).toEqual(0);
   });
 
-  ["DRAFT", "TEMPLATE", "PUBLISHED"].forEach((alertStatus) => {
+  ["DRAFT", "PUBLISHED"].forEach((alertStatus) => {
     test(`approvers can directly create new alerts of any status (${alertStatus})`, async () => {
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: "POST",
@@ -148,18 +148,16 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
     });
   });
 
-  ["DRAFT", "TEMPLATE"].forEach((alertStatus) => {
-    test(`composers can directly create new alerts of some statuses (${alertStatus})`, async () => {
-      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-        method: "POST",
-        body: { status: alertStatus, data: validAlertData },
-        query: { alertingAuthorityId: "aa" },
-      });
-      await createUser({ ...users.approver, alertingAuthorityVerified: true });
-      mockUserOnce(users.approver);
-      await handleAlertingAuthorityAlerts(req, res);
-      expect(res._getStatusCode()).toEqual(200);
+  test(`composers can directly create new alerts of some statuses (DRAFT)`, async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { status: "DRAFT", data: validAlertData },
+      query: { alertingAuthorityId: "aa" },
     });
+    await createUser({ ...users.approver, alertingAuthorityVerified: true });
+    mockUserOnce(users.approver);
+    await handleAlertingAuthorityAlerts(req, res);
+    expect(res._getStatusCode()).toEqual(200);
   });
 
   test("valid alert data should be saved", async () => {
@@ -168,7 +166,7 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
       query: { alertingAuthorityId: "aa" },
-      body: { status: "TEMPLATE", data: validAlertData },
+      body: { status: "DRAFT", data: validAlertData },
     });
     mockUserOnce(users.admin);
     await handleAlertingAuthorityAlerts(req, res);

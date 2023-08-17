@@ -143,7 +143,6 @@ describe("Login", () => {
     await queries.findByText(document, "active alerts");
     await queries.findByText(document, "future alerts");
     await queries.findByText(document, "draft alerts");
-    await queries.findByText(document, "template alerts");
     await queries.findByText(document, "expired alerts");
   });
 });

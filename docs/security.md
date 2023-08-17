@@ -10,7 +10,7 @@ At the highest level, there are three roles:
    Admins can perform any action under their respective AAs.
 
 2. Composer
-   Composers can edit any non-published alert, create new draft/template alerts, but cannot publish any alert.
+   Composers can edit any non-published alert, create new draft alerts, but cannot publish any alert.
 
 3. Approver
    Approvers can edit/create and publish any draft alert.

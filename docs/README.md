@@ -12,7 +12,7 @@ Features:
 - **Secure user authentication** with 'magic links' and usernameless [WebAuthn](https://www.w3.org/TR/webauthn-2/)
 - **Internationalised interface** (English, French, and Spanish currently) using [LinguiJS](https://lingui.js.org/index.html)
 - **[WMO Register of Alerting Authorities integration](https://alertingauthority.wmo.int/)**: users must be verified by their Alerting Authority to use the platform
-- Create **template and draft alerts**
+- Create **draft alerts**
 - Create **multilingual alerts**
 - Dynamic **images** for alerts to share on social media or other dissemination methods
 - **Invite guest users** to collaborate on alerts with limited access

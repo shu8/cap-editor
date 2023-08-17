@@ -91,30 +91,28 @@ describe("GET /api/alerts/:id", () => {
     expect(xml.indexOf(uuid)).toBeGreaterThan(-1);
   });
 
-  ["DRAFT", "TEMPLATE"].forEach((status) => {
-    test("returns non-signed alert XML for non-published alerts", async () => {
-      const user = await createUser();
-      const data = { ...databaseAlertData };
-      data.userId = user.id;
-      data.status = status;
-      const alert = await prismaMock.alert.create({ data });
+  test("returns non-signed alert XML for non-published alerts", async () => {
+    const user = await createUser();
+    const data = { ...databaseAlertData };
+    data.userId = user.id;
+    data.status = 'DRAFT';
+    const alert = await prismaMock.alert.create({ data });
 
-      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-        method: "GET",
-        query: { alertId: alert.id },
-      });
-      await handleAlert(req, res);
-
-      expect(res._getStatusCode()).toEqual(200);
-      expect(res.getHeader("content-type")).toEqual("application/xml");
-
-      const xml = res._getData();
-      expect(
-        xml.indexOf(`<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">`)
-      ).toBeGreaterThan(-1);
-      expect(xml.indexOf(`<ds:Signature`)).toEqual(-1);
-      expect(xml.indexOf(uuid)).toBeGreaterThan(-1);
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+      query: { alertId: alert.id },
     });
+    await handleAlert(req, res);
+
+    expect(res._getStatusCode()).toEqual(200);
+    expect(res.getHeader("content-type")).toEqual("application/xml");
+
+    const xml = res._getData();
+    expect(
+      xml.indexOf(`<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">`)
+    ).toBeGreaterThan(-1);
+    expect(xml.indexOf(`<ds:Signature`)).toEqual(-1);
+    expect(xml.indexOf(uuid)).toBeGreaterThan(-1);
   });
 
   test("returns non-signed alert XML for published, expired alerts", async () => {

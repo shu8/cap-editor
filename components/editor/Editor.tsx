@@ -179,7 +179,7 @@ export default function Editor(props: Props) {
 
     const options: AlertStatus[] = props.existingAlertStatus
       ? [props.existingAlertStatus]
-      : ["DRAFT", "TEMPLATE"];
+      : ["DRAFT"];
 
     if (props.roles.includes("APPROVER") || props.roles.includes("ADMIN")) {
       options.push("PUBLISHED");

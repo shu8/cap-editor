@@ -20,7 +20,7 @@ async function handleNewAlert(
   const session = await getServerSession(req, res, authOptions);
   if (!session) throw new ApiError(401, "You are not logged in");
 
-  if (!["TEMPLATE", "PUBLISHED", "DRAFT"].includes(req.body.status)) {
+  if (!["PUBLISHED", "DRAFT"].includes(req.body.status)) {
     throw new ApiError(400, "You did not provide a valid alert status");
   }
 
@@ -46,7 +46,7 @@ async function handleNewAlert(
 
   const roles = alertingAuthority.roles;
 
-  // i.e., only ADMINs and APPROVERs can request to publish a new alert (an EDITOR can only edit drafts/templates)
+  // i.e., only ADMINs and APPROVERs can request to publish a new alert (an EDITOR can only edit drafts)
   if (
     !roles.includes("ADMIN") &&
     !roles.includes("APPROVER") &&
@@ -89,7 +89,7 @@ async function handleGetAlerts(
 ) {
   const { json } = req.query;
 
-  // JSON returns all alerts, unsigned, inc. draft and template, as long as you are logged in
+  // JSON returns all alerts, unsigned, inc. draft, as long as you are logged in
   if (json) {
     const session = await getServerSession(req, res, authOptions);
     if (!session) throw new ApiError(403, "You are not logged in");

@@ -77,23 +77,21 @@ describe("POST /api/alerts/:id/share", () => {
     expect(res._getStatusCode()).toEqual(403);
   });
 
-  ["PUBLISHED", "TEMPLATE"].forEach((status) => {
-    test(`${status} alerts cannot be shared`, async () => {
-      const alert = await createAlert({
-        status,
-        userDetails: { ...users.admin, alertingAuthorityVerified: true },
-      });
-
-      const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-        method: "POST",
-        query: { alertId: alert.id },
-        body: { email: "guest@example.com" },
-      });
-
-      mockUserOnce(users.admin);
-      await handleShareAlert(req, res);
-      expect(res._getStatusCode()).toEqual(403);
+  test(`PUBLISHED alerts cannot be shared`, async () => {
+    const alert = await createAlert({
+      status: "PUBLISHED",
+      userDetails: { ...users.admin, alertingAuthorityVerified: true },
     });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      query: { alertId: alert.id },
+      body: { email: "guest@example.com" },
+    });
+
+    mockUserOnce(users.admin);
+    await handleShareAlert(req, res);
+    expect(res._getStatusCode()).toEqual(403);
   });
 
   test("Draft alert can be shared successfully", async () => {

@@ -140,27 +140,4 @@ describe("<Alert>", () => {
       screen.queryByText("Share on Social Media", { exact: false })
     ).toEqual(null);
   });
-
-  test("renders template alert correctly", async () => {
-    const alert = { ...databaseAlert };
-    alert.status = "TEMPLATE";
-    render(<Alert alert={alert} />, {
-      wrapper: TestingProvider,
-    });
-
-    await screen.findByText("View alert ↗");
-    await screen.findByText("Use as template for new alert →");
-    await screen.findByText("Edit alert 🖉");
-    await screen.findByText("Alert");
-    await screen.findByText("Actual");
-    await screen.findByText("Immediate");
-    await screen.findByText("Observed");
-    await screen.findByText("Extreme");
-    await screen.findByText("Headline");
-    await screen.findByText("(Geo)");
-
-    expect(
-      screen.queryByText("Share on Social Media", { exact: false })
-    ).toEqual(null);
-  });
 });

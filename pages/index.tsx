@@ -37,13 +37,11 @@ export default function Home() {
     active: DBAlert[];
     future: DBAlert[];
     draft: DBAlert[];
-    template: DBAlert[];
     expired: DBAlert[];
   } = {
     active: [],
     future: [],
     draft: [],
-    template: [],
     expired: [],
   };
 
@@ -52,8 +50,6 @@ export default function Home() {
       const alert = alerts.alerts[i];
       if (alert.status === "DRAFT") {
         alertsByStatus.draft.push(alert);
-      } else if (alert.status === "TEMPLATE") {
-        alertsByStatus.template.push(alert);
       } else if (alert.status === "PUBLISHED") {
         const alreadyExpired =
           new Date(alert?.data?.info?.[0]?.expires) < new Date();

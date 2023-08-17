@@ -23,7 +23,7 @@ async function handleUpdateAlert(
     throw new ApiError(400, "You did not provide a valid Alert ID");
   }
 
-  if (!["TEMPLATE", "PUBLISHED", "DRAFT"].includes(req.body.status)) {
+  if (!["PUBLISHED", "DRAFT"].includes(req.body.status)) {
     throw new ApiError(400, "You did not provide a valid alert status");
   }
 
