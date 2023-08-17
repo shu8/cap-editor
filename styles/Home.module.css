@@ -11,3 +11,7 @@
 .sharedAlertsDescription {
   text-transform: none;
 }
+
+.exportBtn {
+  margin: 0 auto;
+}

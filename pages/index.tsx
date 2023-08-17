@@ -10,6 +10,7 @@ import Alert from "../components/Alert";
 import { fetcher } from "../lib/helpers.client";
 import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
 import styles from "../styles/Home.module.css";
+import ExportAlerts from "../components/ExportAlerts";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -166,6 +167,14 @@ export default function Home() {
                   </div>
                 </Panel>
               )}
+
+            <ExportAlerts
+              languages={[
+                ...new Set(
+                  alerts?.alerts?.map((a) => a.language as string) ?? []
+                ),
+              ]}
+            />
           </>
         )}
       </main>
