@@ -8,7 +8,7 @@ async function handleGetAlertingAuthorityFeeds(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // /feed simply returns list of all AAs and their feed URLs
+  // /feed simply returns list of all AAs and their per-language feed URLs
   const alertingAuthorities = await prisma.alertingAuthority.findMany({
     include: { Alerts: { select: { language: true } } },
   });

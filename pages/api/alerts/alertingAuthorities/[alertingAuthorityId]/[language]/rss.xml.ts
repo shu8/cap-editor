@@ -1,11 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
 import { ApiError } from "next/dist/server/api-utils";
 
 import { withErrorHandler } from "../../../../../../lib/apiErrorHandler";
 import prisma from "../../../../../../lib/prisma";
 import { formatAlertingAuthorityFeedAsXML } from "../../../../../../lib/xml/helpers";
-import { authOptions } from "../../../../auth/[...nextauth]";
 
 async function handleGetAlerts(
   alertingAuthorityId: string,
@@ -13,26 +11,6 @@ async function handleGetAlerts(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { json } = req.query;
-
-  // JSON returns all alerts, unsigned, inc. draft, as long as you are logged in
-  if (json) {
-    const session = await getServerSession(req, res, authOptions);
-    if (!session) throw new ApiError(403, "You are not logged in");
-
-    if (!session.user.alertingAuthorities[alertingAuthorityId]) {
-      throw new ApiError(
-        401,
-        "You do not have permission to view JSON alerts for this Alerting Authority"
-      );
-    }
-
-    const alerts = await prisma.alert.findMany({
-      where: { alertingAuthorityId, language },
-    });
-    return res.json({ error: false, alerts });
-  }
-
   const alertingAuthorityAlerts = await prisma.alertingAuthority.findFirst({
     where: { id: alertingAuthorityId },
     include: { Alerts: { where: { status: "PUBLISHED", language } } },

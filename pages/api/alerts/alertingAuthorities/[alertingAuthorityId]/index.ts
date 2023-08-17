@@ -82,6 +82,35 @@ async function handleNewAlert(
   }
 }
 
+async function handleGetAlerts(
+  alertingAuthorityId: string,
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  // JSON-only endpoint returns all alerts/languages, unsigned, inc. draft, as long as you are logged in
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) throw new ApiError(403, "You are not logged in");
+
+  if (!session.user.alertingAuthorities[alertingAuthorityId]) {
+    throw new ApiError(
+      401,
+      "You do not have permission to view JSON alerts for this Alerting Authority"
+    );
+  }
+
+  const alerts = await prisma.alert.findMany({
+    where: { alertingAuthorityId },
+    select: {
+      alertingAuthorityId: true,
+      data: true,
+      id: true,
+      language: true,
+      status: true,
+    },
+  });
+  return res.json({ error: false, alerts });
+}
+
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { alertingAuthorityId } = req.query;
 
@@ -90,6 +119,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       400,
       "You did not provide a valid Alerting Authority ID"
     );
+  }
+
+  if (req.method === "GET") {
+    return handleGetAlerts(alertingAuthorityId, req, res);
   }
 
   if (req.method === "POST") {
