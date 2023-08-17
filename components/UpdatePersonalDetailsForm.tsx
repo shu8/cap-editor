@@ -6,12 +6,16 @@ import { Button, Form, Message } from "rsuite";
 import { HandledError } from "../lib/helpers.client";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import ErrorMessage from "./ErrorMessage";
+import { useSession } from "next-auth/react";
 
 type Data = { name: string };
 export default function UpdatePersonalDetailsForm() {
+  const { data: session } = useSession();
   const toaster = useToasterI18n();
   const router = useRouter();
-  const [formData, setFormData] = useState<Data>({ name: "" });
+  const [formData, setFormData] = useState<Data>({
+    name: session?.user.name ?? "",
+  });
 
   return (
     <div>
