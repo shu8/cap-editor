@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 import { HandledError, useMountEffect } from "../../lib/helpers.client";
 import { useToasterI18n } from "../../lib/useToasterI18n";
 import Map from "./map/Map";
-import { AlertingAuthority } from "@prisma/client";
+import { Alert, AlertingAuthority } from "@prisma/client";
 import ErrorMessage from "../ErrorMessage";
 import styles from "../../styles/components/editor/EditorSinglePage.module.css";
 import { RangeType } from "rsuite/esm/DatePicker";
@@ -131,17 +131,21 @@ const DropdownField = ({
   options,
   fieldName,
   searchable,
+  onOpen,
+  multi,
 }: {
   label: string;
   fieldName: keyof FormAlertData;
   options: string[] | { label: string; value: any }[];
   searchable?: boolean;
+  onOpen?: () => void;
+  multi?: boolean;
 } & Props) => (
   <Form.Group>
     <Form.ControlLabel>{label}</Form.ControlLabel>
     <Form.Control
       name={fieldName}
-      accepter={SelectPicker}
+      accepter={multi ? CheckPicker : SelectPicker}
       data={
         typeof options[0] === "string"
           ? options.map((t) => ({
@@ -155,6 +159,7 @@ const DropdownField = ({
       searchable={searchable ?? false}
       value={alertData[fieldName]}
       onChange={(v) => onUpdate({ [fieldName]: v! })}
+      onOpen={() => onOpen?.()}
     />
   </Form.Group>
 );
@@ -335,6 +340,50 @@ export const Timezone = ({ onUpdate, alertData }: Props) => (
     fieldName="timezone"
   />
 );
+
+export const References = ({
+  onUpdate,
+  alertData,
+  alertingAuthorityId,
+}: Props & { alertingAuthorityId: string }) => {
+  const toaster = useToasterI18n();
+  const [referenceOptions, setReferenceOptions] = useState<Alert[]>([]);
+  const fetchReferenceOptions = () => {
+    fetch(`/api/alerts/alertingAuthorities/${alertingAuthorityId}`)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.error) throw new HandledError(res.message);
+
+        // Ensure we don't show option to reference current alert (e.g., when editing a draft)
+        setReferenceOptions(
+          res.alerts.filter((a: Alert) => a.id !== alertData.identifier)
+        );
+      })
+      .catch((err) =>
+        toaster.push(
+          <ErrorMessage
+            error={err}
+            action={t`fetching the list of reference alerts`}
+          />
+        )
+      );
+  };
+
+  return (
+    <DropdownField
+      multi
+      onOpen={fetchReferenceOptions}
+      onUpdate={onUpdate}
+      alertData={alertData}
+      label={t`References`}
+      options={referenceOptions.map((alert) => ({
+        label: `${alert.data.info[0].headline} - sent ${alert.data.sent} (${alert.id})`,
+        value: `${alert.data.sender},${alert.id},${alert.data.sent}`,
+      }))}
+      fieldName="references"
+    />
+  );
+};
 
 export const ResponseType = ({ onUpdate, alertData }: Props) => (
   <Form.Group>

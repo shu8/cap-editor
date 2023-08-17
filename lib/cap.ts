@@ -27,7 +27,7 @@ export const mapFormAlertDataToCapSchema = (
     // code
     // note
     ...(alertData.references?.length && {
-      references: alertData.references?.join(" "),
+      references: alertData.references.join(" "),
     }),
     // incidents,
     info: [

@@ -27,6 +27,7 @@ import {
   MapForm,
   MessageType,
   Onset,
+  References,
   Resources,
   ResponseType,
   Severity,
@@ -164,6 +165,14 @@ export default function EditorSinglePage(props: Props) {
             <Category onUpdate={onUpdate} alertData={alertData} />
             <ResponseType onUpdate={onUpdate} alertData={alertData} />
           </Stack>
+
+          {["Update", "Cancel"].includes(alertData.msgType) && (
+            <References
+              onUpdate={onUpdate}
+              alertData={alertData}
+              alertingAuthorityId={props.alertingAuthority.id}
+            />
+          )}
 
           <Stack
             direction="row"
