@@ -23,6 +23,7 @@ specifiers:
   '@testing-library/user-event': ^14.4.3
   '@turf/flip': ^6.5.0
   '@turf/truncate': ^6.5.0
+  '@types/luxon': ^3.3.1
   '@types/node': 18.11.15
   '@types/nodemailer': ^6.4.7
   '@types/react': 18.0.26
@@ -48,6 +49,7 @@ specifiers:
   jest-environment-node: ^29.4.3
   json-schema-to-typescript: ^11.0.5
   jsonschema: ^1.4.1
+  luxon: ^3.4.0
   net: ^1.0.2
   next: 13.0.7
   next-auth: ^4.19.2
@@ -87,12 +89,14 @@ dependencies:
   '@simplewebauthn/server': 6.2.2
   '@turf/flip': 6.5.0
   '@turf/truncate': 6.5.0
+  '@types/luxon': 3.3.1
   capgen: 1.0.8
   cookies-next: 2.1.1
   fast-xml-parser: 4.1.2
   iso-639-1: 2.1.15
   iso-639-3: 3.0.1
   jsonschema: 1.4.1
+  luxon: 3.4.0
   net: 1.0.2
   next: 13.0.7_kkcfeymwl5j7dlmofmanydspyi
   next-auth: 4.19.2_3cwqslqzlzoexu5xtohrsogrx4
@@ -2928,6 +2932,10 @@ packages:
 
   /@types/lodash/4.14.191:
     resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
+
+  /@types/luxon/3.3.1:
+    resolution: {integrity: sha512-XOS5nBcgEeP2PpcqJHjCWhUCAzGfXIU8ILOSLpx2FhxqMW9KdxgCGXNOEKGVBfveKtIpztHzKK5vSRVLyW/NqA==}
+    dev: false
 
   /@types/minimatch/5.1.2:
     resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
@@ -7068,6 +7076,11 @@ packages:
     dependencies:
       es5-ext: 0.10.62
     dev: true
+
+  /luxon/3.4.0:
+    resolution: {integrity: sha512-7eDo4Pt7aGhoCheGFIuq4Xa2fJm4ZpmldpGhjTYBNUYNCN6TIEP6v7chwwwt3KRp7YR+rghbfvjyo3V5y9hgBw==}
+    engines: {node: '>=12'}
+    dev: false
 
   /lz-string/1.4.4:
     resolution: {integrity: sha512-0ckx7ZHRPqb0oUm8zNr+90mtf9DQB60H1wMCjBtfi62Kl3a7JbHob6gA2bC+xRvZoOL+1hzUK8jeuEIQE8svEQ==}

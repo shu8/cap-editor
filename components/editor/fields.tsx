@@ -1,4 +1,4 @@
-import { Trans, select, t } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 import {
   Button,
   CheckPicker,
@@ -10,7 +10,6 @@ import {
   Message,
   SelectPicker,
   Stack,
-  TagPicker,
 } from "rsuite";
 import { FormAlertData } from "./EditorSinglePage";
 import timezones from "timezones.json";
@@ -22,6 +21,36 @@ import Map from "./map/Map";
 import { AlertingAuthority } from "@prisma/client";
 import ErrorMessage from "../ErrorMessage";
 import styles from "../../styles/components/editor/EditorSinglePage.module.css";
+import { RangeType } from "rsuite/esm/DatePicker";
+import { DateTime } from "luxon";
+
+const predefinedTimeRanges: RangeType<Date>[] = [
+  {
+    label: "now",
+    value: new Date(),
+    placement: "left",
+  },
+  {
+    label: "today, end",
+    value: DateTime.now().endOf("day").toJSDate(),
+    placement: "left",
+  },
+  {
+    label: "tomorrow, start",
+    value: DateTime.now().plus({ days: 1 }).startOf("day").toJSDate(),
+    placement: "left",
+  },
+  {
+    label: "tomorrow, end",
+    value: DateTime.now().plus({ days: 1 }).endOf("day").toJSDate(),
+    placement: "left",
+  },
+  {
+    label: "in one hour",
+    value: DateTime.now().plus({ hours: 1 }).toJSDate(),
+    placement: "left",
+  },
+];
 
 type Props = {
   onUpdate: (data: Partial<FormAlertData>) => void;
@@ -147,6 +176,7 @@ const DateTimeField = ({
       oneTap
       format="yyyy-MM-dd HH:mm:ss"
       block
+      ranges={predefinedTimeRanges}
       cleanable={false}
       value={alertData[fieldName] as Date}
       onChange={(v) => onUpdate({ [fieldName]: v! })}
