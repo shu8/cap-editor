@@ -36,16 +36,11 @@ const AlertingAuthoritySelector = ({
 
   return (
     <Dropdown
+      size="xs"
+      className="alertingAuthoritySelector"
       block={fullWidth}
       renderToggle={(props, ref) => (
-        <Button
-          {...props}
-          ref={ref}
-          appearance="ghost"
-          size="md"
-          color="violet"
-        >
-          <i>Alerting Authority</i>:&nbsp;
+        <Button {...props} ref={ref} appearance="link" size="xs" color="violet">
           {!!alertingAuthorities[alertingAuthorityId] && (
             <span
               className={classes(

@@ -107,3 +107,15 @@ input::placeholder {
 .rs-form-help-text {
   color: #1A1A1A !important;
 }
+
+.alertingAuthoritySelector {
+  line-height: 0;
+}
+
+.alertingAuthoritySelector button {
+  padding-left: 5px;
+}
+
+.noPadding {
+  padding: 0;
+}

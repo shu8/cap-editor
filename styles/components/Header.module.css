@@ -26,5 +26,13 @@
 }
 
 .text {
-  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
 }

@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "rsuite";
+import { Button, Divider } from "rsuite";
 
 import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
 import styles from "../styles/components/Header.module.css";
@@ -23,47 +23,56 @@ export default function Header() {
             alt="CAP Logo"
             priority
           />
-          <span className={styles.text}>CAP Editor</span>
         </h1>
       </Link>
-
-      <div>
+      <div className={styles.text}>
+        <span>
+          Compose and view Common Alerting Protocol (CAP) Public Alerts
+        </span>
         {session && (
-          <>
+          <span>
+            for
             <AlertingAuthoritySelector
               alertingAuthorities={session.user.alertingAuthorities}
               appendToQuery={false}
-              fullWidth={false}
+              fullWidth
             />
+          </span>
+        )}
+      </div>
 
-            <Link href={`/editor?alertingAuthority=${alertingAuthorityId}`}>
-              <Button
-                appearance="ghost"
-                color="violet"
-                className={styles.button}
-              >
-                <Trans>Create alert</Trans>
-              </Button>
-            </Link>
-
-            <Link href="/settings">
-              <Button
-                appearance="ghost"
-                color="violet"
-                className={styles.button}
-              >
-                <Trans>Settings</Trans>
-              </Button>
-            </Link>
-
-            <Button
-              appearance="ghost"
-              color="violet"
-              className={styles.button}
-              onClick={() => signOut()}
-            >
-              <Trans>Logout</Trans>
-            </Button>
+      <div style={{ display: "flex" }}>
+        {session && (
+          <>
+            <div className={styles.userDetails}>
+              <span>{session.user.email}</span>
+              <span>
+                {session.user.alertingAuthorities[alertingAuthorityId].roles
+                  .join(", ")
+                  .toLowerCase()}
+              </span>
+              <div>
+                <Button
+                  className="noPadding"
+                  appearance="link"
+                  color="violet"
+                  size="sm"
+                  href="/settings"
+                >
+                  Settings
+                </Button>
+                <Divider vertical />
+                <Button
+                  className="noPadding"
+                  appearance="link"
+                  color="violet"
+                  size="sm"
+                  onClick={() => signOut()}
+                >
+                  Logout
+                </Button>
+              </div>
+            </div>
           </>
         )}
 

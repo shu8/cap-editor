@@ -100,6 +100,16 @@ export default function Home() {
 
         {session && (
           <>
+            <Link href={`/editor?alertingAuthority=${alertingAuthorityId}`}>
+              <Button
+                appearance="ghost"
+                color="violet"
+                className={styles.button}
+              >
+                <Trans>Create alert</Trans>
+              </Button>
+            </Link>
+
             {isLoading && (
               <Loader
                 size="lg"
