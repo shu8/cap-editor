@@ -13,8 +13,7 @@ import styles from "../styles/Home.module.css";
 
 export default function Home() {
   const { data: session } = useSession();
-  const [alertingAuthorityId, setAlertingAuthorityId] =
-    useAlertingAuthorityLocalStorage();
+  const [alertingAuthorityId] = useAlertingAuthorityLocalStorage();
 
   const {
     data: alerts,
@@ -34,15 +33,11 @@ export default function Home() {
   } = useSWR("/api/alerts/shared", fetcher);
 
   const alertsByStatus: {
-    active: DBAlert[];
-    future: DBAlert[];
+    published: DBAlert[];
     draft: DBAlert[];
-    expired: DBAlert[];
   } = {
-    active: [],
-    future: [],
+    published: [],
     draft: [],
-    expired: [],
   };
 
   if (alerts && !alerts?.error) {
@@ -51,18 +46,7 @@ export default function Home() {
       if (alert.status === "DRAFT") {
         alertsByStatus.draft.push(alert);
       } else if (alert.status === "PUBLISHED") {
-        const alreadyExpired =
-          new Date(alert?.data?.info?.[0]?.expires) < new Date();
-        const alreadyBegan =
-          new Date(alert?.data?.info?.[0]?.onset) < new Date();
-
-        if (alreadyExpired) {
-          alertsByStatus.expired.push(alert);
-        } else if (alreadyBegan) {
-          alertsByStatus.active.push(alert);
-        } else {
-          alertsByStatus.future.push(alert);
-        }
+        alertsByStatus.published.push(alert);
       }
     }
   }
@@ -159,6 +143,15 @@ export default function Home() {
                   collapsible
                   bordered
                 >
+                  {sharedAlertsLoading && (
+                    <Loader
+                      size="lg"
+                      backdrop
+                      center
+                      content={t`Loading shared alerts...`}
+                    />
+                  )}
+
                   <p className={styles.sharedAlertsDescription}>
                     <Trans>
                       The folllowing alerts have been shared with you to
