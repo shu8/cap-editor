@@ -118,4 +118,13 @@ input::placeholder {
 
 .noPadding {
   padding: 0;
+  line-height: unset;
+}
+
+.displayWhiteSpace {
+  white-space: pre-line;
+}
+
+summary {
+  cursor: pointer;
 }

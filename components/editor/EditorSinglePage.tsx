@@ -149,7 +149,11 @@ export default function EditorSinglePage(props: Props) {
           <Headline onUpdate={onUpdate} alertData={alertData} />
           <Event onUpdate={onUpdate} alertData={alertData} />
           <Description onUpdate={onUpdate} alertData={alertData} />
-          <Instruction onUpdate={onUpdate} alertData={alertData} />
+          <Instruction
+            onUpdate={onUpdate}
+            alertData={alertData}
+            alertingAuthority={props.alertingAuthority}
+          />
 
           <Divider />
 
