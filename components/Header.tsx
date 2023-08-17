@@ -41,64 +41,60 @@ export default function Header() {
         )}
       </div>
 
-      <div style={{ display: "flex" }}>
-        {session && (
-          <>
-            <div className={styles.userDetails}>
-              <span>{session.user.email}</span>
-              <span>
-                {session.user.alertingAuthorities?.[alertingAuthorityId]?.roles
-                  ?.join(", ")
-                  .toLowerCase()}
-              </span>
-              <div>
-                <Button
-                  className="noPadding"
-                  appearance="link"
-                  color="violet"
-                  size="sm"
-                  href="/settings"
-                >
-                  Settings
-                </Button>
-                <Divider vertical />
-                <Button
-                  className="noPadding"
-                  appearance="link"
-                  color="violet"
-                  size="sm"
-                  onClick={() => signOut()}
-                >
-                  Logout
-                </Button>
-              </div>
-            </div>
-          </>
-        )}
+      {session && (
+        <div className={styles.userDetails}>
+          <span>{session.user.email}</span>
+          <span>
+            {session.user.alertingAuthorities?.[alertingAuthorityId]?.roles
+              ?.join(", ")
+              .toLowerCase()}
+          </span>
+          <div>
+            <Button
+              className="noPadding"
+              appearance="link"
+              color="violet"
+              size="sm"
+              href="/settings"
+            >
+              Settings
+            </Button>
+            <Divider vertical />
+            <Button
+              className="noPadding"
+              appearance="link"
+              color="violet"
+              size="sm"
+              onClick={() => signOut()}
+            >
+              Logout
+            </Button>
+          </div>
+        </div>
+      )}
 
-        {!session && (
-          <>
-            <Link href="/register" className={styles.button}>
-              <Button
-                appearance="primary"
-                color="violet"
-                className={styles.button}
-              >
-                <Trans>Register</Trans>
-              </Button>
-            </Link>
-            <Link href="/login" className={styles.button}>
-              <Button
-                appearance="primary"
-                color="violet"
-                className={styles.button}
-              >
-                <Trans>Login</Trans>
-              </Button>
-            </Link>
-          </>
-        )}
-      </div>
+      {!session && (
+        <div>
+          <Link href="/register" className={styles.button}>
+            <Button
+              appearance="primary"
+              color="violet"
+              className={styles.button}
+            >
+              <Trans>Register</Trans>
+            </Button>
+          </Link>
+          <Link href="/login" className={styles.button}>
+            <Button
+              appearance="primary"
+              color="violet"
+              className={styles.button}
+            >
+              <Trans>Login</Trans>
+            </Button>
+          </Link>
+        </div>
+      )}
     </nav>
   );
 }
