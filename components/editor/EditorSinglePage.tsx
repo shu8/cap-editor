@@ -36,6 +36,7 @@ import {
   Urgency,
   Web,
 } from "./fields";
+import SeverityCertaintyMatrix from "./SeverityCertaintyMatrix";
 
 const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];
@@ -184,9 +185,16 @@ export default function EditorSinglePage(props: Props) {
             className={styles.inputGroup}
             wrap
           >
-            <Urgency onUpdate={onUpdate} alertData={alertData} />
+            {props.alertingAuthority.severityCertaintyMatrixEnabled && (
+              <SeverityCertaintyMatrix
+                certainty={alertData.certainty}
+                severity={alertData.severity}
+                onChange={onUpdate}
+              />
+            )}
             <Severity onUpdate={onUpdate} alertData={alertData} />
             <Certainty onUpdate={onUpdate} alertData={alertData} />
+            <Urgency onUpdate={onUpdate} alertData={alertData} />
           </Stack>
 
           <Stack

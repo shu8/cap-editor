@@ -10,6 +10,7 @@ type UpdateData = {
   contact?: string;
   web?: string;
   defaultTimezone?: string;
+  severityCertaintyMatrixEnabled?: boolean;
 };
 
 async function handleUpdateAlertingAuthority(
@@ -35,7 +36,12 @@ async function handleUpdateAlertingAuthority(
   }
 
   const data: UpdateData = {};
-  ["contact", "web", "defaultTimezone"].forEach((prop) => {
+  [
+    "contact",
+    "web",
+    "defaultTimezone",
+    "severityCertaintyMatrixEnabled",
+  ].forEach((prop) => {
     if (req.body[prop]) data[prop as keyof UpdateData] = req.body[prop];
   });
 
@@ -64,6 +70,7 @@ async function handleGetAlertingAuthority(
       defaultTimezone: true,
       contact: true,
       web: true,
+      severityCertaintyMatrixEnabled: true,
     },
   });
 

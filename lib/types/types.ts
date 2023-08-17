@@ -21,6 +21,7 @@ export type AlertingAuthority = {
   roles: Role[];
   contact: string | null;
   web: string | null;
+  severityCertaintyMatrixEnabled: boolean;
 };
 
 export type LocalStorageState = {

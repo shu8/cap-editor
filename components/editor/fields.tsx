@@ -412,7 +412,7 @@ export const Urgency = ({ onUpdate, alertData }: Props) => (
     onUpdate={onUpdate}
     alertData={alertData}
     label={t`Urgency`}
-    options={["Immediate", "Expected", "Future"]}
+    options={["Immediate", "Expected", "Future", "Past", "Unknown"]}
     fieldName="urgency"
   />
 );
@@ -422,7 +422,7 @@ export const Certainty = ({ onUpdate, alertData }: Props) => (
     onUpdate={onUpdate}
     alertData={alertData}
     label={t`Certainty`}
-    options={["Likely", "Possible", "Unlikely"]}
+    options={["Observed", "Likely", "Possible", "Unlikely", "Unknown"]}
     fieldName="certainty"
   />
 );
@@ -432,7 +432,7 @@ export const Severity = ({ onUpdate, alertData }: Props) => (
     onUpdate={onUpdate}
     alertData={alertData}
     label={t`Severity`}
-    options={["Minor", "Moderate", "Severe"]}
+    options={["Extreme", "Severe", "Moderate", "Minor", "Unknown"]}
     fieldName="severity"
   />
 );

@@ -7,21 +7,21 @@
   column-gap: 1px;
   row-gap: 1px;
   align-items: center;
-  grid-template-columns: repeat(3, 40px);
-  grid-template-rows: repeat(3, 40px);
+  grid-template-columns: repeat(4, 30px);
+  grid-template-rows: repeat(4, 30px);
 }
 
 .cell {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 }
 
 .selected::after {
   content: "✓";
   position: absolute;
-  font-size: 1.8em;
-  margin-left: 10px;
+  font-size: 1.4em;
+  margin-left: 8px;
 }
 
 .red {

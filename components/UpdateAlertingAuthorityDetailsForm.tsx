@@ -1,14 +1,19 @@
 import { t, Trans } from "@lingui/macro";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Button, Form, Loader, Message } from "rsuite";
+import { Button, Form, Loader, Message, Toggle } from "rsuite";
 
 import { fetcher, HandledError } from "../lib/helpers.client";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import ErrorMessage from "./ErrorMessage";
 import useSWR from "swr";
 
-type Data = { defaultTimezone: string; contact: string; web: string };
+type Data = {
+  defaultTimezone: string;
+  contact: string;
+  web: string;
+  severityCertaintyMatrixEnabled: boolean;
+};
 
 export default function UpdateAlertingAuthorityDetailsForm({
   alertingAuthorityId,
@@ -35,6 +40,8 @@ export default function UpdateAlertingAuthorityDetailsForm({
       defaultTimezone: settings?.defaultTimezone ?? "",
       contact: settings?.contact ?? "",
       web: settings?.web ?? "",
+      severityCertaintyMatrixEnabled:
+        settings?.severityCertaintyMatrixEnabled ?? false,
     });
   }, [settings]);
 
@@ -118,6 +125,21 @@ export default function UpdateAlertingAuthorityDetailsForm({
             type="url"
             placeholder={t`e.g., www.metoffice.gov.uk`}
           />
+        </Form.Group>
+
+        <Form.Group controlId="severityCertaintyMatrixEnabled">
+          <Form.ControlLabel>
+            <Trans>Severity-certainity matrix enabled</Trans>
+          </Form.ControlLabel>
+          <Form.Control
+            required
+            name="severityCertaintyMatrixEnabled"
+            accepter={Toggle}
+          />
+          <Form.HelpText>
+            Control whether all members of this AA can see a 4x4
+            severity-certainty matrix in the Alert Editor.
+          </Form.HelpText>
         </Form.Group>
 
         <Form.Group>

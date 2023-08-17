@@ -76,16 +76,17 @@ model Alert {
 }
 
 model AlertingAuthority {
-  id              String                    @id
-  author          String
-  countryCode     String?
-  name            String
-  defaultTimezone String                    @default("Etc/GMT")
-  contact         String?
-  web             String?
-  polygon         String?
-  Users           UserAlertingAuthorities[]
-  Alerts          Alert[]
+  id                             String                    @id
+  author                         String
+  countryCode                    String?
+  name                           String
+  defaultTimezone                String                    @default("Etc/GMT")
+  severityCertaintyMatrixEnabled Boolean                   @default(false)
+  contact                        String?
+  web                            String?
+  polygon                        String?
+  Users                          UserAlertingAuthorities[]
+  Alerts                         Alert[]
 
   @@map("alerting_authorities")
 }

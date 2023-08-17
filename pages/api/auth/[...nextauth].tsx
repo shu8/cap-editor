@@ -28,6 +28,7 @@ const getUser = async (email: string) => {
               defaultTimezone: true,
               contact: true,
               web: true,
+              severityCertaintyMatrixEnabled: true,
             },
           },
           roles: true,
@@ -55,6 +56,8 @@ const mapAlertingAuthorities = (
       roles: cur.roles,
       contact: cur.AlertingAuthority.contact,
       web: cur.AlertingAuthority.web,
+      severityCertaintyMatrixEnabled:
+        cur.AlertingAuthority.severityCertaintyMatrixEnabled,
     };
     return acc;
   }, {} as UserAlertingAuthorities);

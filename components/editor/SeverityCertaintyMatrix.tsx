@@ -49,18 +49,43 @@ export default function SeverityCertaintyMatrix({
 
         <Cell
           colorStyle={styles.yellow}
-          cellCertainty="Likely"
+          cellCertainty="Observed"
           cellSeverity="Minor"
         />
         <Cell
           colorStyle={styles.amber}
-          cellCertainty="Likely"
+          cellCertainty="Observed"
           cellSeverity="Moderate"
         />
         <Cell
           colorStyle={styles.red}
+          cellCertainty="Observed"
+          cellSeverity="Severe"
+        />
+        <Cell
+          colorStyle={styles.red}
+          cellCertainty="Observed"
+          cellSeverity="Extreme"
+        />
+        <Cell
+          colorStyle={styles.yellow}
+          cellCertainty="Likely"
+          cellSeverity="Minor"
+        />
+        <Cell
+          colorStyle={styles.amber}
+          cellCertainty="Likely"
+          cellSeverity="Moderate"
+        />
+        <Cell
+          colorStyle={styles.amber}
           cellCertainty="Likely"
           cellSeverity="Severe"
+        />
+        <Cell
+          colorStyle={styles.red}
+          cellCertainty="Likely"
+          cellSeverity="Extreme"
         />
         <Cell
           colorStyle={styles.green}
@@ -78,6 +103,11 @@ export default function SeverityCertaintyMatrix({
           cellSeverity="Severe"
         />
         <Cell
+          colorStyle={styles.amber}
+          cellCertainty="Possible"
+          cellSeverity="Extreme"
+        />
+        <Cell
           colorStyle={styles.green}
           cellCertainty="Unlikely"
           cellSeverity="Minor"
@@ -91,6 +121,11 @@ export default function SeverityCertaintyMatrix({
           colorStyle={styles.yellow}
           cellCertainty="Unlikely"
           cellSeverity="Severe"
+        />
+        <Cell
+          colorStyle={styles.yellow}
+          cellCertainty="Unlikely"
+          cellSeverity="Extreme"
         />
       </div>
 
