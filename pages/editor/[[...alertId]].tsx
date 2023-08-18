@@ -159,7 +159,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         acc[area.areaDesc] = {
           circles: area.circle ?? [],
           polygons: area.polygon ?? [],
-          geocodes: area.geocode ?? {},
+          geocodes:
+            area.geocode?.reduce((acc, cur) => {
+              acc[cur.valueName] = cur.value;
+              return acc;
+            }, {}) ?? {},
         };
         return acc;
       }, {}),

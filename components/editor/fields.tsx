@@ -34,6 +34,7 @@ import styles from "../../styles/components/editor/EditorSinglePage.module.css";
 import { RangeType } from "rsuite/esm/DatePicker";
 import { DateTime } from "luxon";
 import { WhatNowResponse } from "../../lib/types/types";
+import KeyValueInput from "../KeyValueInput";
 
 const predefinedTimeRanges: RangeType<Date>[] = [
   {
@@ -889,9 +890,23 @@ export const MapForm = ({
 
             <Form.Group>
               <Form.ControlLabel>
-                <Trans>Geocode</Trans>
+                <Trans>Geocode</Trans>{" "}
+                <KeyValueInput
+                  keyLabel="Type"
+                  valueLabel="Geocode"
+                  addLabel={t`Add Geocode?`}
+                  emptyLabel={
+                    <Form.HelpText>
+                      <Trans>No geocodes added yet</Trans>
+                    </Form.HelpText>
+                  }
+                  values={regions[selectedRegion]?.geocodes}
+                  onUpdate={(geocodes) => {
+                    regions[selectedRegion].geocodes = geocodes;
+                    onUpdate({ regions });
+                  }}
+                />
               </Form.ControlLabel>
-              <Form.Control name="geocode" />
             </Form.Group>
           </>
         )}
