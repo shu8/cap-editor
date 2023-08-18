@@ -60,6 +60,30 @@ export const formatDate = (date: Date, timezone: string = "Etc/GMT") => {
   );
 };
 
+export const roundNestedArray = (arr: any, precision: number) => {
+  const rounded: any = [];
+  arr.forEach((element: any) => {
+    if (Array.isArray(element)) {
+      rounded.push(roundNestedArray(element, precision));
+    } else {
+      rounded.push(element.toFixed(precision));
+    }
+  });
+  return rounded;
+};
+
+export const flipNestedArrayCoordinates = (arr: any) => {
+  const flipped: any = [];
+  arr.forEach((element: any) => {
+    if (Array.isArray(element) && element.length === 2) {
+      flipped.push([element[1], element[0]]);
+    } else {
+      flipped.push(flipNestedArrayCoordinates(element));
+    }
+  });
+  return flipped;
+};
+
 export class HandledError extends Error {
   constructor(message: string, ...params) {
     super(...params);

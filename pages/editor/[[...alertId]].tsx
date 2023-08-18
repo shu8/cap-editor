@@ -156,7 +156,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     defaultAlertData = {
       category: info?.category ?? [],
       regions: info?.area?.reduce((acc, area) => {
-        acc[area.areaDesc] = area.circle ?? area.polygon;
+        acc[area.areaDesc] = {
+          circles: area.circle ?? [],
+          polygons: area.polygon ?? [],
+          geocodes: area.geocode ?? {},
+        };
         return acc;
       }, {}),
       onset: (info?.effective

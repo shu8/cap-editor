@@ -22,6 +22,8 @@ import React, { ReactNode, useEffect, useState } from "react";
 import {
   HandledError,
   camelise,
+  flipNestedArrayCoordinates,
+  roundNestedArray,
   useMountEffect,
 } from "../../lib/helpers.client";
 import { useToasterI18n } from "../../lib/useToasterI18n";
@@ -700,29 +702,35 @@ export const MapForm = ({
   const [countries, setCountries] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState("");
   const [customPolygonInput, setCustomPolygonInput] = useState("");
+  const [customCircleInput, setCustomCircleInput] = useState("");
 
   const polygonStringToArray = (str: string) => {
-    const arr = [];
-    const coordPairs = str.split(" ");
-    for (let i = 0; i < coordPairs.length; i++) {
-      const nums = coordPairs[i].split(",");
-      const x = +nums[0];
-      const y = +nums[1];
-      if (isNaN(x) || isNaN(y)) return null;
-      arr.push([x, y]);
-    }
+    const polygons = str.split("\n");
+    const arr = polygons.map((polygonStr) => {
+      const coordPairs = polygonStr.split(" ");
+      return coordPairs.map((c) => {
+        const nums = c.split(",");
+        const x = +nums[0];
+        const y = +nums[1];
+        if (isNaN(x) || isNaN(y)) return [];
+        return [x, y];
+      });
+    });
+
     return arr;
   };
 
-  const polygonArrayToString = (arr: number[][]) =>
-    arr.map((v: number[]) => v.join(",")).join(" ");
+  const polygonArrayToString = (arr: number[][][]) =>
+    arr
+      .map((coords) => coords.map((v: number[]) => v.join(",")).join(" "))
+      .join("\n");
 
-  const fetchCountries = async () => {
-    fetch(`/api/countries?countryCode=${alertingAuthority.countryCode}`)
+  const fetchAlertingAuthorityRegions = async () => {
+    fetch(`/geojson-regions?countryCode=${alertingAuthority?.countryCode}`)
       .then((res) => res.json())
       .then((res) => {
         if (res.error) throw new HandledError(res.message);
-        setCountries(res.countries);
+        setCountries(res);
       })
       .catch((err) =>
         toaster.push(
@@ -732,20 +740,15 @@ export const MapForm = ({
   };
 
   useMountEffect(() => {
-    fetchCountries();
+    fetchAlertingAuthorityRegions();
   });
 
   const regions = { ...alertData.regions };
   useEffect(() => {
-    // Don't reset custom polygon input whilst user is typing an invalid input
-    if (
-      regions[selectedRegion]?.length === 1 &&
-      regions[selectedRegion][0]?.length === 0
-    ) {
-      return;
-    }
-
-    setCustomPolygonInput(polygonArrayToString(regions[selectedRegion] ?? []));
+    setCustomPolygonInput(
+      polygonArrayToString(regions[selectedRegion]?.polygons ?? [])
+    );
+    setCustomCircleInput(regions[selectedRegion]?.circles?.join("\n") ?? "");
   }, [selectedRegion, regions]);
 
   return (
@@ -772,7 +775,7 @@ export const MapForm = ({
               value: r,
             }))}
             creatable
-            cleanable={false}
+            cleanable
             value={selectedRegion}
             onChange={(selected) => {
               setSelectedRegion(selected);
@@ -788,24 +791,36 @@ export const MapForm = ({
               wrap
               spacing={0}
             >
-              {countries.map((c, i) => (
-                <Button
-                  appearance="link"
-                  size="xs"
-                  key={`country-${i}`}
-                  className={styles.countryQuickAddLink}
-                  onClick={() => {
-                    regions[c] = [];
-                    onUpdate({ regions });
+              {countries?.features?.map((f) => {
+                const country = f.id;
+                return (
+                  <Button
+                    appearance="link"
+                    size="xs"
+                    key={`country-${f.id}`}
+                    className={styles.countryQuickAddLink}
+                    onClick={() => {
+                      if (!regions[country]) {
+                        regions[country] = {
+                          polygons: [],
+                          circles: [],
+                          geocodes: {},
+                        };
+                      }
 
-                    // The Map component adds the actual coordinates of the quick-added location when it sees a new region with [] coordinates.
-                    // We need to update the selected region only after the coordinates have been updated.
-                    setTimeout(() => setSelectedRegion(c), 0);
-                  }}
-                >
-                  {c}
-                </Button>
-              ))}
+                      regions[country].polygons.push(
+                        ...flipNestedArrayCoordinates(
+                          roundNestedArray(f.geometry.coordinates, 3)
+                        )
+                      );
+                      onUpdate({ regions: { ...regions } });
+                      setSelectedRegion(country);
+                    }}
+                  >
+                    {country}
+                  </Button>
+                );
+              })}
             </Stack>
           </Form.HelpText>
         </Form.Group>
@@ -823,7 +838,7 @@ export const MapForm = ({
                 setSelectedRegion("");
               }}
             >
-              Delete?
+              <Trans>Delete?</Trans>
             </Button>
             <Form.Group>
               <Form.ControlLabel>
@@ -836,14 +851,17 @@ export const MapForm = ({
                 onChange={(v) => {
                   setCustomPolygonInput(v);
                   const arr = polygonStringToArray(v);
-                  regions[selectedRegion] = arr ?? [[]];
+                  if (arr) regions[selectedRegion].polygons = arr;
                   onUpdate({ regions });
                 }}
               />
               <Form.HelpText>
-                Use the drawing tool or paste in polygon coordinates
-                (space-delimited coordinate pairs, with matching first and last
-                pair)
+                <Trans>
+                  Use the drawing tool or paste in polygon coordinates
+                  (space-delimited coordinate pairs "lat,long", with matching
+                  first and last pair). Enter each polygon's coordinates on a
+                  new line.
+                </Trans>
               </Form.HelpText>
             </Form.Group>
 
@@ -851,9 +869,21 @@ export const MapForm = ({
               <Form.ControlLabel>
                 <Trans>Circle</Trans>
               </Form.ControlLabel>
-              <Form.Control name="circle" accepter={Textarea} />
+              <Form.Control
+                name="circle"
+                accepter={Textarea}
+                value={customCircleInput}
+                onChange={(v) => {
+                  setCustomCircleInput(v);
+                  regions[selectedRegion].circles = v.split("\n");
+                  onUpdate({ regions });
+                }}
+              />
               <Form.HelpText>
-                Use the drawing tool or paste in circle coordinates
+                <Trans>
+                  Use the drawing tool or paste in circle coordinates ("lat,long
+                  radiusKm"). Enter each circle's coordinates on a new line.
+                </Trans>
               </Form.HelpText>
             </Form.Group>
 

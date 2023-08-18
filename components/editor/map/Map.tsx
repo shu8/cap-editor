@@ -3,7 +3,7 @@ import { Icon } from "@rsuite/icons";
 import flip from "@turf/flip";
 import truncate from "@turf/truncate";
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IconButton } from "rsuite";
 
 import OLFeatureCollection from "ol/Collection";
@@ -21,7 +21,7 @@ import { Fill, Stroke, Style } from "ol/style";
 import OLView from "ol/View";
 
 import { useMountEffect } from "../../../lib/helpers.client";
-import { FormAlertData } from "../Editor";
+import { FormAlertData } from "../EditorSinglePage";
 import TileLayer from "./TileLayer";
 import VectorLayer from "./VectorLayer";
 
@@ -55,10 +55,6 @@ const selectedStyle = new Style({
   stroke: new Stroke({ color: "rgba(255, 0, 0, 0.2)" }),
   fill: new Fill({ color: "rgba(255, 0, 0, 0.2)" }),
 });
-const hoverStyle = new Style({
-  stroke: new Stroke({ color: "rgba(0, 0, 255, 0.2)" }),
-  fill: new Fill({ color: "rgba(0, 0, 255, 0.2)" }),
-});
 const defaultFeatureCountryStyle = new Style({
   stroke: new Stroke({ color: "rgba(0, 0, 0, 0.2)" }),
   fill: new Fill({ color: "rgba(255, 255, 255, 0.1)" }),
@@ -67,7 +63,6 @@ const alertingAuthorityStyle = new Style({
   fill: new Fill({ color: "rgba(100, 100, 100, 0.2)" }),
 });
 
-let hovered: Feature | null;
 export default function Map({
   regions = {},
   onRegionsChange,
@@ -87,14 +82,8 @@ export default function Map({
   const [selectedFeaturesSource] = useState<OLVectorSource>(
     new OLVectorSource({ wrapX: false, features: selectedFeatures })
   );
-
-  const defaultFeaturesSource = useMemo(
-    () =>
-      new OLVectorSource({
-        url: `/geojson-regions?countryCode=${alertingAuthority?.countryCode}`,
-        format: geojsonFormat,
-      }),
-    [alertingAuthority]
+  const [defaultFeaturesSource] = useState<OLVectorSource>(
+    new OLVectorSource({ wrapX: false, features: [] })
   );
 
   const metersPerUnit = map?.getView().getProjection().getMetersPerUnit();
@@ -114,36 +103,15 @@ export default function Map({
   alertingAuthorityRegion.setId("alertingAuthority");
 
   const updateRegionsOnMap = () => {
-    selectedFeaturesSource.forEachFeature((f) => {
-      const id = f.getId() as string;
-      if (!regions[id]) selectedFeaturesSource.removeFeature(f);
-    });
+    selectedFeaturesSource.forEachFeature((f) =>
+      selectedFeaturesSource.removeFeature(f)
+    );
 
-    Object.keys(regions).forEach((r) => {
-      const feature = defaultFeaturesSource.getFeatureById(r);
-
-      if (
-        feature?.get("ADMIN") != null &&
-        selectedFeaturesSource.hasFeature(feature)
-      ) {
-        return;
-      }
-
-      if (feature?.get("ADMIN") != null) {
-        // Handle default country features
-        selectedFeaturesSource.addFeature(feature);
-        return;
-      }
-
-      // Handle custom features
-      const data = regions[r]?.[0];
-      if (!data) return;
-
-      const handleCustomFeature = (data) => {
-        if (typeof data === "string") {
-          if (!metersPerUnit) return;
-
-          const [coords, radius] = data.split(" ");
+    const handleRegion = (regionName: string) => {
+      const data = regions[regionName];
+      if (data.circles && metersPerUnit) {
+        data.circles.forEach((circle) => {
+          const [coords, radius] = circle.split(" ");
           const circleFeature = new Feature(
             new Circle(
               coords
@@ -153,27 +121,22 @@ export default function Map({
               (+radius * 1000) / metersPerUnit
             )
           );
-          circleFeature.setId(r);
-          return circleFeature;
-        } else {
-          const polygonFeature = new Feature(new Polygon([regions[r]]));
-          polygonFeature.setId(r);
-          const geoJsonFeature =
-            geojsonFormat.writeFeatureObject(polygonFeature);
-          flip(geoJsonFeature, { mutate: true });
-          return geojsonFormat.readFeature(geoJsonFeature);
-        }
-      };
-
-      const existingCustomFeature = selectedFeaturesSource.getFeatureById(r);
-      if (existingCustomFeature) {
-        existingCustomFeature.setGeometry(
-          handleCustomFeature(data)?.getGeometry()
-        );
-      } else {
-        selectedFeaturesSource.addFeature(handleCustomFeature(data));
+          selectedFeaturesSource.addFeature(circleFeature);
+        });
       }
-    });
+
+      data.polygons?.forEach((polygon) => {
+        const polygonFeature = new Feature(new Polygon([polygon]));
+        const geoJsonFeature = geojsonFormat.writeFeatureObject(polygonFeature);
+        flip(geoJsonFeature, { mutate: true });
+        selectedFeaturesSource.addFeature(
+          geojsonFormat.readFeature(geoJsonFeature)
+        );
+      });
+    };
+
+    if (!editingRegion) Object.keys(regions).forEach((r) => handleRegion(r));
+    else if (regions[editingRegion]) handleRegion(editingRegion);
   };
 
   useMountEffect(() => {
@@ -195,9 +158,7 @@ export default function Map({
 
     alertingAuthorityRegion.setStyle(alertingAuthorityStyle);
     defaultFeaturesSource?.addFeature(alertingAuthorityRegion);
-    defaultFeaturesSource.on("featuresloadend", updateRegionsOnMap);
     return () => {
-      defaultFeaturesSource.un("featuresloadend", updateRegionsOnMap);
       mapObject.setTarget(undefined);
     };
   });
@@ -205,14 +166,10 @@ export default function Map({
   useEffect(() => {
     const addFeatureHandler = (e: VectorSourceEvent<Geometry>) => {
       if (!e.feature) return;
+      if (!e.feature.get("drawn")) return;
 
-      const id = e.feature.getId();
-      if (id && regions[id]?.length) return;
-
-      const regionName = e.feature?.get("ADMIN");
-      if (regionName) {
-        // A full country was selected
-
+      const geometryType = e.feature?.getGeometry()?.getType();
+      if (geometryType === "Polygon") {
         const geoJsonFeature = geojsonFormat.writeFeatureObject(e.feature);
         flip(geoJsonFeature, { mutate: true });
         truncate(geoJsonFeature, {
@@ -220,54 +177,41 @@ export default function Map({
           mutate: true,
         });
 
-        onRegionsChange({
-          ...regions,
-          [regionName]: geoJsonFeature.geometry.coordinates.flat(),
-        });
+        if (!regions[editingRegion]) {
+          regions[editingRegion] = {
+            polygons: [],
+            circles: [],
+            geocodes: {},
+          };
+        }
+        regions[editingRegion].polygons.push(
+          geoJsonFeature.geometry.coordinates.flat()
+        );
+        onRegionsChange({ ...regions });
       } else {
-        // A custom polygon/circle was added
+        const geometry = e.feature.getGeometry() as Circle;
+        // Center is in form Longitude, Latitude
+        const center = geometry.getCenter();
 
-        const name = e.feature.get("name");
-        if (!name) {
-          selectedFeaturesSource.removeFeature(e.feature);
-          return;
+        if (!metersPerUnit) return;
+        const radiusKm = (geometry.getRadius() * metersPerUnit) / 1000;
+
+        // CAP needs Center as Latitude, Longitude.
+        // CAP needs radius in km after a space character
+        if (!regions[editingRegion]) {
+          regions[editingRegion] = {
+            polygons: [],
+            circles: [],
+            geocodes: {},
+          };
         }
-
-        e.feature.setId(name);
-        const geometryType = e.feature?.getGeometry()?.getType();
-
-        if (geometryType === "Polygon") {
-          const geoJsonFeature = geojsonFormat.writeFeatureObject(e.feature);
-          flip(geoJsonFeature, { mutate: true });
-          truncate(geoJsonFeature, {
-            precision: COORDINATE_PRECISION,
-            mutate: true,
-          });
-
-          onRegionsChange({
-            ...regions,
-            [name]: geoJsonFeature.geometry.coordinates.flat(),
-          });
-        } else {
-          const geometry = e.feature.getGeometry() as Circle;
-          // Center is in form Longitude, Latitude
-          const center = geometry.getCenter();
-
-          if (!metersPerUnit) return;
-          const radiusKm = (geometry.getRadius() * metersPerUnit) / 1000;
-
-          // CAP needs Center as Latitude, Longitude.
-          // CAP needs radius in km after a space character
-          onRegionsChange({
-            ...regions,
-            [name]: [
-              `${center
-                .reverse()
-                .map((n) => n.toFixed(COORDINATE_PRECISION))
-                .join(",")} ${radiusKm}`,
-            ],
-          });
-        }
+        regions[editingRegion].circles.push(
+          `${center
+            .reverse()
+            .map((n) => n.toFixed(COORDINATE_PRECISION))
+            .join(",")} ${radiusKm.toFixed(COORDINATE_PRECISION)}`
+        );
+        onRegionsChange({ ...regions });
       }
     };
 
@@ -281,15 +225,15 @@ export default function Map({
     };
 
     selectedFeaturesSource.on("addfeature", addFeatureHandler);
-    selectedFeaturesSource.on("removefeature", removeFeatureHandler);
+    // selectedFeaturesSource.on("removefeature", removeFeatureHandler);
 
     updateRegionsOnMap();
 
     return () => {
       selectedFeaturesSource.un("addfeature", addFeatureHandler);
-      selectedFeaturesSource.un("removefeature", removeFeatureHandler);
+      //   selectedFeaturesSource.un("removefeature", removeFeatureHandler);
     };
-  }, [map, regions]);
+  }, [map, regions, editingRegion]);
 
   return (
     <div ref={mapRef} style={{ height: "400px", width: "45%" }}>
@@ -347,7 +291,7 @@ export default function Map({
                 type: objectType as Type,
               });
               draw.on("drawend", (e) => {
-                e.feature.setProperties({ name: editingRegion });
+                e.feature.setProperties({ drawn: true });
                 draw.setActive(false);
                 map?.removeInteraction(draw);
               });

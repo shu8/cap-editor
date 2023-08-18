@@ -60,9 +60,11 @@ export const mapFormAlertDataToCapSchema = (
         resource: alertData.resources,
         area: Object.entries(alertData.regions).map(([regionName, data]) => ({
           areaDesc: regionName,
-          ...(typeof data?.[0] === "string" && { circle: data }),
-          ...(typeof data?.[0] !== "string" && { polygon: data }),
-          // geocode
+          ...(data.polygons?.length && { polygon: data.polygons }),
+          ...(data.circles?.length && { circle: data.circles }),
+          geocode: Object.keys(data.geocodes ?? {}).map((valueName) => ({
+            [valueName]: data.geocodes[valueName],
+          })),
           // altitude
           // ceiling
         })),

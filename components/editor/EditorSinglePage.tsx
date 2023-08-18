@@ -5,15 +5,10 @@ import "ol/ol.css";
 import { useState } from "react";
 import { Button, Divider, Form, Stack } from "rsuite";
 
-import {
-  classes,
-  getEndOfYesterday,
-  updateState,
-} from "../../lib/helpers.client";
+import { classes, updateState } from "../../lib/helpers.client";
 import { Resource } from "../../lib/types/types";
 import styles from "../../styles/components/editor/EditorSinglePage.module.css";
 import SplitButton from "../SplitButton";
-import Map from "./map/Map";
 import {
   Category,
   Certainty,
@@ -45,7 +40,15 @@ export type FormAlertData = {
   // Only present if an Alert is being edited (instead of created)
   identifier?: string;
   category: string[];
-  regions: { [key: string]: number[] | number[][] };
+  regions: {
+    [key: string]: {
+      polygons: number[][];
+      circles: string[];
+      geocodes: {
+        [key: string]: string;
+      };
+    };
+  };
   timezone?: string;
   onset: Date | string;
   expires: Date | string;
