@@ -901,8 +901,8 @@ export const MapForm = ({
                     </Form.HelpText>
                   }
                   values={regions[selectedRegion]?.geocodes}
-                  onUpdate={(geocodes) => {
-                    regions[selectedRegion].geocodes = geocodes;
+                  onChange={(geocodes) => {
+                    alertData.regions[selectedRegion].geocodes = geocodes;
                     onUpdate({ regions });
                   }}
                 />

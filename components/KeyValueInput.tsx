@@ -1,5 +1,5 @@
 import { Trans, t } from "@lingui/macro";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Button, Form, Stack } from "rsuite";
 
 export default function KeyValueInput({
@@ -7,14 +7,14 @@ export default function KeyValueInput({
   valueLabel,
   emptyLabel,
   addLabel,
-  onUpdate,
+  onChange,
   values,
 }: {
   keyLabel: ReactNode | string;
   valueLabel: ReactNode | string;
   emptyLabel: ReactNode | string;
   addLabel: ReactNode | string;
-  onUpdate: (values: { [key: string]: string }) => void;
+  onChange: (values: { [key: string]: string }) => void;
   values: { [key: string]: string };
 }) {
   const [showForm, setShowForm] = useState(false);
@@ -23,11 +23,28 @@ export default function KeyValueInput({
 
   const handleDelete = (key: string) => {
     delete values[key];
-    onUpdate({ ...values });
+    onChange({ ...values });
   };
+
+  useEffect(() => {
+    if (values[newKey] && values[newKey] === newValue) {
+      setShowForm(false);
+      setNewKey("");
+      setNewValue("");
+    }
+  }, [values, newKey, newValue]);
 
   return (
     <>
+      <Button
+        size="xs"
+        onClick={() => setShowForm((old) => !old)}
+        color="blue"
+        appearance="ghost"
+      >
+        {showForm ? t`Cancel` : addLabel}
+      </Button>
+
       {Object.keys(values).length !== 0 && (
         <ul>
           {Object.entries(values).map(([k, v], i) => (
@@ -45,15 +62,6 @@ export default function KeyValueInput({
           ))}
         </ul>
       )}
-
-      <Button
-        size="xs"
-        onClick={() => setShowForm((old) => !old)}
-        color="blue"
-        appearance="ghost"
-      >
-        {showForm ? t`Cancel` : addLabel}
-      </Button>
 
       {!Object.keys(values).length && !showForm && <>{emptyLabel}</>}
 
@@ -79,13 +87,7 @@ export default function KeyValueInput({
             color="blue"
             appearance="ghost"
             size="sm"
-            onClick={() => {
-              const newValues = { ...values, [newKey]: newValue };
-              onUpdate(newValues);
-              setShowForm(false);
-              setNewKey("");
-              setNewValue("");
-            }}
+            onClick={() => onChange({ ...values, [newKey]: newValue })}
           >
             Save
           </Button>
