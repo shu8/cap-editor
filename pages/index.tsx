@@ -131,6 +131,14 @@ export default function Home() {
                     </Panel>
                   )
                 )}
+
+                <ExportAlerts
+                  languages={[
+                    ...new Set(
+                      alerts?.alerts?.map((a) => a.language as string) ?? []
+                    ),
+                  ]}
+                />
               </>
             )}
 
@@ -167,14 +175,6 @@ export default function Home() {
                   </div>
                 </Panel>
               )}
-
-            <ExportAlerts
-              languages={[
-                ...new Set(
-                  alerts?.alerts?.map((a) => a.language as string) ?? []
-                ),
-              ]}
-            />
           </>
         )}
       </main>
