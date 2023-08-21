@@ -69,3 +69,9 @@
   font-family: monospace;
   text-transform: none;
 }
+
+.actions {
+  float: right;
+  display: flex;
+  gap: 10px;
+}

@@ -381,9 +381,7 @@ export default function EditorPage(props: Props) {
                 )
               );
           }}
-          onCancel={() => {
-            router.push("/");
-          }}
+          onCancel={() => router.push("/")}
         />
       </main>
     </>
