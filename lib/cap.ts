@@ -63,7 +63,8 @@ export const mapFormAlertDataToCapSchema = (
           ...(data.polygons?.length && { polygon: data.polygons }),
           ...(data.circles?.length && { circle: data.circles }),
           geocode: Object.keys(data.geocodes ?? {}).map((valueName) => ({
-            [valueName]: data.geocodes[valueName],
+            valueName,
+            value: data.geocodes[valueName],
           })),
           // altitude
           // ceiling

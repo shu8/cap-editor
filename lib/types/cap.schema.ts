@@ -81,7 +81,10 @@ export interface CAPV12JSONSchema2 {
       areaDesc: string;
       polygon?: ((number[] | number)[] | number)[][];
       circle?: string[];
-      geocode?: string[];
+      geocode?: {
+        valueName: string;
+        value: string;
+      }[];
       altitude?: number;
       ceiling?: number;
     }[];
@@ -383,7 +386,20 @@ export const CAPV12Schema =
                 "geocode": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "type": "object",
+                    "properties": {
+                      "valueName": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "valueName",
+                      "value"
+                    ],
+                    "additionalProperties": false
                   }
                 },
                 "altitude": {

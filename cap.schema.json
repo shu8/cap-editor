@@ -292,7 +292,20 @@
                 "geocode": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "type": "object",
+                    "properties": {
+                      "valueName": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "valueName",
+                      "value"
+                    ],
+                    "additionalProperties": false
                   }
                 },
                 "altitude": {
