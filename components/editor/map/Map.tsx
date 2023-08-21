@@ -2,6 +2,7 @@ import { AlertingAuthority } from "@prisma/client";
 import { Icon } from "@rsuite/icons";
 import flip from "@turf/flip";
 import truncate from "@turf/truncate";
+import intersect from "@turf/intersect";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { IconButton } from "rsuite";
@@ -9,7 +10,7 @@ import { IconButton } from "rsuite";
 import OLFeatureCollection from "ol/Collection";
 import Feature from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
-import { Circle, Geometry, Polygon } from "ol/geom";
+import { Circle, Geometry, MultiPolygon, Polygon } from "ol/geom";
 import { Type } from "ol/geom/Geometry";
 import { defaults as OLDefaultInteractions } from "ol/interaction";
 import OLDraw from "ol/interaction/Draw";
@@ -166,6 +167,12 @@ export default function Map({
   useEffect(() => {
     const addFeatureHandler = (e: VectorSourceEvent<Geometry>) => {
       if (!e.feature) return;
+
+      if (e.feature.get("invalid")) {
+        selectedFeaturesSource.removeFeature(e.feature);
+        return;
+      }
+
       if (!e.feature.get("drawn")) return;
 
       const geometryType = e.feature?.getGeometry()?.getType();
@@ -215,23 +222,10 @@ export default function Map({
       }
     };
 
-    const removeFeatureHandler = (e: VectorSourceEvent<Geometry>) => {
-      const region = e.feature?.getId();
-      if (region) {
-        // A full country was deleted
-        delete regions[region];
-        onRegionsChange({ ...regions });
-      }
-    };
-
     selectedFeaturesSource.on("addfeature", addFeatureHandler);
-    // selectedFeaturesSource.on("removefeature", removeFeatureHandler);
-
     updateRegionsOnMap();
-
     return () => {
       selectedFeaturesSource.un("addfeature", addFeatureHandler);
-      //   selectedFeaturesSource.un("removefeature", removeFeatureHandler);
     };
   }, [map, regions, editingRegion]);
 
@@ -290,7 +284,28 @@ export default function Map({
                 features: selectedFeatures,
                 type: objectType as Type,
               });
+
               draw.on("drawend", (e) => {
+                // Prevent drawing intersecting polygons
+                if (objectType === "Polygon") {
+                  const features = selectedFeatures.getArray();
+                  for (let i = 0; i < features.length; i++) {
+                    if (
+                      (features[i].getGeometry() instanceof Polygon ||
+                        features[i].getGeometry() instanceof MultiPolygon) &&
+                      intersect(
+                        geojsonFormat.writeFeatureObject(features[i]),
+                        geojsonFormat.writeFeatureObject(e.feature)
+                      )
+                    ) {
+                      e.feature.setProperties({ invalid: true });
+                      draw.setActive(false);
+                      map?.removeInteraction(draw);
+                      return;
+                    }
+                  }
+                }
+
                 e.feature.setProperties({ drawn: true });
                 draw.setActive(false);
                 map?.removeInteraction(draw);
