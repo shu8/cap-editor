@@ -39,8 +39,8 @@ const redirect = (url: string) => ({
 
 /**
  * There can be 3 cases:
- * - /editor?alertingAuthority=aa-id: create a new alert
- * - /editor?template=alert-id&alertingAuthority=aa-id: create a new alert, using the given alert as a template
+ * - /editor?alertingAuthorityId=aa-id: create a new alert
+ * - /editor?template=alert-id&alertingAuthorityId=aa-id: create a new alert, using the given alert as a template
  * - /editor/alert-id: edit the given alert
  *
  * When editing, the user must have edit permission for the AA of that alert, or the alert must have been shared with them.
@@ -104,7 +104,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     // and that they have permission to create an alert for that AA.
     let alertingAuthorityId = context.query?.alertingAuthorityId;
 
-    // If the AA hasn't been specified as ?alertingAuthority query param
+    // If the AA hasn't been specified as ?alertingAuthorityId query param
     // but the user only has one AA, then by-default, choose this one
     if (typeof alertingAuthorityId !== "string") {
       const userAlertingAuthorities = Object.keys(

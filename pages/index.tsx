@@ -81,7 +81,7 @@ export default function Home() {
 
         {session && (
           <>
-            <Link href={`/editor?alertingAuthority=${alertingAuthorityId}`}>
+            <Link href={`/editor?alertingAuthorityId=${alertingAuthorityId}`}>
               <Button
                 appearance="ghost"
                 color="violet"
