@@ -5,7 +5,7 @@ import truncate from "@turf/truncate";
 import intersect from "@turf/intersect";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { IconButton } from "rsuite";
+import {  IconButton } from "rsuite";
 
 import OLFeatureCollection from "ol/Collection";
 import Feature from "ol/Feature";
@@ -13,6 +13,7 @@ import GeoJSON from "ol/format/GeoJSON";
 import { Circle, Geometry, MultiPolygon, Polygon } from "ol/geom";
 import { Type } from "ol/geom/Geometry";
 import { defaults as OLDefaultInteractions } from "ol/interaction";
+import { defaults as defaultControls } from "ol/control.js";
 import OLDraw from "ol/interaction/Draw";
 import OLMap from "ol/Map";
 import { useGeographic } from "ol/proj";
@@ -25,8 +26,12 @@ import { useMountEffect } from "../../../lib/helpers.client";
 import { FormAlertData } from "../EditorSinglePage";
 import TileLayer from "./TileLayer";
 import VectorLayer from "./VectorLayer";
+import XYZ from "ol/source/XYZ";
+import SplitButton from "../../SplitButton";
 
 const COORDINATE_PRECISION = 3;
+
+type BaseLayer = "OSM" | "ESRI";
 
 // https://www.reshot.com/free-svg-icons/item/free-positioning-polygone-F2AWH4PGVQ/
 const PolygonImage = () => (
@@ -52,6 +57,14 @@ const CircleImage = () => (
 
 const geojsonFormat = new GeoJSON();
 const OSMSource = new OSM();
+const ESRISource = new XYZ({
+  attributions:
+    'Tiles © <a href="https://services.arcgisonline.com/ArcGIS/' +
+    'rest/services/World_Topo_Map/MapServer">ArcGIS</a>',
+  url:
+    "https://server.arcgisonline.com/ArcGIS/rest/services/" +
+    "World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+});
 const selectedStyle = new Style({
   stroke: new Stroke({ color: "rgba(255, 0, 0, 0.2)" }),
   fill: new Fill({ color: "rgba(255, 0, 0, 0.2)" }),
@@ -86,6 +99,7 @@ export default function Map({
   const [defaultFeaturesSource] = useState<OLVectorSource>(
     new OLVectorSource({ wrapX: false, features: [] })
   );
+  const [baseLayer, setBaseLayer] = useState<BaseLayer>("OSM");
 
   const metersPerUnit = map?.getView().getProjection().getMetersPerUnit();
 
@@ -152,6 +166,7 @@ export default function Map({
       layers: [],
       overlays: [],
       interactions: OLDefaultInteractions(),
+      controls: defaultControls({ attributionOptions: { collapsible: true } }),
     });
 
     if (mapRef.current) mapObject.setTarget(mapRef.current);
@@ -232,7 +247,12 @@ export default function Map({
   return (
     <div ref={mapRef} style={{ height: "400px", width: "45%" }}>
       <div style={{ position: "relative" }}>
-        <TileLayer map={map} source={OSMSource} zIndex={0} />
+        {baseLayer === "ESRI" && (
+          <TileLayer map={map} source={ESRISource} zIndex={0} />
+        )}
+        {baseLayer === "OSM" && (
+          <TileLayer map={map} source={OSMSource} zIndex={0} />
+        )}
         <VectorLayer
           map={map}
           source={selectedFeaturesSource}
@@ -245,6 +265,17 @@ export default function Map({
           style={defaultFeatureCountryStyle}
           zIndex={2}
         />
+
+        <div style={{ position: "absolute", zIndex: 4, left: 35, top: 10 }}>
+          <SplitButton
+            color="violet"
+            appearance="primary"
+            options={["OSM", "ESRI"]}
+            arrowDirection="down"
+            size="xs"
+            onClick={(i) => setBaseLayer(["OSM", "ESRI"][i] ?? "OSM")}
+          />
+        </div>
 
         {["Polygon", "Circle"].map((objectType, i) => (
           <IconButton
