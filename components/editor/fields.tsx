@@ -578,119 +578,70 @@ export const Category = ({ onUpdate, alertData }: Props) => (
 
 export const Resources = ({ onUpdate, alertData }: Props) => {
   const toaster = useToasterI18n();
-  const [addNewResource, setAddNewResource] = useState(false);
-  const [newResourceUrl, setNewResourceUrl] = useState("");
-  const [newResourceDesc, setNewResourceDesc] = useState("");
 
   const getMimeType = async (url: string): Promise<string> => {
-    try {
-      const res = await fetch("/api/mime?" + new URLSearchParams({ url })).then(
-        (res) => res.json()
-      );
-      if (res.error) throw new HandledError(res.message);
-      return res.mime;
-    } catch {
-      throw new HandledError(
-        t`There was an error accessing this resource. It may be currently unavailable.`
-      );
-    }
-  };
-
-  const handleSave = async () => {
-    try {
-      const mimeType = await getMimeType(newResourceUrl);
-      const resources = [...alertData.resources];
-      resources.push({
-        resourceDesc: newResourceDesc,
-        uri: newResourceUrl,
-        mimeType,
-      });
-      onUpdate({ resources });
-      setNewResourceUrl("");
-      setNewResourceDesc("");
-      setAddNewResource(false);
-    } catch (err) {
-      toaster.push(
-        <Message type="error" closable duration={0}>
-          {(err as HandledError).message}
-        </Message>
-      );
-    }
-  };
-
-  const handleDelete = (index: number) => {
-    const resources = [...alertData.resources];
-    resources.splice(i, 1);
-    onUpdate({ resources });
+    const res = await fetch("/api/mime?" + new URLSearchParams({ url })).then(
+      (res) => res.json()
+    );
+    if (res.error) throw new HandledError(res.message);
+    return res.mime;
   };
 
   return (
-    <div>
-      <strong>Resources</strong>{" "}
-      <Button
-        size="xs"
-        onClick={() => setAddNewResource(true)}
-        color="blue"
-        appearance="ghost"
-      >
-        Add URL?
-      </Button>
-      {!alertData.resources.length && (
-        <p>
-          <Trans>No resources added yet</Trans>.
-        </p>
-      )}
-      {alertData.resources?.map((r, i) => (
-        <li key={`resource-${i}`}>
-          {r.resourceDesc} (
-          <a href={r.uri} target="_blank" rel="noreferrer">
-            {r.uri}
-          </a>
-          ) &mdash;{" "}
-          <Button
-            size="xs"
-            color="red"
-            appearance="ghost"
-            onClick={() => handleDelete(i)}
-          >
-            <Trans>Delete?</Trans>
-          </Button>
-        </li>
-      ))}
-      {addNewResource && (
-        <Stack spacing={10} alignItems="flex-end">
-          <Form.Group>
-            <Form.ControlLabel>
-              <Trans>URL</Trans>
-            </Form.ControlLabel>
-            <Form.Control
-              name="resourceUrl"
-              onChange={(v) => setNewResourceUrl(v)}
-              value={newResourceUrl}
-              type="url"
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.ControlLabel>
-              <Trans>Description</Trans>
-            </Form.ControlLabel>
-            <Form.Control
-              name="resourceDesc"
-              onChange={(v) => setNewResourceDesc(v)}
-              value={newResourceDesc}
-            />
-          </Form.Group>
-          <Button
-            color="blue"
-            appearance="ghost"
-            size="sm"
-            onClick={handleSave}
-          >
-            Save
-          </Button>
-        </Stack>
-      )}
-    </div>
+    <Form.Group>
+      <Form.ControlLabel>
+        <Trans>Resources</Trans>{" "}
+        <KeyValueInput
+          keyLabel="Description"
+          valueLabel="URL"
+          addLabel={t`Add URL?`}
+          emptyLabel={
+            <Form.HelpText>
+              <Trans>No resources added yet</Trans>
+            </Form.HelpText>
+          }
+          values={alertData.resources.reduce((acc, cur) => {
+            acc[cur.resourceDesc] = cur.uri;
+            return acc;
+          }, {})}
+          onChange={async (newResources) => {
+            const resourceDescriptions = Object.keys(newResources);
+            const resourceMimeTypes = await Promise.allSettled(
+              resourceDescriptions.map((desc) =>
+                getMimeType(newResources[desc])
+              )
+            );
+
+            const resources = [];
+            let hasError = false;
+            for (let i = 0; i < resourceMimeTypes.length; i++) {
+              if (resourceMimeTypes[i].status === "fulfilled") {
+                resources.push({
+                  resourceDesc: resourceDescriptions[i],
+                  uri: newResources[resourceDescriptions[i]],
+                  mimeType: resourceMimeTypes[i].value,
+                });
+              } else {
+                hasError = true;
+              }
+            }
+
+            if (hasError) {
+              toaster.push(
+                <Message type="error" closable duration={0}>
+                  <Trans>
+                    There was an error accessing one or more resources. They may
+                    be currently unavailable.
+                  </Trans>
+                </Message>
+              );
+            }
+
+            onUpdate({ resources });
+          }}
+        />
+      </Form.ControlLabel>
+    </Form.Group>
   );
 };
 
