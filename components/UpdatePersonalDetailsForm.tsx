@@ -33,10 +33,11 @@ export default function UpdatePersonalDetailsForm() {
             .then(async (res) => {
               if (res.error) throw new HandledError(res.message);
               toaster.push(
-                <Message type="success" duration={0} closable>
+                <Message type="success" closable>
                   <Trans>Your personal details were updated successfully</Trans>
                   .
-                </Message>
+                </Message>,
+                { duration: 3000 }
               );
               router.reload();
             })

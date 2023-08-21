@@ -45,12 +45,13 @@ export default function ConnectToAlertingAuthorityForm() {
             .then((res) => {
               if (res.error) throw new HandledError(res.message);
               toaster.push(
-                <Message type="success" duration={0} closable>
+                <Message type="success" closable>
                   <Trans>
                     Your request has been sent to your Alerting Authority; you
                     will receive an email once they have approved your access.
                   </Trans>
-                </Message>
+                </Message>,
+                { duration: 0 }
               );
             })
             .catch((err) =>

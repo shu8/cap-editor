@@ -82,10 +82,11 @@ export default function VerifyUser({
       .then((res) => {
         if (res.error) throw new HandledError(res.message);
         toaster.push(
-          <Message type="success" duration={0} closable>
+          <Message type="success" closable>
             <Trans>Account successfully</Trans>{" "}
             {verified ? t`approved` : t`rejected`}
-          </Message>
+          </Message>,
+          { duration: 5000 }
         );
       })
       .catch((err) =>

@@ -39,12 +39,13 @@ export default function RegisterForm({ email = "" }) {
             .then((res) => {
               if (res.error) throw new HandledError(res.message);
               toaster.push(
-                <Message type="success" duration={0} closable>
+                <Message type="success" closable>
                   <Trans>
                     Registration successful. You can now{" "}
                     <Link href="/login">login</Link>.
                   </Trans>
-                </Message>
+                </Message>,
+                { duration: 5000 }
               );
             })
             .catch((err) =>

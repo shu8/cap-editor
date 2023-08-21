@@ -11,13 +11,13 @@ export default function ErrorMessage({
 }) {
   if (error instanceof HandledError) {
     return (
-      <Message closable type="error" duration={0}>
+      <Message closable type="error">
         <Trans>There was an error</Trans> {action}: {error.message}
       </Message>
     );
   } else {
     return (
-      <Message closable type="error" duration={0}>
+      <Message closable type="error">
         <Trans>
           There was an error {action}. Please try again later or contact your
           administrator if the issue persists.

@@ -58,13 +58,14 @@ export default function SettingsPage() {
 
                 if (!verification?.error) {
                   toaster.push(
-                    <Message type="success" duration={0} closable>
+                    <Message type="success" closable>
                       <Trans>
                         This device has been successfully registered for
                         WebAuthn authentication
                       </Trans>
                       .
-                    </Message>
+                    </Message>,
+                    { duration: 3000 }
                   );
                 } else {
                   throw new Error("Failed to register", verification);

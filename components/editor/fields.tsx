@@ -628,12 +628,13 @@ export const Resources = ({ onUpdate, alertData }: Props) => {
 
             if (hasError) {
               toaster.push(
-                <Message type="error" closable duration={0}>
+                <Message type="error" closable>
                   <Trans>
                     There was an error accessing one or more resources. They may
                     be currently unavailable.
                   </Trans>
-                </Message>
+                </Message>,
+                { duration: 0 }
               );
             }
 

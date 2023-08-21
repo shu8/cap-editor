@@ -323,12 +323,13 @@ export default function EditorPage(props: Props) {
               .then((res) => {
                 if (res.error) throw new HandledError(res.message);
                 toaster.push(
-                  <Message type="success" duration={0} showIcon closable>
+                  <Message type="success" showIcon closable>
                     <Trans>
                       An invitation email to collaborate on this Alert has been
                       sent.
                     </Trans>
-                  </Message>
+                  </Message>,
+                  { duration: 3000 }
                 );
               })
               .catch((err) =>
@@ -363,10 +364,10 @@ export default function EditorPage(props: Props) {
               .then((res) => {
                 if (res.error) throw new HandledError(res.message);
                 toaster.push(
-                  <Message type="success" duration={0} showIcon closable>
+                  <Message type="success" showIcon closable>
                     <Trans>Alert successfully submitted.</Trans>
                   </Message>,
-                  { placement: "bottomCenter" }
+                  { placement: "bottomCenter", duration: 3000 }
                 );
                 router.push("/");
               })
