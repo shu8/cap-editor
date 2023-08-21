@@ -66,7 +66,7 @@ export const roundNestedArray = (arr: any, precision: number) => {
     if (Array.isArray(element)) {
       rounded.push(roundNestedArray(element, precision));
     } else {
-      rounded.push(element.toFixed(precision));
+      rounded.push(+element.toFixed(precision));
     }
   });
   return rounded;

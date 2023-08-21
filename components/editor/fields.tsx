@@ -766,7 +766,7 @@ export const MapForm = ({
                           roundNestedArray(f.geometry.coordinates, 3)
                         )
                       );
-                      onUpdate({ regions: { ...regions } });
+                      onUpdate({ regions });
                       setSelectedRegion(country);
                     }}
                   >
