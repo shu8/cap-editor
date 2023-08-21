@@ -7,6 +7,7 @@ import { TypeAttributes } from "rsuite/esm/@types/common";
 
 import { CAPV12JSONSchema } from "../lib/types/cap.schema";
 import styles from "../styles/components/Alert.module.css";
+import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
 
 const generateSocialMediaText = (
   info: NonNullable<CAPV12JSONSchema["info"]>[number] | undefined
@@ -26,6 +27,8 @@ const generateSocialMediaText = (
 };
 
 export default function Alert({ alert }: { alert: DBAlert }) {
+  const [alertingAuthorityId] = useAlertingAuthorityLocalStorage();
+
   const alertData = alert.data as CAPV12JSONSchema;
   const info = alertData.info![0] as NonNullable<
     CAPV12JSONSchema["info"]
@@ -67,7 +70,9 @@ export default function Alert({ alert }: { alert: DBAlert }) {
               </Button>
             </Link>
           )}
-          <Link href={`/editor?template=${alert.id}`}>
+          <Link
+            href={`/editor?template=${alert.id}&alertingAuthorityId=${alertingAuthorityId}`}
+          >
             <Button
               className={styles.btn}
               appearance="ghost"

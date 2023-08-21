@@ -102,7 +102,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     // If they're not looking to edit an alert, they must be looking to create one.
     // So we need to know which AA they are creating the alert for
     // and that they have permission to create an alert for that AA.
-    let alertingAuthorityId = context.query?.alertingAuthority;
+    let alertingAuthorityId = context.query?.alertingAuthorityId;
 
     // If the AA hasn't been specified as ?alertingAuthority query param
     // but the user only has one AA, then by-default, choose this one
@@ -192,7 +192,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       resources: info?.resource ?? [],
     };
 
-    if (!isTemplate) {
+    if (isTemplate) {
+      defaultAlertData.contact = alertingAuthority.contact ?? "";
+      defaultAlertData.web = alertingAuthority.web ?? "";
+    } else {
       defaultAlertData.identifier = alertData.identifier;
       editingAlert = { id: alertData.identifier, status: alert.status };
     }
@@ -239,7 +242,7 @@ export default function EditorPage(props: Props) {
 
   // If ?template query param exists, hide it from user
   useMountEffect(() => {
-    if (router.query.template || router.query.alertingAuthority) {
+    if (router.query.template || router.query.alertingAuthorityId) {
       router.replace("/editor", undefined, { shallow: true });
     }
   });

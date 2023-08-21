@@ -62,7 +62,7 @@ const AlertingAuthoritySelector = ({
             onClick={() => {
               setAlertingAuthorityId(id);
               if (appendToQuery) {
-                router.query.alertingAuthority = id;
+                router.query.alertingAuthorityId = id;
                 router.push(router);
               }
             }}
