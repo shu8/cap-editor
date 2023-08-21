@@ -61,34 +61,28 @@ export const formatAlertingAuthorityFeedAsXML = async (
       "last_signed_at"
     );
     entries.push({
-      id: alert.id,
+      guid: `${process.env.BASE_URL}/feed/${alert.id}`,
       title: data.info?.[0]?.headline ?? "Alert",
-      link: {
-        "@_href": `${process.env.BASE_URL}/feed/${alert.id}`,
-      },
-      updated: lastSignedAt
-        ? new Date(+lastSignedAt).toISOString()
-        : new Date().toISOString(),
-      published: new Date(data.sent).toISOString(),
+      link: `${process.env.BASE_URL}/feed/${alert.id}`,
+      pubDate: lastSignedAt
+        ? new Date(+lastSignedAt).toUTCString()
+        : new Date().toUTCString(),
     });
   }
 
   const url = `${process.env.BASE_URL}/feed/alertingAuthorities/${alertingAuthority.id}/${language}/rss.xml`;
   const feed = builder.build({
-    feed: {
-      "@_xmlns": "http://www.w3.org/2005/Atom",
-      id: url,
-      title: `Alerts for ${alertingAuthority.name} (${language})`,
-      updated: new Date().toISOString(),
-      author: {
-        name: alertingAuthority.name,
-        email: alertingAuthority.author,
+    rss: {
+      "@_version": "2.0",
+      channel: {
+        title: `CAP alerts for ${alertingAuthority.name} (${language})`,
+        link: {
+          "@_rel": "self",
+          "#text": url,
+        },
       },
-      link: {
-        "@_rel": "self",
-        "@_href": url,
-      },
-      entry: entries,
+      lastBuildDate: new Date().toUTCString(),
+      item: entries,
     },
   });
 
@@ -103,26 +97,30 @@ export const formatAlertingAuthoritiesAsXML = (
   }[]
 ) => {
   const entries = alertingAuthorities.map((aa) => ({
-    id: aa.id,
+    guid: { "@_isPermaLink": false, "#text": aa.id },
     title: aa.title,
+    description: `CAP Alerts for ${aa.title}`,
     link: aa.languages.map((lang) => ({
-      "@_href": `${process.env.BASE_URL}/feed/alertingAuthorities/${aa.id}/${lang}/rss.xml`,
       "@_xml:lang": lang,
       "@_hreflang": lang,
+      "#text": `${process.env.BASE_URL}/feed/alertingAuthorities/${aa.id}/${lang}/rss.xml`,
     })),
   }));
 
   const feed = builder.build({
-    feed: {
-      "@_xmlns": "http://www.w3.org/2005/Atom",
-      id: `${process.env.BASE_URL}/feed/`,
-      title: `Current Alerting Authorities`,
-      updated: new Date().toISOString(),
-      link: {
-        "@_rel": "self",
-        "@_href": `${process.env.BASE_URL}/feed`,
+    rss: {
+      "@_version": "2.0",
+      channel: {
+        title: `Alerting Authoritiy feeds`,
+        description:
+          "Public hazard and emergency Common Alerting Protocol (CAP) alerts for Alerting Authorities",
+        link: {
+          "@_rel": "self",
+          "#text": `${process.env.BASE_URL}/feed`,
+        },
+        lastBuildDate: new Date().toUTCString(),
+        item: entries,
       },
-      entry: entries,
     },
   });
 
