@@ -1,25 +1,11 @@
 import { describe, expect, jest, test } from "@jest/globals";
-import { i18n } from "@lingui/core";
-import { I18nProvider } from "@lingui/react";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 
-import { Onset } from "../../../components/editor/fields";
-import { messages } from "../../../locales/en/messages";
-import { Form } from "rsuite";
 import userEvent from "@testing-library/user-event";
 import { DateTime } from "luxon";
-import { defaultFormData } from "../helpers";
-
-i18n.load({ en: messages });
-i18n.activate("en");
-const TestingProvider = ({ children }: any) => {
-  return (
-    <I18nProvider i18n={i18n} forceRenderOnLocaleChange={true}>
-      <Form>{children}</Form>
-    </I18nProvider>
-  );
-};
+import { Onset } from "../../../components/editor/fields";
+import { TestingProvider, defaultFormData } from "../helpers";
 
 const props = { alertData: { ...defaultFormData, onset: new Date() } };
 
