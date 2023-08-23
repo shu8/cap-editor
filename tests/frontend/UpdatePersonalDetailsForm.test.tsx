@@ -7,6 +7,7 @@ import userEvent from "@testing-library/user-event";
 
 import UpdatePersonalDetailsForm from "../../components/UpdatePersonalDetailsForm";
 import { messages } from "../../locales/en/messages";
+import { SessionProvider } from "next-auth/react";
 
 const startOfToday = new Date();
 startOfToday.setHours(0, 0, 0, 0);
@@ -14,9 +15,11 @@ i18n.load({ en: messages });
 i18n.activate("en");
 const TestingProvider = ({ children }: any) => {
   return (
-    <I18nProvider i18n={i18n} forceRenderOnLocaleChange={true}>
-      {children}
-    </I18nProvider>
+    <SessionProvider session={null}>
+      <I18nProvider i18n={i18n} forceRenderOnLocaleChange={true}>
+        {children}
+      </I18nProvider>
+    </SessionProvider>
   );
 };
 

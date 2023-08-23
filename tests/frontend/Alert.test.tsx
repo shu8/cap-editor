@@ -31,6 +31,7 @@ const databaseAlert: DBAlert = {
   status: "PUBLISHED",
   userId: "user-id",
   alertingAuthorityId: "aa",
+  language: "eng",
   data: {
     identifier: uuid,
     sender: "foo@example.com",
@@ -39,7 +40,7 @@ const databaseAlert: DBAlert = {
     msgType: "Alert",
     info: [
       {
-        language: "en",
+        language: "eng",
         category: ["Geo"],
         event: "Flooding",
         responseType: ["Prepare"],

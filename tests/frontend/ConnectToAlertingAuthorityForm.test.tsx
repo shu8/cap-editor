@@ -48,7 +48,11 @@ describe("<ConnectToAlertingAuthorityForm>", () => {
       exact: false,
     });
     await act(async () => {
-      await user.click(screen.getByText("Select"));
+      await user.click(
+        screen.getByText(
+          "Select, or type in the name of, your Alerting Authority"
+        )
+      );
     });
     await screen.findByText("Test AA");
     expect(global.fetch).toBeCalledTimes(1);
@@ -81,7 +85,11 @@ describe("<ConnectToAlertingAuthorityForm>", () => {
       exact: false,
     });
     await act(async () => {
-      await user.click(screen.getByText("Select"));
+      await user.click(
+        screen.getByText(
+          "Select, or type in the name of, your Alerting Authority"
+        )
+      );
     });
 
     const aa = await screen.findByText("Test AA");
@@ -115,7 +123,11 @@ describe("<ConnectToAlertingAuthorityForm>", () => {
       exact: false,
     });
     await act(async () => {
-      await user.click(screen.getByText("Select"));
+      await user.click(
+        screen.getByText(
+          "Select, or type in the name of, your Alerting Authority"
+        )
+      );
     });
     await screen.findByText(
       "There was an error fetching alerting authorities",
@@ -158,7 +170,11 @@ describe("<ConnectToAlertingAuthorityForm>", () => {
       exact: false,
     });
     await act(async () => {
-      await user.click(screen.getByText("Select"));
+      await user.click(
+        screen.getByText(
+          "Select, or type in the name of, your Alerting Authority"
+        )
+      );
     });
 
     const aa = await screen.findByText("Test AA");
