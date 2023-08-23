@@ -40,11 +40,11 @@ describe("<UpdatePersonalDetailsForm>", () => {
   });
 
   test("sends correct POST request on submission", async () => {
-    global.fetch = jest.fn(() =>
+    window.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({}),
       })
-    );
+    ) as any;
 
     const user = userEvent.setup();
     render(<UpdatePersonalDetailsForm />, {
@@ -71,11 +71,11 @@ describe("<UpdatePersonalDetailsForm>", () => {
   });
 
   test("handles POST error on submission", async () => {
-    global.fetch = jest.fn(() =>
+    window.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.reject({}),
       })
-    );
+    ) as any;
 
     const user = userEvent.setup();
     render(<UpdatePersonalDetailsForm />, {

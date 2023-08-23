@@ -22,7 +22,7 @@ const TestingProvider = ({ children }: any) => {
 
 describe("<ConnectToAlertingAuthorityForm>", () => {
   test("renders dropdown correctly", async () => {
-    global.fetch = jest.fn(() =>
+    window.fetch = jest.fn(() =>
       Promise.resolve({
         json: () =>
           Promise.resolve({
@@ -37,7 +37,7 @@ describe("<ConnectToAlertingAuthorityForm>", () => {
             ],
           }),
       })
-    );
+    ) as any;
 
     const user = userEvent.setup();
     render(<ConnectToAlertingAuthorityForm />, {
@@ -59,7 +59,7 @@ describe("<ConnectToAlertingAuthorityForm>", () => {
   });
 
   test("sends correct POST request on submission", async () => {
-    global.fetch = jest.fn(() =>
+    window.fetch = jest.fn(() =>
       Promise.resolve({
         json: () =>
           Promise.resolve({
@@ -74,7 +74,7 @@ describe("<ConnectToAlertingAuthorityForm>", () => {
             ],
           }),
       })
-    );
+    ) as any;
 
     const user = userEvent.setup();
     render(<ConnectToAlertingAuthorityForm />, {
@@ -108,11 +108,11 @@ describe("<ConnectToAlertingAuthorityForm>", () => {
   });
 
   test("handles GET fetch error", async () => {
-    global.fetch = jest.fn(() =>
+    window.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.reject(),
       })
-    );
+    ) as any;
 
     const user = userEvent.setup();
     render(<ConnectToAlertingAuthorityForm />, {
@@ -137,7 +137,7 @@ describe("<ConnectToAlertingAuthorityForm>", () => {
   });
 
   test("handles POST fetch error", async () => {
-    global.fetch = jest
+    window.fetch = jest
       .fn()
       .mockImplementationOnce(() =>
         Promise.resolve({
@@ -159,7 +159,7 @@ describe("<ConnectToAlertingAuthorityForm>", () => {
         Promise.resolve({
           json: () => Promise.reject(),
         })
-      );
+      ) as any;
 
     const user = userEvent.setup();
     render(<ConnectToAlertingAuthorityForm />, {
