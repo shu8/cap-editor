@@ -15,6 +15,7 @@ module.exports = {
       },
       transformIgnorePatterns: ["/node_modules/(?!ol)/"],
       setupFiles: ["<rootDir>/tests/frontend/setup.ts"],
+      globalSetup: "<rootDir>/tests/frontend/global-setup.ts",
     },
     {
       setupFilesAfterEnv: ["<rootDir>/tests/e2e/setup.ts"],
