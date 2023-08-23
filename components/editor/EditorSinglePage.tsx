@@ -38,6 +38,7 @@ import {
   Web,
 } from "./fields";
 import SeverityCertaintyMatrix from "./SeverityCertaintyMatrix";
+import XMLPreview from "./XMLPreview";
 
 const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
 export type Step = typeof STEPS[number];
@@ -172,7 +173,7 @@ export default function EditorSinglePage(props: Props) {
       </div>
 
       <Form fluid className={styles.editorContainer}>
-        <div className={styles.inputsWrapper}>
+        <div className={styles.left}>
           <Headline onUpdate={onUpdate} alertData={alertData} />
           <Event onUpdate={onUpdate} alertData={alertData} />
           <Description onUpdate={onUpdate} alertData={alertData} />
@@ -252,12 +253,21 @@ export default function EditorSinglePage(props: Props) {
           <Resources onUpdate={onUpdate} alertData={alertData} />
         </div>
 
-        <div className={classes(styles.mapFormWrapper)}>
-          <MapForm
-            onUpdate={onUpdate}
-            alertData={alertData}
-            alertingAuthority={props.alertingAuthority}
-          />
+        <div className={styles.right}>
+          <div className={styles.row}>
+            <MapForm
+              onUpdate={onUpdate}
+              alertData={alertData}
+              alertingAuthority={props.alertingAuthority}
+            />
+          </div>
+
+          <div className={styles.row}>
+            <XMLPreview
+              alertingAuthority={props.alertingAuthority}
+              alertData={alertData}
+            />
+          </div>
         </div>
       </Form>
     </div>

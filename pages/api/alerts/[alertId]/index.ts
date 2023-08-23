@@ -136,7 +136,7 @@ async function handleGetAlert(
       new Date(alert.data!.info?.[0]?.expires) < new Date()
     ) {
       res.setHeader("Content-Type", "application/xml");
-      return res.status(200).send(formatAlertAsXML(alert));
+      return res.status(200).send(formatAlertAsXML(alert.data as CAPV12JSONSchema));
     }
 
     const redisKey = `${REDIS_PREFIX_SIGNED_ALERTS}:${alert.id}`;

@@ -4,11 +4,12 @@ import { Application, Parse, SignedXml } from "xmldsigjs";
 import { Alert } from ".prisma/client";
 import { getPrivateKey } from "../crypto";
 import { formatAlertAsXML } from "./helpers";
+import { CAPV12JSONSchema } from "../types/cap.schema";
 
 Application.setEngine("OpenSSL", webcrypto);
 
 export async function sign(alert: Alert) {
-  const alertXml = Parse(formatAlertAsXML(alert));
+  const alertXml = Parse(formatAlertAsXML(alert.data as CAPV12JSONSchema));
   const signed = new SignedXml(alertXml);
   const privateKey = await getPrivateKey();
   if (!privateKey) return null;

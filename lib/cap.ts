@@ -74,10 +74,7 @@ export const mapFormAlertDataToCapSchema = (
   };
 
   const validationResult = validateJSON(alert, CAPV12Schema);
-  if (!validationResult.valid) {
-    console.error(validationResult);
-    throw "Invalid alert details";
-  }
+  if (!validationResult.valid) throw validationResult;
 
   return alert as CAPV12JSONSchema;
 };

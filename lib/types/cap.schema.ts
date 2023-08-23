@@ -187,7 +187,8 @@ export const CAPV12Schema =
             }
           },
           "event": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "responseType": {
             "type": "array",
@@ -274,13 +275,16 @@ export const CAPV12Schema =
             "type": "string"
           },
           "headline": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "instruction": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "web": {
             "type": "string",

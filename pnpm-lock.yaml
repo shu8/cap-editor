@@ -66,6 +66,7 @@ specifiers:
   quoted-printable: ^1.0.1
   react: 18.2.0
   react-dom: 18.2.0
+  react-xml-viewer: ^2.0.0
   redis: ^4.6.4
   redis-mock: ^0.56.3
   rsuite: ^5.37.4
@@ -106,6 +107,7 @@ dependencies:
   ol: 7.2.2
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-xml-viewer: 2.0.0_biqbaboplfbrettd7655fr4n2y
   redis: 4.6.4
   rsuite: 5.37.4_biqbaboplfbrettd7655fr4n2y
   sharp: 0.31.3
@@ -5197,6 +5199,13 @@ packages:
       strnum: 1.0.5
     dev: false
 
+  /fast-xml-parser/4.2.7:
+    resolution: {integrity: sha512-J8r6BriSLO1uj2miOk1NW0YVm8AGOOu3Si2HQp/cSmo6EA4m3fcwu2WKjJ4RK9wMLBtg69y1kS8baDiQBR41Ig==}
+    hasBin: true
+    dependencies:
+      strnum: 1.0.5
+    dev: false
+
   /fastq/1.14.0:
     resolution: {integrity: sha512-eR2D+V9/ExcbF9ls441yIuN6TI2ED1Y2ZcA5BmMtJsOkWOFRJQ0Jt0g1UwqXJJVAb+V+umH5Dfr8oh4EVP7VVg==}
     dependencies:
@@ -8336,6 +8345,19 @@ packages:
     dependencies:
       '@babel/runtime': 7.20.6
       memoize-one: 5.2.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-xml-viewer/2.0.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-UGgb9QqT4Qn6OtJgpxs+y8C7yY+Dpyh9n4WoJcc3RFLm/nn5uddLjhxlrxP9gPE78J1mxplYOvOabJUAJMs49Q==}
+    engines: {node: '>=12', npm: '>=5'}
+    peerDependencies:
+      react: '>= 16.8.4'
+      react-dom: '>= 16.8.4'
+    dependencies:
+      fast-xml-parser: 4.2.7
+      lodash: 4.17.21
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false

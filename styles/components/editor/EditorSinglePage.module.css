@@ -24,25 +24,24 @@
 
 .editorContainer {
   display: flex;
-  justify-content: space-between;
+  gap: 15px;
 }
 
-.inputsWrapper {
-  width: 50%;
+.left,
+.right,
+.row {
+  flex: 1;
 }
 
 .inputGroup {
   margin-bottom: 24px;
 }
 
-.mapFormWrapper {
-  width: 45%;
-}
-
 .mapForm {
   display: flex;
   flex-direction: row;
   gap: 20px;
+  margin-bottom: 10px;
 }
 
 .mapFormGroup {

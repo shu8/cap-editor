@@ -17,8 +17,8 @@ const CAPGenerator = new Capgen({
   xmlOptions: { prettyPrint: true },
 });
 
-export const formatAlertAsXML = (alert: Alert): string => {
-  const info = (alert.data as CAPV12JSONSchema).info;
+export const formatAlertAsXML = (alertData: CAPV12JSONSchema): string => {
+  const info = alertData.info;
   if (info) {
     for (let i = 0; i < info.length; i++) {
       if (!info[i].area) continue;
@@ -34,7 +34,7 @@ export const formatAlertAsXML = (alert: Alert): string => {
   }
 
   try {
-    let xmlAlert = CAPGenerator.createUsing(alert.data as any) as string;
+    let xmlAlert = CAPGenerator.createUsing(alertData as any) as string;
     const newlineIndex = xmlAlert.indexOf("\n");
     return (
       xmlAlert.substring(0, newlineIndex) +

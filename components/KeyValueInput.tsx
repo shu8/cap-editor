@@ -8,7 +8,7 @@ export default function KeyValueInput({
   emptyLabel,
   addLabel,
   onChange,
-  values,
+  values = {},
 }: {
   keyLabel: ReactNode | string;
   valueLabel: ReactNode | string;
