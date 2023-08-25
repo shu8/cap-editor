@@ -19,17 +19,17 @@ async function handlePreviewAlert(
   const session = await getServerSession(req, res, authOptions);
   if (!session) throw new ApiError(401, "You are not logged in");
 
+  if (!req.body) {
+    throw new ApiError(400, "You did not provide valid alert data");
+  }
+
   const alertingAuthority = await prisma.userAlertingAuthorities.findFirst({
     where: {
       alertingAuthorityId,
       verified: { not: null },
       User: { email: session.user.email },
     },
-    include: {
-      AlertingAuthority: {
-        select: { name: true, author: true, contact: true, web: true },
-      },
-    },
+    include: { AlertingAuthority: { select: { name: true, author: true } } },
   });
 
   if (!alertingAuthority) {
