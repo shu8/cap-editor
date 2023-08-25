@@ -2,11 +2,11 @@ import { describe, expect, jest, test } from "@jest/globals";
 import { randomUUID } from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
-import { mapFormAlertDataToCapSchema } from "../../lib/cap";
-import { formatDate, getStartOfToday } from "../../lib/helpers.client";
-import handleAlertingAuthorityAlerts from "../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]/[language]/rss.xml";
-import { createUser, mockUserOnce, users } from "./helpers";
-import { prismaMock } from "./setup";
+import { mapFormAlertDataToCapSchema } from "../../../../../../lib/cap";
+import { formatDate, getStartOfToday } from "../../../../../../lib/helpers.client";
+import handleAlertingAuthorityAlerts from "../../../../../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]/[language]/rss.xml";
+import { createUser, mockUserOnce, users } from "../../../../helpers";
+import { prismaMock } from "../../../../setup";
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");

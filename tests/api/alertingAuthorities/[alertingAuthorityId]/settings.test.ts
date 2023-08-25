@@ -1,9 +1,9 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
-import handleAlertingAuthoritiesSettings from "../../pages/api/alertingAuthorities/[alertingAuthorityId]/settings";
-import { createUser, mockUserOnce, users } from "./helpers";
-import { prismaMock } from "./setup";
+import handleAlertingAuthoritiesSettings from "../../../../pages/api/alertingAuthorities/[alertingAuthorityId]/settings";
+import { createUser, mockUserOnce, users } from "../../helpers";
+import { prismaMock } from "../../setup";
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");

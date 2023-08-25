@@ -1,10 +1,10 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
-import { formatDate, getStartOfToday } from "../../lib/helpers.client";
-import handleAlertingAuthorityAlerts from "../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]";
-import { createUser, defaultFormData, mockUserOnce, users } from "./helpers";
-import { prismaMock } from "./setup";
+import { formatDate, getStartOfToday } from "../../../../../lib/helpers.client";
+import handleAlertingAuthorityAlerts from "../../../../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]";
+import { createUser, defaultFormData, mockUserOnce, users } from "../../../helpers";
+import { prismaMock } from "../../../setup";
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");
