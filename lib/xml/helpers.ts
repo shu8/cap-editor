@@ -96,16 +96,18 @@ export const formatAlertingAuthoritiesAsXML = (
     languages: string[];
   }[]
 ) => {
-  const entries = alertingAuthorities.map((aa) => ({
-    guid: { "@_isPermaLink": false, "#text": aa.id },
-    title: aa.title,
-    description: `CAP Alerts for ${aa.title}`,
-    link: aa.languages.map((lang) => ({
-      "@_xml:lang": lang,
-      "@_hreflang": lang,
-      "#text": `${process.env.BASE_URL}/feed/alertingAuthorities/${aa.id}/${lang}/rss.xml`,
-    })),
-  }));
+  const entries = alertingAuthorities
+    .filter((aa) => aa.languages.length)
+    .map((aa) => ({
+      guid: { "@_isPermaLink": false, "#text": aa.id },
+      title: aa.title,
+      description: `CAP Alerts for ${aa.title}`,
+      link: aa.languages.map((lang) => ({
+        "@_xml:lang": lang,
+        "@_hreflang": lang,
+        "#text": `${process.env.BASE_URL}/feed/alertingAuthorities/${aa.id}/${lang}/rss.xml`,
+      })),
+    }));
 
   const feed = builder.build({
     rss: {

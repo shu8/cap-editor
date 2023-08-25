@@ -23,6 +23,10 @@ async function handleUpdateAlert(
     throw new ApiError(400, "You did not provide a valid Alert ID");
   }
 
+  if (!req.body.data) {
+    throw new ApiError(400, "You did not provide valid alert details");
+  }
+
   if (!["PUBLISHED", "DRAFT"].includes(req.body.status)) {
     throw new ApiError(400, "You did not provide a valid alert status");
   }
@@ -38,7 +42,7 @@ async function handleUpdateAlert(
         where: { expires: { gt: new Date() } },
       },
       AlertingAuthority: {
-        select: { name: true, author: true, contact: true, web: true },
+        select: { name: true, author: true },
       },
     },
   });
@@ -136,7 +140,9 @@ async function handleGetAlert(
       new Date(alert.data!.info?.[0]?.expires) < new Date()
     ) {
       res.setHeader("Content-Type", "application/xml");
-      return res.status(200).send(formatAlertAsXML(alert.data as CAPV12JSONSchema));
+      return res
+        .status(200)
+        .send(formatAlertAsXML(alert.data as CAPV12JSONSchema));
     }
 
     const redisKey = `${REDIS_PREFIX_SIGNED_ALERTS}:${alert.id}`;

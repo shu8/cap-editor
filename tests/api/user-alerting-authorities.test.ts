@@ -64,10 +64,21 @@ describe("/api/user/alertingAuthorities", () => {
     expect(alertingAuthority?.alertingAuthorityId).toEqual("aa");
   });
 
-  test("other AA is created in DB", async () => {
+  test("requires other AA name", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
       body: { alertingAuthorityId: "other" },
+    });
+    await createUser();
+    mockUserOnce(users.admin);
+    await handleUserAlertingAuthorities(req, res);
+    expect(res._getStatusCode()).toEqual(400);
+  });
+
+  test("other AA is created in DB", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { alertingAuthorityId: "other", name: "Other Alerting Authority" },
     });
     const user = await createUser();
     mockUserOnce(users.admin);

@@ -44,8 +44,7 @@ describe("GET /api/alertingAuthorities/:id/settings", () => {
       countryCode: "GB",
       name: "AA",
       defaultTimezone: "Etc/GMT",
-      contact: "example@example.com",
-      web: "https://example.com",
+      severityCertaintyMatrixEnabled: false,
     });
   });
 });
@@ -68,7 +67,7 @@ describe("POST /api/alertingAuthorities/:id/settings", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
       query: { alertingAuthorityId: "foo" },
-      body: { contact: "contact@aa.com" },
+      body: { severityCertaintyMatrixEnabled: true },
     });
 
     await createUser({ ...users.admin, alertingAuthorityVerified: true });
@@ -81,7 +80,10 @@ describe("POST /api/alertingAuthorities/:id/settings", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
       query: { alertingAuthorityId: "aa" },
-      body: { contact: "contact@aa.com" },
+      body: {
+        severityCertaintyMatrixEnabled: true,
+        defaultTimezone: "Europe/London",
+      },
     });
 
     await createUser({ ...users.admin, alertingAuthorityVerified: true });
@@ -89,6 +91,7 @@ describe("POST /api/alertingAuthorities/:id/settings", () => {
     await handleAlertingAuthoritiesSettings(req, res);
 
     const aa = await prismaMock.alertingAuthority.findFirst();
-    expect(aa?.contact).toEqual("contact@aa.com");
+    expect(aa?.severityCertaintyMatrixEnabled).toEqual(true);
+    expect(aa?.defaultTimezone).toEqual("Europe/London");
   });
 });

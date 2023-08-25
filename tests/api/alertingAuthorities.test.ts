@@ -1,8 +1,8 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
-import redis from "../../lib/redis";
 import handleAlertingAuthorities from "../../pages/api/alertingAuthorities";
+import { createUser, users } from "./helpers";
 
 const mockWMOData = [
   {
@@ -33,15 +33,38 @@ describe("/api/alertingAuthorities", () => {
     await handleAlertingAuthorities(req, res);
     expect(res._getStatusCode()).toEqual(200);
     expect(JSON.parse(res._getData()).result).toEqual(mockWMOData);
+  });
 
-    // Make sure WMO data was cached
-    const { res: res2 } = createMocks<NextApiRequest, NextApiResponse>({
+  test('returns "other" AAs as well as WMO Register of AAs ', async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
     });
-    global.fetch = jest.fn(() => null);
-    jest.spyOn(redis, "GET").mockReturnValueOnce(JSON.stringify(mockWMOData));
-    await handleAlertingAuthorities(req, res2);
-    expect(res2._getStatusCode()).toEqual(200);
-    expect(JSON.parse(res2._getData()).result).toEqual(mockWMOData);
+
+    await createUser({
+      ...users.composer,
+      alertingAuthority: {
+        id: "ifrc:custom",
+        author: "test@example.com",
+        name: "Test Custom AA",
+        countryCode: "GB",
+      },
+      alertingAuthorityVerified: true,
+    });
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({ json: () => Promise.resolve(mockWMOData) })
+    );
+    await handleAlertingAuthorities(req, res);
+    expect(res._getStatusCode()).toEqual(200);
+    expect(JSON.parse(res._getData()).result).toEqual([
+      ...mockWMOData,
+      {
+        name: "Test Custom AA",
+        id: "ifrc:custom",
+        author: "test@example.com",
+        countryCode: "GB",
+        polygon: null,
+      },
+    ]);
   });
 });

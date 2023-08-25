@@ -3,34 +3,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { formatDate, getStartOfToday } from "../../lib/helpers.client";
 import handleAlert from "../../pages/api/alerts/[alertId]";
-import { createAlert, createUser, mockUserOnce, users } from "./helpers";
+import {
+  createAlert,
+  createUser,
+  defaultFormData,
+  mockUserOnce,
+  users,
+} from "./helpers";
 import { prismaMock } from "./setup";
-
-const validAlertData = {
-  status: "PUBLISHED",
-  data: {
-    category: ["Geo"],
-    regions: {},
-    from: formatDate(new Date()),
-    to: formatDate(getStartOfToday()),
-    actions: ["Prepare"],
-    certainty: "Observed",
-    severity: "Extreme",
-    urgency: "Immediate",
-    status: "Actual",
-    msgType: "Alert",
-    references: [],
-    textLanguages: {
-      en: {
-        event: "Test",
-        headline: "Test",
-        description: "Test",
-        instruction: "Test",
-        resources: [],
-      },
-    },
-  },
-};
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");
@@ -47,7 +27,19 @@ describe("PUT /api/alerts/:id", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { id: "foo" },
-      body: { status: "foo" },
+      body: { status: "foo", data: defaultFormData },
+    });
+
+    await handleAlert(req, res);
+    expect(res._getStatusCode()).toEqual(400);
+  });
+
+  test("requires alert data to be provided", async () => {
+    const alert = await createAlert({ status: "DRAFT" });
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "PUT",
+      query: { id: alert.id },
+      body: { status: "PUBLISHED" },
     });
 
     await handleAlert(req, res);
@@ -58,7 +50,7 @@ describe("PUT /api/alerts/:id", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { alertId: "foo" },
-      body: { status: "PUBLISHED" },
+      body: { status: "PUBLISHED", data: defaultFormData },
     });
 
     await handleAlert(req, res);
@@ -70,38 +62,11 @@ describe("PUT /api/alerts/:id", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { alertId: alert.id },
-      body: validAlertData,
+      body: { status: "PUBLISHED", data: defaultFormData },
     });
 
     await createUser({ ...users.composer, alertingAuthorityVerified: false });
     mockUserOnce(users.composer);
-    await handleAlert(req, res);
-    expect(res._getStatusCode()).toEqual(403);
-  });
-
-  test("user can have alert shared with them", async () => {
-    const alert = await createAlert({ status: "DRAFT" });
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: "PUT",
-      query: { alertId: alert.id },
-      body: validAlertData,
-    });
-
-    const editor = await createUser({
-      roles: [],
-      email: "guest@example.com",
-      name: "Guest",
-      alertingAuthorityVerified: false,
-    });
-    await prismaMock.sharedAlert.create({
-      data: { alertId: alert.id, userId: editor.id },
-    });
-    mockUserOnce({
-      email: "guest@example.com",
-      name: "Guest",
-      image: "",
-      alertingAuthority: {},
-    });
     await handleAlert(req, res);
     expect(res._getStatusCode()).toEqual(403);
   });
@@ -111,7 +76,7 @@ describe("PUT /api/alerts/:id", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { alertId: alert.id },
-      body: validAlertData,
+      body: { status: "PUBLISHED", data: defaultFormData },
     });
 
     const editor = await createUser({
@@ -133,12 +98,12 @@ describe("PUT /api/alerts/:id", () => {
     expect(res._getStatusCode()).toEqual(410);
   });
 
-  test("editors cannot publish existing alerts", async () => {
+  test("composers cannot PUBLISH alerts", async () => {
     const alert = await createAlert();
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { alertId: alert.id },
-      body: { status: "PUBLISHED" },
+      body: { status: "PUBLISHED", data: defaultFormData },
     });
 
     await createUser({ ...users.composer, alertingAuthorityVerified: true });
@@ -151,7 +116,7 @@ describe("PUT /api/alerts/:id", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { alertId: "foo" },
-      body: { status: "PUBLISHED" },
+      body: { status: "PUBLISHED", data: defaultFormData },
     });
 
     await createUser({ ...users.admin, alertingAuthorityVerified: true });
@@ -167,7 +132,7 @@ describe("PUT /api/alerts/:id", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { alertId: alert.id },
-      body: { status: "DRAFT" },
+      body: { status: "DRAFT", data: defaultFormData },
     });
 
     mockUserOnce(users.admin);
@@ -191,21 +156,6 @@ describe("PUT /api/alerts/:id", () => {
           from: formatDate(new Date()),
           to: formatDate(getStartOfToday()),
           actions: ["foo"],
-          certainty: "Observed",
-          severity: "Extreme",
-          urgency: "Immediate",
-          status: "Actual",
-          msgType: "Alert",
-          references: [],
-          textLanguages: {
-            en: {
-              event: "Test",
-              headline: "Test",
-              description: "Test",
-              instruction: "Test",
-              resources: [],
-            },
-          },
         },
       },
     });
@@ -223,12 +173,18 @@ describe("PUT /api/alerts/:id", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "PUT",
       query: { alertId: alert.id },
-      body: validAlertData,
+      body: {
+        status: "PUBLISHED",
+        data: { ...defaultFormData, headline: "Updated headline" },
+      },
     });
 
     mockUserOnce(users.admin);
     await handleAlert(req, res);
     expect(res._getStatusCode()).toEqual(200);
-    expect((await prismaMock.alert.findFirst())?.status).toEqual("PUBLISHED");
+    const dbAlert = await prismaMock.alert.findFirst();
+    expect(dbAlert).toBeTruthy();
+    expect(dbAlert!.status).toEqual("PUBLISHED");
+    expect(dbAlert!.data.info[0].headline).toEqual("Updated headline");
   });
 });

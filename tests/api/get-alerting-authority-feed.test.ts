@@ -2,7 +2,11 @@ import { describe, expect, jest, test } from "@jest/globals";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import handleAlerts from "../../pages/api/alerts/index";
-import { createUser } from "./helpers";
+import { createAlert, createUser } from "./helpers";
+import { randomUUID } from "crypto";
+import { prismaMock } from "./setup";
+import { mapFormAlertDataToCapSchema } from "../../lib/cap";
+import { formatDate } from "../../lib/helpers.client";
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");
@@ -14,24 +18,33 @@ describe("GET /api/alerts", () => {
     await handleAlerts(req, res);
     expect(res._getStatusCode()).toEqual(200);
     const xml = res._getData();
-    expect(xml.indexOf("<entry>")).toEqual(-1);
-    expect(
-      xml.indexOf(`<feed xmlns="http://www.w3.org/2005/Atom">`)
-    ).toBeGreaterThan(-1);
+    expect(xml).not.toMatch("<item>");
+    expect(xml).toMatch(`<rss version="2.0">`);
   });
 
-  test("feed URLs should be returned for each AA", async () => {
+  test("feed URLs should not be returned for AAs with no alerts (new AAs)", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
     });
-    await createUser();
     await handleAlerts(req, res);
     expect(res._getStatusCode()).toEqual(200);
     const xml = res._getData();
-    expect(xml.indexOf("<entry>")).toBeGreaterThan(-1);
-    expect(
-      xml.indexOf(`<feed xmlns="http://www.w3.org/2005/Atom">`)
-    ).toBeGreaterThan(-1);
-    expect(xml.indexOf(`/feed/alertingAuthorities/aa`)).toBeGreaterThan(-1);
+    expect(xml).toMatch(`<rss version="2.0">`);
+    expect(xml).not.toMatch("<item>");
+    expect(xml).not.toMatch(`/feed/alertingAuthorities/`);
+  });
+
+  test("feed URLs should be returned for each AA that has alerts", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "GET",
+    });
+
+    await createAlert();
+    await handleAlerts(req, res);
+    expect(res._getStatusCode()).toEqual(200);
+    const xml = res._getData();
+    expect(xml).toMatch("<item>");
+    expect(xml).toMatch(`<rss version="2.0">`);
+    expect(xml).toMatch(`/feed/alertingAuthorities/aa/eng/rss.xml`);
   });
 });

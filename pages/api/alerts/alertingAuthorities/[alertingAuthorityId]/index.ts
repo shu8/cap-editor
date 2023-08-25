@@ -23,17 +23,17 @@ async function handleNewAlert(
     throw new ApiError(400, "You did not provide a valid alert status");
   }
 
+  if (!req.body.data) {
+    throw new ApiError(400, "You did not provide valid alert data");
+  }
+
   const alertingAuthority = await prisma.userAlertingAuthorities.findFirst({
     where: {
       alertingAuthorityId,
       verified: { not: null },
       User: { email: session.user.email },
     },
-    include: {
-      AlertingAuthority: {
-        select: { name: true, author: true, contact: true, web: true },
-      },
-    },
+    include: { AlertingAuthority: { select: { name: true, author: true } } },
   });
 
   if (!alertingAuthority) {

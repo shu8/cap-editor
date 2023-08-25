@@ -2,41 +2,18 @@ import { describe, expect, jest, test } from "@jest/globals";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { formatDate, getStartOfToday } from "../../lib/helpers.client";
-import handleAlertingAuthorityAlerts from "../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]/[language]";
-import { createUser, mockUserOnce, users } from "./helpers";
+import handleAlertingAuthorityAlerts from "../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]";
+import { createUser, defaultFormData, mockUserOnce, users } from "./helpers";
 import { prismaMock } from "./setup";
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");
 
-const validAlertData = {
-  category: ["Geo"],
-  regions: {},
-  from: formatDate(getStartOfToday()),
-  to: formatDate(new Date()),
-  actions: [],
-  certainty: "Observed",
-  severity: "Extreme",
-  urgency: "Immediate",
-  status: "Actual",
-  msgType: "Alert",
-  references: [],
-  textLanguages: {
-    en: {
-      event: "Test",
-      headline: "Test",
-      description: "Test",
-      instruction: "Test",
-      resources: [],
-    },
-  },
-};
-
 describe("POST /api/alerts/alertingAuthorities/:id", () => {
   test("AA must be supplied", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
-      body: { status: "foo" },
+      body: { status: "foo", data: defaultFormData },
     });
     await createUser();
     await handleAlertingAuthorityAlerts(req, res);
@@ -46,7 +23,7 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
   test("must be logged in", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
-      body: { status: "PUBLISHED" },
+      body: { status: "PUBLISHED", data: defaultFormData },
       query: { alertingAuthorityId: "aa" },
     });
     await handleAlertingAuthorityAlerts(req, res);
@@ -66,9 +43,21 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
   test("valid alert status must be supplied", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
-      body: { status: "foo" },
+      body: { status: "foo", data: defaultFormData },
       query: { alertingAuthorityId: "aa" },
     });
+    mockUserOnce(users.admin);
+    await handleAlertingAuthorityAlerts(req, res);
+    expect(res._getStatusCode()).toEqual(400);
+  });
+
+  test("alert data must be supplied", async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { status: "PUBLISHED" },
+      query: { alertingAuthorityId: "aa" },
+    });
+    await createUser({ ...users.composer, alertingAuthorityVerified: true });
     mockUserOnce(users.admin);
     await handleAlertingAuthorityAlerts(req, res);
     expect(res._getStatusCode()).toEqual(400);
@@ -77,7 +66,7 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
   test("AA must exist", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
-      body: { status: "foo" },
+      body: { status: "foo", data: defaultFormData },
       query: { alertingAuthorityId: "aa" },
     });
     await createUser();
@@ -89,7 +78,7 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
   test(`composers cannot create new PUBLISHED alerts`, async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
-      body: { status: "PUBLISHED" },
+      body: { status: "PUBLISHED", data: defaultFormData },
       query: { alertingAuthorityId: "aa" },
     });
     await createUser({ ...users.composer, alertingAuthorityVerified: true });
@@ -138,26 +127,54 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
     test(`approvers can directly create new alerts of any status (${alertStatus})`, async () => {
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: "POST",
-        body: { status: alertStatus, data: validAlertData },
+        body: { status: alertStatus, data: defaultFormData },
         query: { alertingAuthorityId: "aa" },
       });
       await createUser({ ...users.approver, alertingAuthorityVerified: true });
       mockUserOnce(users.approver);
       await handleAlertingAuthorityAlerts(req, res);
       expect(res._getStatusCode()).toEqual(200);
+      expect((await prismaMock.alert.findMany()).length).toEqual(1);
     });
   });
 
-  test(`composers can directly create new alerts of some statuses (DRAFT)`, async () => {
+  test(`composers can directly create new alerts of DRAFT status`, async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
-      body: { status: "DRAFT", data: validAlertData },
+      body: { status: "DRAFT", data: defaultFormData },
       query: { alertingAuthorityId: "aa" },
     });
-    await createUser({ ...users.approver, alertingAuthorityVerified: true });
-    mockUserOnce(users.approver);
+    await createUser({ ...users.composer, alertingAuthorityVerified: true });
+    mockUserOnce(users.composer);
     await handleAlertingAuthorityAlerts(req, res);
     expect(res._getStatusCode()).toEqual(200);
+    expect((await prismaMock.alert.findMany()).length).toEqual(1);
+  });
+
+  test(`composers can NOT directly create new alerts of PUBLISHED status`, async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { status: "PUBLISHED", data: defaultFormData },
+      query: { alertingAuthorityId: "aa" },
+    });
+    await createUser({ ...users.composer, alertingAuthorityVerified: true });
+    mockUserOnce(users.composer);
+    await handleAlertingAuthorityAlerts(req, res);
+    expect(res._getStatusCode()).toEqual(403);
+    expect((await prismaMock.alert.findMany()).length).toEqual(0);
+  });
+
+  test(`user must be approved for AA`, async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      body: { status: "PUBLISHED", data: defaultFormData },
+      query: { alertingAuthorityId: "aa" },
+    });
+    await createUser({ ...users.composer, alertingAuthorityVerified: false });
+    mockUserOnce(users.composer);
+    await handleAlertingAuthorityAlerts(req, res);
+    expect(res._getStatusCode()).toEqual(400);
+    expect((await prismaMock.alert.findMany()).length).toEqual(0);
   });
 
   test("valid alert data should be saved", async () => {
@@ -166,7 +183,7 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
       query: { alertingAuthorityId: "aa" },
-      body: { status: "DRAFT", data: validAlertData },
+      body: { status: "DRAFT", data: defaultFormData },
     });
     mockUserOnce(users.admin);
     await handleAlertingAuthorityAlerts(req, res);

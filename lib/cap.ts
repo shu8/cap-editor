@@ -49,8 +49,8 @@ export const mapFormAlertDataToCapSchema = (
             value: `${process.env.BASE_URL}/feed/${id}`,
           },
         ],
-        web: alertData.web ?? null,
-        contact: alertData.contact ?? null,
+        ...(!!alertData.web && { web: alertData.web }),
+        ...(!!alertData.contact && { contact: alertData.contact }),
         // parameter
         resource: alertData.resources,
         area: Object.entries(alertData.regions).map(([regionName, data]) => ({

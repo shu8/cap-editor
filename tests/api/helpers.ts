@@ -6,6 +6,7 @@ import { mapFormAlertDataToCapSchema } from "../../lib/cap";
 import { formatDate } from "../../lib/helpers.client";
 import { hash } from "../../lib/helpers.server";
 import { prismaMock } from "./setup";
+import { DateTime } from "luxon";
 
 export const mockUserOnce = (mockUserDetails) => {
   const originalModuleClient = jest.requireActual("next-auth/react") as any;
@@ -46,8 +47,6 @@ const defaultAlertingAuthority = {
   name: "AA",
   countryCode: "GB",
   author: "aa@example.com",
-  contact: "example@example.com",
-  web: "https://example.com",
 };
 
 export const users = {
@@ -69,6 +68,28 @@ export const users = {
     image: "",
     alertingAuthority: { ...defaultAlertingAuthority, roles: ["ADMIN"] },
   },
+};
+
+export const defaultFormData = {
+  category: ["Geo"],
+  regions: {},
+  onset: DateTime.now().startOf("day").toISO(),
+  expires: DateTime.now().plus({ day: 1 }).endOf("day").toISO(),
+  language: "eng",
+  contact: "contact@example.com",
+  web: "https://www.example.com",
+  responseType: ["Shelter"],
+  certainty: "Observed",
+  severity: "Extreme",
+  urgency: "Immediate",
+  status: "Actual",
+  msgType: "Alert",
+  references: [],
+  event: "Test",
+  headline: "Test",
+  description: "Test",
+  instruction: "Test",
+  resources: [],
 };
 
 export const createUser = async ({
@@ -123,32 +144,8 @@ export const createAlert = async ({
       alertingAuthorityId: "aa",
       userId: user.id,
       data: mapFormAlertDataToCapSchema(
-        {
-          name: "AA",
-          author: "AA@example.com",
-        },
-        {
-          category: ["Geo"],
-          regions: {},
-          from: formatDate(new Date()),
-          to: formatDate(future),
-          responseType: ["Shelter"],
-          certainty: "Observed",
-          severity: "Extreme",
-          urgency: "Immediate",
-          status: "Actual",
-          msgType: "Alert",
-          references: [],
-          textLanguages: {
-            en: {
-              event: "Test",
-              headline: "Test",
-              description: "Test",
-              instruction: "Test",
-              resources: [],
-            },
-          },
-        },
+        { name: "AA", author: "AA@example.com" },
+        defaultFormData,
         uuid
       ),
     },

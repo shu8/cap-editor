@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { withErrorHandler } from "../../../lib/apiErrorHandler";
 import { fetchWMOAlertingAuthorities } from "../../../lib/helpers.server";
+import prisma from "../../../lib/prisma";
 
 async function handleGetAlertingAuthorities(
   req: NextApiRequest,

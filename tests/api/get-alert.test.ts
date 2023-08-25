@@ -3,50 +3,28 @@ import { randomUUID } from "crypto";
 import { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { mapFormAlertDataToCapSchema } from "../../lib/cap";
-import { formatDate } from "../../lib/helpers.client";
 import handleAlert from "../../pages/api/alerts/[alertId]";
-import { createUser } from "./helpers";
+import { createUser, defaultFormData } from "./helpers";
 import { prismaMock } from "./setup";
 
 const uuid = randomUUID();
 const future = new Date();
 future.setDate(future.getDate() + 1);
-const databaseAlertData: any = {
-  id: uuid,
-  status: "PUBLISHED",
-  alertingAuthorityId: "aa",
+const generateDatabaseAlertData = ({
+  id = uuid,
+  status = "PUBLISHED",
+  alertingAuthorityId = "aa",
+  formData = { ...defaultFormData },
+} = {}): any => ({
+  id,
+  status,
+  alertingAuthorityId,
   data: mapFormAlertDataToCapSchema(
-    {
-      name: "AA",
-      author: "aa@example.com",
-      web: "https://example.com",
-      contact: "example@example.com",
-    },
-    {
-      category: ["Geo"],
-      regions: {},
-      from: formatDate(new Date()),
-      to: formatDate(future),
-      responseType: ["Shelter"],
-      certainty: "Observed",
-      severity: "Extreme",
-      urgency: "Immediate",
-      status: "Actual",
-      msgType: "Alert",
-      references: [],
-      textLanguages: {
-        en: {
-          event: "Test",
-          headline: "Test",
-          description: "Test",
-          instruction: "Test",
-          resources: [],
-        },
-      },
-    },
-    uuid
+    { name: "AA", author: "aa@example.com" },
+    formData,
+    id
   ),
-};
+});
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");
@@ -70,7 +48,7 @@ describe("GET /api/alerts/:id", () => {
 
   test("returns signed alert XML for published, non-expired alerts", async () => {
     const user = await createUser();
-    const data = { ...databaseAlertData };
+    const data = generateDatabaseAlertData();
     data.userId = user.id;
     const alert = await prismaMock.alert.create({ data });
 
@@ -84,18 +62,17 @@ describe("GET /api/alerts/:id", () => {
     expect(res.getHeader("content-type")).toEqual("application/xml");
 
     const xml = res._getData();
-    expect(
-      xml.indexOf(`<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">`)
-    ).toBeGreaterThan(-1);
-    expect(xml.indexOf(`<ds:Signature`)).toBeGreaterThan(-1);
-    expect(xml.indexOf(uuid)).toBeGreaterThan(-1);
+    expect(xml).toMatch(`<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">`);
+    expect(xml).toMatch(`<ds:Signature`);
+    expect(xml).toMatch(uuid);
   });
 
   test("returns non-signed alert XML for non-published alerts", async () => {
     const user = await createUser();
-    const data = { ...databaseAlertData };
+    const data = generateDatabaseAlertData({
+      status: "DRAFT",
+    });
     data.userId = user.id;
-    data.status = 'DRAFT';
     const alert = await prismaMock.alert.create({ data });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
@@ -108,19 +85,21 @@ describe("GET /api/alerts/:id", () => {
     expect(res.getHeader("content-type")).toEqual("application/xml");
 
     const xml = res._getData();
-    expect(
-      xml.indexOf(`<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">`)
-    ).toBeGreaterThan(-1);
-    expect(xml.indexOf(`<ds:Signature`)).toEqual(-1);
-    expect(xml.indexOf(uuid)).toBeGreaterThan(-1);
+    expect(xml).toMatch(`<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">`);
+    expect(xml).not.toMatch(`<ds:Signature`);
+    expect(xml).toMatch(uuid);
   });
 
   test("returns non-signed alert XML for published, expired alerts", async () => {
     const user = await createUser();
-    const data = { ...databaseAlertData };
+    const data = generateDatabaseAlertData({
+      formData: {
+        ...defaultFormData,
+        expires: new Date().toISOString(),
+      },
+      status: "PUBLISHED",
+    });
     data.userId = user.id;
-    data.status = "PUBLISHED";
-    data.data.info[0].expires = formatDate(new Date());
     const alert = await prismaMock.alert.create({ data });
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
@@ -133,10 +112,8 @@ describe("GET /api/alerts/:id", () => {
     expect(res.getHeader("content-type")).toEqual("application/xml");
 
     const xml = res._getData();
-    expect(
-      xml.indexOf(`<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">`)
-    ).toBeGreaterThan(-1);
-    expect(xml.indexOf(`<ds:Signature`)).toEqual(-1);
-    expect(xml.indexOf(uuid)).toBeGreaterThan(-1);
+    expect(xml).toMatch(`<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">`);
+    expect(xml).not.toMatch(`<ds:Signature`);
+    expect(xml).toMatch(uuid);
   });
 });

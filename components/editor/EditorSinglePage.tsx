@@ -60,8 +60,8 @@ export type FormAlertData = {
   msgType: string;
   references: string[];
   language: string;
-  web: string;
-  contact: string;
+  web?: string;
+  contact?: string;
   event: string;
   headline: string;
   description: string;

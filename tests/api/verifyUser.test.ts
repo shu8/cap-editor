@@ -83,7 +83,7 @@ describe("/api/verifyUser", () => {
     expect(users[0].AlertingAuthorities[0].roles).toEqual(["ADMIN"]);
   });
 
-  test("AA name must be provided for Other AAs", async () => {
+  test("'Other' AA can be approved", async () => {
     await createUser({
       alertingAuthority: {
         author: "aa@example.com",
@@ -94,37 +94,23 @@ describe("/api/verifyUser", () => {
     });
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
-      body: { verificationToken: "token", verified: true },
-    });
-    await handleVerifyUser(req, res);
-    expect(res._getStatusCode()).toEqual(400);
-  });
-
-  test("AA name is updated when provided for for Other AAs", async () => {
-    await createUser({
-      roles: ["ADMIN"],
-      email: "admin@example.com",
-      name: "Foo",
-      alertingAuthority: {
-        author: "aa@example.com",
-        countryCode: "GB",
-        id: "ifrc:aa",
-        name: "AA",
-      },
-    });
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: "POST",
-      body: {
-        verificationToken: "token",
-        verified: true,
-        name: "Other",
-        roles: ["ADMIN"],
-      },
+      body: { verificationToken: "token", verified: true, roles: ["ADMIN"] },
     });
     await handleVerifyUser(req, res);
     expect(res._getStatusCode()).toEqual(200);
 
-    const alertingAuthority = await prismaMock.alertingAuthority.findFirst();
-    expect(alertingAuthority?.name).toEqual("Other");
+    const users = await prismaMock.user.findMany({
+      include: {
+        AlertingAuthorities: {
+          select: { verificationToken: true, verified: true, roles: true },
+        },
+      },
+    });
+
+    expect(users.length).toEqual(1);
+    expect(users[0].AlertingAuthorities.length).toEqual(1);
+    expect(users[0].AlertingAuthorities[0].verificationToken).toEqual(null);
+    expect(users[0].AlertingAuthorities[0].verified).toBeTruthy();
+    expect(users[0].AlertingAuthorities[0].roles).toEqual(["ADMIN"]);
   });
 });

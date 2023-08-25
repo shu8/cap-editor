@@ -4,70 +4,46 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { mapFormAlertDataToCapSchema } from "../../lib/cap";
 import { formatDate, getStartOfToday } from "../../lib/helpers.client";
-import handleAlertingAuthorityAlerts from "../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]/[language]";
+import handleAlertingAuthorityAlerts from "../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]/[language]/rss.xml";
 import { createUser, mockUserOnce, users } from "./helpers";
 import { prismaMock } from "./setup";
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");
-describe("GET /api/alerts/alertingAuthorities/:id", () => {
-  test("404 when AA does not exist", async () => {
+describe("GET /api/alerts/alertingAuthorities/:id/:language/rss.xml", () => {
+  test("must provide language", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
       query: { alertingAuthorityId: "foo" },
     });
     await handleAlertingAuthorityAlerts(req, res);
-    expect(res._getStatusCode()).toEqual(404);
+    expect(res._getStatusCode()).toEqual(400);
   });
 
-  test("must be logged in to see JSON alerts", async () => {
+  test("404 when AA does not exist", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
-      query: { alertingAuthorityId: "aa", json: true },
+      query: { alertingAuthorityId: "foo", language: "eng" },
     });
-    await createUser();
     await handleAlertingAuthorityAlerts(req, res);
-    expect(res._getStatusCode()).toEqual(403);
+    expect(res._getStatusCode()).toEqual(404);
   });
 
   test("no alerts should be returned when no alerts exist", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
-      query: { alertingAuthorityId: "aa" },
+      query: { alertingAuthorityId: "aa", language: "eng" },
     });
     await createUser();
     await handleAlertingAuthorityAlerts(req, res);
+
     expect(res._getStatusCode()).toEqual(200);
     const xml = res._getData();
-    expect(xml.indexOf("<entry>")).toEqual(-1);
-    expect(
-      xml.indexOf(`<feed xmlns="http://www.w3.org/2005/Atom">`)
-    ).toBeGreaterThan(-1);
+    expect(xml).toMatch(`<rss version="2.0">`);
+    expect(xml).not.toMatch("<entry>");
   });
 
-  test("no alerts should be returned when no alerts exist (JSON)", async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: "GET",
-      query: { json: true, alertingAuthorityId: "aa" },
-    });
-    await createUser();
-    mockUserOnce(users.composer);
-    await handleAlertingAuthorityAlerts(req, res);
-    expect(res._getStatusCode()).toEqual(200);
-    expect(JSON.parse(res._getData())).toEqual({ error: false, alerts: [] });
-  });
-
-  test("user must be part of AA to get JSON alerts", async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: "GET",
-      query: { json: true, alertingAuthorityId: "aa2" },
-    });
-    mockUserOnce(users.composer);
-    await handleAlertingAuthorityAlerts(req, res);
-    expect(res._getStatusCode()).toEqual(401);
-  });
-
-  test("only published, non-expired alerts, for the requested AA should be returned", async () => {
+  test("only published, non-expired alerts, for the requested AA and language should be returned", async () => {
     const user = await createUser();
     const user2 = await createUser({
       roles: ["ADMIN"],
@@ -83,7 +59,13 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
     const future = new Date();
     future.setDate(future.getDate() + 1);
 
-    const uuids = [randomUUID(), randomUUID(), randomUUID(), randomUUID()];
+    const uuids = [
+      randomUUID(),
+      randomUUID(),
+      randomUUID(),
+      randomUUID(),
+      randomUUID(),
+    ];
 
     await prismaMock.alert.createMany({
       data: [
@@ -100,17 +82,13 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
           userId: user.id,
           alertingAuthorityId: "aa",
           data: mapFormAlertDataToCapSchema(
-            {
-              name: "AA",
-              author: "aa@example.com",
-              web: "https://example.com",
-              contact: "example@example.com",
-            },
+            { name: "AA", author: "aa@example.com" },
             {
               category: ["Geo"],
               regions: {},
               from: formatDate(getStartOfToday()),
               to: formatDate(new Date()),
+              language: "eng",
               responseType: ["Shelter"],
               certainty: "Observed",
               severity: "Extreme",
@@ -118,15 +96,11 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
               status: "Actual",
               msgType: "Alert",
               references: [],
-              textLanguages: {
-                en: {
-                  event: "Test",
-                  headline: "Test",
-                  description: "Test",
-                  instruction: "Test",
-                  resources: [],
-                },
-              },
+              event: "Test",
+              headline: "Test",
+              description: "Test",
+              instruction: "Test",
+              resources: [],
             },
             uuids[1]
           ),
@@ -137,17 +111,13 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
           userId: user2.id,
           alertingAuthorityId: "aa2",
           data: mapFormAlertDataToCapSchema(
-            {
-              name: "AA2",
-              author: "aa2@example.com",
-              web: "https://example.com",
-              contact: "example@example.com",
-            },
+            { name: "AA2", author: "aa2@example.com" },
             {
               category: ["Geo"],
               regions: {},
-              from: formatDate(new Date()),
-              to: formatDate(future),
+              onset: formatDate(new Date()),
+              expires: formatDate(future),
+              language: "eng",
               responseType: ["Shelter"],
               certainty: "Observed",
               severity: "Extreme",
@@ -155,15 +125,11 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
               status: "Actual",
               msgType: "Alert",
               references: [],
-              textLanguages: {
-                en: {
-                  event: "Test",
-                  headline: "Test",
-                  description: "Test",
-                  instruction: "Test",
-                  resources: [],
-                },
-              },
+              event: "Test",
+              headline: "Test",
+              description: "Test",
+              instruction: "Test",
+              resources: [],
             },
             uuids[2]
           ),
@@ -173,18 +139,15 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
           status: "PUBLISHED",
           userId: user.id,
           alertingAuthorityId: "aa",
+          language: "fra",
           data: mapFormAlertDataToCapSchema(
-            {
-              name: "AA",
-              author: "aa@example.com",
-              web: "https://example.com",
-              contact: "example@example.com",
-            },
+            { name: "AA", author: "aa@example.com" },
             {
               category: ["Geo"],
               regions: {},
-              from: formatDate(new Date()),
-              to: formatDate(future),
+              onset: formatDate(new Date()),
+              expires: formatDate(future),
+              language: "fra",
               responseType: ["Shelter"],
               certainty: "Observed",
               severity: "Extreme",
@@ -192,37 +155,63 @@ describe("GET /api/alerts/alertingAuthorities/:id", () => {
               status: "Actual",
               msgType: "Alert",
               references: [],
-              textLanguages: {
-                en: {
-                  event: "Test",
-                  headline: "Test",
-                  description: "Test",
-                  instruction: "Test",
-                  resources: [],
-                },
-              },
+              event: "Essai",
+              headline: "Essai",
+              description: "Essai",
+              instruction: "Essai",
+              resources: [],
             },
             uuids[3]
           ),
         },
+        {
+          id: uuids[4],
+          status: "PUBLISHED",
+          userId: user.id,
+          alertingAuthorityId: "aa",
+          data: mapFormAlertDataToCapSchema(
+            { name: "AA", author: "aa@example.com" },
+            {
+              category: ["Geo"],
+              regions: {},
+              onset: formatDate(new Date()),
+              expires: formatDate(future),
+              language: "eng",
+              responseType: ["Shelter"],
+              certainty: "Observed",
+              severity: "Extreme",
+              urgency: "Immediate",
+              status: "Actual",
+              msgType: "Alert",
+              references: [],
+              event: "Test",
+              headline: "Test",
+              description: "Test",
+              instruction: "Test",
+              resources: [],
+            },
+            uuids[4]
+          ),
+        },
       ],
     });
+
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "GET",
-      query: { alertingAuthorityId: "aa" },
+      query: { alertingAuthorityId: "aa", language: "eng" },
     });
     await handleAlertingAuthorityAlerts(req, res);
     expect(res._getStatusCode()).toEqual(200);
 
     const xml = res._getData();
-    expect(xml.match(/<entry>/) || []).toHaveLength(1);
+    expect(xml.match(/<item>/) || []).toHaveLength(1);
 
-    // Only the last alert has an expiry in future and is for this AA
+    // Only the last alert has an expiry in future and is for this AA and language
     uuids.forEach((uuid, i) => {
       if (i === uuids.length - 1) {
-        expect(xml.indexOf(uuid)).toBeGreaterThan(-1);
+        expect(xml).toMatch(uuid);
       } else {
-        expect(xml.indexOf(uuid)).toEqual(-1);
+        expect(xml).not.toMatch(uuid);
       }
     });
   });
