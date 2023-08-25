@@ -15,23 +15,24 @@ async function handleExportAlerts(
   if (!session) throw new ApiError(401, "You are not logged in");
 
   if (
+    !Array.isArray(req.body.status) ||
     !req.body.status?.length ||
     req.body.status.find((s: string) => !["PUBLISHED", "DRAFT"].includes(s))
   ) {
     throw new ApiError(400, "You did not provide a valid alert status");
   }
 
-  if (req.body.sent?.length != 2) {
+  if (!Array.isArray(req.body.sent) || req.body.sent?.length != 2) {
     throw new ApiError(400, "You did not provide any date range filter");
   }
 
-  if (!req.body.language?.length) {
+  if (!Array.isArray(req.body.language) || !req.body.language?.length) {
     throw new ApiError(400, "You did not provide any languages filter");
   }
 
   if (!session.user.alertingAuthorities[alertingAuthorityId]) {
     throw new ApiError(
-      400,
+      403,
       "You did not provide a valid Alerting Authority to export alerts from, or you do not have permission to export alerts for this Alerting Authority"
     );
   }
@@ -45,6 +46,7 @@ async function handleExportAlerts(
         gte: req.body.sent[0],
         lte: req.body.sent[1],
       },
+      alertingAuthorityId,
     },
     select: {
       alertingAuthorityId: true,
