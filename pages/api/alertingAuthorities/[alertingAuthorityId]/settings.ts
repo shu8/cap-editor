@@ -7,8 +7,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
 type UpdateData = {
-  contact?: string;
-  web?: string;
   defaultTimezone?: string;
   severityCertaintyMatrixEnabled?: boolean;
 };
@@ -36,12 +34,7 @@ async function handleUpdateAlertingAuthority(
   }
 
   const data: UpdateData = {};
-  [
-    "contact",
-    "web",
-    "defaultTimezone",
-    "severityCertaintyMatrixEnabled",
-  ].forEach((prop) => {
+  ["defaultTimezone", "severityCertaintyMatrixEnabled"].forEach((prop) => {
     if (req.body[prop]) data[prop as keyof UpdateData] = req.body[prop];
   });
 
@@ -68,8 +61,6 @@ async function handleGetAlertingAuthority(
       countryCode: true,
       name: true,
       defaultTimezone: true,
-      contact: true,
-      web: true,
       severityCertaintyMatrixEnabled: true,
     },
   });

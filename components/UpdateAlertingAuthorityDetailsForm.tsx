@@ -10,8 +10,6 @@ import useSWR from "swr";
 
 type Data = {
   defaultTimezone: string;
-  contact: string;
-  web: string;
   severityCertaintyMatrixEnabled: boolean;
 };
 
@@ -38,8 +36,6 @@ export default function UpdateAlertingAuthorityDetailsForm({
   useEffect(() => {
     setFormData({
       defaultTimezone: settings?.defaultTimezone ?? "",
-      contact: settings?.contact ?? "",
-      web: settings?.web ?? "",
       severityCertaintyMatrixEnabled:
         settings?.severityCertaintyMatrixEnabled ?? false,
     });
@@ -102,29 +98,6 @@ export default function UpdateAlertingAuthorityDetailsForm({
             required
             name="defaultTimezone"
             placeholder={t`e.g., Europe/London`}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="contact">
-          <Form.ControlLabel>
-            <Trans>Contact Address</Trans>
-          </Form.ControlLabel>
-          <Form.Control
-            required
-            name="contact"
-            placeholder={t`e.g., metoffice@gov.uk`}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="web">
-          <Form.ControlLabel>
-            <Trans>Web URL</Trans>
-          </Form.ControlLabel>
-          <Form.Control
-            required
-            name="web"
-            type="url"
-            placeholder={t`e.g., www.metoffice.gov.uk`}
           />
         </Form.Group>
 

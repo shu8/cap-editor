@@ -90,8 +90,6 @@ export const createUser = async ({
                 name: alertingAuthority.name,
                 countryCode: alertingAuthority.countryCode,
                 author: alertingAuthority.author,
-                contact: alertingAuthority.contact,
-                web: alertingAuthority.web,
               },
               where: { id: alertingAuthority.id },
             },
@@ -128,8 +126,6 @@ export const createAlert = async ({
         {
           name: "AA",
           author: "AA@example.com",
-          web: "https://example.com",
-          contact: "example@example.com",
         },
         {
           category: ["Geo"],

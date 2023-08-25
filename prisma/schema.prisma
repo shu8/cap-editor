@@ -82,8 +82,6 @@ model AlertingAuthority {
   name                           String
   defaultTimezone                String                    @default("Etc/GMT")
   severityCertaintyMatrixEnabled Boolean                   @default(false)
-  contact                        String?
-  web                            String?
   polygon                        String?
   Users                          UserAlertingAuthorities[]
   Alerts                         Alert[]

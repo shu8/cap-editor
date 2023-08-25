@@ -73,8 +73,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
             name: true,
             countryCode: true,
             id: true,
-            contact: true,
-            web: true,
           },
         },
       },
@@ -192,10 +190,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       resources: info?.resource ?? [],
     };
 
-    if (isTemplate) {
-      defaultAlertData.contact = alertingAuthority.contact ?? "";
-      defaultAlertData.web = alertingAuthority.web ?? "";
-    } else {
+    if (!isTemplate) {
       defaultAlertData.identifier = alertData.identifier;
       editingAlert = { id: alertData.identifier, status: alert.status };
     }
@@ -211,8 +206,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       urgency: "",
       status: "",
       msgType: "",
-      contact: alertingAuthority.contact ?? "",
-      web: alertingAuthority.web ?? "",
+      contact: "",
+      web: "",
       references: [],
       language: "eng",
       event: "",

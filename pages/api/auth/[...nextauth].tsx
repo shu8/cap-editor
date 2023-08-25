@@ -26,8 +26,6 @@ const getUser = async (email: string) => {
               id: true,
               polygon: true,
               defaultTimezone: true,
-              contact: true,
-              web: true,
               severityCertaintyMatrixEnabled: true,
             },
           },
@@ -54,8 +52,6 @@ const mapAlertingAuthorities = (
       polygon: cur.AlertingAuthority.polygon,
       defaultTimezone: cur.AlertingAuthority.defaultTimezone,
       roles: cur.roles,
-      contact: cur.AlertingAuthority.contact,
-      web: cur.AlertingAuthority.web,
       severityCertaintyMatrixEnabled:
         cur.AlertingAuthority.severityCertaintyMatrixEnabled,
     };
