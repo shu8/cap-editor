@@ -15,7 +15,7 @@ import Map from "../map/Map";
 import { FieldProps, Textarea } from "./common";
 import styles from "../../../styles/components/editor/EditorSinglePage.module.css";
 
-export default function Onset({
+export default function MapForm({
   onUpdate,
   alertData,
   alertingAuthority,
@@ -99,8 +99,17 @@ export default function Onset({
             creatable
             cleanable
             value={selectedRegion}
-            onChange={(selected) => {
-              setSelectedRegion(selected);
+            onChange={(country) => {
+              if (!regions[country]) {
+                regions[country] = {
+                  polygons: [],
+                  circles: [],
+                  geocodes: {},
+                };
+                onUpdate({ regions });
+              }
+
+              setSelectedRegion(country);
             }}
           />
           <Form.HelpText>

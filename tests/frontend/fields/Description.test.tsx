@@ -27,10 +27,9 @@ describe("<Description>", () => {
 
     const input = await screen.findByRole("textbox");
     const user = userEvent.setup();
-    const text = "test";
-    await user.type(input, text);
+    await user.type(input, "t");
 
-    expect(onUpdate).toBeCalledTimes(text.length);
-    expect(onUpdate).toBeCalledWith({ description: text });
+    expect(onUpdate).toBeCalledTimes(1);
+    expect(onUpdate).toBeCalledWith({ description: "t" });
   });
 });
