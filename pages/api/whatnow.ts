@@ -11,8 +11,12 @@ async function handleGetWhatNowMessages(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (!req.query.countryCode) {
+  if (typeof req.query.countryCode !== "string") {
     throw new ApiError(400, "You did not supply a country code");
+  }
+
+  if (req.query.countryCode.length > 3) {
+    throw new ApiError(400, "You did not supply a valid country code");
   }
 
   const session = await getServerSession(req, res, authOptions);
