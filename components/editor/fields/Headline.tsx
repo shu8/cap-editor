@@ -8,7 +8,7 @@ export default function Headline({ onUpdate, alertData }: FieldProps) {
       alertData={alertData}
       label={t`Headline`}
       fieldName="headline"
-      maxLength={15}
+      maxLength={140}
     />
   );
 }

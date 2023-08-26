@@ -16,7 +16,7 @@ describe("<Headline>", () => {
     });
 
     await screen.findByText("Headline");
-    await screen.findByText("0/15 characters");
+    await screen.findByText("0/140 characters");
     await screen.findByRole("textbox");
   });
 

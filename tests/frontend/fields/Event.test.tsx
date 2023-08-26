@@ -16,7 +16,10 @@ describe("<Event>", () => {
     });
 
     await screen.findByText("Event");
-    await screen.findByText("What is the event this alert pertains to?");
+    await screen.findByText("0/35 characters", { exact: false });
+    await screen.findByText("What is the event this alert pertains to?", {
+      exact: false,
+    });
     await screen.findByRole("textbox");
   });
 

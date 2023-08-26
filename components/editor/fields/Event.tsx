@@ -9,6 +9,7 @@ export default function Event({ onUpdate, alertData }: FieldProps) {
       label={t`Event`}
       fieldName="event"
       help={t`What is the event this alert pertains to?`}
+      maxLength={35}
     />
   );
 }
