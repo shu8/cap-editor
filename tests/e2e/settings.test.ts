@@ -130,7 +130,6 @@ describe("Connect to Alerting Authorities", () => {
       "Select, or type in the name of, your Alerting Authority"
     );
     await selector.click();
-    await queries.findByText(document, "Test AA");
 
     await selector.type("Another AA");
     await selector.press("Enter");

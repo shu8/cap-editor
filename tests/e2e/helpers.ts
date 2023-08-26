@@ -70,32 +70,35 @@ export const login = async (email: string) => {
 };
 
 export const mockNetworkResponse = async (
-  requests: {
+  mockRequests: {
     method: string;
     path: string;
     data: any;
   }[]
 ) => {
   await page.setRequestInterception(true);
-  page.on("request", (request) => {
+  page.on("request", async (request) => {
     if (request.isInterceptResolutionHandled()) return;
 
-    requests.forEach((r) => {
+    for (const r of mockRequests) {
       if (request.url().endsWith(r.path) && request.method() === r.method) {
-        request.respond({
+        await request.respond({
           contentType: "application/json",
           body: JSON.stringify(r.data),
         });
         return;
       }
-    });
+    }
 
     request.continue();
   });
 };
 
-export const clearInput = async (input: ElementHandle) =>
-  input.evaluate((handle) => ((handle as HTMLInputElement).value = ""));
+// [How to delete existing text from input using Puppeteer?](https://stackoverflow.com/a/66750133)
+export const clearInput = async (input: ElementHandle) => {
+  await input.click({ clickCount: 3 });
+  await page.keyboard.press("Backspace");
+};
 
 export async function fillOutEditorForm(document: ElementHandle<Element>) {
   jest.setTimeout(15000);

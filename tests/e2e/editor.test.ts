@@ -26,7 +26,7 @@ describe("Editor: new alert", () => {
   });
 
   test("load editor", async () => {
-    assertEditingPage(document);
+    await assertEditingPage(document);
 
     // No 'references' should be shown initially
     const referencesField = await queries.queryByText(document, "References");
