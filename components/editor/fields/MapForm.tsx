@@ -15,6 +15,9 @@ import Map from "../map/Map";
 import { FieldProps, Textarea } from "./common";
 import styles from "../../../styles/components/editor/EditorSinglePage.module.css";
 
+const POSITIVE_COORDINATE_REGEX = /\d+(\.\d{1,3})?/;
+const COORDINATE_REGEX = /-?\d+(\.\d{1,3})?/;
+
 export default function MapForm({
   onUpdate,
   alertData,
@@ -27,17 +30,24 @@ export default function MapForm({
   const [customCircleInput, setCustomCircleInput] = useState("");
 
   const polygonStringToArray = (str: string) => {
-    const polygons = str.split("\n");
-    const arr = polygons.map((polygonStr) => {
-      const coordPairs = polygonStr.split(" ");
-      return coordPairs.map((c) => {
+    const arr = [];
+    const lines = str.split("\n");
+    for (const line of lines) {
+      const coordPairs = line.split(" ");
+      const coords = [];
+      for (const c of coordPairs) {
         const nums = c.split(",");
         const x = +nums[0];
         const y = +nums[1];
-        if (isNaN(x) || isNaN(y)) return [];
-        return [x, y];
-      });
-    });
+        if (isNaN(x) || isNaN(y)) return null;
+        coords.push([x, y]);
+      }
+      if (coords.length < 4) return null;
+      if (coords[0].toString() !== coords[coords.length - 1].toString()) {
+        return null;
+      }
+      arr.push(coords);
+    }
 
     return arr;
   };
@@ -46,6 +56,20 @@ export default function MapForm({
     arr
       .map((coords) => coords.map((v: number[]) => v.join(",")).join(" "))
       .join("\n");
+
+  const circlesStringToArray = (str: string) => {
+    const arr = [];
+    const lines = str.split("\n");
+    const regex = new RegExp(
+      `^${COORDINATE_REGEX.source},${COORDINATE_REGEX.source} ${POSITIVE_COORDINATE_REGEX.source}$`
+    );
+
+    for (const line of lines) {
+      if (line.match(regex)) arr.push(line);
+      else return null;
+    }
+    return arr;
+  };
 
   const fetchAlertingAuthorityRegions = async () => {
     fetch(`/geojson-regions?countryCode=${alertingAuthority?.countryCode}`)
@@ -71,7 +95,7 @@ export default function MapForm({
       polygonArrayToString(regions[selectedRegion]?.polygons ?? [])
     );
     setCustomCircleInput(regions[selectedRegion]?.circles?.join("\n") ?? "");
-  }, [selectedRegion, regions]);
+  }, [selectedRegion, alertData.regions]);
 
   return (
     <div className={styles.mapForm}>
@@ -182,8 +206,10 @@ export default function MapForm({
                 onChange={(v) => {
                   setCustomPolygonInput(v);
                   const arr = polygonStringToArray(v);
-                  if (arr) regions[selectedRegion].polygons = arr;
-                  onUpdate({ regions });
+                  if (arr) {
+                    regions[selectedRegion].polygons = arr;
+                    onUpdate({ regions });
+                  }
                 }}
               />
               <Form.HelpText>
@@ -206,8 +232,11 @@ export default function MapForm({
                 value={customCircleInput}
                 onChange={(v) => {
                   setCustomCircleInput(v);
-                  regions[selectedRegion].circles = v.split("\n");
-                  onUpdate({ regions });
+                  const arr = circlesStringToArray(v);
+                  if (arr) {
+                    regions[selectedRegion].circles = arr;
+                    onUpdate({ regions });
+                  }
                 }}
               />
               <Form.HelpText>
