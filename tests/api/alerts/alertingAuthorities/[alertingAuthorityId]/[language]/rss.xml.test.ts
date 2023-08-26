@@ -102,6 +102,7 @@ describe("GET /api/alerts/alertingAuthorities/:id/:language/rss.xml", () => {
               instruction: "Test",
               resources: [],
             },
+            new Date(),
             uuids[1]
           ),
         },
@@ -131,6 +132,7 @@ describe("GET /api/alerts/alertingAuthorities/:id/:language/rss.xml", () => {
               instruction: "Test",
               resources: [],
             },
+            new Date(),
             uuids[2]
           ),
         },
@@ -161,6 +163,7 @@ describe("GET /api/alerts/alertingAuthorities/:id/:language/rss.xml", () => {
               instruction: "Essai",
               resources: [],
             },
+            new Date(),
             uuids[3]
           ),
         },
@@ -190,6 +193,7 @@ describe("GET /api/alerts/alertingAuthorities/:id/:language/rss.xml", () => {
               instruction: "Test",
               resources: [],
             },
+            new Date(),
             uuids[4]
           ),
         },

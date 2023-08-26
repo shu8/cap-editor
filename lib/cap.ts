@@ -6,13 +6,14 @@ import { CAPV12JSONSchema, CAPV12Schema } from "./types/cap.schema";
 export const mapFormAlertDataToCapSchema = (
   alertingAuthority: { name: string; author: string },
   alertData: FormAlertData,
+  sent: Date,
   id: string
 ): CAPV12JSONSchema => {
   // Type as `any` for now because this object needs to next be validated against the JSON schema
   const alert: any = {
     identifier: id,
     sender: alertingAuthority.author,
-    sent: formatDate(new Date(), alertData.timezone),
+    sent: formatDate(sent, alertData.timezone),
     status: alertData.status,
     msgType: alertData.msgType,
     // source

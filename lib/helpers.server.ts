@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 
 import { REDIS_KEY_WMO_REGISTER_OF_AAS } from "./constants";
 import redis from "./redis";
+import { DateTime } from "luxon";
 
 export const fetchWMOAlertingAuthorities = async () => {
   const cachedData = await redis.GET(REDIS_KEY_WMO_REGISTER_OF_AAS);
@@ -34,3 +35,11 @@ export const fetchWMOAlertingAuthorities = async () => {
 
 export const hash = (str: string) =>
   createHash("md5").update(str).digest("hex");
+
+export const generateAlertIdentifier = (
+  alertingAuthorityId: string,
+  sent: Date
+) =>
+  `${alertingAuthorityId}.${DateTime.fromJSDate(sent).toFormat(
+    "yyyy.MM.dd.HH.mm.ss"
+  )}`;

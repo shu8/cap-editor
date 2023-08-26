@@ -146,6 +146,7 @@ export const createAlert = async ({
       data: mapFormAlertDataToCapSchema(
         { name: "AA", author: "AA@example.com" },
         defaultFormData,
+        new Date(),
         uuid
       ),
     },

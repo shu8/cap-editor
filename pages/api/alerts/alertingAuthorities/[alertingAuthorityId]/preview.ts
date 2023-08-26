@@ -10,6 +10,7 @@ import { CAPV12JSONSchema } from "../../../../../lib/types/cap.schema";
 import { authOptions } from "../../../auth/[...nextauth]";
 import { formatAlertAsXML } from "../../../../../lib/xml/helpers";
 import { ValidatorResult } from "jsonschema";
+import { generateAlertIdentifier } from "../../../../../lib/helpers.server";
 
 async function handlePreviewAlert(
   alertingAuthorityId: string,
@@ -39,11 +40,16 @@ async function handlePreviewAlert(
     );
   }
 
-  const identifier = randomUUID();
+  const sent = new Date();
+  const identifier = generateAlertIdentifier(
+    alertingAuthority.alertingAuthorityId,
+    sent
+  );
   try {
     const alertData: CAPV12JSONSchema = mapFormAlertDataToCapSchema(
       alertingAuthority.AlertingAuthority,
       req.body,
+      sent,
       identifier
     );
     return res

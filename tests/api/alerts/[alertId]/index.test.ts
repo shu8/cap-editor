@@ -13,6 +13,7 @@ import {
 } from "../../helpers";
 import { formatDate, getStartOfToday } from "../../../../lib/helpers.client";
 import { prismaMock } from "../../setup";
+import { DateTime } from "luxon";
 
 const uuid = randomUUID();
 const future = new Date();
@@ -29,6 +30,7 @@ const generateDatabaseAlertData = ({
   data: mapFormAlertDataToCapSchema(
     { name: "AA", author: "aa@example.com" },
     formData,
+    new Date(),
     id
   ),
 });
@@ -297,5 +299,12 @@ describe("PUT /api/alerts/:id", () => {
     expect(dbAlert).toBeTruthy();
     expect(dbAlert!.status).toEqual("PUBLISHED");
     expect(dbAlert!.data.info[0].headline).toEqual("Updated headline");
+
+    const sentTimeFormatted = DateTime.fromFormat(
+      dbAlert!.data.sent,
+      "yyyy-MM-dd'T'HH:mm:ssZZ",
+      { setZone: true }
+    ).toFormat("yyyy.MM.dd.HH.mm.ss");
+    expect(dbAlert!.data.identifier).toEqual(`aa.${sentTimeFormatted}`);
   });
 });

@@ -3,8 +3,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { formatDate, getStartOfToday } from "../../../../../lib/helpers.client";
 import handleAlertingAuthorityAlerts from "../../../../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]";
-import { createUser, defaultFormData, mockUserOnce, users } from "../../../helpers";
+import {
+  createUser,
+  defaultFormData,
+  mockUserOnce,
+  users,
+} from "../../../helpers";
 import { prismaMock } from "../../../setup";
+import { DateTime } from "luxon";
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");
@@ -187,8 +193,17 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
     });
     mockUserOnce(users.admin);
     await handleAlertingAuthorityAlerts(req, res);
+    console.log(res._getData());
     expect(res._getStatusCode()).toEqual(200);
     expect(JSON.parse(res._getData()).identifier).toBeTruthy();
-    expect((await prismaMock.alert.findMany()).length).toEqual(1);
+
+    const alerts = await prismaMock.alert.findMany();
+    expect(alerts).toHaveLength(1);
+    const sentTimeFormatted = DateTime.fromFormat(
+      alerts[0].data.sent,
+      "yyyy-MM-dd'T'HH:mm:ssZZ",
+      { setZone: true }
+    ).toFormat("yyyy.MM.dd.HH.mm.ss");
+    expect(alerts[0].data.identifier).toEqual(`aa.${sentTimeFormatted}`);
   });
 });

@@ -13,6 +13,7 @@ import { CAPV12JSONSchema } from "../../../../lib/types/cap.schema";
 import { formatAlertAsXML } from "../../../../lib/xml/helpers";
 import { sign } from "../../../../lib/xml/sign";
 import { authOptions } from "../../auth/[...nextauth]";
+import { generateAlertIdentifier } from "../../../../lib/helpers.server";
 
 async function handleUpdateAlert(
   req: NextApiRequest,
@@ -98,13 +99,16 @@ async function handleUpdateAlert(
     );
   }
 
+  const sent = new Date();
+  const identifier = generateAlertIdentifier(alertingAuthority.id, sent);
   const alertData: FormAlertData = req.body.data;
 
   try {
     const newAlert: CAPV12JSONSchema = mapFormAlertDataToCapSchema(
       alert.AlertingAuthority,
       alertData,
-      alertId
+      sent,
+      identifier
     );
     await prisma.alert.update({
       where: { id: alert.id },

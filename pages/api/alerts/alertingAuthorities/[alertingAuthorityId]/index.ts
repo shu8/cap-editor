@@ -10,6 +10,7 @@ import { mapFormAlertDataToCapSchema } from "../../../../../lib/cap";
 import prisma from "../../../../../lib/prisma";
 import { CAPV12JSONSchema } from "../../../../../lib/types/cap.schema";
 import { authOptions } from "../../../auth/[...nextauth]";
+import { generateAlertIdentifier } from "../../../../../lib/helpers.server";
 
 async function handleNewAlert(
   alertingAuthorityId: string,
@@ -54,18 +55,26 @@ async function handleNewAlert(
     throw new ApiError(403, "You do not have permission to publish new alerts");
   }
 
-  const identifier = randomUUID();
+  const sent = new Date();
+  const identifier = generateAlertIdentifier(
+    alertingAuthority.alertingAuthorityId,
+    sent
+  );
   const alertData: FormAlertData = req.body.data;
 
   try {
     const alert: CAPV12JSONSchema = mapFormAlertDataToCapSchema(
       alertingAuthority.AlertingAuthority,
       alertData,
+      sent,
       identifier
     );
     await prisma.alert.create({
       data: {
-        id: alert.identifier,
+        // The DB alert ID is a UUID, but the actual alert's XML identifier is a "AA ID.SENT DATETIME"
+        // These are different because we could create alerts as drafts and publish later, so the
+        //  original creation time != final sent time, so ID would need to change
+        id: randomUUID(),
         data: alert as Prisma.InputJsonValue,
         creator: { connect: { email: session.user.email } },
         status: req.body.status,

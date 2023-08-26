@@ -99,9 +99,7 @@ export const CAPV12Schema =
   "type": "object",
   "properties": {
     "identifier": {
-      "type": "string",
-      "format": "uuid",
-      "pattern": "[^<&,\\s]"
+      "type": "string"
     },
     "sender": {
       "type": "string",
