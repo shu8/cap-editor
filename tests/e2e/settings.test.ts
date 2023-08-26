@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "@jest/globals";
 import { getDocument, queries } from "pptr-testing-library";
 import { ElementHandle } from "puppeteer";
-import { createUser, login, mockNetworkResponse } from "./helpers";
+import { clearInput, createUser, login, mockNetworkResponse } from "./helpers";
 
 var document: ElementHandle<Element>;
 beforeEach(async () => {
@@ -19,23 +19,33 @@ describe("AA settings", () => {
   test("load section", async () => {
     await queries.findByText(document, "Alerting Authority settings");
     await queries.findByText(document, "Default Timezone");
-    await queries.findByText(document, "Contact Address");
-    await queries.findByText(document, "Web URL");
+    await queries.findByText(document, "Severity-certainty matrix enabled");
+    await queries.findByText(document, "Save");
   });
 
-  test("can update contact and web URL", async () => {
+  test("can update timezone and severity-certainty matrix", async () => {
     const input = await queries.findByPlaceholderText(
       document,
-      "e.g., metoffice@gov.uk"
+      "e.g., Europe/London"
     );
-    await input.type("test@test.com");
+    await clearInput(input);
+    await input.type("Europe/London");
+
+    const toggle = await queries.findByText(
+      document,
+      "Severity-certainty matrix enabled"
+    );
+    await toggle.click();
+
     const saveBtns = await queries.findAllByText(document, "Save");
     await saveBtns[0].click();
 
     await page.waitForNavigation({ waitUntil: "networkidle0" });
-    expect((await prisma?.alertingAuthority.findFirst())?.contact).toEqual(
-      "test@test.com"
-    );
+    const aa = await prisma?.alertingAuthority.findFirst();
+
+    expect(aa).toBeTruthy();
+    expect(aa!.defaultTimezone).toEqual("Europe/London");
+    expect(aa!.severityCertaintyMatrixEnabled).toEqual(true);
   });
 });
 
@@ -49,6 +59,7 @@ describe("Personal Details", () => {
 
   test("can update name", async () => {
     const input = await queries.findByPlaceholderText(document, "Your name");
+    await clearInput(input);
     await input.type("New name");
 
     const saveBtns = await queries.findAllByText(document, "Save");
@@ -62,7 +73,10 @@ describe("Personal Details", () => {
 describe("Connect to Alerting Authorities", () => {
   test("load section", async () => {
     await queries.findByText(document, "Connect to Alerting Authorities");
-    await queries.findByText(document, "Select");
+    await queries.findByText(
+      document,
+      "Select, or type in the name of, your Alerting Authority"
+    );
   });
 
   test("loads alerting authorities", async () => {
@@ -78,7 +92,10 @@ describe("Connect to Alerting Authorities", () => {
       ],
     });
 
-    const selector = await queries.findByText(document, "Select");
+    const selector = await queries.findByText(
+      document,
+      "Select, or type in the name of, your Alerting Authority"
+    );
     await selector.click();
     await queries.findByText(document, "Test AA");
   });
@@ -96,11 +113,15 @@ describe("Connect to Alerting Authorities", () => {
       ],
     });
 
-    const selector = await queries.findByText(document, "Select");
+    const selector = await queries.findByText(
+      document,
+      "Select, or type in the name of, your Alerting Authority"
+    );
     await selector.click();
     await queries.findByText(document, "Test AA");
-    const aa = await queries.findAllByText(document, "Other");
-    await aa[1].click();
+
+    await selector.type("Another AA");
+    await selector.press("Enter");
 
     const submitBtn = await queries.findByText(
       document,
@@ -116,9 +137,9 @@ describe("Connect to Alerting Authorities", () => {
 
     const userAas = await prisma?.userAlertingAuthorities.findMany();
     expect(userAas).toBeTruthy();
-    expect(userAas!.length).toEqual(1);
-    expect(userAas![0].alertingAuthorityId.startsWith("ifrc:"));
-    expect(userAas![0].verified).toBeNull();
-    expect(userAas![0].verificationToken).toBeTruthy();
+    expect(userAas!.length).toEqual(2);
+    expect(userAas![1].alertingAuthorityId.startsWith("ifrc:"));
+    expect(userAas![1].verified).toBeNull();
+    expect(userAas![1].verificationToken).toBeTruthy();
   });
 });

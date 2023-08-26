@@ -190,12 +190,6 @@ describe("Verify", () => {
     );
     await acceptBtn.click();
 
-    const input = await queries.findByPlaceholderText(
-      document,
-      "e.g., Bermuda"
-    );
-    await input.type("Other AA");
-
     const selector = await queries.findByText(document, "Select role(s)", {
       exact: false,
     });

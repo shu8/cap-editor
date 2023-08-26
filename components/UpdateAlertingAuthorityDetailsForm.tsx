@@ -103,7 +103,7 @@ export default function UpdateAlertingAuthorityDetailsForm({
 
         <Form.Group controlId="severityCertaintyMatrixEnabled">
           <Form.ControlLabel>
-            <Trans>Severity-certainity matrix enabled</Trans>
+            <Trans>Severity-certainty matrix enabled</Trans>
           </Form.ControlLabel>
           <Form.Control
             required

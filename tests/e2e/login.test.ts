@@ -140,9 +140,12 @@ describe("Login", () => {
     document = await getDocument(page);
 
     // Make sure we are now logged in
-    await queries.findByText(document, "active alerts");
-    await queries.findByText(document, "future alerts");
+    await queries.findByText(document, "published alerts");
     await queries.findByText(document, "draft alerts");
-    await queries.findByText(document, "expired alerts");
+    await queries.findByText(document, "Export alerts");
+    await queries.findByText(document, "Create alert");
+    await queries.findByText(document, "Settings");
+    await queries.findByText(document, "Logout");
+    await queries.findByText(document, "foo@example.com");
   });
 });

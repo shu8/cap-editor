@@ -87,9 +87,14 @@ export const mockNetworkResponse = async (
   });
 };
 
+export const clearInput = async (input: ElementHandle) =>
+  input.evaluate((handle) => ((handle as HTMLInputElement).value = ""));
+
 export async function fillOutEditorForm(document: ElementHandle<Element>) {
-  const [statusInput, messageTypeInput] =
-    await queries.findAllByText(document, "Select");
+  const [statusInput, messageTypeInput] = await queries.findAllByText(
+    document,
+    "Select"
+  );
 
   await statusInput.click();
   await (await queries.findByText(document, "Actual")).click();
