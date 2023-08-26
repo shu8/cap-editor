@@ -11,17 +11,26 @@ async function handleGetMimeType(req: NextApiRequest, res: NextApiResponse) {
   if (!session) throw new ApiError(401, "You are not logged in");
 
   const { url } = req.query;
-  if (typeof url !== "string")
+  if (typeof url !== "string") {
     throw new ApiError(400, "You did not provide a valid URL");
+  }
+
+  // Require a HTTPS URL
+  if (!url.match(/^https:\/\//)) {
+    throw new ApiError(400, "You did not provide a valid URL");
+  }
 
   try {
     const response = await fetch(url);
-    if (response.status !== 200)
+    if (response.status !== 200) {
       throw new ApiError(400, "You did not provide a valid URL");
+    }
 
+    // Require a Content-Type
     const contentType = response.headers.get("Content-Type");
-    if (!contentType)
-      return res.json({ error: false, mime: "application/octet-stream" });
+    if (!contentType) {
+      throw new ApiError(400, "You did not provide a valid URL");
+    }
 
     const mime = new MIMEType(contentType).essence;
     return res.json({ error: false, mime });
