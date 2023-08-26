@@ -20,7 +20,7 @@ describe("AA settings", () => {
     await queries.findByText(document, "Alerting Authority settings");
     await queries.findByText(document, "Default Timezone");
     await queries.findByText(document, "Severity-certainty matrix enabled");
-    await queries.findByText(document, "Save");
+    expect(await queries.findAllByText(document, "Save")).toHaveLength(2);
   });
 
   test("can update timezone and severity-certainty matrix", async () => {
@@ -54,7 +54,7 @@ describe("Personal Details", () => {
     await queries.findByText(document, "Personal Details");
     await queries.findByText(document, "Name");
     await queries.findByPlaceholderText(document, "Your name");
-    await queries.findAllByText(document, "Save");
+    expect(await queries.findAllByText(document, "Save")).toHaveLength(2);
   });
 
   test("can update name", async () => {

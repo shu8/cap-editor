@@ -40,7 +40,7 @@ describe("Editor: new alert", () => {
 
     await (await queries.findByText(document, "Type")).click();
     await (await queries.findByText(document, "Update")).click();
-    await queries.queryByText(document, "References");
+    await queries.findByText(document, "References");
   });
 
   test("alert can be filled out", async () => {

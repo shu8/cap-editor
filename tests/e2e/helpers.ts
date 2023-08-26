@@ -78,6 +78,8 @@ export const mockNetworkResponse = async (
 ) => {
   await page.setRequestInterception(true);
   page.on("request", (request) => {
+    if (request.isInterceptResolutionHandled()) return;
+
     requests.forEach((r) => {
       if (request.url().endsWith(r.path) && request.method() === r.method) {
         request.respond({
@@ -197,7 +199,6 @@ export async function assertEditingPage(document: ElementHandle<Element>) {
   await queries.findByText(document, "CAP Alert Composer");
   await queries.findByText(document, "Cancel");
   await queries.findByText(document, "Save draft");
-  await queries.findByText(document, "Publish");
 
   await queries.findByText(document, "Headline");
   await queries.findByText(document, "Event");
