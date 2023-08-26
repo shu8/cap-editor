@@ -4,7 +4,12 @@ import { randomUUID } from "crypto";
 import { getDocument, queries } from "pptr-testing-library";
 import { ElementHandle } from "puppeteer";
 import { formatDate } from "../../lib/helpers.client";
-import { createUser, fillOutEditorForm, login } from "./helpers";
+import {
+  assertEditingPage,
+  createUser,
+  fillOutEditorForm,
+  login,
+} from "./helpers";
 
 var document: ElementHandle<Element>;
 
@@ -20,47 +25,34 @@ describe("Editor: new alert (composer)", () => {
     document = await getDocument(page);
   });
 
-  test("load editor", async () => {
-    await queries.findByText(document, "New alert: metadata");
-    await queries.findByText(document, "Status");
-    await queries.findByText(document, "Message type");
+  test("correct submit actions shown for composer", async () => {
+    await queries.findByText(document, "Cancel");
+    await queries.findByText(document, "Save draft");
 
-    // No 'references' should be shown initially
-    const referencesField = await queries.queryByText(document, "References");
-    expect(referencesField).toBeNull();
+    const publishBtn = await queries.queryByText(document, "Publish");
+    expect(publishBtn).toBeNull();
   });
 
-  test("correct alert submit actions shown for editor", async () => {
+  test("new alert can be saved as draft by composer", async () => {
     await fillOutEditorForm(document);
 
-    const saveBtn = await queries.findByText(document, "Save as draft");
-    const multiBtnArrow = (await saveBtn.evaluateHandle(
-      (el) => el.nextElementSibling
-    )) as ElementHandle;
-
-    await multiBtnArrow!.asElement()!.click();
-    await queries.findAllByText(document, "Save as draft");
-    expect(await queries.queryByText(document, "Publish alert now")).toBeNull();
-  });
-
-  test("new alert can be saved as draft by editor", async () => {
-    await fillOutEditorForm(document);
-
-    const saveBtn = await queries.findByText(document, "Save as draft");
+    const saveBtn = await queries.findByText(document, "Save draft");
     await saveBtn.click();
     await queries.findByText(document, "Alert successfully submitted.");
 
     const alerts = await prisma!.alert.findMany();
     expect(alerts).toBeTruthy();
-    expect(alerts.length).toEqual(1);
+    expect(alerts).toHaveLength(1);
     expect(alerts[0].status).toEqual("DRAFT");
     expect(alerts[0].data).toBeTruthy();
+    expect(alerts[0].data.info[0].resource).toHaveLength(1);
+    expect(alerts[0].data.info[0].area[0].polygon).toHaveLength(1);
+    expect(alerts[0].data.info[0].area[0].geocode).toBeFalsy();
+    expect(alerts[0].data.info[0].area[0].circle).toBeFalsy();
   });
 });
 
 describe("Editor: edit alert (composer)", () => {
-  let alertId: string | undefined;
-
   beforeEach(async () => {
     const user = await createUser("foo@example.com", "Foo", {
       verified: new Date(),
@@ -86,7 +78,7 @@ describe("Editor: edit alert (composer)", () => {
           msgType: "Alert",
           info: [
             {
-              language: "en",
+              language: "eng",
               category: ["Geo"],
               event: "Flooding",
               responseType: ["Prepare"],
@@ -96,15 +88,15 @@ describe("Editor: edit alert (composer)", () => {
               onset: formatDate(from),
               expires: formatDate(future),
               senderName: "Alerting Authority",
-              headline: "Headline",
-              description: "Description",
-              instruction: "Instruction",
+              headline: "Headline text",
+              description: "Description text",
+              instruction: "Instruction text",
               web: `https://example.com/feed/${uuid}`,
               contact: "foo@example.com",
               resource: [],
               area: [
                 {
-                  areaDesc: "England",
+                  areaDesc: "England description",
                   polygon: [
                     [49.8858833313549, -6.36867904666016],
                     [49.8858833313549, 1.75900208943311],
@@ -119,7 +111,6 @@ describe("Editor: edit alert (composer)", () => {
         },
       },
     });
-    alertId = alert?.id;
     await login("foo@example.com");
     await page.goto(`${baseUrl}/editor/${alert!.id}`, {
       waitUntil: "networkidle0",
@@ -127,41 +118,19 @@ describe("Editor: edit alert (composer)", () => {
     document = await getDocument(page);
   });
 
-  test("cannot edit published alert", async () => {
-    await prisma?.alert.updateMany({ data: { status: "PUBLISHED" } });
-    await page.reload({ waitUntil: "networkidle0" });
-    document = await getDocument(page);
+  test("correct submit actions shown for composer", async () => {
+    await queries.findByText(document, "Cancel");
+    await queries.findByText(document, "Save draft");
 
-    await queries.findByText(document, "You cannot edit a published alert", {
-      exact: false,
-    });
-  });
-
-  test("shows editing screen for draft alert", async () => {
-    await queries.findByText(document, "Edit alert: metadata");
-    await queries.findByText(document, alertId!);
-    await queries.findByText(document, "Status");
-    await queries.findByText(document, "Actual");
-    await queries.findByText(document, "Message type");
-    await queries.findByText(document, "Alert");
-
-    // No 'references' should be shown initially
-    const referencesField = await queries.queryByText(document, "References");
-    expect(referencesField).toBeNull();
+    const publishBtn = await queries.queryByText(document, "Publish");
+    expect(publishBtn).toBeNull();
   });
 
   test("can edit draft alert", async () => {
-    const statusSelector = await queries.findByText(document, "Actual");
-    await statusSelector.click();
+    await (await queries.findByText(document, "Status")).click();
     await (await queries.findByText(document, "Exercise")).click();
 
-    await (await queries.findByText(document, "Next")).click();
-    await (await queries.findByText(document, "Next")).click();
-    await (await queries.findByText(document, "Next")).click();
-    await (await queries.findByText(document, "Next")).click();
-    await (await queries.findByText(document, "Next")).click();
-
-    await (await queries.findByText(document, "Update draft")).click();
+    await (await queries.findByText(document, "Save draft")).click();
     await queries.findByText(document, "Alert successfully submitted.");
 
     expect(

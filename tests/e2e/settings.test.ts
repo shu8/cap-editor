@@ -80,17 +80,23 @@ describe("Connect to Alerting Authorities", () => {
   });
 
   test("loads alerting authorities", async () => {
-    await mockNetworkResponse("GET", "/api/alertingAuthorities", {
-      result: [
-        {
-          name: "Test AA",
-          id: "aa",
-          author: "aa@example.com",
-          countryCode: "GB",
-          polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
+    await mockNetworkResponse([
+      {
+        method: "GET",
+        path: "/api/alertingAuthorities",
+        data: {
+          result: [
+            {
+              name: "Test AA",
+              id: "aa",
+              author: "aa@example.com",
+              countryCode: "GB",
+              polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
+            },
+          ],
         },
-      ],
-    });
+      },
+    ]);
 
     const selector = await queries.findByText(
       document,
@@ -101,17 +107,23 @@ describe("Connect to Alerting Authorities", () => {
   });
 
   test("can join Other alerting authority", async () => {
-    await mockNetworkResponse("GET", "/api/alertingAuthorities", {
-      result: [
-        {
-          name: "Test AA",
-          id: "aa",
-          author: "aa@example.com",
-          countryCode: "GB",
-          polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
+    await mockNetworkResponse([
+      {
+        method: "GET",
+        path: "/api/alertingAuthorities",
+        data: {
+          result: [
+            {
+              name: "Test AA",
+              id: "aa",
+              author: "aa@example.com",
+              countryCode: "GB",
+              polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
+            },
+          ],
         },
-      ],
-    });
+      },
+    ]);
 
     const selector = await queries.findByText(
       document,

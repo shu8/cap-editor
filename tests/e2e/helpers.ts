@@ -1,3 +1,4 @@
+import { jest } from "@jest/globals";
 import { Role } from "@prisma/client";
 import { getDocument, queries } from "pptr-testing-library";
 import { ElementHandle } from "puppeteer";
@@ -69,19 +70,23 @@ export const login = async (email: string) => {
 };
 
 export const mockNetworkResponse = async (
-  method: string,
-  path: string,
-  data: any
+  requests: {
+    method: string;
+    path: string;
+    data: any;
+  }[]
 ) => {
   await page.setRequestInterception(true);
   page.on("request", (request) => {
-    if (request.url().endsWith(path) && request.method() === method) {
-      request.respond({
-        contentType: "application/json",
-        body: JSON.stringify(data),
-      });
-      return;
-    }
+    requests.forEach((r) => {
+      if (request.url().endsWith(r.path) && request.method() === r.method) {
+        request.respond({
+          contentType: "application/json",
+          body: JSON.stringify(r.data),
+        });
+        return;
+      }
+    });
 
     request.continue();
   });
@@ -91,51 +96,140 @@ export const clearInput = async (input: ElementHandle) =>
   input.evaluate((handle) => ((handle as HTMLInputElement).value = ""));
 
 export async function fillOutEditorForm(document: ElementHandle<Element>) {
-  const [statusInput, messageTypeInput] = await queries.findAllByText(
-    document,
-    "Select"
-  );
+  jest.setTimeout(15000);
+  await mockNetworkResponse([
+    {
+      method: "GET",
+      path: "/geojson-regions",
+      data: {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            id: "England",
+            properties: { ADMIN: "England", ISO_A3: "GBR" },
+            geometry: {
+              type: "Polygon",
+              coordinates: [
+                [
+                  [-6.36867904666016, 49.8858833313549],
+                  [1.75900208943311, 49.8858833313549],
+                  [1.75900208943311, 55.8041437929974],
+                  [-6.36867904666016, 55.8041437929974],
+                  [-6.36867904666016, 49.8858833313549],
+                ],
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      method: "GET",
+      path: "/api/mime",
+      data: { error: false, mime: "text/html" },
+    },
+  ]);
 
-  await statusInput.click();
+  for (const label of [
+    "Headline",
+    "Event",
+    "Description",
+    "Instruction",
+    "Contact",
+    "Web",
+  ]) {
+    const el = await queries.findByText(document, label);
+    await el.click();
+    await page.keyboard.type(label === "Web" ? "https://example.com" : label);
+  }
+
+  await (await queries.findByText(document, "Status")).click();
   await (await queries.findByText(document, "Actual")).click();
 
-  await messageTypeInput.click();
+  await (await queries.findByText(document, "Type")).click();
   await (await queries.findByText(document, "Alert")).click();
 
-  await (await queries.findByText(document, "Next")).click();
-
+  await (await queries.findByText(document, "Category")).click();
   await (await queries.findByText(document, "Rescue & recovery")).click();
-  await (await queries.findByText(document, "Next")).click();
+  await page.keyboard.press("Escape");
 
-  await (await queries.findByText(document, "Select")).click();
-  await (
-    await queries.findByText(document, "England", { exact: false })
-  ).click();
-  await (await queries.findByText(document, "Next")).click();
+  await (await queries.findByText(document, "Response")).click();
+  await (await queries.findByText(document, "Shelter")).click();
+  await page.keyboard.press("Escape");
 
-  const [severitySelector, certaintySelector] = await queries.findAllByText(
-    document,
-    "Choose"
-  );
-
-  await severitySelector.click();
+  await (await queries.findByText(document, "Severity")).click();
   await (await queries.findByText(document, "Severe")).click();
 
-  await certaintySelector.click();
+  await (await queries.findByText(document, "Certainty")).click();
   await (await queries.findByText(document, "Likely")).click();
 
-  await (await queries.findAllByText(document, "Immediate"))[0].click();
+  await (await queries.findByText(document, "Urgency")).click();
+  await (await queries.findByText(document, "Immediate")).click();
 
-  await (await queries.findByText(document, "Select")).click();
-  await (await queries.findByText(document, "Prepare")).click();
+  await (await queries.findByText(document, "Timezone")).click();
+  await (await queries.findByText(document, "(UTC) Casablanca")).click();
 
-  await (await queries.findByText(document, "Next")).click();
+  await (await queries.findByText(document, "Onset")).click();
+  await (await queries.findByText(document, "tomorrow, start")).click();
 
-  const inputs = await queries.findAllByRole(document, "textbox");
-  await inputs[0].type("Flooding");
-  await inputs[1].type("Headline");
-  await inputs[2].type("Description");
-  await inputs[3].type("Instruction");
+  await (await queries.findByText(document, "Expires")).click();
+  await (await queries.findByText(document, "tomorrow, end")).click();
 
-  await (await queries.findByText(document, "Next")).click();
+  await (await queries.findByText(document, "Add URL?")).click();
+  await page.keyboard.press("Tab");
+  await page.keyboard.type("Resource Description");
+  await page.keyboard.press("Tab");
+  await page.keyboard.type("https://example.com");
+  await page.keyboard.press("Tab");
+  await (await queries.findByText(document, "Save")).click();
+  await queries.findByText(
+    document,
+    "Resource added",
+    { exact: false },
+    { timeout: 2000 }
+  );
+
+  await (await queries.findByText(document, "England")).click();
+}
+
+export async function assertEditingPage(document: ElementHandle<Element>) {
+  await queries.findByText(document, "CAP Alert Composer");
+  await queries.findByText(document, "Cancel");
+  await queries.findByText(document, "Save draft");
+  await queries.findByText(document, "Publish");
+
+  await queries.findByText(document, "Headline");
+  await queries.findByText(document, "Event");
+  await queries.findByText(document, "Description");
+  await queries.findByText(document, "Instruction");
+  await queries.findByText(document, "Auto-fill from WhatNow?");
+
+  await queries.findByText(document, "Status");
+  await queries.findByText(document, "Type");
+  await queries.findByText(document, "Category");
+  await queries.findByText(document, "Response");
+  await queries.findByText(document, "Severity");
+  await queries.findByText(document, "Certainty");
+  await queries.findByText(document, "Urgency");
+  await queries.findByText(document, "Timezone");
+  await queries.findByText(document, "Onset");
+  await queries.findByText(document, "Expires");
+  await queries.findAllByText(document, "Language");
+  await queries.findByText(document, "Web");
+  await queries.findByText(document, "Contact");
+
+  await queries.findByText(document, "Resources");
+  await queries.findByText(document, "Add URL?");
+  await queries.findByText(document, "No resources added yet");
+
+  await queries.findByText(document, "Area Description");
+  await queries.findByText(document, "Choose/type area name...");
+  await queries.findByText(
+    document,
+    "Type the description of a custom area, or quick-add",
+    { exact: false }
+  );
+
+  await queries.findByText(document, "Alert XML Preview");
 }

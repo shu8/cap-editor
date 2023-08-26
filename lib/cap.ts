@@ -49,18 +49,20 @@ export const mapFormAlertDataToCapSchema = (
             value: `${process.env.BASE_URL}/feed/${id}`,
           },
         ],
-        ...(!!alertData.web && { web: alertData.web }),
-        ...(!!alertData.contact && { contact: alertData.contact }),
+        ...(!!alertData.web?.length && { web: alertData.web }),
+        ...(!!alertData.contact?.length && { contact: alertData.contact }),
         // parameter
         resource: alertData.resources,
         area: Object.entries(alertData.regions).map(([regionName, data]) => ({
           areaDesc: regionName,
           ...(data.polygons?.length && { polygon: data.polygons }),
           ...(data.circles?.length && { circle: data.circles }),
-          geocode: Object.keys(data.geocodes ?? {}).map((valueName) => ({
-            valueName,
-            value: data.geocodes[valueName],
-          })),
+          ...(Object.keys(data.geocodes ?? {}).length && {
+            geocode: Object.keys(data.geocodes).map((valueName) => ({
+              valueName,
+              value: data.geocodes[valueName],
+            })),
+          }),
           // altitude
           // ceiling
         })),

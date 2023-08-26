@@ -65,6 +65,13 @@ export default function Resources({ onUpdate, alertData }: FieldProps) {
                 </Message>,
                 { duration: 0 }
               );
+            } else {
+              toaster.push(
+                <Message type="error" closable>
+                  <Trans>Resource added.</Trans>
+                </Message>,
+                { duration: 2000 }
+              );
             }
 
             onUpdate({ resources });

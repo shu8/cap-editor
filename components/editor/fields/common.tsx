@@ -58,7 +58,7 @@ const TextField = ({
   textarea?: boolean;
   help?: string | ReactNode;
 } & FieldProps) => (
-  <Form.Group>
+  <Form.Group controlId={label}>
     <Form.ControlLabel>{label}</Form.ControlLabel>
     <Form.Control
       name={fieldName}
@@ -98,7 +98,7 @@ const DropdownField = ({
   onOpen?: () => void;
   multi?: boolean;
 } & FieldProps) => (
-  <Form.Group>
+  <Form.Group controlId={label}>
     <Form.ControlLabel>{label}</Form.ControlLabel>
     <Form.Control
       name={fieldName}
@@ -130,7 +130,7 @@ const DateTimeField = ({
   label: string;
   fieldName: keyof FormAlertData;
 } & FieldProps) => (
-  <Form.Group>
+  <Form.Group controlId={label}>
     <Form.ControlLabel>{label}</Form.ControlLabel>
     <Form.Control
       name={fieldName}

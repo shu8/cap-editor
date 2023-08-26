@@ -124,10 +124,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       return redirect(`/error/${ERRORS.AA_NOT_ALLOWED.slug}`);
     }
 
-    // Validators are not allowed to create new alerts -- they can only edit
+    // Only users with roles are allowed to create new alerts
+    //  (where COMPOSERs can only create DRAFTs)
     if (
       !alertingAuthority.roles.includes("ADMIN") &&
-      !alertingAuthority.roles.includes("COMPOSER")
+      !alertingAuthority.roles.includes("COMPOSER") &&
+      !alertingAuthority.roles.includes("APPROVER")
     ) {
       return redirect(`/error/${ERRORS.NOT_ALLOWED_CREATE_ALERTS.slug}`);
     }
@@ -181,7 +183,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       msgType: alertData.msgType,
       contact: info?.contact,
       web: info?.web,
-      references: alertData.references ? alertData.references.split(" ") : [],
+      references: alertData.references?.split(" ") ?? [],
       language: info?.language,
       event: info?.event ?? "",
       headline: info?.headline ?? "",

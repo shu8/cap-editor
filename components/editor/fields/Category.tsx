@@ -1,6 +1,5 @@
-import { Trans, t } from "@lingui/macro";
-import { CheckPicker, Form } from "rsuite";
-import { FieldProps } from "./common";
+import { t } from "@lingui/macro";
+import { DropdownField, FieldProps } from "./common";
 
 const CATEGORIES = [
   { label: t`Geophysical (e.g., landslide)`, value: "Geo" },
@@ -28,19 +27,13 @@ const CATEGORIES = [
 
 export default function Category({ onUpdate, alertData }: FieldProps) {
   return (
-    <Form.Group>
-      <Form.ControlLabel>
-        <Trans>Category</Trans>
-      </Form.ControlLabel>
-      <Form.Control
-        name="category"
-        accepter={CheckPicker}
-        cleanable={false}
-        searchable={false}
-        data={CATEGORIES}
-        onChange={(v) => onUpdate({ category: v })}
-        value={alertData.category}
-      />
-    </Form.Group>
+    <DropdownField
+      alertData={alertData}
+      fieldName="category"
+      label={t`Category`}
+      onUpdate={onUpdate}
+      options={CATEGORIES}
+      multi
+    />
   );
 }
