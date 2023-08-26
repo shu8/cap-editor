@@ -50,7 +50,6 @@ async function handlePreviewAlert(
       .status(200)
       .json({ error: false, xml: formatAlertAsXML(alertData) });
   } catch (err) {
-    console.error(err);
     if (err instanceof ValidatorResult) {
       const errors = err.errors.map(
         (e) => `${e.property.split(".").at(-1)} ${e.message}`
