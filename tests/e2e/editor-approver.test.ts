@@ -139,7 +139,7 @@ describe("Editor: edit alert (approver)", () => {
 
   test("correct submit actions shown for approver", async () => {
     await queries.findByText(document, "Cancel");
-    await queries.findByText(document, "Save draft");
+    await queries.findByText(document, "Update draft");
     await queries.findByText(document, "Publish");
   });
 
@@ -147,7 +147,7 @@ describe("Editor: edit alert (approver)", () => {
     await (await queries.findByText(document, "Status")).click();
     await (await queries.findByText(document, "Exercise")).click();
 
-    await (await queries.findByText(document, "Save draft")).click();
+    await(await queries.findByText(document, "Update draft")).click();
     await queries.findByText(document, "Alert successfully submitted.");
 
     expect(

@@ -120,7 +120,7 @@ describe("Editor: edit alert (composer)", () => {
 
   test("correct submit actions shown for composer", async () => {
     await queries.findByText(document, "Cancel");
-    await queries.findByText(document, "Save draft");
+    await queries.findByText(document, "Update draft");
 
     const publishBtn = await queries.queryByText(document, "Publish");
     expect(publishBtn).toBeNull();
@@ -130,7 +130,7 @@ describe("Editor: edit alert (composer)", () => {
     await (await queries.findByText(document, "Status")).click();
     await (await queries.findByText(document, "Exercise")).click();
 
-    await (await queries.findByText(document, "Save draft")).click();
+    await(await queries.findByText(document, "Update draft")).click();
     await queries.findByText(document, "Alert successfully submitted.");
 
     expect(

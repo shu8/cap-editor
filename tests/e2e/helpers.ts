@@ -201,7 +201,7 @@ export async function fillOutEditorForm(document: ElementHandle<Element>) {
 export async function assertEditingPage(document: ElementHandle<Element>) {
   await queries.findByText(document, "CAP Alert Composer");
   await queries.findByText(document, "Cancel");
-  await queries.findByText(document, "Save draft");
+  await queries.findByText(document, /Save|Update draft/);
 
   await queries.findByText(document, "Headline");
   await queries.findByText(document, "Event");

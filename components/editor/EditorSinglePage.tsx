@@ -141,28 +141,26 @@ export default function EditorSinglePage(props: Props) {
   return (
     <div className={classes(styles.newAlert)}>
       <div className={classes(styles.header)}>
-        <div>
-          <h2>
-            CAP Alert Composer
-            {alertData.identifier && <i> (editing)</i>}
-            {props.existingAlertStatus === "DRAFT" && props.isShareable && (
-              <span
-                title={t`Collaborate on this alert with someone`}
-                className={styles.shareIcon}
-                onClick={() => {
-                  const email = window.prompt(
-                    "Please enter the email address of the user you wish to invite to collaborate"
-                  );
-                  if (!email) return;
+        <h2>
+          CAP Alert Composer
+          {alertData.identifier && <i> (editing)</i>}
+          {props.existingAlertStatus === "DRAFT" && props.isShareable && (
+            <span
+              title={t`Collaborate on this alert with someone`}
+              className={styles.shareIcon}
+              onClick={() => {
+                const email = window.prompt(
+                  "Please enter the email address of the user you wish to invite to collaborate"
+                );
+                if (!email) return;
 
-                  props.onShareAlert(email);
-                }}
-              >
-                <ShareOutline />
-              </span>
-            )}
-          </h2>
-        </div>
+                props.onShareAlert(email);
+              }}
+            >
+              <ShareOutline />
+            </span>
+          )}
+        </h2>
         {renderActionButtons()}
       </div>
 
