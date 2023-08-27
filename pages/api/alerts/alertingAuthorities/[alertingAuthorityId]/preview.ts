@@ -20,7 +20,7 @@ async function handlePreviewAlert(
   const session = await getServerSession(req, res, authOptions);
   if (!session) throw new ApiError(401, "You are not logged in");
 
-  if (!req.body) {
+  if (!req.body.data) {
     throw new ApiError(400, "You did not provide valid alert data");
   }
 
@@ -48,9 +48,10 @@ async function handlePreviewAlert(
   try {
     const alertData: CAPV12JSONSchema = mapFormAlertDataToCapSchema(
       alertingAuthority.AlertingAuthority,
-      req.body,
+      req.body.data,
       sent,
-      identifier
+      identifier,
+      req.body.multiLanguageGroupId ?? randomUUID()
     );
     return res
       .status(200)

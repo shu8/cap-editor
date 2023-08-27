@@ -5,3 +5,6 @@ export const REDIS_PREFIX_SIGNED_ALERTS = "alerts";
 export const REDIS_PREFIX_WHATNOW = "whatnow";
 export const REDIS_PREFIX_WEBAUTHN_AUTH_CHALLENGE = "webauthn-auth";
 export const REDIS_PREFIX_WEBAUTHN_REGISTER_CHALLENGE = "webauthn-register";
+
+export const MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME =
+  "MULTI_LANGUAGE_GROUP_ID";

@@ -62,12 +62,16 @@ async function handleNewAlert(
   );
   const alertData: FormAlertData = req.body.data;
 
+  // Create a new multi-language group ID for the alert if not linking to an existing one
+  const multiLanguageGroupId = req.body.multiLanguageGroupId ?? randomUUID();
+
   try {
     const alert: CAPV12JSONSchema = mapFormAlertDataToCapSchema(
       alertingAuthority.AlertingAuthority,
       alertData,
       sent,
-      identifier
+      identifier,
+      multiLanguageGroupId
     );
     await prisma.alert.create({
       data: {

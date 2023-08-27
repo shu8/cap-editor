@@ -82,12 +82,12 @@ type Props = {
   alertingAuthority: UserAlertingAuthority;
   roles: Role[];
   existingAlertStatus?: AlertStatus;
-  isNewLanguageDraft: boolean;
+  multiLanguageGroupId?: string;
 };
 
 export default function EditorSinglePage(props: Props) {
   const [alertData, setAlertData] = useState(props.defaultAlertData);
-
+  const isNewLanguageDraft = !!props.multiLanguageGroupId;
   const onUpdate = (data: Partial<FormAlertData>) =>
     updateState(setAlertData, data);
 
@@ -187,23 +187,23 @@ export default function EditorSinglePage(props: Props) {
             <Status
               onUpdate={onUpdate}
               alertData={alertData}
-              disabled={props.isNewLanguageDraft}
+              disabled={isNewLanguageDraft}
             />
             <MessageType
               onUpdate={onUpdate}
               alertData={alertData}
-              disabled={props.isNewLanguageDraft}
+              disabled={isNewLanguageDraft}
             />
 
             <Category
               onUpdate={onUpdate}
               alertData={alertData}
-              disabled={props.isNewLanguageDraft}
+              disabled={isNewLanguageDraft}
             />
             <ResponseType
               onUpdate={onUpdate}
               alertData={alertData}
-              disabled={props.isNewLanguageDraft}
+              disabled={isNewLanguageDraft}
             />
           </Stack>
 
@@ -226,23 +226,23 @@ export default function EditorSinglePage(props: Props) {
                 certainty={alertData.certainty}
                 severity={alertData.severity}
                 onChange={onUpdate}
-                disabled={props.isNewLanguageDraft}
+                disabled={isNewLanguageDraft}
               />
             )}
             <Severity
               onUpdate={onUpdate}
               alertData={alertData}
-              disabled={props.isNewLanguageDraft}
+              disabled={isNewLanguageDraft}
             />
             <Certainty
               onUpdate={onUpdate}
               alertData={alertData}
-              disabled={props.isNewLanguageDraft}
+              disabled={isNewLanguageDraft}
             />
             <Urgency
               onUpdate={onUpdate}
               alertData={alertData}
-              disabled={props.isNewLanguageDraft}
+              disabled={isNewLanguageDraft}
             />
           </Stack>
 
@@ -256,12 +256,12 @@ export default function EditorSinglePage(props: Props) {
             <Onset
               onUpdate={onUpdate}
               alertData={alertData}
-              disabled={props.isNewLanguageDraft}
+              disabled={isNewLanguageDraft}
             />
             <Expires
               onUpdate={onUpdate}
               alertData={alertData}
-              disabled={props.isNewLanguageDraft}
+              disabled={isNewLanguageDraft}
             />
           </Stack>
 
@@ -289,7 +289,7 @@ export default function EditorSinglePage(props: Props) {
               onUpdate={onUpdate}
               alertData={alertData}
               alertingAuthority={props.alertingAuthority}
-              disabled={props.isNewLanguageDraft}
+              disabled={isNewLanguageDraft}
             />
           </div>
 
@@ -297,6 +297,9 @@ export default function EditorSinglePage(props: Props) {
             <XMLPreview
               alertingAuthority={props.alertingAuthority}
               alertData={alertData}
+              {...(isNewLanguageDraft && {
+                multiLanguageGroupId: props.multiLanguageGroupId,
+              })}
             />
           </div>
         </div>

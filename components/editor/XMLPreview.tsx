@@ -9,9 +9,11 @@ import { FormAlertData } from "./EditorSinglePage";
 export default function XMLPreview({
   alertingAuthority,
   alertData,
+  multiLanguageGroupId,
 }: {
   alertingAuthority: UserAlertingAuthority;
   alertData: FormAlertData;
+  multiLanguageGroupId?: string;
 }) {
   // Debounce alertData, so we only send preview API request every second
   const debouncedAlertData = useDebounce(alertData, 1000);
@@ -22,7 +24,7 @@ export default function XMLPreview({
     fetch(`/api/alerts/alertingAuthorities/${alertingAuthority.id}/preview`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(debouncedAlertData),
+      body: JSON.stringify({ data: debouncedAlertData, multiLanguageGroupId }),
     })
       .then((res) => res.json())
       .then((res) => {

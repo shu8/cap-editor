@@ -2,12 +2,14 @@ import { validate as validateJSON } from "jsonschema";
 import { FormAlertData } from "../components/editor/EditorSinglePage";
 import { formatDate } from "./helpers.client";
 import { CAPV12JSONSchema, CAPV12Schema } from "./types/cap.schema";
+import { MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME } from "./constants";
 
 export const mapFormAlertDataToCapSchema = (
   alertingAuthority: { name: string; author: string },
   alertData: FormAlertData,
   sent: Date,
-  id: string
+  id: string,
+  multiLanguageGroupId?: string
 ): CAPV12JSONSchema => {
   // Type as `any` for now because this object needs to next be validated against the JSON schema
   const alert: any = {
@@ -49,6 +51,14 @@ export const mapFormAlertDataToCapSchema = (
             valueName: "CANONICAL_URL",
             value: `${process.env.BASE_URL}/feed/${id}`,
           },
+          ...(multiLanguageGroupId
+            ? [
+                {
+                  valueName: MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME,
+                  value: multiLanguageGroupId,
+                },
+              ]
+            : []),
         ],
         ...(!!alertData.web?.length && { web: alertData.web }),
         ...(!!alertData.contact?.length && { contact: alertData.contact }),

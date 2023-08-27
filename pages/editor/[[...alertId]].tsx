@@ -25,6 +25,7 @@ import { UserAlertingAuthority } from "../../lib/types/types";
 import { useAlertingAuthorityLocalStorage } from "../../lib/useLocalStorageState";
 import { useToasterI18n } from "../../lib/useToasterI18n";
 import { authOptions } from "../api/auth/[...nextauth]";
+import { MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME } from "../../lib/constants";
 
 // Must serialise Dates between server and client
 type FormAlertDataSerialised = FormAlertData & {
@@ -43,7 +44,7 @@ type Props =
       alertingAuthority: UserAlertingAuthority;
       isShared: boolean;
       session: Session;
-      isNewLanguageDraft: boolean;
+      multiLanguageGroupId: string | null;
     };
 
 const redirect = (url: string) => ({
@@ -71,6 +72,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   // First, check if user wants to edit an alert through /editor/ID
   let { alertId, alertingAuthorityId, template } = context.query;
+  const isNewLanguageDraft = context.query.isNewLanguageDraft === "1";
   let isTemplate = false;
   let isNewAlert = true;
 
@@ -98,6 +100,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   let alert;
   let editingAlert;
+  let multiLanguageGroupId;
   if (alertId) {
     alert = await prisma.alert.findFirst({
       where: { id: alertId },
@@ -122,6 +125,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         id: (alert.data as CAPV12JSONSchema).identifier,
         status: alert.status,
       };
+    }
+
+    if (isNewLanguageDraft) {
+      multiLanguageGroupId = (
+        alert.data as CAPV12JSONSchema
+      ).info?.[0]?.parameter?.find(
+        (p) => p.valueName === MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME
+      )?.value;
     }
 
     alertingAuthorityId = alert.alertingAuthorityId;
@@ -232,7 +243,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       alertingAuthority,
       session,
       isShared,
-      isNewLanguageDraft: context.query.isNewLanguageDraft === "1",
+      multiLanguageGroupId: multiLanguageGroupId ?? null,
     },
   };
 };
@@ -316,7 +327,9 @@ export default function EditorPage(props: Props) {
           {...(props.editingAlert && {
             existingAlertStatus: props.editingAlert.status,
           })}
-          isNewLanguageDraft={props.isNewLanguageDraft}
+          {...(typeof props.multiLanguageGroupId === "string" && {
+            multiLanguageGroupId: props.multiLanguageGroupId,
+          })}
           isShareable={!props.isShared}
           onShareAlert={async (email) => {
             if (!props.editingAlert!.id) return;
@@ -358,7 +371,11 @@ export default function EditorPage(props: Props) {
                 method: props.editingAlert ? "PUT" : "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(
-                  { status: alertStatus, data: alertData },
+                  {
+                    status: alertStatus,
+                    data: alertData,
+                    multiLanguageGroupId: props.multiLanguageGroupId,
+                  },
                   function (k, v) {
                     return this[k] instanceof Date
                       ? formatDate(this[k], alertData.timezone)
