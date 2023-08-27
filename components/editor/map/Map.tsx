@@ -50,7 +50,7 @@ const CircleImage = () => (
     src="/circle.svg"
     width={25}
     height={25}
-    title="Draw Cirlce"
+    title="Draw Circle"
     alt="Draw Circle"
   />
 );
@@ -295,6 +295,7 @@ export default function Map({
                 window.alert(
                   "Please choose/type an area name before drawing the area"
                 );
+                return;
               }
 
               const existingDrawInteractions = map
