@@ -1,10 +1,11 @@
-import { Alert, AlertingAuthority } from ".prisma/client";
+import { Alert } from ".prisma/client";
 import { Capgen } from "capgen";
 import { XMLBuilder } from "fast-xml-parser";
 
 import { REDIS_PREFIX_SIGNED_ALERTS } from "../constants";
 import redis from "../redis";
 import { CAPV12JSONSchema } from "../types/cap.schema";
+import { UserAlertingAuthority } from "../types/types";
 
 const builder = new XMLBuilder({
   format: true,
@@ -47,7 +48,7 @@ export const formatAlertAsXML = (alertData: CAPV12JSONSchema): string => {
 };
 
 export const formatAlertingAuthorityFeedAsXML = async (
-  alertingAuthority: Pick<AlertingAuthority, "author" | "id" | "name">,
+  alertingAuthority: Pick<UserAlertingAuthority, "author" | "id" | "name">,
   language: string,
   alerts: Alert[]
 ) => {

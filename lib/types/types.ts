@@ -8,18 +8,18 @@ export type Resource = {
 };
 
 export type UserAlertingAuthorities = {
-  [k: string]: AlertingAuthority & {
-    polygon: string | null;
-  };
+  [k: string]: UserAlertingAuthority;
 };
 
-export type AlertingAuthority = {
+export type UserAlertingAuthority = {
   id: string;
   name: string;
   countryCode: string | null;
   defaultTimezone: string;
   roles: Role[];
   severityCertaintyMatrixEnabled: boolean;
+  author: string;
+  polygon: string | null;
 };
 
 export type LocalStorageState = {

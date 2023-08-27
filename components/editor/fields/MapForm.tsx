@@ -7,7 +7,7 @@ import {
   roundNestedArray,
   useMountEffect,
 } from "../../../lib/helpers.client";
-import { AlertingAuthority } from "../../../lib/types/types";
+import { UserAlertingAuthority } from "../../../lib/types/types";
 import { useToasterI18n } from "../../../lib/useToasterI18n";
 import ErrorMessage from "../../ErrorMessage";
 import KeyValueInput from "../../KeyValueInput";
@@ -22,7 +22,7 @@ export default function MapForm({
   onUpdate,
   alertData,
   alertingAuthority,
-}: FieldProps & { alertingAuthority: AlertingAuthority }) {
+}: FieldProps & { alertingAuthority: UserAlertingAuthority }) {
   const toaster = useToasterI18n();
   const [countries, setCountries] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState("");

@@ -1,33 +1,33 @@
-import { AlertingAuthority } from "@prisma/client";
 import { Icon } from "@rsuite/icons";
 import flip from "@turf/flip";
-import truncate from "@turf/truncate";
 import intersect from "@turf/intersect";
+import truncate from "@turf/truncate";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import {  IconButton } from "rsuite";
+import { IconButton } from "rsuite";
 
 import OLFeatureCollection from "ol/Collection";
 import Feature from "ol/Feature";
+import OLMap from "ol/Map";
+import OLView from "ol/View";
+import { defaults as defaultControls } from "ol/control.js";
 import GeoJSON from "ol/format/GeoJSON";
 import { Circle, Geometry, MultiPolygon, Polygon } from "ol/geom";
 import { Type } from "ol/geom/Geometry";
 import { defaults as OLDefaultInteractions } from "ol/interaction";
-import { defaults as defaultControls } from "ol/control.js";
 import OLDraw from "ol/interaction/Draw";
-import OLMap from "ol/Map";
 import { useGeographic } from "ol/proj";
 import OSM from "ol/source/OSM";
 import OLVectorSource, { VectorSourceEvent } from "ol/source/Vector";
 import { Fill, Stroke, Style } from "ol/style";
-import OLView from "ol/View";
 
+import XYZ from "ol/source/XYZ";
 import { useMountEffect } from "../../../lib/helpers.client";
+import { UserAlertingAuthority } from "../../../lib/types/types";
+import SplitButton from "../../SplitButton";
 import { FormAlertData } from "../EditorSinglePage";
 import TileLayer from "./TileLayer";
 import VectorLayer from "./VectorLayer";
-import XYZ from "ol/source/XYZ";
-import SplitButton from "../../SplitButton";
 
 const COORDINATE_PRECISION = 3;
 
@@ -84,7 +84,7 @@ export default function Map({
   editingRegion,
 }: Partial<FormAlertData> & {
   onRegionsChange: (regions: FormAlertData["regions"]) => void;
-  alertingAuthority: AlertingAuthority | null;
+  alertingAuthority: UserAlertingAuthority;
   editingRegion: string;
 }) {
   useGeographic();

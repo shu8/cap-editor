@@ -1,12 +1,12 @@
 import { t, Trans } from "@lingui/macro";
-import { AlertingAuthority, AlertStatus, Role } from "@prisma/client";
+import { AlertStatus, Role } from "@prisma/client";
 import { ShareOutline } from "@rsuite/icons";
 import "ol/ol.css";
 import { useState } from "react";
 import { Button, Divider, Form, Stack } from "rsuite";
 
 import { classes, updateState } from "../../lib/helpers.client";
-import { Resource } from "../../lib/types/types";
+import { Resource, UserAlertingAuthority } from "../../lib/types/types";
 import styles from "../../styles/components/editor/EditorSinglePage.module.css";
 import {
   Category,
@@ -79,7 +79,7 @@ type Props = {
   onShareAlert: (email: string) => void;
   isShareable: boolean;
   defaultAlertData: FormAlertData;
-  alertingAuthority: AlertingAuthority;
+  alertingAuthority: UserAlertingAuthority;
   roles: Role[];
   existingAlertStatus?: AlertStatus;
 };

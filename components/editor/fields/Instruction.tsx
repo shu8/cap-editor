@@ -1,6 +1,9 @@
 import { Trans, t } from "@lingui/macro";
 import { FieldProps, TextField } from "./common";
-import { AlertingAuthority, WhatNowResponse } from "../../../lib/types/types";
+import {
+  UserAlertingAuthority,
+  WhatNowResponse,
+} from "../../../lib/types/types";
 import { useToasterI18n } from "../../../lib/useToasterI18n";
 import { useState } from "react";
 import { HandledError, camelise } from "../../../lib/helpers.client";
@@ -74,7 +77,7 @@ export default function Instruction({
   onUpdate,
   alertData,
   alertingAuthority,
-}: FieldProps & { alertingAuthority: AlertingAuthority }) {
+}: FieldProps & { alertingAuthority: UserAlertingAuthority }) {
   const toaster = useToasterI18n();
   const [whatNowMessages, setWhatNowMessages] = useState<WhatNowResponse[]>([]);
   const [showWhatNowModal, setShowWhatNowModal] = useState(false);

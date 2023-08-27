@@ -1,7 +1,7 @@
 import { t, Trans } from "@lingui/macro";
-import { AlertStatus } from "@prisma/client";
+import { Alert, AlertStatus } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import { getServerSession } from "next-auth";
+import { getServerSession, Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -21,17 +21,29 @@ import {
   useMountEffect,
 } from "../../lib/helpers.client";
 import { CAPV12JSONSchema } from "../../lib/types/cap.schema";
-import { AlertingAuthority } from "../../lib/types/types";
+import { UserAlertingAuthority } from "../../lib/types/types";
 import { useAlertingAuthorityLocalStorage } from "../../lib/useLocalStorageState";
 import { useToasterI18n } from "../../lib/useToasterI18n";
 import { authOptions } from "../api/auth/[...nextauth]";
 
-type Props = {
-  defaultAlertData: (FormAlertData & { from: string; to: string }) | undefined;
-  editingAlert: { id: string; status: AlertStatus } | undefined;
-  alertingAuthority: AlertingAuthority | undefined;
-  isShared: boolean;
+// Must serialise Dates between server and client
+type FormAlertDataSerialised = FormAlertData & {
+  onset: string;
+  expires: string;
 };
+
+type Props =
+  | {
+      invalidAlertingAuthority: true;
+    }
+  | {
+      invalidAlertingAuthority: false;
+      defaultAlertData: FormAlertDataSerialised | undefined;
+      editingAlert: { id: string; status: AlertStatus } | undefined;
+      alertingAuthority: UserAlertingAuthority | undefined;
+      isShared: boolean;
+      session: Session;
+    };
 
 const redirect = (url: string) => ({
   redirect: { destination: url, permanent: false },
@@ -52,15 +64,42 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) return redirect("/login");
 
+  const userAlertingAuthorityIds = Object.keys(
+    session.user.alertingAuthorities
+  );
+
   // First, check if user wants to edit an alert through /editor/ID
-  let { alertId } = context.query;
+  let { alertId, alertingAuthorityId, template } = context.query;
+  let isTemplate = false;
+  let isNewAlert = true;
+
+  if (alertId) {
+    // Check if user wants to edit existing alert through /editor/:ID
+    // Next.js returns optional catch-all route params as array of each nested route
+    alertId = alertId[0];
+    isNewAlert = false;
+  } else if (typeof template === "string") {
+    // Check if user wants to use an existing alert as a template through /editor?template=ID
+    alertId = template;
+    isTemplate = true;
+  }
+
+  // If we're making a new alert, but don't know for which AA,
+  //  and the user only has one AA, then default to that.
+  // Otherwise, ask them to choose which AA first
+  if (
+    isNewAlert &&
+    typeof alertingAuthorityId !== "string" &&
+    userAlertingAuthorityIds.length === 1
+  ) {
+    alertingAuthorityId = userAlertingAuthorityIds[0];
+  } else {
+    return { props: { invalidAlertingAuthority: true } };
+  }
 
   let alert;
-  let alertingAuthority;
-  let isShared = false;
-  // Next.js returns catch-all route params as array
+  let editingAlert;
   if (alertId) {
-    alertId = alertId[0];
     alert = await prisma.alert.findFirst({
       where: { id: alertId },
       include: {
@@ -68,105 +107,67 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
           include: { User: { select: { email: true } } },
           where: { expires: { gt: new Date() } },
         },
-        AlertingAuthority: {
-          select: {
-            name: true,
-            countryCode: true,
-            id: true,
-          },
-        },
+        AlertingAuthority: true,
       },
     });
+
     if (!alert) return redirect(`/error/${ERRORS.ALERT_NOT_FOUND.slug}`);
 
-    alertingAuthority =
-      session.user.alertingAuthorities?.[alert.alertingAuthorityId] ?? null;
+    if (!isTemplate) {
+      // Nobody is allowed to edit an already-published alert
+      if (alert.status === "PUBLISHED") {
+        return redirect(`/error/${ERRORS.EDIT_PUBLISHED_ALERT.slug}`);
+      }
 
+      editingAlert = {
+        id: (alert.data as CAPV12JSONSchema).identifier,
+        status: alert.status,
+      };
+    }
+
+    alertingAuthorityId = alert.alertingAuthorityId;
+  }
+
+  let alertingAuthority = session.user.alertingAuthorities[
+    alertingAuthorityId
+  ] as UserAlertingAuthority;
+
+  let isShared = false;
+  if (!isNewAlert && alert) {
     // The user must be part of this AA to edit it, or this alert must be shared with them
     isShared = !!alert.SharedAlerts.find(
       (s) => s.User.email === session.user.email
     );
-    if (isShared) {
-      alertingAuthority = alert.AlertingAuthority;
-    } else if (!alertingAuthority) {
-      return redirect(`/error/${ERRORS.AA_NOT_ALLOWED.slug}`);
-    }
 
-    // Nobody is allowed to edit an already-published alert
-    if (alert.status === "PUBLISHED") {
-      return redirect(`/error/${ERRORS.EDIT_PUBLISHED_ALERT.slug}`);
-    }
-  } else {
-    // If they're not looking to edit an alert, they must be looking to create one.
-    // So we need to know which AA they are creating the alert for
-    // and that they have permission to create an alert for that AA.
-    let alertingAuthorityId = context.query?.alertingAuthorityId;
-
-    // If the AA hasn't been specified as ?alertingAuthorityId query param
-    // but the user only has one AA, then by-default, choose this one
-    if (typeof alertingAuthorityId !== "string") {
-      const userAlertingAuthorities = Object.keys(
-        session.user.alertingAuthorities
-      );
-      if (userAlertingAuthorities.length === 1) {
-        alertingAuthorityId = userAlertingAuthorities[0];
-      } else {
-        return { props: {} };
-      }
-    }
-
-    alertingAuthority = session.user.alertingAuthorities[
-      alertingAuthorityId
-    ] as AlertingAuthority;
-
-    // The user must be part of this AA to be able to create one for it
-    if (!alertingAuthority) {
-      return redirect(`/error/${ERRORS.AA_NOT_ALLOWED.slug}`);
-    }
-
-    // Only users with roles are allowed to create new alerts
-    //  (where COMPOSERs can only create DRAFTs)
-    if (
-      !alertingAuthority.roles.includes("ADMIN") &&
-      !alertingAuthority.roles.includes("COMPOSER") &&
-      !alertingAuthority.roles.includes("APPROVER")
-    ) {
-      return redirect(`/error/${ERRORS.NOT_ALLOWED_CREATE_ALERTS.slug}`);
-    }
+    if (isShared) alertingAuthority = { ...alert.AlertingAuthority, roles: [] };
   }
 
-  // Check if user wants to use an existing alert as a template through /editor?template=ID
-  let isTemplate = false;
-  if (!alertId) {
-    alertId = context.query?.template;
-    if (typeof alertId === "string") {
-      isTemplate = true;
-      alert = await prisma.alert.findFirst({ where: { id: alertId } });
-      if (!alert) return redirect(`/error/${ERRORS.ALERT_NOT_FOUND.slug}`);
-    }
+  if (!alertingAuthority) {
+    return redirect(`/error/${ERRORS.AA_NOT_ALLOWED.slug}`);
   }
 
-  let defaultAlertData: any;
-  let editingAlert: any = null;
+  let defaultAlertData: FormAlertDataSerialised;
   if (alert) {
     // Convert DB Alert data to FormAlertData for Editor
     const alertData = alert.data as CAPV12JSONSchema;
     const info = alertData.info?.[0];
 
     defaultAlertData = {
+      ...(!isTemplate && { identifier: alertData.identifier }),
       category: info?.category ?? [],
-      regions: info?.area?.reduce((acc, area) => {
-        acc[area.areaDesc] = {
-          circles: area.circle ?? [],
-          polygons: area.polygon ?? [],
-          geocodes:
-            area.geocode?.reduce((acc, cur) => {
-              acc[cur.valueName] = cur.value;
-              return acc;
-            }, {}) ?? {},
-        };
-        return acc;
-      }, {}),
+      regions:
+        info?.area?.reduce((acc, area) => {
+          acc[area.areaDesc] = {
+            circles: area.circle ?? [],
+            polygons: area.polygon ?? [],
+            geocodes:
+              area.geocode?.reduce((acc, cur) => {
+                acc[cur.valueName] = cur.value;
+                return acc;
+              }, {} as { [key: string]: string }) ?? {},
+          };
+          return acc;
+        }, {} as { [key: string]: any }) ?? {},
       onset: (info?.effective
         ? new Date(info?.effective)
         : getStartOfToday()
@@ -184,18 +185,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       contact: info?.contact,
       web: info?.web,
       references: alertData.references?.split(" ") ?? [],
-      language: info?.language,
+      language: info?.language ?? "",
       event: info?.event ?? "",
       headline: info?.headline ?? "",
       description: info?.description ?? "",
       instruction: info?.instruction ?? "",
-      resources: info?.resource ?? [],
+      resources:
+        info?.resource?.map((r) => ({
+          mimeType: r.mimeType,
+          resourceDesc: r.resourceDesc,
+          uri: r.uri!,
+        })) ?? [],
     };
-
-    if (!isTemplate) {
-      defaultAlertData.identifier = alertData.identifier;
-      editingAlert = { id: alertData.identifier, status: alert.status };
-    }
   } else {
     defaultAlertData = {
       category: [],
@@ -222,6 +223,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   return {
     props: {
+      invalidAlertingAuthority: false,
       defaultAlertData,
       editingAlert,
       alertingAuthority,
@@ -259,7 +261,7 @@ export default function EditorPage(props: Props) {
     );
   }
 
-  if (!props.isShared && (!alertingAuthorityId || !props.defaultAlertData)) {
+  if (props.invalidAlertingAuthority) {
     return (
       <>
         <Head>
@@ -285,7 +287,7 @@ export default function EditorPage(props: Props) {
 
   // Dates were serialised on server; convert back to Date now
   const defaultAlertData: FormAlertData = {
-    ...props.defaultAlertData,
+    ...props.defaultAlertData!,
     onset: new Date(props.defaultAlertData!.onset),
     expires: new Date(props.defaultAlertData!.expires),
     timezone:
@@ -304,7 +306,7 @@ export default function EditorPage(props: Props) {
               ? `editor-${props.editingAlert.id}`
               : `editor-${new Date().getTime()}`
           }
-          alertingAuthority={props.alertingAuthority}
+          alertingAuthority={props.alertingAuthority!}
           roles={props.isShared ? ["COMPOSER"] : props.alertingAuthority!.roles}
           defaultAlertData={defaultAlertData}
           {...(props.editingAlert && {

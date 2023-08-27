@@ -1,16 +1,16 @@
-import { AlertingAuthority } from "@prisma/client";
-import { FormAlertData } from "./EditorSinglePage";
+import { Trans, t } from "@lingui/macro";
 import { useEffect, useState } from "react";
 import XMLViewer from "react-xml-viewer";
 import { Panel } from "rsuite";
-import { Trans, t } from "@lingui/macro";
 import { useDebounce } from "usehooks-ts";
+import { UserAlertingAuthority } from "../../lib/types/types";
+import { FormAlertData } from "./EditorSinglePage";
 
 export default function XMLPreview({
   alertingAuthority,
   alertData,
 }: {
-  alertingAuthority: AlertingAuthority;
+  alertingAuthority: UserAlertingAuthority;
   alertData: FormAlertData;
 }) {
   // Debounce alertData, so we only send preview API request every second

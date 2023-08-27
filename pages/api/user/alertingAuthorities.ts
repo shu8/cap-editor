@@ -40,6 +40,8 @@ async function handleConnectToAlertingAuthority(
           name: customAlertingAuthorityName,
           countryCode: "Other",
           polygon: null,
+          defaultTimezone: "Etc/GMT",
+          severityCertaintyMatrixEnabled: false,
         }
       : (await fetchWMOAlertingAuthorities()).find(
           (a) => a.id === alertingAuthorityId
