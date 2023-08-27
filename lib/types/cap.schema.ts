@@ -73,7 +73,7 @@ export interface CAPV12JSONSchema2 {
       resourceDesc: string;
       mimeType: string;
       size?: number;
-      uri?: string;
+      uri: string;
       drefUri?: string;
       digest?: string;
     }[];
@@ -316,10 +316,12 @@ export const CAPV12Schema =
               "type": "object",
               "properties": {
                 "resourceDesc": {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "mimeType": {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "size": {
                   "type": "number"
@@ -337,7 +339,8 @@ export const CAPV12Schema =
               },
               "required": [
                 "resourceDesc",
-                "mimeType"
+                "mimeType",
+                "uri"
               ],
               "additionalProperties": false
             }
@@ -348,7 +351,8 @@ export const CAPV12Schema =
               "type": "object",
               "properties": {
                 "areaDesc": {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "polygon": {
                   "type": "array",

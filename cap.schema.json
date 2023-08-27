@@ -222,10 +222,12 @@
               "type": "object",
               "properties": {
                 "resourceDesc": {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "mimeType": {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "size": {
                   "type": "number"
@@ -243,7 +245,8 @@
               },
               "required": [
                 "resourceDesc",
-                "mimeType"
+                "mimeType",
+                "uri"
               ],
               "additionalProperties": false
             }
@@ -254,7 +257,8 @@
               "type": "object",
               "properties": {
                 "areaDesc": {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 "polygon": {
                   "type": "array",
