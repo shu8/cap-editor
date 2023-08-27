@@ -92,12 +92,12 @@ describe("<Instruction>", () => {
     await user.click(eventHeader);
     const stageHeader = await screen.findByText("Mitigation", { exact: false });
     await user.click(stageHeader);
-    await screen.findByText("- Test Instruction");
+    await screen.findByText("Test Instruction");
 
     const addBtn = await screen.findByText("Add this text?");
     await user.click(addBtn);
 
     expect(onUpdate).toBeCalledTimes(1);
-    expect(onUpdate).toBeCalledWith({ instruction: "- Test Instruction" });
+    expect(onUpdate).toBeCalledWith({ instruction: "Test Instruction" });
   });
 });
