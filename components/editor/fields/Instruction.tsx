@@ -45,7 +45,7 @@ const WhatNowMessage = ({
       {stages.map((stage) => {
         const text =
           message.translations[chosenLanguage].stages[camelise(stage)]?.join(
-            "\n- "
+            ". "
           );
         if (!text) return;
 
@@ -57,12 +57,12 @@ const WhatNowMessage = ({
                 appearance="link"
                 size="xs"
                 className="noPadding"
-                onClick={() => onChosenText(`- ${text}`)}
+                onClick={() => onChosenText(text)}
               >
                 <Trans>Add this text?</Trans>
               </Button>
             </summary>
-            <p className="displayWhiteSpace">- {text}</p>
+            <p className="displayWhiteSpace">{text}</p>
           </details>
         );
       })}
