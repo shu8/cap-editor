@@ -193,7 +193,6 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
     });
     mockUserOnce(users.admin);
     await handleAlertingAuthorityAlerts(req, res);
-    console.log(res._getData());
     expect(res._getStatusCode()).toEqual(200);
     expect(JSON.parse(res._getData()).identifier).toBeTruthy();
 
@@ -205,5 +204,35 @@ describe("POST /api/alerts/alertingAuthorities/:id", () => {
       { setZone: true }
     ).toFormat("yyyy.MM.dd.HH.mm.ss");
     expect(alerts[0].data.identifier).toEqual(`aa.${sentTimeFormatted}`);
+    expect(alerts[0].data.info[0].parameter).toHaveLength(2);
+    expect(alerts[0].data.info[0].parameter.map((p) => p.valueName)).toEqual([
+      "CANONICAL_URL",
+      "MULTI_LANGUAGE_GROUP_ID",
+    ]);
+  });
+
+  test("specified multi-language group ID should be used", async () => {
+    await createUser({ ...users.admin, alertingAuthorityVerified: true });
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: "POST",
+      query: { alertingAuthorityId: "aa" },
+      body: {
+        status: "DRAFT",
+        data: defaultFormData,
+        multiLanguageGroupId: "test-multi-language-group-id",
+      },
+    });
+    mockUserOnce(users.admin);
+    await handleAlertingAuthorityAlerts(req, res);
+    expect(res._getStatusCode()).toEqual(200);
+    expect(JSON.parse(res._getData()).identifier).toBeTruthy();
+
+    const alerts = await prismaMock.alert.findMany();
+    expect(
+      alerts[0].data.info[0].parameter.find(
+        (p) => p.valueName === "MULTI_LANGUAGE_GROUP_ID"
+      ).value
+    ).toEqual("test-multi-language-group-id");
   });
 });

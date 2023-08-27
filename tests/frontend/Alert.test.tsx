@@ -81,6 +81,7 @@ describe("<Alert>", () => {
 
     await screen.findByText("View alert ↗");
     await screen.findByText("Use as template for new alert →");
+    await screen.findByText("Draft in new language");
     await screen.findByText("Alert");
     await screen.findByText("Actual");
     await screen.findByText("Immediate");
@@ -105,6 +106,7 @@ describe("<Alert>", () => {
 
     await screen.findByText("View alert ↗");
     await screen.findByText("Use as template for new alert →");
+    await screen.findByText("Draft in new language");
     await screen.findByText("Alert");
     await screen.findByText("Actual");
     await screen.findByText("Immediate");
@@ -128,6 +130,7 @@ describe("<Alert>", () => {
 
     await screen.findByText("View alert ↗");
     await screen.findByText("Use as template for new alert →");
+    await screen.findByText("Draft in new language");
     await screen.findByText("Edit alert 🖉");
     await screen.findByText("Alert");
     await screen.findByText("Actual");
