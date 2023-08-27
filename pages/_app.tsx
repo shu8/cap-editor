@@ -27,7 +27,7 @@ export default function App({
   }, [locale]);
 
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={session} refetchOnWindowFocus={false}>
       <div className="wrapper">
         <I18nProvider i18n={i18n} forceRenderOnLocaleChange={true}>
           <Header />
