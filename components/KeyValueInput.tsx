@@ -9,6 +9,7 @@ export default function KeyValueInput({
   addLabel,
   onChange,
   values = {},
+  disabled,
 }: {
   keyLabel: ReactNode | string;
   valueLabel: ReactNode | string;
@@ -16,6 +17,7 @@ export default function KeyValueInput({
   addLabel: ReactNode | string;
   onChange: (values: { [key: string]: string }) => void;
   values: { [key: string]: string };
+  disabled?: boolean;
 }) {
   const [showForm, setShowForm] = useState(false);
   const [newKey, setNewKey] = useState("");
@@ -40,6 +42,7 @@ export default function KeyValueInput({
         size="xs"
         onClick={() => setShowForm((old) => !old)}
         color="blue"
+        disabled={disabled}
         appearance="ghost"
       >
         {showForm ? t`Cancel` : addLabel}
@@ -51,6 +54,7 @@ export default function KeyValueInput({
             <li key={i}>
               {k}: {v} &mdash;{" "}
               <Button
+                disabled={disabled}
                 size="xs"
                 color="red"
                 appearance="ghost"
@@ -71,6 +75,7 @@ export default function KeyValueInput({
             <Form.ControlLabel>{keyLabel}</Form.ControlLabel>
             <Form.Control
               name="key"
+              disabled={disabled}
               onChange={(v) => setNewKey(v)}
               value={newKey}
             />
@@ -78,6 +83,7 @@ export default function KeyValueInput({
           <Form.Group>
             <Form.ControlLabel>{valueLabel}</Form.ControlLabel>
             <Form.Control
+              disabled={disabled}
               name="value"
               onChange={(v) => setNewValue(v)}
               value={newValue}
@@ -85,6 +91,7 @@ export default function KeyValueInput({
           </Form.Group>
           <Button
             color="blue"
+            disabled={disabled}
             appearance="ghost"
             size="sm"
             onClick={() => onChange({ ...values, [newKey]: newValue })}

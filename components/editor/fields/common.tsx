@@ -36,6 +36,7 @@ const predefinedTimeRanges: RangeType<Date>[] = [
 type FieldProps = {
   onUpdate: (data: Partial<FormAlertData>) => void;
   alertData: FormAlertData;
+  disabled?: boolean;
 };
 
 const Textarea = forwardRef((props, ref) => (
@@ -51,6 +52,7 @@ const TextField = ({
   maxLength,
   textarea,
   help,
+  disabled,
 }: {
   label: string;
   fieldName: keyof FormAlertData;
@@ -62,6 +64,7 @@ const TextField = ({
     <Form.ControlLabel>{label}</Form.ControlLabel>
     <Form.Control
       name={fieldName}
+      disabled={disabled}
       onChange={(v) => onUpdate({ [fieldName]: v })}
       value={alertData[fieldName]}
       accepter={textarea ? Textarea : Input}
@@ -92,6 +95,7 @@ const DropdownField = ({
   searchable,
   onOpen,
   multi,
+  disabled,
 }: {
   label: string;
   fieldName: keyof FormAlertData;
@@ -104,6 +108,7 @@ const DropdownField = ({
     <Form.ControlLabel>{label}</Form.ControlLabel>
     <Form.Control
       name={fieldName}
+      disabled={disabled}
       accepter={multi ? CheckPicker : SelectPicker}
       data={
         typeof options[0] === "string"
@@ -128,6 +133,7 @@ const DateTimeField = ({
   alertData,
   label,
   fieldName,
+  disabled,
 }: {
   label: string;
   fieldName: keyof FormAlertData;
@@ -136,6 +142,7 @@ const DateTimeField = ({
     <Form.ControlLabel>{label}</Form.ControlLabel>
     <Form.Control
       name={fieldName}
+      disabled={disabled}
       accepter={DatePicker}
       oneTap
       format="yyyy-MM-dd HH:mm:ss"

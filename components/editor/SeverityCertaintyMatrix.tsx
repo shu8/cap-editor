@@ -6,10 +6,12 @@ export default function SeverityCertaintyMatrix({
   onChange,
   certainty,
   severity,
+  disabled,
 }: {
   onChange: (data: { certainty: string; severity: string }) => void;
   certainty: string;
   severity: string;
+  disabled?: boolean;
 }) {
   const Cell = (props: {
     colorStyle: string;
@@ -22,14 +24,16 @@ export default function SeverityCertaintyMatrix({
         props.colorStyle,
         props.cellCertainty === certainty &&
           props.cellSeverity === severity &&
-          styles.selected
+          styles.selected,
+        disabled && styles.disabled
       )}
-      onClick={() =>
+      onClick={() => {
+        if (disabled) return;
         onChange({
           certainty: props.cellCertainty,
           severity: props.cellSeverity,
-        })
-      }
+        });
+      }}
     />
   );
 

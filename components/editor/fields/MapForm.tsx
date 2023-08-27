@@ -21,6 +21,7 @@ const COORDINATE_REGEX = /-?\d+(\.\d{1,3})?/;
 export default function MapForm({
   onUpdate,
   alertData,
+  disabled,
   alertingAuthority,
 }: FieldProps & { alertingAuthority: UserAlertingAuthority }) {
   const toaster = useToasterI18n();
@@ -122,6 +123,7 @@ export default function MapForm({
             }))}
             creatable
             cleanable
+            disabled={disabled}
             value={selectedRegion}
             onChange={(country) => {
               if (!regions[country]) {
@@ -153,6 +155,7 @@ export default function MapForm({
                     appearance="link"
                     size="xs"
                     key={`country-${f.id}`}
+                    disabled={disabled}
                     className={styles.countryQuickAddLink}
                     onClick={() => {
                       if (!regions[country]) {
@@ -187,6 +190,7 @@ export default function MapForm({
               size="xs"
               color="red"
               appearance="link"
+              disabled={disabled}
               onClick={() => {
                 delete regions[selectedRegion];
                 onUpdate({ regions });
@@ -201,6 +205,7 @@ export default function MapForm({
               </Form.ControlLabel>
               <Form.Control
                 name="polygon"
+                disabled={disabled}
                 accepter={Textarea}
                 value={customPolygonInput}
                 onChange={(v) => {
@@ -228,6 +233,7 @@ export default function MapForm({
               </Form.ControlLabel>
               <Form.Control
                 name="circle"
+                disabled={disabled}
                 accepter={Textarea}
                 value={customCircleInput}
                 onChange={(v) => {
@@ -253,6 +259,7 @@ export default function MapForm({
                 <KeyValueInput
                   keyLabel="Type"
                   valueLabel="Geocode"
+                  disabled={disabled}
                   addLabel={t`Add Geocode?`}
                   emptyLabel={
                     <Form.HelpText>

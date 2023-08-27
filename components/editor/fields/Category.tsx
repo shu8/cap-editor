@@ -25,13 +25,12 @@ const CATEGORIES = [
   { label: t`Other`, value: "Other" },
 ];
 
-export default function Category({ onUpdate, alertData }: FieldProps) {
+export default function Category(props: FieldProps) {
   return (
     <DropdownField
-      alertData={alertData}
+      {...props}
       fieldName="category"
       label={t`Category`}
-      onUpdate={onUpdate}
       options={CATEGORIES}
       multi
     />

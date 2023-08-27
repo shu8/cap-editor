@@ -43,6 +43,7 @@ type Props =
       alertingAuthority: UserAlertingAuthority;
       isShared: boolean;
       session: Session;
+      isNewLanguageDraft: boolean;
     };
 
 const redirect = (url: string) => ({
@@ -231,6 +232,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       alertingAuthority,
       session,
       isShared,
+      isNewLanguageDraft: context.query.isNewLanguageDraft === "1",
     },
   };
 };
@@ -314,6 +316,7 @@ export default function EditorPage(props: Props) {
           {...(props.editingAlert && {
             existingAlertStatus: props.editingAlert.status,
           })}
+          isNewLanguageDraft={props.isNewLanguageDraft}
           isShareable={!props.isShared}
           onShareAlert={async (email) => {
             if (!props.editingAlert!.id) return;

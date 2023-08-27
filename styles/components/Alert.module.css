@@ -12,6 +12,10 @@
   flex-direction: column;
 }
 
+.actionIcon {
+  margin-left: 5px;
+}
+
 .socialMediaShareIconsWrapper {
   margin-top: auto;
   display: flex;

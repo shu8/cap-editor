@@ -3,7 +3,7 @@ import { Alert as DBAlert } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { Button, Panel, Tag } from "rsuite";
-import { TypeAttributes } from "rsuite/esm/@types/common";
+import GlobalIcon from "@rsuite/icons/Global";
 
 import { CAPV12JSONSchema } from "../lib/types/cap.schema";
 import styles from "../styles/components/Alert.module.css";
@@ -80,6 +80,19 @@ export default function Alert({ alert }: { alert: DBAlert }) {
               size="xs"
             >
               <Trans>Use as template for new alert</Trans> &rarr;
+            </Button>
+          </Link>
+          <Link
+            href={`/editor?template=${alert.id}&alertingAuthorityId=${alertingAuthorityId}&isNewLanguageDraft=1`}
+          >
+            <Button
+              className={styles.btn}
+              appearance="ghost"
+              color="violet"
+              size="xs"
+            >
+              <Trans>Draft in new language</Trans>{" "}
+              <GlobalIcon className={styles.actionIcon} />
             </Button>
           </Link>
         </>

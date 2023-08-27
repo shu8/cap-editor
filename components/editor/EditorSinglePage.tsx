@@ -82,6 +82,7 @@ type Props = {
   alertingAuthority: UserAlertingAuthority;
   roles: Role[];
   existingAlertStatus?: AlertStatus;
+  isNewLanguageDraft: boolean;
 };
 
 export default function EditorSinglePage(props: Props) {
@@ -183,11 +184,27 @@ export default function EditorSinglePage(props: Props) {
             className={styles.inputGroup}
             wrap
           >
-            <Status onUpdate={onUpdate} alertData={alertData} />
-            <MessageType onUpdate={onUpdate} alertData={alertData} />
+            <Status
+              onUpdate={onUpdate}
+              alertData={alertData}
+              disabled={props.isNewLanguageDraft}
+            />
+            <MessageType
+              onUpdate={onUpdate}
+              alertData={alertData}
+              disabled={props.isNewLanguageDraft}
+            />
 
-            <Category onUpdate={onUpdate} alertData={alertData} />
-            <ResponseType onUpdate={onUpdate} alertData={alertData} />
+            <Category
+              onUpdate={onUpdate}
+              alertData={alertData}
+              disabled={props.isNewLanguageDraft}
+            />
+            <ResponseType
+              onUpdate={onUpdate}
+              alertData={alertData}
+              disabled={props.isNewLanguageDraft}
+            />
           </Stack>
 
           {["Update", "Cancel"].includes(alertData.msgType) && (
@@ -209,11 +226,24 @@ export default function EditorSinglePage(props: Props) {
                 certainty={alertData.certainty}
                 severity={alertData.severity}
                 onChange={onUpdate}
+                disabled={props.isNewLanguageDraft}
               />
             )}
-            <Severity onUpdate={onUpdate} alertData={alertData} />
-            <Certainty onUpdate={onUpdate} alertData={alertData} />
-            <Urgency onUpdate={onUpdate} alertData={alertData} />
+            <Severity
+              onUpdate={onUpdate}
+              alertData={alertData}
+              disabled={props.isNewLanguageDraft}
+            />
+            <Certainty
+              onUpdate={onUpdate}
+              alertData={alertData}
+              disabled={props.isNewLanguageDraft}
+            />
+            <Urgency
+              onUpdate={onUpdate}
+              alertData={alertData}
+              disabled={props.isNewLanguageDraft}
+            />
           </Stack>
 
           <Stack
@@ -223,8 +253,16 @@ export default function EditorSinglePage(props: Props) {
             wrap
           >
             <Timezone onUpdate={onUpdate} alertData={alertData} />
-            <Onset onUpdate={onUpdate} alertData={alertData} />
-            <Expires onUpdate={onUpdate} alertData={alertData} />
+            <Onset
+              onUpdate={onUpdate}
+              alertData={alertData}
+              disabled={props.isNewLanguageDraft}
+            />
+            <Expires
+              onUpdate={onUpdate}
+              alertData={alertData}
+              disabled={props.isNewLanguageDraft}
+            />
           </Stack>
 
           <Divider />
@@ -251,6 +289,7 @@ export default function EditorSinglePage(props: Props) {
               onUpdate={onUpdate}
               alertData={alertData}
               alertingAuthority={props.alertingAuthority}
+              disabled={props.isNewLanguageDraft}
             />
           </div>
 

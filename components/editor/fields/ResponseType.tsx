@@ -1,13 +1,12 @@
 import { t } from "@lingui/macro";
 import { DropdownField, FieldProps } from "./common";
 
-export default function ResponseType({ onUpdate, alertData }: FieldProps) {
+export default function ResponseType(props: FieldProps) {
   return (
     <DropdownField
-      alertData={alertData}
+      {...props}
       fieldName="responseType"
       label={t`Response`}
-      onUpdate={onUpdate}
       options={[
         "Shelter",
         "Evacuate",
