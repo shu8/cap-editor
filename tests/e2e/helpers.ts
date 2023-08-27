@@ -101,7 +101,6 @@ export const clearInput = async (input: ElementHandle) => {
 };
 
 export async function fillOutEditorForm(document: ElementHandle<Element>) {
-  jest.setTimeout(15000);
   await mockNetworkResponse([
     {
       method: "GET",
@@ -236,4 +235,32 @@ export async function assertEditingPage(document: ElementHandle<Element>) {
   );
 
   await queries.findByText(document, "Alert XML Preview");
+}
+
+export async function assertPrefilledEditingPage(
+  document: ElementHandle<Element>
+) {
+  for (const string of [
+    "Actual",
+    "Alert",
+    "Geophysical (e.g., landslide)",
+    "Prepare",
+    "English (eng)",
+    "Immediate",
+    "Extreme",
+    "Observed",
+  ]) {
+    await queries.findByText(document, string, {
+      selector: ".rs-picker-toggle-value,.rs-picker-value-item",
+    });
+  }
+
+  for (const string of [
+    "Headline text",
+    "Flooding",
+    "Description text",
+    "Instruction text",
+  ]) {
+    await queries.findByDisplayValue(document, string);
+  }
 }

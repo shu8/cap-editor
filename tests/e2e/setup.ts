@@ -44,4 +44,4 @@ afterEach(async () => {
   await incognito.close();
 });
 
-jest.setTimeout(10000);
+jest.setTimeout(15000);

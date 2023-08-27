@@ -6,6 +6,7 @@ import { ElementHandle } from "puppeteer";
 import { formatDate } from "../../lib/helpers.client";
 import {
   assertEditingPage,
+  assertPrefilledEditingPage,
   createUser,
   fillOutEditorForm,
   login,
@@ -133,28 +134,6 @@ describe("Editor: edit alert", () => {
   });
 
   test("has alert data pre-filled", async () => {
-    for (const string of [
-      "Actual",
-      "Alert",
-      "Geophysical (e.g., landslide)",
-      "Prepare",
-      "English (eng)",
-      "Immediate",
-      "Extreme",
-      "Observed",
-    ]) {
-      await queries.findByText(document, string, {
-        selector: ".rs-picker-toggle-value,.rs-picker-value-item",
-      });
-    }
-
-    for (const string of [
-      "Headline text",
-      "Flooding",
-      "Description text",
-      "Instruction text",
-    ]) {
-      await queries.findByDisplayValue(document, string);
-    }
+    await assertPrefilledEditingPage(document);
   });
 });
