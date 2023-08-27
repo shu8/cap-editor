@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@jest/globals";
-import { Prisma } from "@prisma/client";
+import { Alert, Prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { getDocument, queries } from "pptr-testing-library";
 import { ElementHandle } from "puppeteer";
@@ -13,6 +13,7 @@ import {
 } from "./helpers";
 
 var document: ElementHandle<Element>;
+var alert: Alert | undefined;
 
 describe("Editor: new alert", () => {
   beforeEach(async () => {
@@ -61,7 +62,7 @@ describe("Editor: edit alert", () => {
     const from = new Date();
     const future = new Date();
     future.setDate(future.getDate() + 1);
-    const alert = await prisma?.alert.create({
+    alert = await prisma?.alert.create({
       data: {
         id: uuid,
         userId: user!.id,
@@ -117,7 +118,9 @@ describe("Editor: edit alert", () => {
 
   test("cannot edit published alert", async () => {
     await prisma?.alert.updateMany({ data: { status: "PUBLISHED" } });
-    await page.reload({ waitUntil: "networkidle0" });
+    await page.goto(`${baseUrl}/editor/${alert!.id}`, {
+      waitUntil: "networkidle0",
+    });
     document = await getDocument(page);
 
     await queries.findByText(document, "You cannot edit a published alert", {
