@@ -38,9 +38,9 @@ type Props =
     }
   | {
       invalidAlertingAuthority: false;
-      defaultAlertData: FormAlertDataSerialised | undefined;
-      editingAlert: { id: string; status: AlertStatus } | undefined;
-      alertingAuthority: UserAlertingAuthority | undefined;
+      defaultAlertData: FormAlertDataSerialised;
+      editingAlert: { id: string; status: AlertStatus } | null;
+      alertingAuthority: UserAlertingAuthority;
       isShared: boolean;
       session: Session;
     };
@@ -93,8 +93,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     userAlertingAuthorityIds.length === 1
   ) {
     alertingAuthorityId = userAlertingAuthorityIds[0];
-  } else {
-    return { props: { invalidAlertingAuthority: true } };
   }
 
   let alert;
@@ -126,6 +124,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     }
 
     alertingAuthorityId = alert.alertingAuthorityId;
+  }
+
+  if (typeof alertingAuthorityId !== "string") {
+    return { props: { invalidAlertingAuthority: true } };
   }
 
   let alertingAuthority = session.user.alertingAuthorities[
@@ -224,8 +226,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   return {
     props: {
       invalidAlertingAuthority: false,
-      defaultAlertData,
-      editingAlert,
+      defaultAlertData: defaultAlertData,
+      editingAlert: editingAlert ?? null,
       alertingAuthority,
       session,
       isShared,
@@ -239,9 +241,9 @@ export default function EditorPage(props: Props) {
   const { data: session } = useSession();
   const [alertingAuthorityId] = useAlertingAuthorityLocalStorage();
 
-  // If ?template query param exists, hide it from user
+  // If query params exists, hide it from user
   useMountEffect(() => {
-    if (router.query.template || router.query.alertingAuthorityId) {
+    if (Object.keys(router.query).length) {
       router.replace("/editor", undefined, { shallow: true });
     }
   });
