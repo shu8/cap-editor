@@ -24,6 +24,7 @@ export default function Resources({ onUpdate, alertData }: FieldProps) {
           keyLabel="Description"
           valueLabel="URL"
           addLabel={t`Add URL?`}
+          allowImageUploadValue
           emptyLabel={
             <Form.HelpText>
               <Trans>No resources added yet</Trans>
@@ -67,7 +68,7 @@ export default function Resources({ onUpdate, alertData }: FieldProps) {
               );
             } else {
               toaster.push(
-                <Message type="error" closable>
+                <Message type="success" closable>
                   <Trans>Resource added.</Trans>
                 </Message>,
                 { duration: 2000 }

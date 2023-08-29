@@ -6,6 +6,9 @@ import MIMEType from "whatwg-mimetype";
 import { withErrorHandler } from "../../lib/apiErrorHandler";
 import { authOptions } from "./auth/[...nextauth]";
 
+const RESOURCE_URL_REGEX = /^https:\/\//;
+const RESOURCE_URL_REGEX_DEV = /https?:\/\//;
+
 async function handleGetMimeType(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions);
   if (!session) throw new ApiError(401, "You are not logged in");
@@ -16,7 +19,13 @@ async function handleGetMimeType(req: NextApiRequest, res: NextApiResponse) {
   }
 
   // Require a HTTPS URL
-  if (!url.match(/^https:\/\//)) {
+  if (
+    !url.match(
+      process.env.NODE_ENV === "production"
+        ? RESOURCE_URL_REGEX
+        : RESOURCE_URL_REGEX_DEV
+    )
+  ) {
     throw new ApiError(400, "You did not provide a valid URL");
   }
 

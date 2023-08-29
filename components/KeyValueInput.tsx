@@ -1,6 +1,9 @@
 import { Trans, t } from "@lingui/macro";
 import { ReactNode, useEffect, useState } from "react";
-import { Button, Form, Stack } from "rsuite";
+import { Button, Form, Stack, Uploader } from "rsuite";
+import { useToasterI18n } from "../lib/useToasterI18n";
+import ErrorMessage from "./ErrorMessage";
+import { HandledError } from "../lib/helpers.client";
 
 export default function KeyValueInput({
   keyLabel,
@@ -10,6 +13,7 @@ export default function KeyValueInput({
   onChange,
   values = {},
   disabled,
+  allowImageUploadValue,
 }: {
   keyLabel: ReactNode | string;
   valueLabel: ReactNode | string;
@@ -18,7 +22,9 @@ export default function KeyValueInput({
   onChange: (values: { [key: string]: string }) => void;
   values: { [key: string]: string };
   disabled?: boolean;
+  allowImageUploadValue?: boolean;
 }) {
+  const toaster = useToasterI18n();
   const [showForm, setShowForm] = useState(false);
   const [newKey, setNewKey] = useState("");
   const [newValue, setNewValue] = useState("");
@@ -70,7 +76,7 @@ export default function KeyValueInput({
       {!Object.keys(values).length && !showForm && <>{emptyLabel}</>}
 
       {showForm && (
-        <Stack spacing={10} alignItems="flex-end">
+        <Stack spacing={10} alignItems="flex-start">
           <Form.Group>
             <Form.ControlLabel>{keyLabel}</Form.ControlLabel>
             <Form.Control
@@ -88,16 +94,56 @@ export default function KeyValueInput({
               onChange={(v) => setNewValue(v)}
               value={newValue}
             />
+            {allowImageUploadValue && (
+              <Form.HelpText>
+                <Uploader
+                  listType="picture-text"
+                  action="/api/uploadResource"
+                  className="noPadding"
+                  name="resourceFile"
+                  accept="image/*"
+                  onSuccess={(response) => {
+                    if (response.error) {
+                      toaster.push(
+                        <ErrorMessage
+                          error={new HandledError(response.error)}
+                          action={t`uploading the image`}
+                        />,
+                        { duration: 2000 }
+                      );
+                    }
+
+                    setNewValue(response.url);
+                  }}
+                  onError={(reason) =>
+                    toaster.push(
+                      <ErrorMessage
+                        error={new Error(reason.type)}
+                        action={t`uploading the image`}
+                      />,
+                      { duration: 2000 }
+                    )
+                  }
+                  onRemove={() => setNewValue("")}
+                >
+                  <Button appearance="link" size="xs" className="noPadding">
+                    <Trans>Or upload an image?</Trans>
+                  </Button>
+                </Uploader>
+              </Form.HelpText>
+            )}
           </Form.Group>
-          <Button
-            color="blue"
-            disabled={disabled}
-            appearance="ghost"
-            size="sm"
-            onClick={() => onChange({ ...values, [newKey]: newValue })}
-          >
-            Save
-          </Button>
+          <Stack.Item alignSelf="flex-start" style={{ marginTop: "25px" }}>
+            <Button
+              color="blue"
+              disabled={disabled}
+              appearance="ghost"
+              size="sm"
+              onClick={() => onChange({ ...values, [newKey]: newValue })}
+            >
+              Save
+            </Button>
+          </Stack.Item>
         </Stack>
       )}
     </>
