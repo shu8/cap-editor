@@ -125,16 +125,8 @@ describe("Homepage (logged in)", () => {
   });
 
   test("alert category panels show no alerts", async () => {
-    const publishedHeader = await queries.findByText(
-      document,
-      "published alerts"
-    );
-    await publishedHeader.click();
-    await queries.findByText(document, "No alerts");
-
-    const draftHeader = await queries.findByText(document, "draft alerts");
-    await draftHeader.click();
-    await queries.findAllByText(document, "No alerts");
+    const noAlertsLabels = await queries.findAllByText(document, "No alerts");
+    expect(noAlertsLabels).toHaveLength(2);
   });
 
   test("shows alerts", async () => {
