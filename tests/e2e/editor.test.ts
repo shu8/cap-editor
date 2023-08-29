@@ -45,6 +45,41 @@ describe("Editor: new alert", () => {
     await queries.findByText(document, "References");
   });
 
+  test("can upload image", async () => {
+    await (await queries.findByText(document, "Add URL?")).click();
+    const futureFileChooser = page.waitForFileChooser();
+    await (await queries.findByText(document, "Or upload an image?")).click();
+    const fileChooser = await futureFileChooser;
+    await fileChooser.accept(["tests/e2e/assets/test.ico"]);
+
+    await queries.findByText(document, "test.ico");
+    await queries.findByText(document, "3.67KB");
+
+    const urlInput = await queries.findByLabelText(document, "URL");
+    const urlValue = await (await urlInput.getProperty("value")).jsonValue();
+    expect(urlValue).toMatch("http://localhost:9000/resources/");
+  });
+
+  test("cannot upload non-image", async () => {
+    await (await queries.findByText(document, "Add URL?")).click();
+    const futureFileChooser = page.waitForFileChooser();
+    await (await queries.findByText(document, "Or upload an image?")).click();
+    const fileChooser = await futureFileChooser;
+    await fileChooser.accept(["tests/e2e/assets/test.txt"]);
+
+    await queries.findByText(document, "test.txt");
+    await queries.findByText(document, "Error");
+
+    await queries.findByText(
+      document,
+      "There was an error uploading the image. Please try again later or contact your administrator if the issue persists."
+    );
+
+    const urlInput = await queries.findByLabelText(document, "URL");
+    const urlValue = await (await urlInput.getProperty("value")).jsonValue();
+    expect(urlValue).toEqual("");
+  });
+
   test("alert can be filled out", async () => {
     await fillOutEditorForm(document);
   });

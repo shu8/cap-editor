@@ -61,6 +61,7 @@ describe("<Resources>", () => {
     await screen.findByText("Description");
     await screen.findByText("URL");
     await screen.findByText("Save");
+    await screen.findByText("Or upload an image?");
 
     expect(await screen.findAllByRole("textbox")).toHaveLength(2);
 
@@ -124,5 +125,45 @@ describe("<Resources>", () => {
         { resourceDesc: "Description", uri: "URL", mimeType: "text/html" },
       ],
     });
+  });
+
+  test("attempts image upload correctly", async () => {
+    const onUpdate = jest.fn();
+    render(<Resources {...props} onUpdate={onUpdate} />, {
+      wrapper: TestingProvider,
+    });
+
+    const spyMock = {
+      open: jest.fn(),
+      setRequestHeader: jest.fn(),
+      timeout: 100,
+      ontimeout: jest.fn(),
+      onload: jest.fn(),
+      status: 200,
+      onerror: jest.fn(),
+      send: jest.fn(),
+    };
+
+    jest
+      .spyOn(window, "XMLHttpRequest")
+      .mockImplementation(() => spyMock as any);
+
+    const user = userEvent.setup();
+    const addBtn = await screen.findByText("Add URL?");
+    await user.click(addBtn);
+
+    const uploadBtn = await screen.findByText("Or upload an image?");
+    const uploader = uploadBtn.previousSibling;
+    expect(uploader).toBeTruthy();
+
+    await user.upload(
+      uploader!,
+      new File(["test"], "test.png", { type: "image/png" })
+    );
+
+    expect(spyMock.open).toBeCalledTimes(1);
+    expect(spyMock.open).toBeCalledWith("POST", "/api/uploadResource", true);
+    expect(spyMock.send).toBeCalledTimes(1);
+    expect(spyMock.send).toBeCalledWith(expect.any(FormData));
   });
 });

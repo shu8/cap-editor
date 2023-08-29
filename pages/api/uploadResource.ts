@@ -23,21 +23,36 @@ const getFormData = async (req: NextApiRequest) => {
     filter: (part) => part.mimetype?.includes("image") ?? false,
     filename: (_, ext) => `${randomUUID()}${ext}`,
   });
-  const parsedForm = await form.parse(req);
-  const files = parsedForm[1];
-  if (files?.resourceFile?.length !== 1) {
+
+  try {
+    const parsedFormAttempt = (await Promise.race([
+      form.parse(req),
+      new Promise((_, reject) => setTimeout(reject, 5000)),
+    ])) as [formidable.Fields, formidable.Files];
+
+    const files = parsedFormAttempt[1];
+    if (files?.resourceFile?.length !== 1) {
+      throw new ApiError(
+        400,
+        "You did not provide a valid file to upload. Only images of less than <5Mb are supported"
+      );
+    }
+    return files.resourceFile[0];
+  } catch (err) {
     throw new ApiError(
-      400,
-      "You did not provide a valid file to upload. Only images of less than <5Mb are supported"
+      500,
+      "There was an error processing your image. Please try again later or contact the administrator if the issue persists."
     );
   }
-
-  return files.resourceFile[0];
 };
 
 async function handleUploadResource(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions);
   if (!session) throw new ApiError(403, "You are not logged in");
+
+  if (!req.headers["content-type"]?.startsWith("multipart/form-data")) {
+    throw new ApiError(400, "You did not make a valid request");
+  }
 
   const file = await getFormData(req);
   await minioClient.fPutObject(

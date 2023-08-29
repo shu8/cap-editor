@@ -77,7 +77,7 @@ export default function KeyValueInput({
 
       {showForm && (
         <Stack spacing={10} alignItems="flex-start">
-          <Form.Group>
+          <Form.Group controlId="key">
             <Form.ControlLabel>{keyLabel}</Form.ControlLabel>
             <Form.Control
               name="key"
@@ -86,7 +86,7 @@ export default function KeyValueInput({
               value={newKey}
             />
           </Form.Group>
-          <Form.Group>
+          <Form.Group controlId="value">
             <Form.ControlLabel>{valueLabel}</Form.ControlLabel>
             <Form.Control
               disabled={disabled}
