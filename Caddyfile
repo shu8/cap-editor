@@ -9,3 +9,10 @@
 127.0.0.1 {
 	reverse_proxy 127.0.0.1:3000
 }
+
+[static.domain.com] {
+	handle /resources/* {
+		reverse_proxy 127.0.0.1:9000
+	}
+	respond 401
+}

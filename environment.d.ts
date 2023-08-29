@@ -16,6 +16,13 @@ declare global {
       WHAT_NOW_API_KEY: string;
       REDIS_HOST: string;
       IFRC_AA_VERIFIER_EMAIL: string;
+      RESOURCES_S3_BASE_URL: string;
+      RESOURCES_S3_PORT: number;
+      RESOURCES_S3_ACCESS_KEY: string;
+      RESOURCES_S3_SECRET_KEY: string;
+      RESOURCES_S3_BUCKET_NAME: string;
+      RESOURCES_S3_BASE_PUBLIC_URL: string;
+      RESOURCES_S3_IS_LOCAL: boolean;
     }
   }
 }

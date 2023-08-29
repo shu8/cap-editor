@@ -37,3 +37,16 @@ services:
       - 80:80
       - 443:443
       - 443:443/udp
+
+  minio:
+    image: minio/minio:latest
+    restart: on-failure
+    entrypoint: sh
+    command: -c '/opt/bin/minio server /data'
+    environment:
+      MINIO_ROOT_USER: ${RESOURCES_S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${RESOURCES_S3_SECRET_KEY}
+    ports:
+      - 127.0.0.1:9000:9000
+    volumes:
+      - ./docker-volumes/minio:/data

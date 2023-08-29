@@ -22,3 +22,16 @@ services:
     ports:
       - 1025:1025
       - 8025:8025
+
+  minio:
+    image: minio/minio:latest
+    restart: on-failure
+    entrypoint: sh
+    command: -c '/opt/bin/minio server /data'
+    environment:
+      MINIO_ROOT_USER: user
+      MINIO_ROOT_PASSWORD: password
+    ports:
+      - 127.0.0.1:9000:9000
+    volumes:
+      - ./docker-volumes/minio:/data
