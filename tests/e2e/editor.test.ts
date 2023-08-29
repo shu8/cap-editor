@@ -53,11 +53,20 @@ describe("Editor: new alert", () => {
     await fileChooser.accept(["tests/e2e/assets/test.ico"]);
 
     await queries.findByText(document, "test.ico");
-    await queries.findByText(document, "3.67KB");
+    await queries.findByText(
+      document,
+      "3.67KB",
+      { exact: false },
+      { timeout: 3000 }
+    );
 
-    const urlInput = await queries.findByLabelText(document, "URL");
-    const urlValue = await (await urlInput.getProperty("value")).jsonValue();
-    expect(urlValue).toMatch("http://localhost:9000/resources/");
+    await queries.findByDisplayValue(
+      document,
+      "http://localhost:9000/resources/",
+      {
+        exact: false,
+      }
+    );
   });
 
   test("cannot upload non-image", async () => {

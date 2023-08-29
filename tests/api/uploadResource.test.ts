@@ -1,8 +1,10 @@
-import { describe, expect, jest, test } from "@jest/globals";
+import { beforeAll, describe, expect, jest, test } from "@jest/globals";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import handleUploadResource from "../../pages/api/uploadResource";
 import { mockUserOnce, users } from "./helpers";
+
+jest.mock("../../lib/minio", () => ({ fPutObject: jest.fn() }));
 
 jest.mock("next-auth/react");
 jest.mock("next-auth");

@@ -104,7 +104,7 @@ export default function KeyValueInput({
                   accept="image/*"
                   onSuccess={(response) => {
                     if (response.error) {
-                      toaster.push(
+                      return toaster.push(
                         <ErrorMessage
                           error={new HandledError(response.error)}
                           action={t`uploading the image`}
