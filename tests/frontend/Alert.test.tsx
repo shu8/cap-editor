@@ -9,6 +9,7 @@ import { randomUUID } from "crypto";
 import Alert from "../../components/Alert";
 import { formatDate } from "../../lib/helpers.client";
 import { messages } from "../../locales/en/messages";
+import { DateTime } from "luxon";
 
 const startOfToday = new Date();
 startOfToday.setHours(0, 0, 0, 0);
@@ -96,9 +97,10 @@ describe("<Alert>", () => {
 
   test("renders published expired alert correctly", async () => {
     const alert = { ...databaseAlert };
-    const expiry = new Date();
-    expiry.setMinutes(expiry.getMinutes() - 1);
-    alert.data.info[0].expires = expiry;
+    alert.data.info[0].expires = DateTime.now()
+      .minus({ minutes: 1 })
+      .setZone("Asia/Calcutta")
+      .toISO();
 
     render(<Alert alert={alert} />, {
       wrapper: TestingProvider,
