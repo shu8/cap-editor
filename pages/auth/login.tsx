@@ -1,13 +1,11 @@
 import { Trans } from "@lingui/macro";
 import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { Message } from "rsuite";
 
-import { startAuthentication } from "@simplewebauthn/browser";
 import AuthenticateForm from "../../components/AuthenticateForm";
 import { authOptions } from "../api/auth/[...nextauth]";
 
@@ -19,34 +17,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function Login() {
-  const { data: session, status: sessionStatus } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const { error } = router.query;
-
-  useEffect(() => {
-    async function initUsernamelessLogin() {
-      const res = await fetch("/api/webauthn/authenticate");
-      if (res.ok && res.status === 200) {
-        const options = await res.json();
-        const auth = await startAuthentication(options);
-        await signIn("webauthn", {
-          ...auth,
-          ...auth.clientExtensionResults,
-          ...auth.response,
-        });
-      }
-    }
-
-    if (
-      sessionStatus !== "loading" &&
-      !session &&
-      !window.location.search.includes("error")
-    ) {
-      initUsernamelessLogin().catch((err) =>
-        console.error("Failed to start usernameless login", err)
-      );
-    }
-  }, [session, sessionStatus]);
 
   return (
     <>
@@ -64,7 +37,7 @@ export default function Login() {
         </main>
       ) : (
         <main>
-          <AuthenticateForm />
+          <AuthenticateForm session={session} />
         </main>
       )}
     </>

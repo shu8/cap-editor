@@ -1,3 +1,15 @@
 .wrapper {
   padding: 10px;
 }
+
+.authenticateForm {
+  margin: auto;
+  width: 50%;
+  text-align: center;
+}
+
+.fingerprintIcon {
+  height: 25px;
+  width: 25px;
+  margin-right: 10px;
+}

@@ -1,5 +1,8 @@
 import { t, Trans } from "@lingui/macro";
-import { startRegistration } from "@simplewebauthn/browser";
+import {
+  browserSupportsWebAuthn,
+  startRegistration,
+} from "@simplewebauthn/browser";
 import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -8,11 +11,11 @@ import { Button, Message, Panel } from "rsuite";
 
 import ConnectToAlertingAuthorityForm from "../components/ConnectToAlertingAuthorityForm";
 import ErrorMessage from "../components/ErrorMessage";
+import UpdateAlertingAuthorityDetailsForm from "../components/UpdateAlertingAuthorityDetailsForm";
 import UpdatePersonalDetailsForm from "../components/UpdatePersonalDetailsForm";
+import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import { authOptions } from "./api/auth/[...nextauth]";
-import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
-import UpdateAlertingAuthorityDetailsForm from "../components/UpdateAlertingAuthorityDetailsForm";
 
 export default function SettingsPage() {
   const toaster = useToasterI18n();
@@ -40,50 +43,59 @@ export default function SettingsPage() {
           </Panel>
         )}
 
-        <Panel header="Security" bordered>
-          <Button
-            appearance="primary"
-            style={{ width: "200px" }}
-            onClick={async () => {
-              try {
-                const options = await fetch("/api/webauthn/register").then(
-                  (res) => res.json()
-                );
-                const credential = await startRegistration(options);
-                const verification = await fetch("/api/webauthn/register", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(credential),
-                }).then((res) => res.json());
+        {browserSupportsWebAuthn() && (
+          <Panel header="Security" bordered>
+            <p>
+              <Trans>
+                Depending on your device, you can register your fingerprint,
+                face, or PIN for easier login in future. You can also register
+                your security key, if you have one.
+              </Trans>
+            </p>
 
-                if (!verification?.error) {
-                  toaster.push(
-                    <Message type="success" closable>
-                      <Trans>
-                        This device has been successfully registered for
-                        WebAuthn authentication
-                      </Trans>
-                      .
-                    </Message>,
-                    { duration: 3000 }
+            <Button
+              appearance="primary"
+              onClick={async () => {
+                try {
+                  const options = await fetch("/api/webauthn/register").then(
+                    (res) => res.json()
                   );
-                } else {
-                  throw new Error("Failed to register", verification);
+                  const credential = await startRegistration(options);
+                  const verification = await fetch("/api/webauthn/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(credential),
+                  }).then((res) => res.json());
+
+                  if (!verification?.error) {
+                    toaster.push(
+                      <Message type="success" closable>
+                        <Trans>
+                          This device has been successfully registered for
+                          WebAuthn authentication
+                        </Trans>
+                        .
+                      </Message>,
+                      { duration: 3000 }
+                    );
+                  } else {
+                    throw new Error("Failed to register", verification);
+                  }
+                } catch (err) {
+                  console.error("Failed to register your device", err);
+                  toaster.push(
+                    <ErrorMessage
+                      error={err}
+                      action={t`registering for WebAuthn`}
+                    />
+                  );
                 }
-              } catch (err) {
-                console.error("Failed to register WebAuthn", err);
-                toaster.push(
-                  <ErrorMessage
-                    error={err}
-                    action={t`registering for WebAuthn`}
-                  />
-                );
-              }
-            }}
-          >
-            Register WebAuthn
-          </Button>
-        </Panel>
+              }}
+            >
+              Setup fingerprint, face, PIN, or security key
+            </Button>
+          </Panel>
+        )}
 
         <Panel header="Personal Details" bordered>
           <UpdatePersonalDetailsForm />

@@ -11,9 +11,9 @@ beforeEach(async () => {
 
 describe("Login", () => {
   test("load page", async () => {
-    expect((await queries.findAllByText(document, "Login")).length).toEqual(2);
-    await queries.findByText(document, "Email");
+    await queries.findByText(document, "Login with email");
     await queries.findByText(document, "Next");
+    await queries.findByText(document, "You will be emailed a link to login.");
   });
 
   test("redirects to register page when logging in with new email", async () => {

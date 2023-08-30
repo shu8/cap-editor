@@ -50,15 +50,16 @@ export default function Header() {
               .toLowerCase()}
           </span>
           <div>
-            <Button
-              className="noPadding"
-              appearance="link"
-              color="violet"
-              size="sm"
-              href="/settings"
-            >
-              Settings
-            </Button>
+            <Link href="/settings">
+              <Button
+                className="noPadding"
+                appearance="link"
+                color="violet"
+                size="sm"
+              >
+                Settings
+              </Button>
+            </Link>
             <Divider vertical />
             <Button
               className="noPadding"
