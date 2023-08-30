@@ -7,6 +7,7 @@ import { formatDate } from "../../lib/helpers.client";
 import { hash } from "../../lib/helpers.server";
 import { prismaMock } from "./setup";
 import { DateTime } from "luxon";
+import { FormAlertData } from "../../components/editor/EditorSinglePage";
 
 export const mockUserOnce = (mockUserDetails) => {
   const originalModuleClient = jest.requireActual("next-auth/react") as any;
@@ -70,11 +71,11 @@ export const users = {
   },
 };
 
-export const defaultFormData = {
+export const defaultFormData: FormAlertData = {
   category: ["Geo"],
   regions: {},
-  onset: DateTime.now().startOf("day").toISO(),
-  expires: DateTime.now().plus({ day: 1 }).endOf("day").toISO(),
+  onset: DateTime.now().startOf("day").toISO()!,
+  expires: DateTime.now().plus({ day: 1 }).endOf("day").toISO()!,
   language: "eng",
   contact: "contact@example.com",
   web: "https://www.example.com",

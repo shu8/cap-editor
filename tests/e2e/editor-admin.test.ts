@@ -1,15 +1,11 @@
 import { beforeEach, describe, expect, test } from "@jest/globals";
 import { Prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
+import { DateTime } from "luxon";
 import { getDocument, queries } from "pptr-testing-library";
 import { ElementHandle } from "puppeteer";
 import { formatDate } from "../../lib/helpers.client";
-import {
-  assertEditingPage,
-  createUser,
-  fillOutEditorForm,
-  login,
-} from "./helpers";
+import { createUser, fillOutEditorForm, login } from "./helpers";
 
 var document: ElementHandle<Element>;
 
@@ -68,6 +64,27 @@ describe("Editor: new alert (admin)", () => {
     expect(alerts[0].data.info[0].area[0].polygon).toHaveLength(1);
     expect(alerts[0].data.info[0].area[0].geocode).toBeFalsy();
     expect(alerts[0].data.info[0].area[0].circle).toBeFalsy();
+  });
+
+  test("timezone is saved correctly", async () => {
+    await fillOutEditorForm(document);
+
+    const saveBtn = await queries.findByText(document, "Save draft");
+    await saveBtn.click();
+    await queries.findByText(document, "Alert successfully submitted.");
+
+    const alerts = await prisma!.alert.findMany();
+    expect(alerts).toBeTruthy();
+    expect(alerts).toHaveLength(1);
+
+    const tomorrowStart = DateTime.now().plus({ days: 1 }).startOf("day");
+    const tomorrowEnd = DateTime.now().plus({ days: 1 }).endOf("day");
+    expect(alerts[0].data.info[0].onset).toEqual(
+      `${tomorrowStart.toFormat("yyyy-MM-dd'T'HH:mm:ss")}+05:30`
+    );
+    expect(alerts[0].data.info[0].expires).toEqual(
+      `${tomorrowEnd.toFormat("yyyy-MM-dd'T'HH:mm:ss")}+05:30`
+    );
   });
 });
 

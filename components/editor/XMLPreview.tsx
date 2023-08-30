@@ -5,6 +5,7 @@ import { Panel } from "rsuite";
 import { useDebounce } from "usehooks-ts";
 import { UserAlertingAuthority } from "../../lib/types/types";
 import { FormAlertData } from "./EditorSinglePage";
+import { formatDate } from "../../lib/helpers.client";
 
 export default function XMLPreview({
   alertingAuthority,
@@ -24,7 +25,14 @@ export default function XMLPreview({
     fetch(`/api/alerts/alertingAuthorities/${alertingAuthority.id}/preview`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: debouncedAlertData, multiLanguageGroupId }),
+      body: JSON.stringify(
+        { data: debouncedAlertData, multiLanguageGroupId },
+        function (k, v) {
+          return this[k] instanceof Date
+            ? formatDate(this[k], debouncedAlertData.timezone)
+            : v;
+        }
+      ),
     })
       .then((res) => res.json())
       .then((res) => {

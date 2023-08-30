@@ -23,7 +23,7 @@ The Editor includes the following steps and mappings to the CAP protocol:
 
 - Data
 
-  - Start time (`alert.info[].effective`)
+  - Start time (`alert.info[].onset`)
   - End time (`alert.info[].expires`)
   - Severity (`alert.info[].severity`)
   - Certainty (`alert.info[].certainty`)

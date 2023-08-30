@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@jest/globals";
-import { Alert, Prisma } from "@prisma/client";
+import { Alert } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { getDocument, queries } from "pptr-testing-library";
 import { ElementHandle } from "puppeteer";
@@ -128,8 +128,8 @@ describe("Editor: edit alert", () => {
               urgency: "Immediate",
               severity: "Extreme",
               certainty: "Observed",
-              onset: formatDate(from),
-              expires: formatDate(future),
+              onset: formatDate(from, "Asia/Calcutta"),
+              expires: formatDate(future, "Asia/Calcutta"),
               senderName: "Alerting Authority",
               headline: "Headline text",
               description: "Description text",

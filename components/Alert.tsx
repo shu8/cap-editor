@@ -2,12 +2,13 @@ import { Trans } from "@lingui/macro";
 import { Alert as DBAlert } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-import { Button, Panel, Tag } from "rsuite";
+import { Button, Divider, Panel, Stack, Tag } from "rsuite";
 import GlobalIcon from "@rsuite/icons/Global";
 
 import { CAPV12JSONSchema } from "../lib/types/cap.schema";
 import styles from "../styles/components/Alert.module.css";
 import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
+import { DateTime } from "luxon";
 
 const generateSocialMediaText = (
   info: NonNullable<CAPV12JSONSchema["info"]>[number] | undefined
@@ -34,9 +35,9 @@ export default function Alert({ alert }: { alert: DBAlert }) {
     CAPV12JSONSchema["info"]
   >[number];
 
-  const onsetDate = new Date(info.onset!);
-  const expiryDate = new Date(info.expires!);
-  const expired = expiryDate < new Date();
+  const onsetDate = DateTime.fromISO(info.onset!, { setZone: true });
+  const expiryDate = DateTime.fromISO(info.expires!, { setZone: true });
+  const expired = expiryDate.toJSDate() < new Date();
   const socialMediaEncodedUrl = encodeURIComponent(
     new URL(`/feed/${alert.id}`, window.location.origin).toString()
   );

@@ -26,6 +26,8 @@ import { useAlertingAuthorityLocalStorage } from "../../lib/useLocalStorageState
 import { useToasterI18n } from "../../lib/useToasterI18n";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME } from "../../lib/constants";
+import { DateTime } from "luxon";
+import timezones from "timezones.json";
 
 // Must serialise Dates between server and client
 type FormAlertDataSerialised = FormAlertData & {
@@ -163,6 +165,19 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     const alertData = alert.data as CAPV12JSONSchema;
     const info = alertData.info?.[0];
 
+    let timezone = "Etc/GMT";
+    if (info?.expires) {
+      const timezoneOffset = DateTime.fromISO(info.expires, {
+        setZone: true,
+      }).toFormat("ZZ");
+
+      const timezoneIANA = timezones
+        .find((t) => t.text.startsWith(`(UTC${timezoneOffset})`))
+        ?.utc.at(-1);
+
+      if (timezoneIANA) timezone = timezoneIANA;
+    }
+
     defaultAlertData = {
       ...(!isTemplate && { identifier: alertData.identifier }),
       category: info?.category ?? [],
@@ -179,14 +194,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
           };
           return acc;
         }, {} as { [key: string]: any }) ?? {},
-      onset: (info?.effective
-        ? new Date(info?.effective)
+      onset: (info?.onset
+        ? new Date(info?.onset)
         : getStartOfToday()
       ).toString(),
       expires: (info?.expires
         ? new Date(info?.expires)
         : new Date()
       ).toString(),
+      timezone,
       responseType: info?.responseType ?? [],
       certainty: info?.certainty ?? "",
       severity: info?.severity ?? "",
@@ -299,11 +315,11 @@ export default function EditorPage(props: Props) {
 
   // Dates were serialised on server; convert back to Date now
   const defaultAlertData: FormAlertData = {
+    timezone:
+      session!.user.alertingAuthorities[alertingAuthorityId].defaultTimezone,
     ...props.defaultAlertData!,
     onset: new Date(props.defaultAlertData!.onset),
     expires: new Date(props.defaultAlertData!.expires),
-    timezone:
-      session!.user.alertingAuthorities[alertingAuthorityId].defaultTimezone,
   };
 
   return (

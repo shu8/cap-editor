@@ -10,6 +10,7 @@ export default function Timezone({ onUpdate, alertData }: FieldProps) {
       label={t`Timezone`}
       options={timezones.map((t) => ({ label: t.text, value: t.utc.at(-1) }))}
       fieldName="timezone"
+      searchable
     />
   );
 }

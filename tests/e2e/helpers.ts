@@ -172,7 +172,14 @@ export async function fillOutEditorForm(document: ElementHandle<Element>) {
   await (await queries.findByText(document, "Immediate")).click();
 
   await (await queries.findByText(document, "Timezone")).click();
-  await (await queries.findByText(document, "(UTC) Casablanca")).click();
+  const searchInput = await queries.findByPlaceholderText(document, "Search");
+  await searchInput.type("5:30");
+  await (
+    await queries.findByText(
+      document,
+      "(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi"
+    )
+  ).click();
 
   await (await queries.findByText(document, "Onset")).click();
   await (await queries.findByText(document, "tomorrow, start")).click();
@@ -263,4 +270,9 @@ export async function assertPrefilledEditingPage(
   ]) {
     await queries.findByDisplayValue(document, string);
   }
+
+  await queries.findByText(
+    document,
+    "(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi"
+  );
 }

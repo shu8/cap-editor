@@ -56,7 +56,7 @@ export const formatDate = (date: Date, timezone: string = "Etc/GMT") => {
     (offset < 0 ? "-" : "+") +
     pad(Math.floor(Math.abs(offset))) +
     ":" +
-    (offset % 0.5 === 0 ? "30" : "00")
+    (Number.isInteger(offset) ? "00" : "30")
   );
 };
 
