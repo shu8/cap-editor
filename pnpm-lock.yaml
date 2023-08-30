@@ -35,9 +35,6 @@ dependencies:
   '@turf/truncate':
     specifier: ^6.5.0
     version: 6.5.0
-  '@types/luxon':
-    specifier: ^3.3.1
-    version: 3.3.1
   capgen:
     specifier: ^1.0.8
     version: 1.0.8
@@ -50,9 +47,6 @@ dependencies:
   formidable:
     specifier: ^3.5.1
     version: 3.5.1
-  iso-639-1:
-    specifier: ^2.1.15
-    version: 2.1.15
   iso-639-3:
     specifier: ^3.0.1
     version: 3.0.1
@@ -65,9 +59,6 @@ dependencies:
   minio:
     specifier: ^7.1.2
     version: 7.1.2
-  net:
-    specifier: ^1.0.2
-    version: 1.0.2
   next:
     specifier: 13.0.7
     version: 13.0.7(@babel/core@7.22.11)(babel-plugin-macros@3.1.0)(react-dom@18.2.0)(react@18.2.0)
@@ -107,9 +98,6 @@ dependencies:
   timezones.json:
     specifier: ^1.7.1
     version: 1.7.1
-  tls:
-    specifier: ^0.0.1
-    version: 0.0.1
   usehooks-ts:
     specifier: ^2.9.1
     version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
@@ -146,8 +134,8 @@ devDependencies:
     specifier: ^10.3.1
     version: 10.3.1(typescript@4.9.5)
   '@simplewebauthn/typescript-types':
-    specifier: 6.3.0-alpha.1
-    version: 6.3.0-alpha.1
+    specifier: ^8.0.0
+    version: 8.0.0
   '@testing-library/dom':
     specifier: ^9.3.1
     version: 9.3.1
@@ -163,6 +151,9 @@ devDependencies:
   '@types/formidable':
     specifier: ^3.4.2
     version: 3.4.2
+  '@types/luxon':
+    specifier: ^3.3.1
+    version: 3.3.1
   '@types/node':
     specifier: 18.11.15
     version: 18.11.15
@@ -2626,8 +2617,8 @@ packages:
       - supports-color
     dev: false
 
-  /@simplewebauthn/typescript-types@6.3.0-alpha.1:
-    resolution: {integrity: sha512-NdVVJMSSqco21MvNrttbRGms1oNL6HvoiRKNFEZ8zB3MdqMecBeicQ7YlKDd4MdJrkAKcwXKwH+cjlzIDU5uhg==}
+  /@simplewebauthn/typescript-types@8.0.0:
+    resolution: {integrity: sha512-d7Izb2H+LZJteXMkS8DmpAarD6mZdpIOu/av/yH4/u/3Pd6DKFLyBM3j8BMmUvUqpzvJvHARNrRfQYto58mtTQ==}
     dev: true
 
   /@sinclair/typebox@0.27.8:
@@ -2973,7 +2964,7 @@ packages:
 
   /@types/luxon@3.3.1:
     resolution: {integrity: sha512-XOS5nBcgEeP2PpcqJHjCWhUCAzGfXIU8ILOSLpx2FhxqMW9KdxgCGXNOEKGVBfveKtIpztHzKK5vSRVLyW/NqA==}
-    dev: false
+    dev: true
 
   /@types/minimatch@5.1.2:
     resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
@@ -6333,11 +6324,6 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
 
-  /iso-639-1@2.1.15:
-    resolution: {integrity: sha512-7c7mBznZu2ktfvyT582E2msM+Udc1EjOyhVRE/0ZsjD9LBtWSm23h3PtiRh2a35XoUsTQQjJXaJzuLjXsOdFDg==}
-    engines: {node: '>=6.0'}
-    dev: false
-
   /iso-639-3@3.0.1:
     resolution: {integrity: sha512-SdljCYXOexv/JmbQ0tvigHN43yECoscVpe2y2hlEqy/CStXQlroPhZLj7zKLRiGqLJfw8k7B973UAMDoQczVgQ==}
     dev: false
@@ -7535,10 +7521,6 @@ packages:
   /nested-error-stacks@2.1.1:
     resolution: {integrity: sha512-9iN1ka/9zmX1ZvLV9ewJYEk9h7RyRRtqdK0woXcqohu8EWIerfPUjYJPg0ULy0UqP7cslmdGc8xKDJcojlKiaw==}
     dev: true
-
-  /net@1.0.2:
-    resolution: {integrity: sha512-kbhcj2SVVR4caaVnGLJKmlk2+f+oLkjqdKeQlmUtz6nGzOpbcobwVIeSURNgraV/v3tlmGIX82OcPCl0K6RbHQ==}
-    dev: false
 
   /new-github-issue-url@0.2.1:
     resolution: {integrity: sha512-md4cGoxuT4T4d/HDOXbrUHkTKrp/vp+m3aOA7XXVYwNsUNMK49g3SQicTSeV5GIz/5QVGAeYRAOlyp9OvlgsYA==}
@@ -9529,10 +9511,6 @@ packages:
     resolution: {integrity: sha512-7cR8rLy2QhYHpsBDBVYnnWXm8uRTr38RoZakFSW7Bs7PzfMPNZthuMLkwqZv7MTu8lhQ91cOFYS5a7iFj2oR3w==}
     engines: {node: '>=4'}
     dev: true
-
-  /tls@0.0.1:
-    resolution: {integrity: sha512-GzHpG+hwupY8VMR6rYsnAhTHqT/97zT45PG8WD5eTT1lq+dFE0nN+1PYpsoBcHJgSmTz5ceK2Cv88IkPmIPOtQ==}
-    dev: false
 
   /tmp@0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
