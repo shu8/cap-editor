@@ -1,14 +1,14 @@
 import { Trans } from "@lingui/macro";
 import { Alert as DBAlert } from "@prisma/client";
+import GlobalIcon from "@rsuite/icons/Global";
 import Image from "next/image";
 import Link from "next/link";
-import { Button, Divider, Panel, Stack, Tag } from "rsuite";
-import GlobalIcon from "@rsuite/icons/Global";
+import { Button, Divider, Panel, Stack } from "rsuite";
 
-import { CAPV12JSONSchema } from "../lib/types/cap.schema";
-import styles from "../styles/components/Alert.module.css";
-import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
 import { DateTime } from "luxon";
+import { CAPV12JSONSchema } from "../lib/types/cap.schema";
+import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
+import styles from "../styles/components/Alert.module.css";
 
 const generateSocialMediaText = (
   info: NonNullable<CAPV12JSONSchema["info"]>[number] | undefined
@@ -49,53 +49,55 @@ export default function Alert({ alert }: { alert: DBAlert }) {
       header={
         <>
           <strong>{info?.headline}</strong> <i>({info?.category.join(", ")})</i>{" "}
-          <a
-            className={styles.btn}
-            target="_blank"
-            href={`/feed/${alert.id}`}
-            rel="noreferrer"
-          >
-            <Button appearance="ghost" color="violet" size="xs">
-              <Trans>View alert</Trans> ↗
-            </Button>
-          </a>
-          {alert.status !== "PUBLISHED" && (
-            <Link href={`/editor/${alert.id}`}>
+          <div className={styles.actions}>
+            <a
+              className={styles.btn}
+              target="_blank"
+              href={`/feed/${alert.id}`}
+              rel="noreferrer"
+            >
+              <Button appearance="ghost" color="violet" size="xs">
+                <Trans>View alert</Trans> ↗
+              </Button>
+            </a>
+            {alert.status !== "PUBLISHED" && (
+              <Link href={`/editor/${alert.id}`}>
+                <Button
+                  className={styles.btn}
+                  appearance="ghost"
+                  color="violet"
+                  size="xs"
+                >
+                  <Trans>Edit alert</Trans> 🖉
+                </Button>
+              </Link>
+            )}
+            <Link
+              href={`/editor?template=${alert.id}&alertingAuthorityId=${alertingAuthorityId}`}
+            >
               <Button
                 className={styles.btn}
                 appearance="ghost"
                 color="violet"
                 size="xs"
               >
-                <Trans>Edit alert</Trans> 🖉
+                <Trans>Use as template for new alert</Trans> &rarr;
               </Button>
             </Link>
-          )}
-          <Link
-            href={`/editor?template=${alert.id}&alertingAuthorityId=${alertingAuthorityId}`}
-          >
-            <Button
-              className={styles.btn}
-              appearance="ghost"
-              color="violet"
-              size="xs"
+            <Link
+              href={`/editor?template=${alert.id}&alertingAuthorityId=${alertingAuthorityId}&isNewLanguageDraft=1`}
             >
-              <Trans>Use as template for new alert</Trans> &rarr;
-            </Button>
-          </Link>
-          <Link
-            href={`/editor?template=${alert.id}&alertingAuthorityId=${alertingAuthorityId}&isNewLanguageDraft=1`}
-          >
-            <Button
-              className={styles.btn}
-              appearance="ghost"
-              color="violet"
-              size="xs"
-            >
-              <Trans>Draft in new language</Trans>{" "}
-              <GlobalIcon className={styles.actionIcon} />
-            </Button>
-          </Link>
+              <Button
+                className={styles.btn}
+                appearance="ghost"
+                color="violet"
+                size="xs"
+              >
+                <Trans>Draft in new language</Trans>{" "}
+                <GlobalIcon className={styles.actionIcon} />
+              </Button>
+            </Link>
+          </div>
         </>
       }
     >
@@ -106,23 +108,14 @@ export default function Alert({ alert }: { alert: DBAlert }) {
             <br />
             <Trans>Expires</Trans>: {expiryDate.toString()}
           </p>
-          <p>
-            <Tag as="span" color="blue">
-              {alertData.msgType}
-            </Tag>
-            <Tag as="span" color="blue">
-              {alertData.status}
-            </Tag>
-            <Tag as="span" color="blue">
-              {info?.urgency}
-            </Tag>
-            <Tag as="span" color="blue">
-              {info?.certainty}
-            </Tag>
-            <Tag as="span" color="blue">
-              {info?.severity}
-            </Tag>
-          </p>
+
+          <Stack divider={<Divider vertical />} wrap>
+            {alertData.msgType}
+            {alertData.status}
+            {info?.urgency}
+            {info?.certainty}
+            {info?.severity}
+          </Stack>
 
           {alert.status === "PUBLISHED" && !expired && (
             <p className={styles.socialMediaShareIconsWrapper}>
