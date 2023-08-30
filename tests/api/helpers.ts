@@ -135,6 +135,7 @@ export const createAlert = async ({
   const future = new Date();
   future.setDate(future.getDate() + 1);
   const uuid = randomUUID();
+  const uuidXml = randomUUID();
   const user = userDetails ? await createUser(userDetails) : await createUser();
 
   return await prismaMock.alert.create({
@@ -147,7 +148,7 @@ export const createAlert = async ({
         { name: "AA", author: "AA@example.com" },
         defaultFormData,
         new Date(),
-        uuid
+        uuidXml
       ),
     },
   });

@@ -61,6 +61,7 @@ describe("Editor: edit alert (composer)", () => {
     });
 
     const uuid = randomUUID();
+    const uuidXml = randomUUID();
     const from = new Date();
     const future = new Date();
     future.setDate(future.getDate() + 1);
@@ -71,7 +72,7 @@ describe("Editor: edit alert (composer)", () => {
         alertingAuthorityId: "AA",
         status: "DRAFT",
         data: {
-          identifier: uuid,
+          identifier: uuidXml,
           sender: "foo@example.com",
           sent: formatDate(from),
           status: "Actual",
@@ -130,7 +131,7 @@ describe("Editor: edit alert (composer)", () => {
     await (await queries.findByText(document, "Status")).click();
     await (await queries.findByText(document, "Exercise")).click();
 
-    await(await queries.findByText(document, "Update draft")).click();
+    await (await queries.findByText(document, "Update draft")).click();
     await queries.findByText(document, "Alert successfully submitted.");
 
     expect(

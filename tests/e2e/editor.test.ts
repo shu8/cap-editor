@@ -103,6 +103,7 @@ describe("Editor: edit alert", () => {
     });
 
     const uuid = randomUUID();
+    const uuidXml = randomUUID();
     const from = new Date();
     const future = new Date();
     future.setDate(future.getDate() + 1);
@@ -113,7 +114,7 @@ describe("Editor: edit alert", () => {
         alertingAuthorityId: "AA",
         status: "DRAFT",
         data: {
-          identifier: uuid,
+          identifier: uuidXml,
           sender: "foo@example.com",
           sent: formatDate(from),
           status: "Actual",

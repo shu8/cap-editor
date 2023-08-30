@@ -121,10 +121,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
         return redirect(`/error/${ERRORS.EDIT_PUBLISHED_ALERT.slug}`);
       }
 
-      editingAlert = {
-        id: (alert.data as CAPV12JSONSchema).identifier,
-        status: alert.status,
-      };
+      editingAlert = { id: alert.id, status: alert.status };
     }
 
     if (isNewLanguageDraft) {
