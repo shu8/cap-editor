@@ -6,11 +6,11 @@ settings:
 
 dependencies:
   '@lingui/core':
-    specifier: ^4.4.1
-    version: 4.4.1
+    specifier: 4.3.0
+    version: 4.3.0
   '@lingui/react':
-    specifier: ^4.4.1
-    version: 4.4.1(react@18.2.0)
+    specifier: 4.3.0
+    version: 4.3.0(react@18.2.0)
   '@next-auth/prisma-adapter':
     specifier: ^1.0.7
     version: 1.0.7(@prisma/client@5.2.0)(next-auth@4.23.1)
@@ -125,11 +125,11 @@ devDependencies:
     specifier: ^29.6.4
     version: 29.6.4
   '@lingui/cli':
-    specifier: ^4.4.1
-    version: 4.4.1
+    specifier: 4.3.0
+    version: 4.3.0
   '@lingui/macro':
-    specifier: ^4.4.1
-    version: 4.4.1(@lingui/react@4.4.1)(babel-plugin-macros@3.1.0)
+    specifier: 4.3.0
+    version: 4.3.0(@lingui/react@4.3.0)(babel-plugin-macros@3.1.0)
   '@mermaid-js/mermaid-cli':
     specifier: ^10.3.1
     version: 10.3.1(typescript@5.2.2)
@@ -2099,13 +2099,13 @@ packages:
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
     dev: false
 
-  /@lingui/babel-plugin-extract-messages@4.4.1:
-    resolution: {integrity: sha512-FMi1UT7ReNZUFvvhwqglQLMerCTWqk84ZojrFa9+wjJXCwTgk9KrXJbPYLIANdyNGj6Y9x5EvXE8niK72k2qdw==}
+  /@lingui/babel-plugin-extract-messages@4.3.0:
+    resolution: {integrity: sha512-X23evX574Pv5wRpg9HytCuE0dsRaFi0kkrj8uQC++Dk1Iti0ptRFeuMU4jxINlfa972Ri3GF6ckGQ+Req3drYg==}
     engines: {node: '>=16.0.0'}
     dev: true
 
-  /@lingui/cli@4.4.1:
-    resolution: {integrity: sha512-XbJiNCmic/3YmbR7hz6IOUJf/MlL2IVMz87+QPxTduhVy1Hnp+pvsdcd6Eyc0mM+lIqSfaJZuvC9aXHHZfsZ1Q==}
+  /@lingui/cli@4.3.0:
+    resolution: {integrity: sha512-Z44IxdK7kzmL+5TB2Kuu2xB3O6n1WCsBG0nUXOMtwTWHNxBLdr89hFogO3Orf7QNyxpfw6yZ3Go3xRm3JO3rJg==}
     engines: {node: '>=16.0.0'}
     hasBin: true
     dependencies:
@@ -2114,11 +2114,11 @@ packages:
       '@babel/parser': 7.22.14
       '@babel/runtime': 7.22.11
       '@babel/types': 7.22.11
-      '@lingui/babel-plugin-extract-messages': 4.4.1
-      '@lingui/conf': 4.4.1
-      '@lingui/core': 4.4.1
-      '@lingui/format-po': 4.4.1
-      '@lingui/message-utils': 4.4.1
+      '@lingui/babel-plugin-extract-messages': 4.3.0
+      '@lingui/conf': 4.3.0
+      '@lingui/core': 4.3.0
+      '@lingui/format-po': 4.3.0
+      '@lingui/message-utils': 4.3.0
       babel-plugin-macros: 3.1.0
       chalk: 4.1.2
       chokidar: 3.5.1
@@ -2142,8 +2142,8 @@ packages:
       - supports-color
     dev: true
 
-  /@lingui/conf@4.4.1:
-    resolution: {integrity: sha512-dLt8+bFfUxuO/CZ0jjlhLeQNM5s28GsA0m/bhCB3r+41KfiwUfX+4fd/ShF9rMFvvpebPdO6Mdm4o1pR6bYsNw==}
+  /@lingui/conf@4.3.0:
+    resolution: {integrity: sha512-ZflR/igJi3+MUr1VeJDNkYMpnNvinRdw9m17G7mxmemxtnYV+RsIiUB+aR3AcgbQbEEmF95XmZb8jlUFYWlvtw==}
     engines: {node: '>=16.0.0'}
     dependencies:
       '@babel/runtime': 7.22.11
@@ -2154,26 +2154,26 @@ packages:
       lodash.get: 4.4.2
     dev: true
 
-  /@lingui/core@4.4.1:
-    resolution: {integrity: sha512-G5Sc1r0mw7loiGeQnrXbyMed3UzwGi93yJK2o1SNbnh7VVKlS99bgA0QN4ECH8Rmf6yy1iC3Dfx+uUIfq6s3Yw==}
+  /@lingui/core@4.3.0:
+    resolution: {integrity: sha512-nx9UM3ndYaK9VG6xQpF0OD/n0W35o5EPbiIzxgNvdNzRFtv9l1Z3pBipHXurRuZX0oDepGhVyXFD0ykPDeF7jA==}
     engines: {node: '>=16.0.0'}
     dependencies:
       '@babel/runtime': 7.22.11
-      '@lingui/message-utils': 4.4.1
+      '@lingui/message-utils': 4.3.0
       unraw: 2.0.1
 
-  /@lingui/format-po@4.4.1:
-    resolution: {integrity: sha512-BC/wgOaAGGTitVjLnujHutD1OqwRZBM4+IlwSHqnLp7SAJrOtwC6SE0OgYk1lrpG1eV6OLdEaHCMTUjslQxdfw==}
+  /@lingui/format-po@4.3.0:
+    resolution: {integrity: sha512-iwqMve+VMxfRisTCk2evcnhAfn54v5qXTXZUDGZQrSQ60r2A4VGtS8VdCzqHwKxvbIatjq4NfWGa0v0zb092jg==}
     engines: {node: '>=16.0.0'}
     dependencies:
-      '@lingui/conf': 4.4.1
-      '@lingui/message-utils': 4.4.1
+      '@lingui/conf': 4.3.0
+      '@lingui/message-utils': 4.3.0
       date-fns: 2.30.0
       pofile: 1.1.4
     dev: true
 
-  /@lingui/macro@4.4.1(@lingui/react@4.4.1)(babel-plugin-macros@3.1.0):
-    resolution: {integrity: sha512-7XHgrgXTtMTGfuKpQqBSuHJX5cLk7h4HO1nBE2bY8749zTtnUONf+HrJ9P3DzGqgr5+HO1z7aACMt/84TU8mUg==}
+  /@lingui/macro@4.3.0(@lingui/react@4.3.0)(babel-plugin-macros@3.1.0):
+    resolution: {integrity: sha512-MkeYKshuEp2j8Nx0IOhppcSiN3wEw3UxMPXsHzMe34U/MPrrriYaxMRY7CSsQrXqftcacQTm9IiDWvJAj4/V9w==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@lingui/react': ^4.0.0
@@ -2181,29 +2181,28 @@ packages:
     dependencies:
       '@babel/runtime': 7.22.11
       '@babel/types': 7.22.11
-      '@lingui/conf': 4.4.1
-      '@lingui/core': 4.4.1
-      '@lingui/message-utils': 4.4.1
-      '@lingui/react': 4.4.1(react@18.2.0)
+      '@lingui/conf': 4.3.0
+      '@lingui/core': 4.3.0
+      '@lingui/message-utils': 4.3.0
+      '@lingui/react': 4.3.0(react@18.2.0)
       babel-plugin-macros: 3.1.0
     dev: true
 
-  /@lingui/message-utils@4.4.1:
-    resolution: {integrity: sha512-nZK5S4MayrSKdZPhSTEFf2h6Q5r62IHzYhhqMFHZ/JVZV4XiEr9UXmDLS5lH8if2vfgqF6Q/CDnmcCcv/4/9AQ==}
+  /@lingui/message-utils@4.3.0:
+    resolution: {integrity: sha512-UtgO5pm6LpJKqmZctr2R2hT+qicb8UijFDG3dctKGBuwkkwunFZUswOLJ+AxfhaO652Vov/yf5qsymJ6UFXPBA==}
     engines: {node: '>=16.0.0'}
     dependencies:
       '@messageformat/parser': 5.1.0
 
-  /@lingui/react@4.4.1(react@18.2.0):
-    resolution: {integrity: sha512-uuJkwTaQ3zgTYDI5W9v/vtj5qbMCRTKMcPnkeSc8oJStx9//F917XdOB5Rg/RBOM6MoAD6Chgr//+oLcw96Hqw==}
+  /@lingui/react@4.3.0(react@18.2.0):
+    resolution: {integrity: sha512-EbkS5J2i26ENuAie70Fb+urOlajOTpa0xF3wZ78Zt4XKJSruZQ1Vg0U7vndpD5QeLsIpjGmJONkLjg8KzyVmBA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       '@babel/runtime': 7.22.11
-      '@lingui/core': 4.4.1
+      '@lingui/core': 4.3.0
       react: 18.2.0
-      use-sync-external-store: 1.2.0(react@18.2.0)
 
   /@mapbox/jsonlint-lines-primitives@2.0.2:
     resolution: {integrity: sha512-rY0o9A5ECsTQRVhv7tL/OyDpGAoUB4tTvLiW1DSzQGq4bvTPhNw1VpSNjDJc5GFZ2XuyOtSWSVN05qOtcD71qQ==}
@@ -10239,6 +10238,7 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
+    dev: false
 
   /usehooks-ts@2.9.1(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-2FAuSIGHlY+apM9FVlj8/oNhd+1y+Uwv5QNkMQz1oSfdHk4PXo1qoCw9I5M7j0vpH8CSWFJwXbVPeYDjLCx9PA==}
