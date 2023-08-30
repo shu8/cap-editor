@@ -126,6 +126,7 @@ export default function MapForm({
             disabled={disabled}
             value={selectedRegion}
             onChange={(country) => {
+              if (!country) return;
               if (!regions[country]) {
                 regions[country] = {
                   polygons: [],
