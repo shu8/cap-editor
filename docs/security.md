@@ -7,13 +7,16 @@ There are multiple levels of security in this system.
 At the highest level, there are three roles:
 
 1. Administrator
+
    Admins can perform any action under their respective AAs.
 
 2. Composer
-   Composers can edit any non-published alert, create new draft alerts, but cannot publish any alert.
+
+   Composers can create and edit any draft alert, but cannot publish any alert.
 
 3. Approver
-   Approvers can edit/create and publish any draft alert.
+
+   Approvers can create, edit, and publish any draft alert.
 
 A user can have one or more roles, however there is largely a hierarchy in these roles.
 
@@ -29,7 +32,7 @@ There are two methods of authentication with the system:
 2. Using biometrics or hardware tokens
    Some devices will support biometrics natively (e.g., Windows Hello, Apple Touch ID, Apple Face ID). Some users may also have hardware tokens (e.g., YubiKeys, Google Titan keys).
 
-   After registering, users have the option to register their device with the platform in order to login without their email in future (when using the same device). When visiting the login page, browsers will automatically request authentication via such devices (without requiring a username).
+   After registering, users have the option to register their device with the platform in order to login without their email in future (when using the same device). When visiting the login page, users have the choice to use biometric authentication, if their browser supports it.
 
 ## Onboarding/registering
 

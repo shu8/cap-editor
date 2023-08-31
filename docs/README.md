@@ -16,8 +16,8 @@ Features:
 - Create **multilingual alerts**
 - Dynamic **images** for alerts to share on social media or other dissemination methods
 - **Invite guest users** to collaborate on alerts with limited access
-- **User roles**: composer (create/edit draft alerts), approver (edit/publish draft alerts), administrator (create/publish any alert)
-- **User-friendly alert creation UI**: individual steps, prefilled defaults, graphical map with circle/polygon drawing
+- **User roles**: composer (create/edit draft alerts), approver (create/edit/publish alerts), administrator (create/edit/publish alerts & manage AA settings)
+- **User-friendly alert creation UI**: simple dropdown-heavy interface with prefilled defaults, graphical map with circle/polygon drawing
 - **[WhatNow](https://whatnow.preparecenter.org/) integration** for pre-filled multilingual alert instruction and descriptions
 - **Digital Signatures** with [XMLDSIG](https://www.w3.org/TR/xmldsig-core1/)
 - **Decentralised and easily deployable** with [Docker Compose](https://docs.docker.com/compose/)
@@ -35,4 +35,3 @@ Editor:
 <p align="center">
   <img src="images/editor.png" alt="CAP Editor" width="80%" align="center">
 </p>
-

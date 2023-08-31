@@ -77,15 +77,14 @@ These tests hook into [Mailhog's API](https://github.com/mailhog/MailHog) to ext
 3. Start the Next.js server in a new shell
 
    ```bash
-   NODE_ENV=test pnpm build # Or npm run build
-   NODE_ENV=test pnpm start # Or npm run start
+   NODE_ENV=test pnpm build && pnpm start
+   NODE_ENV=test pnpm dev
    ```
 
 4. Run API tests
 
    ```bash
    pnpm test:e2e
-   # Or npm run test:e2e
    ```
 
    This also outputs the overall coverage.

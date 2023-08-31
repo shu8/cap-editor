@@ -7,15 +7,21 @@
 - Docker
 - Docker Compose
 
-2. Create a [`.env`](./.env) file based on the [`.env.example`](./.env.example) file
+2. Clone the repo.
+
+3. Create a [`.env`](./.env) file based on the [`.env.example`](./.env.example) file
 
    !> Make sure you [configure the system entirely](./configuration.md).
 
-3. Start the Docker containers using the [`docker-compose-prod.yml`](https://github.com/shu8/cap-editor/tree/main/docker-compose-prod.yml) configuration:
+4. Edit the `Caddyfile` to map the correct ports to the correct hostnames. You will also need to configure your domain's DNS to point to your server's IP address.
+
+5. Start the Docker containers using the [`docker-compose-prod.yml`](https://github.com/shu8/cap-editor/tree/main/docker-compose-prod.yml) configuration:
 
    ```bash
    docker-compose -f docker-compose-prod.yml up -d --build
    ```
+
+6. If using Minio (for S3 storage for resources), make sure the access control is configured appropriately.
 
 [Caddy](https://caddyserver.com/) is used as a web server and reverse proxy in the production configuration. The platform will be accessible on port 80 (redirected to HTTPS) and 443, so these ports must be whitelisted in any firewalls.
 

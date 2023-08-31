@@ -4,13 +4,35 @@ This system is intended to be deployable by simply starting the Docker container
 
 ?> You can copy the `.env.example` file into a new `.env` file, and then edit the defaults, to make configuration easier.
 
-## General
+## Databases
 
-##### `BASE_URL`
+These settings are used in the Docker Compose configuration to configure the databases, and the Next.js server when connecting to the databases.
 
-Example: `https://example.com`.
+##### `POSTGRES_USERNAME`
 
-This is the base URL that the system is deployed on.
+Example: `cap-editor`.
+
+This is the username that the PostgreSQL database should be configured to use.
+
+##### `POSTGRES_PASSWORD`
+
+Example: `khnGQYGwOBaUwwYCMpUVitAVCDOcVZsw`.
+
+This is the password that the PostgreSQL database should be configured to use.
+
+##### `POSTGRES_DATABASE`
+
+Example: `cap-editor`.
+
+This is the database name that the PostgreSQL database should be configured to use.
+
+##### `DATABASE_URL`
+
+Example: `postgresql://USERNAME:PASSWORD@HOST:PORT/DBNAME?schema=public`.
+
+This is the PostgreSQL Connection URL that should be used to connect to the database.
+
+When deploying in production, the Docker internal network allows you to connect to containers using their container name as the hostname. Therefore, in production, the `host` should usually be `db`, and in development it should be `localhost`.
 
 ##### `REDIS_HOST`
 
@@ -19,6 +41,60 @@ Example: `redis`.
 This is the hostname of the Redis server. When deploying in production, the Docker internal network allows you to connect to containers using their container name as the hostname.
 
 Therefore, in production, this should usually be `redis`. In development, this should usually be `localhost` (as Redis is in Docker but the Next.js app is on your host).
+
+## S3 (Uploaded resources)
+
+The CAP Editor allows users to upload images to use as Resource entries for CAP alerts. These are stored in any S3-compatible storage space.
+
+By default, the Docker Compose configuration includes [Minio](https://min.io/), an S3-compatible data store than is hosted alongside the CAP Editor.
+
+Any other S3-compatible data store can be used (e.g., AWS S3, Azure, Backblaze), as long as the following configuration options are set.
+
+##### `RESOURCES_S3_BASE_URL`
+
+Example: `localhost`.
+
+This is the URL of the S3 API that should be used to upload files. If using Minio locally, this should be `localhost` in development, or the Minio Docker container's name in production (e.g., `minio`).
+
+If using an external S3 provider, it should be the URL they give.
+
+##### `RESOURCES_S3_PORT`
+
+Example: `9000`.
+
+This is the port that the S3 API is listening on. If using an external S3 provider, this would usually be `80` or `443`.
+
+##### `RESOURCES_S3_ACCESS_KEY`
+
+Example: `cap-resources`.
+
+This is the username of the user who has permission to write to the S3 bucket.
+
+##### `RESOURCES_S3_SECRET_KEY`
+
+Example: `khnGQYGwOBaUwwYCMpUVitAVCDOcVZsw`.
+
+This is the password of the user who has permission to write to the S3 bucket.
+
+##### `RESOURCES_S3_BUCKET_NAME`
+
+Example: `resources`.
+
+This is the name of the S3 bucket in which resources should be uploaded to.
+
+**Important**: access control must be configured to enable public read-only access.
+
+##### `RESOURCES_S3_BASE_PUBLIC_URL`
+
+Example: `https://s3.domain.com`.
+
+This is the public S3 URL. When hosting Minio, this can be a subdomain which has the Minio port forwarded to it. When using an external S3 provider, this will usually be the same as `RESOURCES_S3_BASE_URL`.
+
+##### `RESOURCES_S3_IS_LOCAL`
+
+Example: `true`.
+
+This should be `true` if using e.g., a local instance of Minio in Docker, and `false` in all other cases.
 
 ## Email
 
@@ -51,6 +127,12 @@ Example: `password`
 Example: `cap-editor@example.com`
 
 ## Security
+
+##### `NEXTAUTH_SECRET`
+
+Example: `khnGQYGwOBaUwwYCMpUVitAVCDOcVZsw`.
+
+This should be a secret used by NextAuth used to sign and encrypt JWTs.
 
 ##### `TLS_DIRECTORY`
 
@@ -101,3 +183,9 @@ Example: `alerting-authority-verifier@ifrc.org`
 This should be an email address which receives verification requests when users attempt to register with the system as an "Other" Alerting Authority. This contact should have the capability and authorisation to verify whether the requesting user is part of an Alerting Authority that is not already within the WMO Register of Alerting Authorities.
 
 For more details on this process, see [Alerting Authorities](./alerting-authorities.md).
+
+##### `BASE_URL`
+
+Example: `https://example.com`.
+
+This is the base URL that the system is deployed on.
