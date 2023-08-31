@@ -149,7 +149,8 @@ export const createAlert = async ({
         { name: "AA", author: "AA@example.com" },
         defaultFormData,
         new Date(),
-        uuidXml
+        uuidXml,
+        randomUUID()
       ),
     },
   });

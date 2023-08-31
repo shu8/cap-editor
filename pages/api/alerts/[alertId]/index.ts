@@ -6,7 +6,10 @@ import { ApiError } from "next/dist/server/api-utils";
 import { FormAlertData } from "../../../../components/editor/Editor";
 import { withErrorHandler } from "../../../../lib/apiErrorHandler";
 import { mapFormAlertDataToCapSchema } from "../../../../lib/cap";
-import { REDIS_PREFIX_SIGNED_ALERTS } from "../../../../lib/constants";
+import {
+  MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME,
+  REDIS_PREFIX_SIGNED_ALERTS,
+} from "../../../../lib/constants";
 import prisma from "../../../../lib/prisma";
 import redis from "../../../../lib/redis";
 import { CAPV12JSONSchema } from "../../../../lib/types/cap.schema";
@@ -14,6 +17,7 @@ import { formatAlertAsXML } from "../../../../lib/xml/helpers";
 import { sign } from "../../../../lib/xml/sign";
 import { authOptions } from "../../auth/[...nextauth]";
 import { generateAlertIdentifier } from "../../../../lib/helpers.server";
+import { randomUUID } from "crypto";
 
 async function handleUpdateAlert(
   req: NextApiRequest,
@@ -102,13 +106,18 @@ async function handleUpdateAlert(
   const sent = new Date();
   const identifier = generateAlertIdentifier(alertingAuthority.id, sent);
   const alertData: FormAlertData = req.body.data;
+  const multiLanguageGroupId =
+    (alert.data as CAPV12JSONSchema).info?.[0]?.parameter?.find(
+      (p) => p.valueName === MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME
+    )?.value ?? randomUUID();
 
   try {
     const newAlert: CAPV12JSONSchema = mapFormAlertDataToCapSchema(
       alert.AlertingAuthority,
       alertData,
       sent,
-      identifier
+      identifier,
+      multiLanguageGroupId
     );
     await prisma.alert.update({
       where: { id: alert.id },

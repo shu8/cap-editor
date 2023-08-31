@@ -9,7 +9,7 @@ export const mapFormAlertDataToCapSchema = (
   alertData: FormAlertData,
   sent: Date,
   id: string,
-  multiLanguageGroupId?: string
+  multiLanguageGroupId: string
 ): CAPV12JSONSchema => {
   // Type as `any` for now because this object needs to next be validated against the JSON schema
   const alert: any = {
@@ -51,14 +51,10 @@ export const mapFormAlertDataToCapSchema = (
             valueName: "CANONICAL_URL",
             value: `${process.env.BASE_URL}/feed/${id}`,
           },
-          ...(multiLanguageGroupId
-            ? [
-                {
-                  valueName: MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME,
-                  value: multiLanguageGroupId,
-                },
-              ]
-            : []),
+          {
+            valueName: MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME,
+            value: multiLanguageGroupId,
+          },
         ],
         ...(!!alertData.web?.length && { web: alertData.web }),
         ...(!!alertData.contact?.length && { contact: alertData.contact }),

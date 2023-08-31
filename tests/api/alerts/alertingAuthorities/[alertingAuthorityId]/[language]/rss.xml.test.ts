@@ -3,7 +3,10 @@ import { randomUUID } from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { mapFormAlertDataToCapSchema } from "../../../../../../lib/cap";
-import { formatDate, getStartOfToday } from "../../../../../../lib/helpers.client";
+import {
+  formatDate,
+  getStartOfToday,
+} from "../../../../../../lib/helpers.client";
 import handleAlertingAuthorityAlerts from "../../../../../../pages/api/alerts/alertingAuthorities/[alertingAuthorityId]/[language]/rss.xml";
 import { createUser, mockUserOnce, users } from "../../../../helpers";
 import { prismaMock } from "../../../../setup";
@@ -103,7 +106,8 @@ describe("GET /api/alerts/alertingAuthorities/:id/:language/rss.xml", () => {
               resources: [],
             },
             new Date(),
-            uuids[1]
+            uuids[1],
+            randomUUID()
           ),
         },
         {
@@ -133,7 +137,8 @@ describe("GET /api/alerts/alertingAuthorities/:id/:language/rss.xml", () => {
               resources: [],
             },
             new Date(),
-            uuids[2]
+            uuids[2],
+            randomUUID()
           ),
         },
         {
@@ -164,7 +169,8 @@ describe("GET /api/alerts/alertingAuthorities/:id/:language/rss.xml", () => {
               resources: [],
             },
             new Date(),
-            uuids[3]
+            uuids[3],
+            randomUUID()
           ),
         },
         {
@@ -194,7 +200,8 @@ describe("GET /api/alerts/alertingAuthorities/:id/:language/rss.xml", () => {
               resources: [],
             },
             new Date(),
-            uuids[4]
+            uuids[4],
+            randomUUID()
           ),
         },
       ],

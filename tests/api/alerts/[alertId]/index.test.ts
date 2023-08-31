@@ -14,6 +14,8 @@ import {
 import { formatDate, getStartOfToday } from "../../../../lib/helpers.client";
 import { prismaMock } from "../../setup";
 import { DateTime } from "luxon";
+import { CAPV12JSONSchema } from "../../../../lib/types/cap.schema";
+import { MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME } from "../../../../lib/constants";
 
 const uuid = randomUUID();
 const future = new Date();
@@ -31,7 +33,8 @@ const generateDatabaseAlertData = ({
     { name: "AA", author: "aa@example.com" },
     formData,
     new Date(),
-    id
+    id,
+    randomUUID()
   ),
 });
 
@@ -298,13 +301,27 @@ describe("PUT /api/alerts/:id", () => {
     const dbAlert = await prismaMock.alert.findFirst();
     expect(dbAlert).toBeTruthy();
     expect(dbAlert!.status).toEqual("PUBLISHED");
-    expect(dbAlert!.data.info[0].headline).toEqual("Updated headline");
+
+    const alertData = dbAlert!.data as CAPV12JSONSchema;
+    expect(alertData.info![0].headline).toEqual("Updated headline");
 
     const sentTimeFormatted = DateTime.fromFormat(
-      dbAlert!.data.sent,
+      alertData.sent,
       "yyyy-MM-dd'T'HH:mm:ssZZ",
       { setZone: true }
     ).toFormat("yyyy.MM.dd.HH.mm.ss");
-    expect(dbAlert!.data.identifier).toEqual(`aa.${sentTimeFormatted}`);
+    expect(alertData.identifier).toEqual(`aa.${sentTimeFormatted}`);
+
+    const originalMultiLanguageGroupId = (
+      alert.data as CAPV12JSONSchema
+    ).info![0]!.parameter?.find(
+      (p) => p.valueName === MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME
+    )?.value;
+
+    const newMultiLanguageGroupId = alertData.info![0]!.parameter?.find(
+      (p) => p.valueName === MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME
+    )?.value;
+
+    expect(newMultiLanguageGroupId).toEqual(originalMultiLanguageGroupId);
   });
 });
