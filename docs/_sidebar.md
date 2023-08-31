@@ -11,7 +11,5 @@
   - [Configuration](configuration.md)
   - [Development](development.md)
   - [Deployment](deployment.md)
-- Misc
   - [Testing](testing.md)
-  - [Future Work](future-work.md)
 - [User Manual](user-manual.md)
