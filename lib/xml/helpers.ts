@@ -81,9 +81,9 @@ export const formatAlertingAuthorityFeedAsXML = async (
           "@_rel": "self",
           "#text": url,
         },
+        lastBuildDate: new Date().toUTCString(),
+        item: entries,
       },
-      lastBuildDate: new Date().toUTCString(),
-      item: entries,
     },
   });
 
