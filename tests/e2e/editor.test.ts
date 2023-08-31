@@ -94,6 +94,28 @@ describe("Editor: new alert", () => {
   });
 });
 
+describe("Editor: new alert (no AA polygon)", () => {
+  beforeEach(async () => {
+    await createUser("foo@example.com", "Foo", {
+      verified: new Date(),
+      name: "AA",
+      roles: ["COMPOSER"],
+      polygon: null,
+    });
+    await login("foo@example.com");
+    await page.goto(`${baseUrl}/editor`, { waitUntil: "networkidle0" });
+    document = await getDocument(page);
+  });
+
+  test("load editor", async () => {
+    await assertEditingPage(document);
+
+    // No 'references' should be shown initially
+    const referencesField = await queries.queryByText(document, "References");
+    expect(referencesField).toBeNull();
+  });
+});
+
 describe("Editor: edit alert", () => {
   beforeEach(async () => {
     const user = await createUser("foo@example.com", "Foo", {

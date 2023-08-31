@@ -1,4 +1,4 @@
-import { jest } from "@jest/globals";
+import { expect } from "@jest/globals";
 import { Role } from "@prisma/client";
 import { getDocument, queries } from "pptr-testing-library";
 import { ElementHandle } from "puppeteer";
@@ -11,6 +11,7 @@ export const createUser = async (
     verified: Date | null;
     name: string;
     roles: Role[];
+    polygon?: string | null;
   }
 ) => {
   return await prisma?.user.create({
@@ -26,7 +27,10 @@ export const createUser = async (
                 author: "aa@example.com",
                 id: alertingAuthority.name,
                 countryCode: "GBR",
-                polygon: "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8",
+                polygon:
+                  typeof alertingAuthority.polygon === "undefined"
+                    ? "59.7,-8 49.9,-8 49.9,2 59.7,2 59.7,-8"
+                    : alertingAuthority.polygon,
               },
             },
             verified: alertingAuthority.verified,
@@ -242,6 +246,9 @@ export async function assertEditingPage(document: ElementHandle<Element>) {
   );
 
   await queries.findByText(document, "Alert XML Preview");
+
+  const mapCanvas = page.$("canvas");
+  expect(mapCanvas).toBeTruthy();
 }
 
 export async function assertPrefilledEditingPage(

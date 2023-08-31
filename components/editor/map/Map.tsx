@@ -103,19 +103,14 @@ export default function Map({
 
   const metersPerUnit = map?.getView().getProjection().getMetersPerUnit();
 
-  const alertingAuthorityPolygonCoordinates: any = [
-    alertingAuthority?.polygon?.split(" ").map((c) =>
+  const alertingAuthorityPolygonCoordinates: any = alertingAuthority?.polygon
+    ?.split(" ")
+    ?.map((c) =>
       c
         .split(",")
         .map((c) => +c)
         .reverse()
-    ) ?? [],
-  ];
-
-  const alertingAuthorityRegion = new Feature({
-    geometry: new Polygon(alertingAuthorityPolygonCoordinates),
-  });
-  alertingAuthorityRegion.setId("alertingAuthority");
+    );
 
   const updateRegionsOnMap = () => {
     selectedFeaturesSource.forEachFeature((f) =>
@@ -155,9 +150,21 @@ export default function Map({
   };
 
   useMountEffect(() => {
+    let alertingAuthorityRegion;
+    if (alertingAuthorityPolygonCoordinates) {
+      alertingAuthorityRegion = new Feature({
+        geometry: new Polygon([alertingAuthorityPolygonCoordinates]),
+      });
+      alertingAuthorityRegion.setId("alertingAuthority");
+      alertingAuthorityRegion.setStyle(alertingAuthorityStyle);
+      defaultFeaturesSource?.addFeature(alertingAuthorityRegion);
+    }
+
     const mapObject = new OLMap({
       view: new OLView({
-        extent: alertingAuthorityRegion.getGeometry()?.getExtent(),
+        ...(alertingAuthorityRegion && {
+          extent: alertingAuthorityRegion.getGeometry()?.getExtent(),
+        }),
         projection: "EPSG:4326",
         showFullExtent: true,
         center: [1, 1],
@@ -172,8 +179,6 @@ export default function Map({
     if (mapRef.current) mapObject.setTarget(mapRef.current);
     setMap(mapObject);
 
-    alertingAuthorityRegion.setStyle(alertingAuthorityStyle);
-    defaultFeaturesSource?.addFeature(alertingAuthorityRegion);
     return () => {
       mapObject.setTarget(undefined);
     };
