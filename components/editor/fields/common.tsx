@@ -69,9 +69,8 @@ const TextField = ({
       value={alertData[fieldName]}
       accepter={textarea ? Textarea : Input}
     />
-    {!maxLength ? (
-      <Form.HelpText>{help}</Form.HelpText>
-    ) : (
+    {help && !maxLength && <Form.HelpText>{help}</Form.HelpText>}
+    {maxLength && (
       <Form.HelpText
         style={{
           color:
