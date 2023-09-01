@@ -28,6 +28,8 @@ It has been created in collaboration with the [International Federation of Red C
 
 Please see the [documentation site](https://shu8.github.io/cap-editor/) for full documentation on the system architecture, implementation details, development instructions, testing, and deployment information.
 
+**IMPORTANT**: If you are using the CAP Editor to publish CAP alert feeds, you should get in touch with the IFRC to onboard with the IFRC Alert Hub, so your alerts can be aggregated and disseminated.
+
 ## Screenshots
 
 Dashboard:
