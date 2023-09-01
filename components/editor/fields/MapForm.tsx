@@ -34,6 +34,7 @@ export default function MapForm({
     const arr = [];
     const lines = str.split("\n");
     for (const line of lines) {
+      if (line === "") continue;
       const coordPairs = line.split(" ");
       const coords = [];
       for (const c of coordPairs) {
@@ -66,6 +67,7 @@ export default function MapForm({
     );
 
     for (const line of lines) {
+      if (line === "") continue;
       if (line.match(regex)) arr.push(line);
       else return null;
     }
