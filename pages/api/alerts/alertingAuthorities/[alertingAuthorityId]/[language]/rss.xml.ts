@@ -24,11 +24,7 @@ async function handleGetAlerts(
   res.setHeader("Content-Type", "application/xml");
   return res.status(200).send(
     await formatAlertingAuthorityFeedAsXML(
-      {
-        name: alertingAuthorityAlerts.name,
-        id: alertingAuthorityAlerts.id,
-        author: alertingAuthorityAlerts.author,
-      },
+      { name: alertingAuthorityAlerts.name, id: alertingAuthorityAlerts.id },
       language,
       alertingAuthorityAlerts.Alerts.filter(
         (a) => new Date(a.data!.info?.[0]?.expires) >= new Date()

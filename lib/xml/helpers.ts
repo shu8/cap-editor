@@ -48,7 +48,7 @@ export const formatAlertAsXML = (alertData: CAPV12JSONSchema): string => {
 };
 
 export const formatAlertingAuthorityFeedAsXML = async (
-  alertingAuthority: Pick<UserAlertingAuthority, "author" | "id" | "name">,
+  alertingAuthority: Pick<UserAlertingAuthority, "id" | "name">,
   language: string,
   alerts: Alert[]
 ) => {

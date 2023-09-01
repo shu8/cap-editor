@@ -27,6 +27,6 @@ jobs:
         run: npm run test:api
         env:
           BASE_URL: http://example.com
-          IFRC_AA_VERIFIER_EMAIL: ifrc@example.com
+          VERIFIER_EMAIL: ifrc@example.com
           PRIVATE_KEY_FILENAME: test-key
           TLS_DIRECTORY: ./

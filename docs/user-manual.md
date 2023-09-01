@@ -31,15 +31,15 @@ Before you can use the platform to draft and/or publish alerts, you must connect
 2. Find your AA in the dropdown menu in the 'Connect to Alerting Authorities' section
 3. Submit the form using the 'Connect to Alerting Authority' button
 
-On submission, a request to the author of your chosen AA will be sent via email. They will need to approve your affiliation with the AA before you can use the platform with this AA. You are automatically sent an email when your affiliation is approved (or rejected).
+On submission, a request to the a central IFRC contact will be sent via email. They will need to approve your affiliation with the AA before you can use the platform with this AA. You are automatically sent an email when your affiliation is approved (or rejected).
 
-?> You may connect to multiple AAs, however each affiliation will have to go through the approval process with the respective AA author.
+?> You may connect to multiple AAs, however each affiliation will have to go through the approval process.
 
-There may be cases where your AA is not listed in the dropdown menu. In this case, please choose the 'Other' option. This will send an approval email to the IFRC, who will verify you are part of this AA.
+There may be cases where your AA is not listed in the dropdown menu. In this case, please choose the 'Other' option and provide the name of your AA. This will still send an approval email to the IFRC, who will verify you are part of this AA.
 
 # Access rights
 
-When you connect to an AA, its author must approve your account. They will also assign the access rights you have, of which there are up to 3 possible:
+When you connect to an AA, your account must be approved. This process also involves you being assigned access rights, of which there are up to 3 possible:
 
 - Composer: edit any non-published alert, and create draft alerts
 - Approver: edit/create any existing draft alert, and publish any valid existing draft alert

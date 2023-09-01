@@ -15,7 +15,7 @@ declare global {
       TLS_DIRECTORY: string;
       WHAT_NOW_API_KEY: string;
       REDIS_HOST: string;
-      IFRC_AA_VERIFIER_EMAIL: string;
+      VERIFIER_EMAIL: string;
       RESOURCES_S3_BASE_URL: string;
       RESOURCES_S3_PORT: number;
       RESOURCES_S3_ACCESS_KEY: string;

@@ -35,7 +35,7 @@ async function handleConnectToAlertingAuthority(
   const alertingAuthority: AlertingAuthority | undefined =
     alertingAuthorityId === "other"
       ? {
-          author: process.env.IFRC_AA_VERIFIER_EMAIL,
+          author: process.env.VERIFIER_EMAIL,
           id: `ifrc:${randomUUID()}`,
           name: customAlertingAuthorityName,
           countryCode: "Other",
@@ -80,11 +80,11 @@ async function handleConnectToAlertingAuthority(
     },
   });
 
-  // Note: if the registering user is the same as the author, they will still receive
-  //  a verification email (as the AA author), where they can assign their own roles
+  // Note: if the registering user is the same as the VERIFIER_EMAIL, they will still receive
+  //  a verification email, where they can assign their own roles
   await sendEmail({
     subject: `New user registered for ${alertingAuthority.name}`,
-    to: alertingAuthority.author,
+    to: process.env.VERIFIER_EMAIL,
     body: `Please verify this user has permission to create alerts for your Alerting Authority`,
     url: `${process.env.BASE_URL}/verify?token=${verificationToken}`,
     urlText: "Verify user now",

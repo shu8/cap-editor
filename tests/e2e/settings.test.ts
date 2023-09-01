@@ -1,7 +1,13 @@
 import { beforeEach, describe, expect, test } from "@jest/globals";
 import { getDocument, queries } from "pptr-testing-library";
 import { ElementHandle } from "puppeteer";
-import { clearInput, createUser, login, mockNetworkResponse } from "./helpers";
+import {
+  clearInput,
+  createUser,
+  getEmails,
+  login,
+  mockNetworkResponse,
+} from "./helpers";
 
 var document: ElementHandle<Element>;
 beforeEach(async () => {
@@ -152,5 +158,13 @@ describe("Connect to Alerting Authorities", () => {
     expect(userAas![1].alertingAuthorityId.startsWith("ifrc:"));
     expect(userAas![1].verified).toBeNull();
     expect(userAas![1].verificationToken).toBeTruthy();
+
+    const emails = await getEmails();
+    const verificationEmail = emails.items[0];
+
+    expect(verificationEmail.Content.Headers.To).toEqual(["ifrc@ifrc.com"]);
+    expect(verificationEmail.Content.Headers.Subject).toEqual([
+      "New user registered for Another AA",
+    ]);
   });
 });
