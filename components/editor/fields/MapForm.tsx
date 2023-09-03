@@ -14,6 +14,7 @@ import KeyValueInput from "../../KeyValueInput";
 import Map from "../map/Map";
 import { FieldProps, Textarea } from "./common";
 import styles from "../../../styles/components/editor/EditorSinglePage.module.css";
+import { useLingui } from "@lingui/react";
 
 const POSITIVE_COORDINATE_REGEX = /\d+(\.\d{1,3})?/;
 const COORDINATE_REGEX = /-?\d+(\.\d{1,3})?/;
@@ -24,6 +25,8 @@ export default function MapForm({
   disabled,
   alertingAuthority,
 }: FieldProps & { alertingAuthority: UserAlertingAuthority }) {
+  useLingui();
+
   const toaster = useToasterI18n();
   const [countries, setCountries] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState("");

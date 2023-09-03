@@ -9,6 +9,7 @@ import { useState } from "react";
 import { HandledError, camelise } from "../../../lib/helpers.client";
 import ErrorMessage from "../../ErrorMessage";
 import { Button, Modal, Nav, Panel, PanelGroup } from "rsuite";
+import { useLingui } from "@lingui/react";
 
 const WhatNowMessage = ({
   message,
@@ -78,6 +79,8 @@ export default function Instruction({
   alertData,
   alertingAuthority,
 }: FieldProps & { alertingAuthority: UserAlertingAuthority }) {
+  useLingui();
+
   const toaster = useToasterI18n();
   const [whatNowMessages, setWhatNowMessages] = useState<WhatNowResponse[]>([]);
   const [showWhatNowModal, setShowWhatNowModal] = useState(false);

@@ -1,9 +1,11 @@
 import { t } from "@lingui/macro";
+import { useLingui } from "@lingui/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Message } from "rsuite";
 
 export default function NextAuthErrorPage() {
+  useLingui();
   const router = useRouter();
   const { error } = router.query;
 

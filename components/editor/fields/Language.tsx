@@ -1,8 +1,10 @@
 import { t } from "@lingui/macro";
 import { DropdownField, FieldProps } from "./common";
 import { iso6393 } from "iso-639-3";
+import { useLingui } from "@lingui/react";
 
 export default function Language({ onUpdate, alertData }: FieldProps) {
+  useLingui();
   return (
     <DropdownField
       onUpdate={onUpdate}

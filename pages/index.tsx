@@ -11,8 +11,11 @@ import { fetcher } from "../lib/helpers.client";
 import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
 import styles from "../styles/Home.module.css";
 import ExportAlerts from "../components/ExportAlerts";
+import { useLingui } from "@lingui/react";
 
 export default function Home() {
+  useLingui();
+
   const { data: session } = useSession();
   const [alertingAuthorityId] = useAlertingAuthorityLocalStorage();
 

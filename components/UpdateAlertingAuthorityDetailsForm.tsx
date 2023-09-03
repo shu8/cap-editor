@@ -7,6 +7,7 @@ import { fetcher, HandledError } from "../lib/helpers.client";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import ErrorMessage from "./ErrorMessage";
 import useSWR from "swr";
+import { useLingui } from "@lingui/react";
 
 type Data = {
   defaultTimezone: string;
@@ -18,6 +19,7 @@ export default function UpdateAlertingAuthorityDetailsForm({
 }: {
   alertingAuthorityId: string;
 }) {
+  useLingui();
   const toaster = useToasterI18n();
   const router = useRouter();
   const {

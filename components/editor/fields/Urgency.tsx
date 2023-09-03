@@ -1,8 +1,9 @@
 import { t } from "@lingui/macro";
+import { useLingui } from "@lingui/react";
 import { DropdownField, FieldProps } from "./common";
-import { iso6393 } from "iso-639-3";
 
 export default function Urgency(props: FieldProps) {
+  useLingui()
   return (
     <DropdownField
       {...props}

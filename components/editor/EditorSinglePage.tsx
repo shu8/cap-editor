@@ -32,9 +32,10 @@ import {
 } from "./fields";
 import SeverityCertaintyMatrix from "./SeverityCertaintyMatrix";
 import XMLPreview from "./XMLPreview";
+import { useLingui } from "@lingui/react";
 
 const STEPS = ["metadata", "category", "map", "data", "text", "summary"];
-export type Step = typeof STEPS[number];
+export type Step = (typeof STEPS)[number];
 
 export type FormAlertData = {
   // Only present if an Alert is being edited (instead of created)
@@ -86,6 +87,7 @@ type Props = {
 };
 
 export default function EditorSinglePage(props: Props) {
+  useLingui();
   const [alertData, setAlertData] = useState(props.defaultAlertData);
   const isNewLanguageDraft = !!props.multiLanguageGroupId;
   const onUpdate = (data: Partial<FormAlertData>) =>
@@ -151,7 +153,7 @@ export default function EditorSinglePage(props: Props) {
               className={styles.shareIcon}
               onClick={() => {
                 const email = window.prompt(
-                  "Please enter the email address of the user you wish to invite to collaborate"
+                  t`Please enter the email address of the user you wish to invite to collaborate`
                 );
                 if (!email) return;
 

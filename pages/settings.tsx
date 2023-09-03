@@ -16,8 +16,11 @@ import UpdatePersonalDetailsForm from "../components/UpdatePersonalDetailsForm";
 import { useAlertingAuthorityLocalStorage } from "../lib/useLocalStorageState";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import { authOptions } from "./api/auth/[...nextauth]";
+import { useLingui } from "@lingui/react";
 
 export default function SettingsPage() {
+  useLingui();
+
   const toaster = useToasterI18n();
   const { data: session } = useSession();
   const [alertingAuthorityId] = useAlertingAuthorityLocalStorage();

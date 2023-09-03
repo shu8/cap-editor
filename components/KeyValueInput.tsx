@@ -4,6 +4,7 @@ import { Button, Form, Stack, Uploader } from "rsuite";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import ErrorMessage from "./ErrorMessage";
 import { HandledError } from "../lib/helpers.client";
+import { useLingui } from "@lingui/react";
 
 export default function KeyValueInput({
   keyLabel,
@@ -24,6 +25,7 @@ export default function KeyValueInput({
   disabled?: boolean;
   allowImageUploadValue?: boolean;
 }) {
+  useLingui();
   const toaster = useToasterI18n();
   const [showForm, setShowForm] = useState(false);
   const [newKey, setNewKey] = useState("");

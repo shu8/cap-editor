@@ -28,6 +28,7 @@ import { authOptions } from "../api/auth/[...nextauth]";
 import { MULTI_LANGUAGE_GROUP_ID_CAP_PARAMETER_NAME } from "../../lib/constants";
 import { DateTime } from "luxon";
 import timezones from "timezones.json";
+import { useLingui } from "@lingui/react";
 
 // Must serialise Dates between server and client
 type FormAlertDataSerialised = FormAlertData & {
@@ -262,6 +263,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 export default function EditorPage(props: Props) {
+  useLingui();
+
   const toaster = useToasterI18n();
   const router = useRouter();
   const { data: session } = useSession();

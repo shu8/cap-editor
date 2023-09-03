@@ -7,6 +7,7 @@ import { HandledError, updateState } from "../lib/helpers.client";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import styles from "../styles/components/AuthenticateForm.module.css";
 import ErrorMessage from "./ErrorMessage";
+import { useLingui } from "@lingui/react";
 
 type RegisterData = {
   name: string;
@@ -14,6 +15,7 @@ type RegisterData = {
 };
 
 export default function RegisterForm({ email = "" }) {
+  useLingui();
   const toaster = useToasterI18n();
   const [formData, setFormData] = useState<RegisterData>({ name: "", email });
 

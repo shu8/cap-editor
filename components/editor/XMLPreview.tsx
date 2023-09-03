@@ -6,6 +6,7 @@ import { useDebounce } from "usehooks-ts";
 import { UserAlertingAuthority } from "../../lib/types/types";
 import { FormAlertData } from "./EditorSinglePage";
 import { formatDate } from "../../lib/helpers.client";
+import { useLingui } from "@lingui/react";
 
 export default function XMLPreview({
   alertingAuthority,
@@ -16,6 +17,8 @@ export default function XMLPreview({
   alertData: FormAlertData;
   multiLanguageGroupId?: string;
 }) {
+  useLingui();
+
   // Debounce alertData, so we only send preview API request every second
   const debouncedAlertData = useDebounce(alertData, 1000);
   const [xmlPreview, setXmlPreview] = useState("");

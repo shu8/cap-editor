@@ -6,11 +6,11 @@ settings:
 
 dependencies:
   '@lingui/core':
-    specifier: 4.3.0
-    version: 4.3.0
+    specifier: ^4.4.2
+    version: 4.4.2
   '@lingui/react':
-    specifier: 4.3.0
-    version: 4.3.0(react@18.2.0)
+    specifier: ^4.4.2
+    version: 4.4.2(react@18.2.0)
   '@next-auth/prisma-adapter':
     specifier: ^1.0.7
     version: 1.0.7(@prisma/client@5.2.0)(next-auth@4.23.1)
@@ -125,11 +125,11 @@ devDependencies:
     specifier: ^29.6.4
     version: 29.6.4
   '@lingui/cli':
-    specifier: 4.3.0
-    version: 4.3.0
+    specifier: ^4.4.2
+    version: 4.4.2
   '@lingui/macro':
-    specifier: 4.3.0
-    version: 4.3.0(@lingui/react@4.3.0)(babel-plugin-macros@3.1.0)
+    specifier: ^4.4.2
+    version: 4.4.2(@lingui/react@4.4.2)(babel-plugin-macros@3.1.0)
   '@mermaid-js/mermaid-cli':
     specifier: ^10.3.1
     version: 10.3.1(typescript@5.2.2)
@@ -2099,13 +2099,13 @@ packages:
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
     dev: false
 
-  /@lingui/babel-plugin-extract-messages@4.3.0:
-    resolution: {integrity: sha512-X23evX574Pv5wRpg9HytCuE0dsRaFi0kkrj8uQC++Dk1Iti0ptRFeuMU4jxINlfa972Ri3GF6ckGQ+Req3drYg==}
+  /@lingui/babel-plugin-extract-messages@4.4.2:
+    resolution: {integrity: sha512-h4HQCUqmQF+EuK6beTPR5His44yXPZ61WUK5j0rA0yMgmVSMM9fXXJSANnSPIMt+xjcn12erV4uLKiyzchh8yw==}
     engines: {node: '>=16.0.0'}
     dev: true
 
-  /@lingui/cli@4.3.0:
-    resolution: {integrity: sha512-Z44IxdK7kzmL+5TB2Kuu2xB3O6n1WCsBG0nUXOMtwTWHNxBLdr89hFogO3Orf7QNyxpfw6yZ3Go3xRm3JO3rJg==}
+  /@lingui/cli@4.4.2:
+    resolution: {integrity: sha512-4CQ6JlGNHd7rFaxwh6GeA0vvvcMZlPUcCTEbXZ89a4OYDNclsQ3ck8mpbpwMbIfsbyviRyfje83jvwRQL9vF3Q==}
     engines: {node: '>=16.0.0'}
     hasBin: true
     dependencies:
@@ -2114,11 +2114,11 @@ packages:
       '@babel/parser': 7.22.14
       '@babel/runtime': 7.22.11
       '@babel/types': 7.22.11
-      '@lingui/babel-plugin-extract-messages': 4.3.0
-      '@lingui/conf': 4.3.0
-      '@lingui/core': 4.3.0
-      '@lingui/format-po': 4.3.0
-      '@lingui/message-utils': 4.3.0
+      '@lingui/babel-plugin-extract-messages': 4.4.2
+      '@lingui/conf': 4.4.2
+      '@lingui/core': 4.4.2
+      '@lingui/format-po': 4.4.2
+      '@lingui/message-utils': 4.4.2
       babel-plugin-macros: 3.1.0
       chalk: 4.1.2
       chokidar: 3.5.1
@@ -2142,8 +2142,8 @@ packages:
       - supports-color
     dev: true
 
-  /@lingui/conf@4.3.0:
-    resolution: {integrity: sha512-ZflR/igJi3+MUr1VeJDNkYMpnNvinRdw9m17G7mxmemxtnYV+RsIiUB+aR3AcgbQbEEmF95XmZb8jlUFYWlvtw==}
+  /@lingui/conf@4.4.2:
+    resolution: {integrity: sha512-PHy0tAVcwyAuEjxWonVcPgacQGJHbo+jSmluIRn2KySzdGeL6RrLk2Fcr0oBi0Pjy8kGaLxVHBPX7Ps2IWiNDw==}
     engines: {node: '>=16.0.0'}
     dependencies:
       '@babel/runtime': 7.22.11
@@ -2154,26 +2154,26 @@ packages:
       lodash.get: 4.4.2
     dev: true
 
-  /@lingui/core@4.3.0:
-    resolution: {integrity: sha512-nx9UM3ndYaK9VG6xQpF0OD/n0W35o5EPbiIzxgNvdNzRFtv9l1Z3pBipHXurRuZX0oDepGhVyXFD0ykPDeF7jA==}
+  /@lingui/core@4.4.2:
+    resolution: {integrity: sha512-CAWgvw69SV6cTfBQ0yNmD3GNTqAoIrn7JmenXcSlzcmuYJ5XG/mO8KbMTQw6PWwhVLykWSm68OsRzN/NQ4Agrg==}
     engines: {node: '>=16.0.0'}
     dependencies:
       '@babel/runtime': 7.22.11
-      '@lingui/message-utils': 4.3.0
+      '@lingui/message-utils': 4.4.2
       unraw: 2.0.1
 
-  /@lingui/format-po@4.3.0:
-    resolution: {integrity: sha512-iwqMve+VMxfRisTCk2evcnhAfn54v5qXTXZUDGZQrSQ60r2A4VGtS8VdCzqHwKxvbIatjq4NfWGa0v0zb092jg==}
+  /@lingui/format-po@4.4.2:
+    resolution: {integrity: sha512-4OJb+GKHQFexcgwPEM6Xkx6wYdujKtqYndXWlhjFV2qNN5SMmxa4GlODAzJxrcCh+mMwut6OszQvAggR0DYtXw==}
     engines: {node: '>=16.0.0'}
     dependencies:
-      '@lingui/conf': 4.3.0
-      '@lingui/message-utils': 4.3.0
+      '@lingui/conf': 4.4.2
+      '@lingui/message-utils': 4.4.2
       date-fns: 2.30.0
       pofile: 1.1.4
     dev: true
 
-  /@lingui/macro@4.3.0(@lingui/react@4.3.0)(babel-plugin-macros@3.1.0):
-    resolution: {integrity: sha512-MkeYKshuEp2j8Nx0IOhppcSiN3wEw3UxMPXsHzMe34U/MPrrriYaxMRY7CSsQrXqftcacQTm9IiDWvJAj4/V9w==}
+  /@lingui/macro@4.4.2(@lingui/react@4.4.2)(babel-plugin-macros@3.1.0):
+    resolution: {integrity: sha512-6EzUeFSJh5A7iU6RgtvQjAp29CzOhVY3nB8DAtYy0FEWc/Vlo+FqNJiC4W0gIEYH/mJ3ob30Gnhp8PeNccSFqw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@lingui/react': ^4.0.0
@@ -2181,27 +2181,27 @@ packages:
     dependencies:
       '@babel/runtime': 7.22.11
       '@babel/types': 7.22.11
-      '@lingui/conf': 4.3.0
-      '@lingui/core': 4.3.0
-      '@lingui/message-utils': 4.3.0
-      '@lingui/react': 4.3.0(react@18.2.0)
+      '@lingui/conf': 4.4.2
+      '@lingui/core': 4.4.2
+      '@lingui/message-utils': 4.4.2
+      '@lingui/react': 4.4.2(react@18.2.0)
       babel-plugin-macros: 3.1.0
     dev: true
 
-  /@lingui/message-utils@4.3.0:
-    resolution: {integrity: sha512-UtgO5pm6LpJKqmZctr2R2hT+qicb8UijFDG3dctKGBuwkkwunFZUswOLJ+AxfhaO652Vov/yf5qsymJ6UFXPBA==}
+  /@lingui/message-utils@4.4.2:
+    resolution: {integrity: sha512-p04wwWMi3aVnezx4m0dlJNhbA1099nRiGvEjoLy7E3grYT6duLg+IF+NCA5U6QhWM5BsSrjiJZFVj9tER8bdeQ==}
     engines: {node: '>=16.0.0'}
     dependencies:
       '@messageformat/parser': 5.1.0
 
-  /@lingui/react@4.3.0(react@18.2.0):
-    resolution: {integrity: sha512-EbkS5J2i26ENuAie70Fb+urOlajOTpa0xF3wZ78Zt4XKJSruZQ1Vg0U7vndpD5QeLsIpjGmJONkLjg8KzyVmBA==}
+  /@lingui/react@4.4.2(react@18.2.0):
+    resolution: {integrity: sha512-CBt6jzd+uOVJ5mZcKNXptaaaUqruy5YGMGszVaV3MTRadBbi4Vn07n0/gyfA/RDyFI95LLF2g4OY4uxf8Xb1hA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       '@babel/runtime': 7.22.11
-      '@lingui/core': 4.3.0
+      '@lingui/core': 4.4.2
       react: 18.2.0
 
   /@mapbox/jsonlint-lines-primitives@2.0.2:

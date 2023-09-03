@@ -1,7 +1,9 @@
 import { t } from "@lingui/macro";
 import { DropdownField, FieldProps } from "./common";
+import { useLingui } from "@lingui/react";
 
 export default function ResponseType(props: FieldProps) {
+  useLingui();
   return (
     <DropdownField
       {...props}

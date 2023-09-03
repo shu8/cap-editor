@@ -1,8 +1,10 @@
 import { t } from "@lingui/macro";
 import timezones from "timezones.json";
 import { DropdownField, FieldProps } from "./common";
+import { useLingui } from "@lingui/react";
 
 export default function Timezone({ onUpdate, alertData }: FieldProps) {
+  useLingui();
   return (
     <DropdownField
       onUpdate={onUpdate}

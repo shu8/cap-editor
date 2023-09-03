@@ -11,6 +11,7 @@ import { hash } from "../lib/helpers.server";
 import prisma from "../lib/prisma";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import styles from "../styles/Verify.module.css";
+import { useLingui } from "@lingui/react";
 
 type Props = {
   userToBeVerified: {
@@ -64,6 +65,8 @@ export default function VerifyUser({
   userToBeVerified,
   verificationToken,
 }: Props) {
+  useLingui();
+
   const toaster = useToasterI18n();
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [roles, setRoles] = useState([]);

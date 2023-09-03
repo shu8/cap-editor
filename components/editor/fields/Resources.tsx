@@ -4,8 +4,10 @@ import { HandledError } from "../../../lib/helpers.client";
 import { useToasterI18n } from "../../../lib/useToasterI18n";
 import KeyValueInput from "../../KeyValueInput";
 import { FieldProps } from "./common";
+import { useLingui } from "@lingui/react";
 
 export default function Resources({ onUpdate, alertData }: FieldProps) {
+  useLingui();
   const toaster = useToasterI18n();
 
   const getMimeType = async (url: string): Promise<string> => {
@@ -21,8 +23,8 @@ export default function Resources({ onUpdate, alertData }: FieldProps) {
       <Form.ControlLabel>
         <Trans>Resources</Trans>{" "}
         <KeyValueInput
-          keyLabel="Description"
-          valueLabel="URL"
+          keyLabel={t`Description`}
+          valueLabel={t`URL`}
           addLabel={t`Add URL?`}
           allowImageUploadValue
           emptyLabel={

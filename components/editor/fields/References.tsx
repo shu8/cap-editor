@@ -5,12 +5,15 @@ import { useToasterI18n } from "../../../lib/useToasterI18n";
 import { useState } from "react";
 import { HandledError } from "../../../lib/helpers.client";
 import ErrorMessage from "../../ErrorMessage";
+import { useLingui } from "@lingui/react";
 
 export default function References({
   onUpdate,
   alertData,
   alertingAuthorityId,
 }: FieldProps & { alertingAuthorityId: string }) {
+  useLingui();
+
   const toaster = useToasterI18n();
   const [referenceOptions, setReferenceOptions] = useState<Alert[]>([]);
   const fetchReferenceOptions = () => {

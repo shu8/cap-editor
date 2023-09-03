@@ -5,12 +5,14 @@ import { Button, Form, InputPicker, Loader, Message } from "rsuite";
 import { HandledError } from "../lib/helpers.client";
 import { useToasterI18n } from "../lib/useToasterI18n";
 import ErrorMessage from "./ErrorMessage";
+import { useLingui } from "@lingui/react";
 
 type RegisterData = {
   alertingAuthorityId: string;
 };
 
 export default function ConnectToAlertingAuthorityForm() {
+  useLingui();
   const toaster = useToasterI18n();
   const [alertingAuthorities, setAlertingAuthorities] = useState([]);
   const [finishedLoading, setFinishedLoading] = useState(false);
